@@ -1,0 +1,85 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style x:Key="RowButtonNotVisible" TargetType="Button">
+        <Setter Property="Visibility" Value="Collapsed"/>
+    </Style>
+
+    <Style x:Key="RowButtonVisibleColor" TargetType="Button">
+        <Setter Property="Visibility" Value="Visible"/>
+        <Setter Property="VerticalAlignment" Value="top" />
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Height" Value="14"/>
+        <Setter Property="Content" Value="Edit"/>
+        <Setter Property="Background" Value="#e1e1e1"/>
+    </Style>
+
+    <Style x:Key="RowButtonVisibleColorRedFont" TargetType="Button">
+        <Setter Property="Visibility" Value="Visible"/>
+        <Setter Property="VerticalAlignment" Value="top" />
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Content" Value="Edit"/>
+        <Setter Property="Foreground" Value="Red"/>
+        <Setter Property="Background" Value="#e1e1e1"/>
+    </Style>
+
+    <Style x:Key="RowButtonVisibleWhite" TargetType="Button">
+        <Setter Property="Visibility" Value="Visible"/>
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Height" Value="14"/>
+        <Setter Property="Content" Value="Edit"/>
+        <Setter Property="Background" Value="#e0eaf8"/>
+    </Style>
+
+    <Style x:Key="RowButtonVisibleWhiteRedFont" TargetType="Button">
+        <Setter Property="Visibility" Value="Visible"/>
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Height" Value="14"/>
+        <Setter Property="Content" Value="Edit"/>
+        <Setter Property="Foreground" Value="Red" />
+        <Setter Property="Background" Value="#e0eaf8"/>
+    </Style>
+
+    <Style x:Key="BtnStyleStandard" TargetType="Button">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Height" Value="26"/>
+    </Style>
+
+    <Style x:Key="BtnStyleSearch" TargetType="Button">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Width" Value="120"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
+    <Style x:Key="EditIngredientButton" TargetType="Button">
+        <Setter Property="Width" Value="23"/>
+        <Setter Property="Content" Value="Edit"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Visibility" Value="{Binding Path=NumberOfIngredients, Converter={StaticResource IntToVisibilityWithParamsMinConverter}, ConverterParameter = 1}"/>
+        <Setter Property="Background" Value="#eee"/>
+        <Setter Property="Foreground" Value="Red"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Command" Value="{Binding CmdRemoveIngredient}"/>
+        <Setter Property="Visibility" Value="Visible"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Height" Value="14"/>
+    </Style>
+
+    <!--<Style>
+        <Style x:Key="CursorControlWait" TargetType="">
+            <i:Interaction.Behaviors>
+                <icore:DataTriggerBehavior Binding="{Binding CursorWait, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                </icore:DataTriggerBehavior>
+            </i:Interaction.Behaviors>
+        </Style>
+    </Style>-->
+
+</ResourceDictionary>

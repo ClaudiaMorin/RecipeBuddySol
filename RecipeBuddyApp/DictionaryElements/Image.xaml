@@ -1,0 +1,33 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <BitmapImage x:Key="AppitizerImage" UriSource="../Images/AppitizerPublicDomain.png"  />
+    <BitmapImage x:Key="BreadImage" UriSource="../Images/BreadPublicDomain.png" />
+    <BitmapImage x:Key="BullImage" UriSource="../Images/BullPublicDomain.png" />
+    <BitmapImage x:Key="CakeImage" UriSource="../Images/CakePublicDomain.png" />
+    <BitmapImage x:Key="CookieImage" UriSource="../Images/CookiePublicDomain.png" />
+    <BitmapImage x:Key="FishImage" UriSource="../Images/FishPublicDomain.png" />
+    <BitmapImage x:Key="MealImage" UriSource="../Images/MealPublicDomain.png" />
+    <BitmapImage x:Key="PastryImage"  UriSource="../Images/PasteryPublicDomain.png" />
+    <BitmapImage x:Key="PigImage" UriSource="../Images/PigPublicDomain.png" />
+    <BitmapImage x:Key="PuddingImage" UriSource="../Images/PuddingPublicDomain.png" />
+    <BitmapImage x:Key="QuestionMarkImage" UriSource="../Images/QuestionMarkPublicDomain.png" />
+    <BitmapImage x:Key="SaladImage" UriSource="../Images/SaladPublicDomain.png" />
+    <BitmapImage x:Key="SheepImage" UriSource="../Images/SheepPublicDomain.png" />
+    <BitmapImage x:Key="SoupImage" UriSource="../Images/SoupPublicDomain.png" />
+    <BitmapImage x:Key="TurkeyImage" UriSource="../Images/TurkeyPublicDomain.png" />
+    <BitmapImage x:Key="BakedTurkeyImage" UriSource="../Images/BakedTurkeyPublicDomain.png"  />
+    <BitmapImage x:Key="BowlsImage" UriSource="../Images/BowlsPublicDomain.png" />
+    <BitmapImage x:Key="Cookie2Image" UriSource="../Images/Cookie2PublicDomain.png" />
+    <BitmapImage x:Key="CupcakeImage" UriSource="../Images/Cupcake2PublicDomain.png" />
+    <BitmapImage x:Key="TeaCupImage" UriSource="../Images/TeaCupPublicDomain.png" AutoPlay="False" />
+    <BitmapImage x:Key="BeansImage" UriSource="../Images/BeansPublicDomain.png" />
+    <BitmapImage x:Key="TofuImage" UriSource="../Images/TofuPublicDomain.png" />
+    <BitmapImage x:Key="EggsImage" UriSource="../Images/EggsPublicDomain.png" />
+    <BitmapImage x:Key="CheeseImage" UriSource="../Images/CheesePublicDomain.png" />
+    <BitmapImage x:Key="CandyImage" UriSource="../Images/CandyPublicDomain.png" />
+    <BitmapImage x:Key="DoughtnutImage" UriSource="../Images/DoughnutPublicDomain.png" />
+    <BitmapImage x:Key="ApplicationIcon" UriSource="../Images/CupcakeTrayIcon.ico" />
+
+</ResourceDictionary>

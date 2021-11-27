@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RecipeBuddy.Core": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

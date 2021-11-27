@@ -1,0 +1,89 @@
+﻿<Page
+    x:Class="RecipeBuddy.Views.ShellPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+    xmlns:helpers="using:RecipeBuddy.Helpers"
+    xmlns:views="using:RecipeBuddy.Views"
+    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:RecipeBuddy.Views"
+    mc:Ignorable="d">
+
+    <i:Interaction.Behaviors>
+        <ic:EventTriggerBehavior EventName="Loaded">
+            <ic:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
+        </ic:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
+
+    <winui:NavigationView
+        x:Name="navigationView"
+        IsBackButtonVisible="Visible"
+        IsBackEnabled="{x:Bind ViewModel.IsBackEnabled, Mode=OneWay}"
+        SelectedItem="{x:Bind ViewModel.Selected, Mode=OneWay}"
+        IsSettingsVisible="False"
+        PaneDisplayMode="Top"
+        Background="{ThemeResource SystemControlBackgroundAltHighBrush}">
+        <winui:NavigationView.MenuItems>
+            <!--
+            TODO WTS: Change the symbols for each item as appropriate for your app
+            More on Segoe UI Symbol icons: https://docs.microsoft.com/windows/uwp/style/segoe-ui-symbol-font
+            Or to use an IconElement instead of a Symbol see https://github.com/Microsoft/WindowsTemplateStudio/blob/release/docs/UWP/projectTypes/navigationpane.md
+            Edit String/en-US/Resources.resw: Add a menu item title for each page
+            -->
+            <winui:NavigationViewItem x:Uid="Shell_Login"  helpers:NavHelper.NavigateTo ="views:UserView" Content="Login/out"  />
+            <winui:NavigationViewItem x:Uid="Shell_Select" helpers:NavHelper.NavigateTo ="views:SelectedView"  Content="Make It" />
+            <winui:NavigationViewItem x:Uid="Shell_Search" helpers:NavHelper.NavigateTo ="views:SearchView" Content="Search"  />
+            <!--<winui:NavigationViewItem x:Uid="Shell_Edit" helpers:NavHelper.NavigateTo ="views:EditView" Content="Edit"  />
+            <winui:NavigationViewItem x:Uid="Shell_Upload" helpers:NavHelper.NavigateTo ="views:UploadView" Content="Upload"  />-->
+        </winui:NavigationView.MenuItems>
+
+        <i:Interaction.Behaviors>
+            <ic:EventTriggerBehavior EventName="ItemInvoked">
+                <ic:InvokeCommandAction Command="{x:Bind ViewModel.ItemInvokedCommand}" />
+            </ic:EventTriggerBehavior>
+        </i:Interaction.Behaviors>
+
+        <Grid>
+            <Frame x:Name="shellFrame"/>
+            <!--<Grid.RowDefinitions>
+                <RowDefinition Height="670"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>-->
+
+
+            <!--<StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="0"  Background="DarkGray">-->
+                <!--<Pivot x:Name="TabControl" SelectedIndex="{Binding Path=SelectedTabIndex}">-->
+                    <!--<PivotItem x:Name="SearchTab" Header="Search" FontWeight="Bold" FontSize="16">
+                                <local:SearchView/>
+                            </PivotItem>
+                            <PivotItem x:Name="WebTab" FontWeight="Bold" FontSize="16">
+                                <PivotItem.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="View:  "/>
+                                        <TextBlock x:Name="Count" Text="{Binding ListCount}" Foreground="Red"/>
+                                    </StackPanel>
+                                </PivotItem.Header>
+                            </PivotItem>
+                            <PivotItem x:Name="SelectedTab" Header="Make It!" FontWeight="Bold" FontSize="16">
+                                <local:SelectedView/>
+                            </PivotItem>
+                            <PivotItem x:Name="EditTab" Header="Edit"  FontWeight="Bold" FontSize="16">
+                                <local:EditView/>
+                            </PivotItem>
+                    <PivotItem x:Name="UploadTab" Header="Upload"  FontWeight="Bold" FontSize="16">
+                        <local:UploadView/>
+                    </PivotItem>-->
+                    <!--<PivotItem x:Name="UserTab" Header="Login\out"  FontWeight="Bold" FontSize="16">
+                        <local:UserView/>
+                    </PivotItem>-->
+                <!--</Pivot>-->
+            <!--</StackPanel>-->
+        </Grid>
+    </winui:NavigationView>
+</Page>

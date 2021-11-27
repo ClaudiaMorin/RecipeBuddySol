@@ -1,0 +1,53 @@
+﻿<Page x:Class="RecipeBuddy.Views.EditView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:RecipeBuddy.Views"
+    mc:Ignorable="d"
+    x:Name="EditTabView">
+
+    <StackPanel x:Name="SeachDockPanelUserControl">
+        <!--<Border BorderBrush="Gray" >
+            <StackPanel Orientation="Vertical">
+                <TextBox x:Name="Title" Style="{StaticResource TitleTbxStyleEdit}"  Text="{Binding Path=Title , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <Grid x:Name="MasterGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Background="Gray" x:Name="EditRecipeTopper" Grid.Column="0">
+                        <Grid.ColumnDefinitions >
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="btnNew" Grid.Column="0"  BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="New" Command="{Binding CmdNew}" ToolTipService.ToolTip="Enter a recipe from scratch!"/>
+                        <Button x:Name="btnRevert" Grid.Column="1"  BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Revert" Command="{Binding CmdRevert}" ToolTipService.ToolTip="Revert all changes made to the recipe." />
+                        <Button x:Name="btnSave"  Grid.Column="2"  BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Save" Command="{Binding CmdSave}" ToolTipService.ToolTip="Save the newly created recipe to the DB."/>
+                        <Button x:Name="btnClear" Grid.Column="3"  BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Clear" Command="{Binding CmdClear}" ToolTipService.ToolTip="Clears the recipe from the edit panel without saving." />
+                        <Button x:Name="btnBorrow" Grid.Column="4" BorderThickness="2" BorderBrush="Gray" Background="#e0eaf8" Style="{StaticResource BtnStyleStandard}" Content="Borrow" Command="{Binding CmdOpenBorrow}" ToolTipService.ToolTip="Open a selected recipe to copy elements." />
+                        <Button x:Name="btnClose" Grid.Column="4"  BorderThickness="2" BorderBrush="Gray" Background="#e0eaf8" Foreground="Red" Style="{StaticResource BtnStyleStandard}" Visibility="{Binding CloseButtonVisibilty}"  Content="Close" Command="{Binding CmdCloseBorrow}"/>
+                    </Grid>
+                    <ComboBox x:Name="RecipesInComboBox" Grid.Column="1" DisplayMemberPath="Title" ItemsSource="{Binding RecipiesList, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding IndexOfComboBoxItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="#e0eaf8" ToolTipService.ToolTip="List of selected recipes." >
+                        --><!--<i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction x:Name="ICommandSelectItemChanged" Command="{Binding CmdSelectedItemChanged}" PassEventArgsToCommand="True" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>--><!--
+                    </ComboBox>
+                </Grid>
+                <Grid Background="Gray" x:Name="DetailsPanels">
+                    <Grid.ColumnDefinitions >
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition x:Name="RecipeCardBorrow" Width="{Binding Path=BorrowWidthSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid.ColumnDefinitions>
+                    <local:RecipeDetailsPanelForEdit Grid.Column="0"  x:Name="EditPanel"/>
+                    <local:RecipeDetailsPanelTextBoxCopyOnly Grid.Column="1" x:Name="BorrowPanel"/>
+                </Grid>
+            </StackPanel>
+        </Border>-->
+    </StackPanel>
+</Page>

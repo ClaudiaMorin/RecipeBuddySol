@@ -1,0 +1,26 @@
+﻿<Application
+    x:Class="RecipeBuddy.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls">
+
+    <Application.Resources>
+        <controls:XamlControlsResources>
+            <controls:XamlControlsResources.MergedDictionaries>
+                <ResourceDictionary Source="DictionaryElements/_Colors.xaml" />
+                <ResourceDictionary Source="DictionaryElements/_FontSizes.xaml" />
+                <ResourceDictionary Source="DictionaryElements/_Thickness.xaml" />
+                <ResourceDictionary Source="DictionaryElements/Image.xaml" />
+                <ResourceDictionary Source="DictionaryElements/Row.xaml"/>
+                <ResourceDictionary Source="DictionaryElements/Templates.xaml" />
+                <ResourceDictionary Source="DictionaryElements/TextBox.xaml" />
+                <ResourceDictionary Source="DictionaryElements/TreeView.xaml" />
+                <ResourceDictionary Source="DictionaryElements/Button.xaml" />
+                <ResourceDictionary Source="DictionaryElements/Triggers.xaml"/>
+                <ResourceDictionary Source="DictionaryElements/TextBlock.xaml" />
+                <ResourceDictionary Source="DictionaryElements/Page.xaml" />
+                <ResourceDictionary Source="DictionaryElements/Converter.xaml" />
+            </controls:XamlControlsResources.MergedDictionaries>
+        </controls:XamlControlsResources>
+    </Application.Resources>
+</Application>

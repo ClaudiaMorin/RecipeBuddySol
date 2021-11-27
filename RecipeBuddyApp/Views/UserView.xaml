@@ -1,0 +1,82 @@
+﻿<Page x:Class="RecipeBuddy.Views.UserView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="using:RecipeBuddy.Views"
+             xmlns:viewmodels="using:RecipeBuddy.ViewModels"
+             d:DataContext="{d:DesignInstance Type=viewmodels:UserViewModel}"
+             mc:Ignorable="d" 
+             x:Name="UserTabView">
+
+    <StackPanel  Background="#eee">
+        <local:AppHeader/>
+        <Grid>
+            <Grid.ColumnDefinitions >
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="6*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel x:Name="UserLoginStackPanel" Grid.Column="0" Margin="10, 10, 10, 10" >
+                <TextBlock x:Name="Login" Text="User Login" TextAlignment="Center" Margin=" 0, 0, 0, 50" FontSize="30" />
+                <TextBlock x:Name="AccountLable" Text="Account"/>
+                <ComboBox x:Name="AccountNames" Grid.Column="0" MinWidth="100" ItemsSource="{Binding ListOfUserAccountsInDB}" SelectedIndex="{Binding SelectedComboBoxIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin=" 0, 0, 0, 20"/>
+                <TextBlock x:Name="PasswordLable"  Text="Password:"/>
+
+                <PasswordBox Password="{Binding PasswordString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                         x:Name="Password" MaxLength="20" PasswordChar="*" PasswordChanged="UserPassword_PasswordChanged" Margin="0, 0, 0, 10" IsEnabled="{Binding PasswordBoxEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Text="Pick 3 sites to search:" FontSize="20" Margin="0, 10"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <CheckBox x:Name="EpicuriousSelection" Grid.Row="0" Grid.Column="0" Content="Epicurious" Margin="0, 5" IsChecked="{Binding EpicuriousCheckBoxChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding EpicuriousCheckBoxEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox x:Name="FoodNetwork" Grid.Row="0" Grid.Column="1" Content="Food Network" Margin="0, 5" IsChecked="{Binding FoodNetworkCheckBoxChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding FoodNetworkCheckBoxEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox x:Name="AllRecipesSelection" Grid.Row="0" Grid.Column="2" Content="All Recipes"  Margin="0, 5" IsChecked="{Binding AllRecipesCheckBoxChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding AllRecipesCheckBoxEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox x:Name="SouthernLiving" Grid.Row="1" Grid.Column="0"  Content="Southern Living" Margin="0, 5"  IsChecked="{Binding SouthernLivingCheckBoxChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SouthernLivingCheckBoxEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox x:Name="Tasty" Grid.Row="1" Grid.Column="1" Content="Tasty" Margin="0, 5"  IsChecked="{Binding TastyCheckBoxChecked}" IsEnabled="{Binding TastyCheckBoxEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox x:Name="FoodAndWine" Grid.Row="1" Grid.Column="2" Content="Food And Wine" Margin="0, 5"  IsChecked="{Binding FoodAndWineCheckBoxChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding FoodAndWineCheckBoxEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+
+                <Border BorderThickness="3" BorderBrush="DarkGray" Margin="0, 5"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="btnLogin"  BorderThickness="2" BorderBrush="Gray" Width="120" Height="35"  Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Login" Margin="0, 5" Command="{Binding CmdLoginBtn}" />
+                    <Button x:Name="btnLogout" BorderThickness="2" BorderBrush="Gray" Width="120" Height="35" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Log out" Margin="0, 5" Command="{Binding CmdLogoutBtn}"/>
+                </StackPanel>
+
+            </StackPanel>   
+            <StackPanel Grid.Column="2" x:Name="NewUserStackPanel" Margin="10, 10, 10, 10">
+                <TextBlock x:Name="NewAccount" Text="New User Account" TextAlignment="Center" Margin="0, 0, 0, 50" FontSize="30" />
+                <TextBlock x:Name="NewNameLable" Text="Account Name:" />
+                <TextBox x:Name="NewAccountName" Text="{Binding NewAccountName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin=" 0, 0, 0, 20" IsEnabled="{Binding PasswordBoxEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock x:Name="NewPasswordLable" Text="User  Password:"/>
+                <PasswordBox x:Name="NewPassword"  Password="{Binding NewPasswordString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  MaxLength="20" PasswordChar="*" PasswordChanged="UserPassword_PasswordChanged"   
+                         Margin="0, 0, 0, 10" IsEnabled="{Binding PasswordBoxEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                
+                <TextBlock x:Name="NewPasswordLableConfirm" Text="Confirm Password:"/>
+                <PasswordBox Password="{Binding NewPasswordString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                         x:Name="NewConfirmPassword" MaxLength="20" PasswordChar="*" PasswordChanged="UserPassword_PasswordChanged" Margin="0, 0, 0, 10" IsEnabled="{Binding PasswordBoxEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <Border BorderThickness="3" BorderBrush="DarkGray" Margin="0, 5"/>
+                <Button x:Name="btnCreateAccount" BorderThickness="2" HorizontalAlignment="Center" BorderBrush="Gray" Width="120" Height="35" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Create User" Command="{Binding CmdCreateUserbtn}"/>
+            </StackPanel>
+        </Grid>
+
+        <TextBlock Text="About" FontSize="20" TextAlignment="Center" Margin=" 0, 0, 0, 20"/>
+        <TextBlock Text="RecipeBuddy a private, digital repository of recipes that have been searched, selected, altered, or newly created and then saved to a database on the users computer" TextWrapping="Wrap" />
+        <Border BorderThickness="10"/>
+        <TextBlock Text="RecipeBuddy is the sole creation of Claudia Morin and is distributed free of charge, all rights reserved." />
+        <Border BorderThickness="10"/>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock x:Name="HyperlinkPublicDomain" Text="All images sorced from:  "/>
+            <HyperlinkButton NavigateUri="https://publicdomainvectors.org/en" >
+                <TextBlock Text=" PublicDomainVectors.org"/>
+            </HyperlinkButton>
+        </StackPanel>
+    </StackPanel>
+</Page>

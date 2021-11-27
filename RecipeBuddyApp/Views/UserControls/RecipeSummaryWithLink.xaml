@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="RecipeBuddy.Views.RecipeSummaryWithLink"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RecipeBuddy.Views"
+             mc:Ignorable="d" >
+    <StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="16"/>
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="WebsiteHyperlink" TextAlignment="left" Grid.Column= "0" Grid.Row="0" FontSize="14">
+                <!--<Hyperlink NavigateUri="{Binding Path=Link, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" RequestNavigate="Hyperlink_RequestNavigate" ToolTipService.ToolTip="{Binding Path=Link, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock Text="{Binding Path=Website, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </Hyperlink>-->
+            </TextBlock>
+            <TextBlock x:Name="Author" TextAlignment="right" Grid.Column= "1" Grid.Row="0" FontSize="14" Text="{Binding Path=Author, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock x:Name="Type" TextAlignment="Left" Grid.Column= "0" Grid.Row="1" FontSize="14" Text="{Binding Path=Recipe_Type, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+        <Border BorderThickness="2" BorderBrush="DarkGray"/>
+        <TextBlock x:Name="Description" TextAlignment="Left" FontSize="14" TextWrapping="Wrap" Text="{Binding Path=Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,54 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--#region  DataTemplates -->
+
+    <DataTemplate x:Key="RecipeNameTemplate">
+        <TreeViewItem Content="{Binding Path=Title}"/>
+    </DataTemplate>
+
+
+    <!--#endregion DataTemplates-->
+
+    <!--#region  Control Templates -->
+
+    <!--<ControlTemplate x:Key="WebView">
+        <views:WebView/>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="SelectedView">
+        <views:SelectedView/>
+    </ControlTemplate>-->
+
+    <!--<DataTemplate DataType="{x:Type viewModels:UserViewModel}">
+        <views:UserView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type viewModels:SelectedViewModel}">
+        <views:SelectedView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type viewModels:SearchViewModel}">
+        <views:SearchView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type viewModels:EditViewModel}" x:Key="EditViewModelKey">
+        <views:EditView/>
+    </DataTemplate>-->
+
+    <ControlTemplate x:Key="TextBoxIngredientForEditPage">
+        <TextBox x:Name="IngredientEditPage" >
+            <!--<TextBox x:Name="IngredientEditPage" LosingFocus="{Binding CmdAddIngredientText}" >
+            <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="LostFocus">
+                        <i:InvokeCommandAction x:Name="ICommandAddText" Command="{Binding CmdAddIngredientText}"  PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>-->
+        </TextBox>
+    </ControlTemplate>
+
+    <!--#endregion Control Templates -->
+
+
+</ResourceDictionary>

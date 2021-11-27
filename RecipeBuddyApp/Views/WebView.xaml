@@ -1,0 +1,65 @@
+﻿<Page x:Class="RecipeBuddy.Views.WebView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="using:RecipeBuddy.Views"
+      xmlns:i="using:Microsoft.Xaml.Interactivity"
+      xmlns:i1="using:Microsoft.Xaml.Interactions.Core"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      x:Name="WebTabView">
+    <StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="670"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <local:RecipeTreeView Grid.Row="0" Grid.Column="0"/>
+
+            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                <StackPanel x:Name="SelectedControls"/>
+                <Border BorderBrush="Gray" BorderThickness="5"/>
+                <ScrollViewer VerticalScrollBarVisibility="Visible" >
+                    <StackPanel x:Name="MasterStackPanel"  Grid.Column="0" Orientation="Vertical" Background="White" Margin ="0,0,0,0">
+                        <Grid Background="Gray" x:Name="ControlsForSelectView">
+                            <Grid.ColumnDefinitions >
+                                <ColumnDefinition Width="10*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="RecipesInComboBox" Grid.Column="0" DisplayMemberPath="Link"  SelectedIndex="{Binding IndexOfComboBoxItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="List of selected Recipes" >
+                                <!--<i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction x:Name="ICommandSelectItemChanged" Command="{Binding CmdSelectedItemChanged}" PassEventArgsToCommand="True" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>-->
+                            </ComboBox>
+                            <Button x:Name="btnRemove" Grid.Column="1" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}"  Content="Remove" Command="{Binding CmdRemove}" ToolTipService.ToolTip="Click to remove recipe"  />
+                            <Button x:Name="btnSave" Grid.Column="3"  Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Save" Command="{Binding CmdSave}" ToolTipService.ToolTip="Click to save recipe under the selected Catagory" />
+                        </Grid>
+                        <Border BorderBrush="Gray" BorderThickness="3">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <!--<cefSharp:ChromiumWebBrowser x:Name="chrom" Grid.Column="0" Height="580" Address="{Binding CurrentLink, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <cefSharp:ChromiumWebBrowser Grid.Column="0" Height="580" x:Name="chrom" Address="google.com"/>-->
+                                <local:RecipeDetailsPanelForSelected x:Name="DetailsPanelForSelected"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</Page>
+
+
+                    
+
+
+

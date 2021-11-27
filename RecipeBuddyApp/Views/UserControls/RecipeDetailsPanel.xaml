@@ -1,0 +1,121 @@
+﻿<UserControl x:Class="RecipeBuddy.Views.RecipeDetailsPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
+             xmlns:local="using:RecipeBuddy.Views"
+             mc:Ignorable="d" >
+    <StackPanel>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="16"/>
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="Author" TextAlignment="Left" Grid.Column= "0" Grid.Row="0" FontSize="12" TextWrapping="Wrap" Text="{Binding Path=Author, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
+                <TextBlock TextAlignment="Right" FontSize="12"  Text="Category: "/>
+                <TextBlock x:Name="Type" TextAlignment="Left" FontSize="12" Grid.Column= "0" Grid.Row="1" TextWrapping="Wrap" Text="{Binding Path=Recipe_Type, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+            <TextBlock x:Name="TotalTime" TextAlignment="Right" Grid.Column= "1" Grid.Row="0" FontSize="12" TextWrapping="Wrap" Text="{Binding Path=TotalTime, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <HyperlinkButton x:Name="WebsiteHyperlink" NavigateUri="{Binding Path=Link, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column= "1" Grid.Row="1" >
+                <TextBlock Text="{Binding Path=Website, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </HyperlinkButton>
+            <!--<TextBlock x:Name="WebsiteHyperlink" TextAlignment="Right" Grid.Column= "1" Grid.Row="1" FontSize="12" TextWrapping="Wrap">-->
+
+                <!--<Hyperlink NavigateUri="{Binding Path=Link, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" RequestNavigate="Hyperlink_RequestNavigate" ToolTipService.ToolTip="{Binding Path=Link, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock Text="{Binding Path=Website, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </Hyperlink>-->
+            <!--</TextBlock>-->
+    </Grid>
+    <StackPanel x:Name="IngredientDirections">
+        <Border BorderThickness="2" BorderBrush="DarkGray"/>
+            <TextBlock x:Name="Ingredient1" Style ="{Binding Path=Ingredient1, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1 }" Text ="{Binding Path=Ingredient1}"/>
+        <Border BorderThickness="2" BorderBrush="DarkGray"/>
+            <TextBlock x:Name="Ingredient2" Style ="{Binding Path=Ingredient2, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0 }" Text ="{Binding Path=Ingredient2}"/>
+            <TextBlock x:Name="Ingredient3" Style ="{Binding Path=Ingredient3, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1 }" Text ="{Binding Path=Ingredient3}"/>
+            <TextBlock x:Name="Ingredient4" Style ="{Binding Path=Ingredient4, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0 }" Text ="{Binding Path=Ingredient4}"/>
+            <TextBlock x:Name="Ingredient5" Style ="{Binding Path=Ingredient5, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1 }" Text ="{Binding Path=Ingredient5}"/>
+            <TextBlock x:Name="Ingredient6" Style ="{Binding Path=Ingredient6, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient6}"/>
+            <TextBlock x:Name="Ingredient7" Style ="{Binding Path=Ingredient7, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1 }" Text ="{Binding Path=Ingredient7}"/>
+            <TextBlock x:Name="Ingredient8" Style ="{Binding Path=Ingredient8, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient8}"/>
+            <TextBlock x:Name="Ingredient9" Style ="{Binding Path=Ingredient9, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1 }" Text ="{Binding Path=Ingredient9}"/>
+            <TextBlock x:Name="Ingredient10" Style ="{Binding Path=Ingredient10, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient10}"/>
+            <TextBlock x:Name="Ingredient11" Style ="{Binding Path=Ingredient11, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1 }" Text ="{Binding Path=Ingredient11}"/>
+            <TextBlock x:Name="Ingredient12" Style ="{Binding Path=Ingredient12, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient12}"/>
+            <TextBlock x:Name="Ingredient13" Style ="{Binding Path=Ingredient13, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1 }" Text ="{Binding Path=Ingredient13}"/>
+            <TextBlock x:Name="Ingredient14" Style ="{Binding Path=Ingredient14, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient14}"/>
+            <TextBlock x:Name="Ingredient15" Style ="{Binding Path=Ingredient15, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1 }" Text ="{Binding Path=Ingredient15}"/>
+            <TextBlock x:Name="Ingredient16" Style ="{Binding Path=Ingredient16, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient16}"/>
+            <TextBlock x:Name="Ingredient17" Style ="{Binding Path=Ingredient17, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1 }" Text ="{Binding Path=Ingredient17}"/>
+            <TextBlock x:Name="Ingredient18" Style ="{Binding Path=Ingredient18, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient18}"/>
+            <TextBlock x:Name="Ingredient19" Style ="{Binding Path=Ingredient19, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1 }" Text ="{Binding Path=Ingredient19}"/>
+            <TextBlock x:Name="Ingredient20" Style ="{Binding Path=Ingredient20, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient20}"/>
+            <TextBlock x:Name="Ingredient21" Style ="{Binding Path=Ingredient21, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Ingredient21}"/>
+            <TextBlock x:Name="Ingredient22" Style ="{Binding Path=Ingredient22, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient22}"/>
+            <TextBlock x:Name="Ingredient23" Style ="{Binding Path=Ingredient23, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Ingredient23}"/>
+            <TextBlock x:Name="Ingredient24" Style ="{Binding Path=Ingredient24, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient24}"/>
+            <TextBlock x:Name="Ingredient25" Style ="{Binding Path=Ingredient25, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Ingredient25}"/>
+            <TextBlock x:Name="Ingredient26" Style ="{Binding Path=Ingredient26, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient26}"/>
+            <TextBlock x:Name="Ingredient27" Style ="{Binding Path=Ingredient27, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Ingredient27}"/>
+            <TextBlock x:Name="Ingredient28" Style ="{Binding Path=Ingredient28, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient28}"/>
+            <TextBlock x:Name="Ingredient29" Style ="{Binding Path=Ingredient29, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Ingredient29}"/>
+            <TextBlock x:Name="Ingredient30" Style ="{Binding Path=Ingredient30, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient30}"/>
+            <TextBlock x:Name="Ingredient31" Style ="{Binding Path=Ingredient31, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Ingredient31}"/>
+            <TextBlock x:Name="Ingredient32" Style ="{Binding Path=Ingredient32, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient32}"/>
+            <TextBlock x:Name="Ingredient33" Style ="{Binding Path=Ingredient33, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Ingredient33}"/>
+            <TextBlock x:Name="Ingredient34" Style ="{Binding Path=Ingredient34, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient34}"/>
+            <TextBlock x:Name="Ingredient35" Style ="{Binding Path=Ingredient35, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Ingredient35}"/>
+            <TextBlock x:Name="Ingredient36" Style ="{Binding Path=Ingredient36, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient36}"/>
+            <TextBlock x:Name="Ingredient37" Style ="{Binding Path=Ingredient37, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Ingredient37}"/>
+            <TextBlock x:Name="Ingredient38" Style ="{Binding Path=Ingredient38, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient38}"/>
+            <TextBlock x:Name="Ingredient39" Style ="{Binding Path=Ingredient39, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Ingredient39}"/>
+            <TextBlock x:Name="Ingredient40" Style ="{Binding Path=Ingredient40, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient40}"/>
+            <TextBlock x:Name="Ingredient41" Style ="{Binding Path=Ingredient41, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Ingredient41}"/>
+            <TextBlock x:Name="Ingredient42" Style ="{Binding Path=Ingredient42, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient42}"/>
+            <TextBlock x:Name="Ingredient43" Style ="{Binding Path=Ingredient43, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Ingredient43}"/>
+            <TextBlock x:Name="Ingredient44" Style ="{Binding Path=Ingredient44, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient44}"/>
+            <TextBlock x:Name="Ingredient45" Style ="{Binding Path=Ingredient45, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Ingredient45}"/>
+            <TextBlock x:Name="Ingredient46" Style ="{Binding Path=Ingredient46, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient46}"/>
+            <TextBlock x:Name="Ingredient47" Style ="{Binding Path=Ingredient47, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Ingredient47}"/>
+            <TextBlock x:Name="Ingredient48" Style ="{Binding Path=Ingredient48, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient48}"/>
+            <TextBlock x:Name="Ingredient49" Style ="{Binding Path=Ingredient49, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Ingredient49}"/>
+            <TextBlock x:Name="Ingredient50" Style ="{Binding Path=Ingredient50, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient50}"/>
+        <Border BorderThickness="2" BorderBrush="DarkGray"/>
+            <TextBlock x:Name="Direction1" Style ="{Binding Path=Direction1, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction1}"/>
+        <Border BorderThickness="2" BorderBrush="DarkGray"/>
+            <TextBlock x:Name="Direction2" Style ="{Binding Path=Direction2, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction2}"/>
+            <TextBlock x:Name="Direction3" Style ="{Binding Path=Direction3, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction3}"/>
+            <TextBlock x:Name="Direction4" Style ="{Binding Path=Direction4, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction4}"/>
+            <TextBlock x:Name="Direction5" Style ="{Binding Path=Direction5, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction5}"/>
+            <TextBlock x:Name="Direction6" Style ="{Binding Path=Direction6, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction6}"/>
+            <TextBlock x:Name="Direction7" Style ="{Binding Path=Direction7, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction7}"/>
+            <TextBlock x:Name="Direction8" Style ="{Binding Path=Direction8, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction8}"/>
+            <TextBlock x:Name="Direction9" Style ="{Binding Path=Direction9, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction9}"/>
+            <TextBlock x:Name="Direction10" Style ="{Binding Path=Direction10, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction10}"/>
+            <TextBlock x:Name="Direction11" Style ="{Binding Path=Direction11, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction11}"/>
+            <TextBlock x:Name="Direction12" Style ="{Binding Path=Direction12, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction12}"/>
+            <TextBlock x:Name="Direction13" Style ="{Binding Path=Direction13, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction13}"/>
+            <TextBlock x:Name="Direction14" Style ="{Binding Path=Direction14, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction14}"/>
+            <TextBlock x:Name="Direction15" Style ="{Binding Path=Direction15, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction15}"/>
+            <TextBlock x:Name="Direction16" Style ="{Binding Path=Direction16, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction16}"/>
+            <TextBlock x:Name="Direction17" Style ="{Binding Path=Direction17, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction17}"/>
+            <TextBlock x:Name="Direction18" Style ="{Binding Path=Direction18, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction18}"/>
+            <TextBlock x:Name="Direction19" Style ="{Binding Path=Direction19, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction19}"/>
+            <TextBlock x:Name="Direction20" Style ="{Binding Path=Direction20, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction20}"/>
+            <TextBlock x:Name="Direction21" Style ="{Binding Path=Direction21, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction21}"/>
+            <TextBlock x:Name="Direction22" Style ="{Binding Path=Direction22, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction22}"/>
+            <TextBlock x:Name="Direction23" Style ="{Binding Path=Direction23, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction23}"/>
+            <TextBlock x:Name="Direction24" Style ="{Binding Path=Direction24, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction24}"/>
+            <TextBlock x:Name="Direction25" Style ="{Binding Path=Direction25, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction25}"/>
+            <TextBlock x:Name="Direction26" Style ="{Binding Path=Direction26, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction26}"/>
+            <TextBlock x:Name="Direction27" Style ="{Binding Path=Direction27, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction27}"/>
+            <TextBlock x:Name="Direction28" Style ="{Binding Path=Direction28, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction28}"/>
+            <TextBlock x:Name="Direction29" Style ="{Binding Path=Direction29, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction29}"/>
+            <TextBlock x:Name="Direction30" Style ="{Binding Path=Direction30, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction30}"/>
+    </StackPanel>
+  </StackPanel>
+</UserControl>

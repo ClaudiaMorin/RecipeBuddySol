@@ -1,0 +1,14 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--<Style.Triggers>
+                <Trigger Property="IsEnabled"  Value="False">
+                    <Setter Property="Cursor" Value="Wait"/>
+                </Trigger>
+                <Trigger Property="IsEnabled"  Value="True">
+                    <Setter Property="Cursor" Value="Arrow"/>
+                </Trigger>
+        </Style.Triggers>-->
+
+</ResourceDictionary>

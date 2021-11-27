@@ -1,0 +1,143 @@
+﻿<Page x:Class="RecipeBuddy.Views.SearchView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:ui ="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:extensions="using:Microsoft.Toolkit.Extensions"
+    mc:Ignorable="d"
+    xmlns:local="using:RecipeBuddy.Views" 
+      x:Name="SeachTabView">
+    <!--<UserControl.InputBindings>
+        <KeyBinding Key="Return" Command="{Binding SearchButtonCmd}" />
+    </UserControl.InputBindings>-->
+
+    <StackPanel x:Name="SeachDockPanelUserControl" ui:FrameworkElementExtensions.Cursor ="{Binding CursorType, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+        <StackPanel Orientation="Horizontal" >
+            <Border BorderThickness="3" BorderBrush="Gray"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <TextBox x:Name="SearchTB" Grid.Column="0" Text="{Binding SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="30" Background="White" TextAlignment="left" FontSize="14"/>
+                <!--<Button x:Name="SearchButton" Grid.Column="1"  Style="{StaticResource BtnStyleSearch}" IsEnabled="{Binding SearchEnabled}" Content="{Binding RelativeSource={RelativeSource Mode=Self},  Path=IsEnabled, Converter={StaticResource SearchTitleChange}}" Command="{Binding SearchButtonCmd}"/>-->
+                <Button x:Name="SearchButton" Grid.Column="1" Height="30" Style="{StaticResource BtnStyleSearch}" IsEnabled="{Binding SearchTitleChangeConverter}" Command="{Binding SearchButtonCmd}" Content="{Binding SearchButtonTitle, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+            <StackPanel x:Name="searchControls" Orientation="Horizontal"/>
+
+        </StackPanel>
+            <Border BorderBrush="Gray" BorderThickness="5">
+                <Grid x:Name="RecipeStackPanelCollection" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                <ScrollViewer VerticalScrollBarVisibility="Visible" Grid.Column="0" x:Name="Search1Panel" >
+                    <StackPanel x:Name="MasterStackPanel1" Orientation="Vertical" Background="White" Margin ="0,0,0,0">
+                        <Border BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue">
+                            <TextBlock x:Name="Title1" Style="{StaticResource TitleTbkStyle}" Text="{Binding Path=Title, UpdateSourceTrigger=PropertyChanged}" />
+                        </Border>
+                        <Grid Background="Gray">
+                            <Grid.ColumnDefinitions >
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="65" />
+                                <ColumnDefinition Width="65" />
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="1" Grid.Row="0" BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue">
+                                <StackPanel x:Name="ListControls1" Orientation="Horizontal">
+                                    <!--<TextBlock x:Name="Progress" Margin="7,0,0,0" TextAlignment="Center"  Height="24" FontSize="14" Visibility="{Binding ElementName=TotalCount, Path=IsVisible, Converter={StaticResource BoolToVisibility}}" Text="{Binding Path=DisplayCurrentCardIndex, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock x:Name="Seperator" TextAlignment="Center" Height="24" FontSize="14" HorizontalAlignment="Center" Text="/" Visibility="{Binding ElementName=TotalCount, Path=IsVisible, Converter={StaticResource BoolToVisibility}}"/>-->
+                                    <TextBlock x:Name="Progress1" Margin="7,0,0,0" TextAlignment="Center"  Height="24" FontSize="14" Visibility="{Binding ElementName=TotalCount1, Converter={StaticResource BoolToVisibility}}" Text="{Binding Path=DisplayCurrentCardIndex, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBlock x:Name="Seperator1" TextAlignment="Center" Height="24" FontSize="14" HorizontalAlignment="Center" Text="/" Visibility="{Binding ElementName=TotalCount1, Converter={StaticResource BoolToVisibility}}"/>
+                                    <TextBlock x:Name="TotalCount1" TextAlignment="Center" Height="24" FontSize="14" HorizontalAlignment="Center" Visibility="{Binding Path=ListCountOfBlurbs, Converter={StaticResource IntToVisibility}}" Text="{Binding Path=ListCountOfBlurbs, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                            </Border>
+                            <Button x:Name="btnBack1" Height="30" Grid.Column="2" BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="&lt; Back" Command="{Binding CmdBackButton}"/>
+                            <Button x:Name="btnNext1" Height="30" Grid.Column="3" BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Next >" Command="{Binding CmdNextButton}"/>
+                            <Button x:Name="btnSelect1"  Height="30" Grid.Column="0" BorderThickness="2" BorderBrush="Gray"  Background="#eee" Style="{StaticResource BtnStyleStandard}" Content="Select" Command="{Binding CmdSelectButton}"/>
+                        </Grid>
+                        <Border BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue">
+                            <StackPanel Height="400">
+                                <local:RecipeSummaryWithLink x:Name="DetailsPanelView1"/>
+                            </StackPanel>
+                            
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+                <ScrollViewer VerticalScrollBarVisibility="Visible" Grid.Column="1" x:Name="SearchPanel2" >
+                    <StackPanel x:Name="MasterStackPanel2" Orientation="Vertical" Background="White" Margin ="0,0,0,0">
+                        <Border BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue">
+                            <TextBlock x:Name="Title2" Style="{StaticResource TitleTbkStyle}" Text="{Binding Path=Title, UpdateSourceTrigger=PropertyChanged}" />
+                        </Border>
+                        <Grid Background="Gray">
+                            <Grid.ColumnDefinitions >
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="65" />
+                                <ColumnDefinition Width="65" />
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="1" Grid.Row="0" BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue">
+                                <StackPanel x:Name="ListControls2" Orientation="Horizontal">
+                                    <!--<TextBlock x:Name="Progress" Margin="7,0,0,0" TextAlignment="Center"  Height="24" FontSize="14" Visibility="{Binding ElementName=TotalCount, Path=IsVisible, Converter={StaticResource BoolToVisibility}}" Text="{Binding Path=DisplayCurrentCardIndex, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock x:Name="Seperator" TextAlignment="Center" Height="24" FontSize="14" HorizontalAlignment="Center" Text="/" Visibility="{Binding ElementName=TotalCount, Path=IsVisible, Converter={StaticResource BoolToVisibility}}"/>-->
+                                    <TextBlock x:Name="Progress2" Margin="7,0,0,0" TextAlignment="Center"  Height="24" FontSize="14" Visibility="{Binding ElementName=TotalCount2, Converter={StaticResource BoolToVisibility}}" Text="{Binding Path=DisplayCurrentCardIndex, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBlock x:Name="Seperator2" TextAlignment="Center" Height="24" FontSize="14" HorizontalAlignment="Center" Text="/" Visibility="{Binding ElementName=TotalCount2, Converter={StaticResource BoolToVisibility}}"/>
+                                    <TextBlock x:Name="TotalCount2" TextAlignment="Center" Height="24" FontSize="14" HorizontalAlignment="Center" Visibility="{Binding Path=ListCountOfBlurbs, Converter={StaticResource IntToVisibility}}" Text="{Binding Path=ListCountOfBlurbs, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                            </Border>
+                            <Button x:Name="btnBack2" Height="30" Grid.Column="2" BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="&lt; Back" Command="{Binding CmdBackButton}"/>
+                            <Button x:Name="btnNext2" Height="30" Grid.Column="3" BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Next >" Command="{Binding CmdNextButton}"/>
+                            <Button x:Name="btnSelect2"  Height="30" Grid.Column="0" BorderThickness="2" BorderBrush="Gray"  Background="#eee" Style="{StaticResource BtnStyleStandard}" Content="Select" Command="{Binding CmdSelectButton}"/>
+                        </Grid>
+                        <Border BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue">
+                            <StackPanel Height="400">
+                                <local:RecipeSummaryWithLink x:Name="DetailsPanelView2"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+                <ScrollViewer VerticalScrollBarVisibility="Visible" Grid.Column="2" x:Name="SearchPanel3" >
+                    <StackPanel x:Name="MasterStackPanel3" Orientation="Vertical" Background="White" Margin ="0,0,0,0">
+                        <Border BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue">
+                            <TextBlock x:Name="Title3" Style="{StaticResource TitleTbkStyle}" Text="{Binding Path=Title, UpdateSourceTrigger=PropertyChanged}" />
+                        </Border>
+                        <Grid Background="Gray">
+                            <Grid.ColumnDefinitions >
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="65" />
+                                <ColumnDefinition Width="65" />
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="1" Grid.Row="0" BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue">
+                                <StackPanel x:Name="ListControls3" Orientation="Horizontal">
+                                    <!--<TextBlock x:Name="Progress" Margin="7,0,0,0" TextAlignment="Center"  Height="24" FontSize="14" Visibility="{Binding ElementName=TotalCount, Path=IsVisible, Converter={StaticResource BoolToVisibility}}" Text="{Binding Path=DisplayCurrentCardIndex, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock x:Name="Seperator" TextAlignment="Center" Height="24" FontSize="14" HorizontalAlignment="Center" Text="/" Visibility="{Binding ElementName=TotalCount, Path=IsVisible, Converter={StaticResource BoolToVisibility}}"/>-->
+                                    <TextBlock x:Name="Progress3" Margin="7,0,0,0" TextAlignment="Center"  Height="24" FontSize="14" Visibility="{Binding ElementName=TotalCount3, Converter={StaticResource BoolToVisibility}}" Text="{Binding Path=DisplayCurrentCardIndex, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBlock x:Name="Seperator3" TextAlignment="Center" Height="24" FontSize="14" HorizontalAlignment="Center" Text="/" Visibility="{Binding ElementName=TotalCount3, Converter={StaticResource BoolToVisibility}}"/>
+                                    <TextBlock x:Name="TotalCount3" TextAlignment="Center" Height="24" FontSize="14" HorizontalAlignment="Center" Visibility="{Binding Path=ListCountOfBlurbs, Converter={StaticResource IntToVisibility}}" Text="{Binding Path=ListCountOfBlurbs, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                            </Border>
+                            <Button x:Name="btnBack3" Height="30" Grid.Column="2" BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="&lt; Back" Command="{Binding CmdBackButton}"/>
+                            <Button x:Name="btnNext3" Height="30" Grid.Column="3" BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Next >" Command="{Binding CmdNextButton}"/>
+                            <Button x:Name="btnSelect3"  Height="30" Grid.Column="0" BorderThickness="2" BorderBrush="Gray"  Background="#eee" Style="{StaticResource BtnStyleStandard}" Content="Select" Command="{Binding CmdSelectButton}"/>
+                        </Grid>
+                        <Border BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue">
+                            <StackPanel Height="400">
+                                <local:RecipeSummaryWithLink x:Name="DetailsPanelView3"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+            </Grid>
+            </Border>
+    </StackPanel>
+</Page>

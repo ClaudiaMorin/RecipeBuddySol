@@ -1,0 +1,130 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--Common texts-->
+    <Style x:Key="PageTitleStyle" TargetType="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontWeight" Value="SemiLight" />
+        <Setter Property="FontSize" Value="{StaticResource LargeFontSize}" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+    </Style>
+
+    <Style x:Key="BodyTextStyle" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <Style x:Key="DescriptionTbkStyle" TargetType="TextBlock">
+        <Setter Property="TextAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontStyle" Value="Italic"/>
+    </Style>
+
+    <!--#region Styles-->
+
+    <Style x:Key="NormalTbkStyle" TargetType="TextBlock">
+        <Setter Property="TextAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="SelectionHighlightColor" Value="White"/>
+    </Style>
+
+    <Style x:Key="NormalTbkStyleRed" TargetType="TextBlock">
+        <Setter Property="TextAlignment" Value="Left" />
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="Foreground" Value="Red"/>
+        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+        <Setter Property="SelectionHighlightColor"  Value="White"/>
+    </Style>
+
+    <Style x:Key="CenterJustifiedTbkStyleRed" TargetType="TextBlock">
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="Foreground" Value="Red"/>
+        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+        <Setter Property="SelectionHighlightColor" Value="White"/>
+    </Style>
+
+    <Style x:Key="NormalTbkStyleYellow" TargetType="TextBlock">
+        <Setter Property="TextAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="SelectionHighlightColor" Value="#eee"/>
+    </Style>
+
+    <Style x:Key="NormalTbkStyleYellowRed" TargetType="TextBlock">
+        <Setter Property="TextAlignment" Value="Left" />
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+        <Setter Property="Foreground" Value="Red"/>
+        <Setter Property="SelectionHighlightColor" Value="#eee"/>
+    </Style>
+
+    <Style x:Key="CenterJustifiedTbkStyleYellowRed" TargetType="TextBlock">
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+        <Setter Property="Foreground" Value="Red"/>
+        <Setter Property="SelectionHighlightColor" Value="#eee"/>
+    </Style>
+
+    <Style x:Key="CollapsedTbkStyle" TargetType="TextBlock">
+        <Setter Property="Visibility" Value="Collapsed"/>
+    </Style>
+
+    <Style x:Key="SubHeaderTbkStyle" TargetType="TextBlock">
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="SelectionHighlightColor"  Value="LightSteelBlue"/>
+        <Setter Property="Height" Value="20" />
+    </Style>
+
+    <Style x:Key="TitleTbkStyle" TargetType="TextBlock">
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Height" Value="50"/>
+        <Setter Property="SelectionHighlightColor" Value="LightSteelBlue"/>
+    </Style>
+
+    <Style x:Key="TitleTbkStyleEdit" TargetType="TextBlock">
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Height" Value="42"/>
+        <Setter Property="SelectionHighlightColor" Value="LightSteelBlue"/>
+    </Style>
+
+    <Style x:Key="WarningTbkStyle" TargetType="TextBlock">
+        <Setter Property="TextAlignment" Value="left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="SelectionHighlightColor"  Value="#eee"/>
+        <Setter Property="Foreground" Value="red"/>
+        <Setter Property="Height" Value="20" />
+    </Style>
+
+</ResourceDictionary>
