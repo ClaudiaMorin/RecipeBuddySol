@@ -20,7 +20,7 @@ namespace RecipeBuddy.Views
             //DetailsPanelForSelected.NumXComboBox.DataContext = SelectedViewModel.Instance;
             //ControlsForSelectView.DataContext = SelectedViewModel.Instance;
             ////Wires the combobox to the list of recipes 
-            RecipesInComboBox.ItemsSource = SelectedViewModel.Instance.listOfRecipeCardsModel.RecipesList;
+            RecipesInComboBox.ItemsSource = SelectedViewModel.Instance.listOfRecipeModel.RecipesList;
 
             //DetailsPanelForSelected.EditRow2.DataContext = SelectedViewModel.Instance;
             //DetailsPanelForSelected.TextBox2.DataContext = SelectedViewModel.Instance;

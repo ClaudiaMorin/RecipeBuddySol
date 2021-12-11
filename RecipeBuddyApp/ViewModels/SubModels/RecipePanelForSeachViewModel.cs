@@ -8,24 +8,26 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using RecipeBuddy.Core.Scrapers;
 using RecipeBuddy.Core.Models;
 using System.Threading.Tasks;
-
+using System.Collections.Generic;
 
 namespace RecipeBuddy.ViewModels
 {
     public class RecipePanelForSearchViewModel : ObservableObject
     {
-        //public RecipeBlurbModel recipeBlurbModel;
         public Type_of_Websource type_Of_Source;
-        public RecipeBlurbListModel listOfRecipeBlurbModel;
+        public RecipeListModel listOfRecipeModel;
+        public RecipeDisplayModel recipeCard;
+
         Action ActionShowCurrentEntry;
         Func<bool> FuncBool;
         Action Action;
         /// <summary>
         /// URLList is used by the Scraper and GenerateSearchResults to pull the URL of all the found recipes 
         /// </summary>
-        public RecipePanelForSearchViewModel(RecipeBlurbListModel listOfRecipeCardsModel)
+        public RecipePanelForSearchViewModel(RecipeListModel listOfRecipeCardsModel)
         {
-            listOfRecipeBlurbModel = listOfRecipeCardsModel;
+            listOfRecipeModel = listOfRecipeCardsModel;
+            recipeCard = new RecipeDisplayModel();
         }
 
         /// <summary>
@@ -35,12 +37,8 @@ namespace RecipeBuddy.ViewModels
         public RecipePanelForSearchViewModel(Type_of_Websource type)
         {   
             type_Of_Source = type;
-            listOfRecipeBlurbModel = new RecipeBlurbListModel();
-            description = "";
-            title = "";
-            Author = "";
-            Website = "";
-            Link = "";
+            recipeCard = new RecipeDisplayModel();
+            listOfRecipeModel = new RecipeListModel();
             canSelectBack = false;
             canSelectNext = false;
             canSelectSelect = false;
@@ -48,7 +46,6 @@ namespace RecipeBuddy.ViewModels
             CmdNextButton = new RBRelayCommand(Action = () => ShowNextEntry(), FuncBool = () => CanSelectNext);
             CmdBackButton = new RBRelayCommand(Action = () => ShowPreviousEntry(), FuncBool = () => CanSelectBack);
             CmdSelectButton = new RBRelayCommand(Action = () => AddToSelectedList(), FuncBool = () => CanSelectSelect);
-            //CmdRemoveButton = new RBRelayCommand(Action = () => RemoveRecipe(), FuncBool = () => CanSelect);
         }
 
         /// <summary>
@@ -57,13 +54,8 @@ namespace RecipeBuddy.ViewModels
         public RecipePanelForSearchViewModel()
         {
             type_Of_Source = Type_of_Websource.None;
-            description = "Some Description";
-            title = "Some Title";
-            Author = "Some Author";
-            Website = "Some Website";
-            Link = "Some link";
-            Recipe_Type = Type_Of_Recipe.Unknown;
-            listOfRecipeBlurbModel = new RecipeBlurbListModel();
+            listOfRecipeModel = new RecipeListModel();
+            recipeCard = new RecipeDisplayModel();
             CanSelectBack = false;
             CanSelectNext = false;
             CanSelectSelect = false;
@@ -80,7 +72,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         internal void AddToSelectedList()
         {
-            //WebViewModel.Instance.AddToListOfRecipeCards(listOfRecipeBlurbModel.GetCurrentEntry());
+            WebViewModel.Instance.AddToListOfRecipeCards(listOfRecipeModel.GetCurrentEntry());
         }
 
         /// <summary>
@@ -99,7 +91,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void ClearRecipeBlurbModelList()
         {
-            listOfRecipeBlurbModel.ClearList();
+            listOfRecipeModel.ClearList();
         }
 
         /// <summary>
@@ -107,7 +99,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void ShowCurrentEntry()
         {
-            UpdateRecipeEntry(listOfRecipeBlurbModel.GetCurrentEntry());
+            UpdateRecipeEntry(listOfRecipeModel.GetCurrentEntry());
         }
 
         /// <summary>
@@ -115,7 +107,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void ShowCurrentEntryAndActivateButtons()
         {
-            UpdateRecipeEntry(listOfRecipeBlurbModel.GetCurrentEntry());
+            UpdateRecipeEntry(listOfRecipeModel.GetCurrentEntry());
 
             CanSelectSelect = true;
             CmdSelectButton.RaiseCanExecuteChanged();
@@ -129,13 +121,13 @@ namespace RecipeBuddy.ViewModels
         /// Used by the nextbutton to show the next entry in the list
         /// </summary>
         public void ShowNextEntry()
-        {UpdateRecipeEntry(listOfRecipeBlurbModel.GetNextEntryInLoop());}
+        {UpdateRecipeEntry(listOfRecipeModel.GetNextEntryInLoop());}
 
         /// <summary>
         /// Used by the backbutton to show the previous entry in the list
         /// </summary>
         public void ShowPreviousEntry()
-        {UpdateRecipeEntry(listOfRecipeBlurbModel.GetPreviousEntryInLoop());}
+        {UpdateRecipeEntry(listOfRecipeModel.GetPreviousEntryInLoop());}
 
 
         /// <summary>
@@ -148,7 +140,7 @@ namespace RecipeBuddy.ViewModels
         {
 
             ActionShowCurrentEntry = () => ShowCurrentEntryAndActivateButtons();
-            int results = await GenerateSearchResultsLists.SearchSitesAndGenerateEntryList(searchTerms, listOfRecipeBlurbModel, type_Of_Source, ActionShowCurrentEntry, coreApplicationView);
+            int results = await GenerateSearchResultsLists.SearchSitesAndGenerateEntryList(searchTerms, listOfRecipeModel, type_Of_Source, ActionShowCurrentEntry, coreApplicationView);
 
             if (results == -1)
             {
@@ -178,17 +170,12 @@ namespace RecipeBuddy.ViewModels
         /// Adds the ingredents and Directions dynamically and then deletes them before the new recipe is replacing the old one.
         /// </summary>
         /// <param name="reSource">The new RecipeCard which we will use to overwrite the old values</param>
-        private void UpdateRecipeEntry(RecipeBlurbModel reSource)
+        private void UpdateRecipeEntry(RecipeRecordModel reSource)
         {
             if (reSource == null)
                 return;
 
-            Description = string.Copy(reSource.Description);
-            Title = string.Copy(reSource.Title);
-            Author = reSource.Author;
-            Website = reSource.Website;
-            Link = reSource.Link;
-            Recipe_Type = reSource.Recipe_Type;
+            recipeCard.UpdateRecipeDisplayFromRecipeRecord(reSource);
         }
 
         public void ClearRecipeEntry()
@@ -196,12 +183,13 @@ namespace RecipeBuddy.ViewModels
             Description = "";
             Title = ""; 
             Author = ""; 
-            Website = ""; 
-            Link = ""; 
+            Website = Type_of_Websource.None; 
+            Link = null; 
             Recipe_Type = Type_Of_Recipe.Unknown;
             CanSelectBack = false;
             CanSelectNext = false;
-            CanSelectSelect = false;  
+            CanSelectSelect = false;
+            //listOfIngredientStringsForDisplay.Clear();
         }
 
         //private void Hyperlink_Navigate( RequestNavigateEventArgs arg)
@@ -215,23 +203,23 @@ namespace RecipeBuddy.ViewModels
 
         public void RemoveRecipe()
         {
-            if (listOfRecipeBlurbModel.RecipiesBlurbList.Count > 0)
+            if (listOfRecipeModel.RecipesList.Count > 0)
             {
-                listOfRecipeBlurbModel.Remove(listOfRecipeBlurbModel.CurrentCardIndex);
-                if (listOfRecipeBlurbModel.CurrentCardIndex > 0)
-                    listOfRecipeBlurbModel.CurrentCardIndex = listOfRecipeBlurbModel.CurrentCardIndex - 1;
+                listOfRecipeModel.Remove(listOfRecipeModel.CurrentCardIndex);
+                if (listOfRecipeModel.CurrentCardIndex > 0)
+                    listOfRecipeModel.CurrentCardIndex = listOfRecipeModel.CurrentCardIndex - 1;
 
                 ShowCurrentEntry();
                 return;
             }
         }
 
-        public RecipeBlurbModel selectRecipe
+        public RecipeRecordModel selectRecipe
         {
             get
             {
-                if (listOfRecipeBlurbModel.RecipiesBlurbList.Count > 0)
-                    return listOfRecipeBlurbModel.GetCurrentEntry();
+                if (listOfRecipeModel.RecipesList.Count > 0)
+                    return listOfRecipeModel.GetCurrentEntry();
 
                 else
                     return null;
@@ -312,8 +300,8 @@ namespace RecipeBuddy.ViewModels
             set { SetProperty(ref title, value); }
         }
 
-        private string link;
-        public string Link
+        private Uri link;
+        public Uri Link
         {
             get { return link; }
             set { SetProperty(ref link, value); }
@@ -333,26 +321,12 @@ namespace RecipeBuddy.ViewModels
             set { SetProperty(ref author, value); }
         }
 
-        private string website;
-        public string Website
+        private Type_of_Websource website;
+        public Type_of_Websource Website
         {
             get { return website; }
             set { SetProperty(ref website, value); }
         }
-
-        //private int listCount;
-        //public int ListCount
-        //{
-        //    get { return listCount; }
-        //    set { SetProperty(ref listCount, value); }
-        //}
-
-        //private int totalCount;
-        //public int TotalCount
-        //{
-        //    get { return totalCount; }
-        //    set { SetProperty(ref totalCount, value); }
-        //}
 
         #endregion
     }

@@ -8,6 +8,7 @@ using RecipeBuddy.Core.Scrapers;
 using System;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
+using RecipeBuddy.Core.Models;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -75,18 +76,20 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void SetUpUser()
         {
-            string name = ListOfUserAccountsInDB[SelectedComboBoxIndex];
+            string AccountName = ListOfUserAccountsInDB[SelectedComboBoxIndex];
 
-            //AccountName = DataBaseAccessorsForRecipeManager.LoadUserFromDatabase(PasswordSecureString, ListOfUserAccountsInDB[SelectedComboBoxIndex]);
-            AccountName = DataBaseAccessorsForRecipeManager.LoadUserFromDatabase(PasswordString, ListOfUserAccountsInDB[SelectedComboBoxIndex]);
+            UsersIDInDB = DataBaseAccessorsForRecipeManager.LoadUserFromDatabase(PasswordString, ListOfUserAccountsInDB[SelectedComboBoxIndex]);
             if (AccountName.Length > 0)
             {
                 SetUpSearchWebsources(false);
                 loggedin = true;
                 CanSelectLogout = true;
                 CanSelectLogin = false;
-
                 PasswordBoxEnabled = "false";
+                //Set Up TreeView
+                List<RecipeRecordModel> recipeRecords = DataBaseAccessorsForRecipeManager.LoadUserDataByID(AccountName, UsersIDInDB);
+                MainNavTreeViewModel.Instance.AddRecipeModelsToTreeView(recipeRecords);
+
                 //passwordSecureString.Clear();
                 //MainWindowViewModel.Instance.SelectedTabIndex = (int)MainWindowViewModel.Tabs.SearchTab;
             }
@@ -100,12 +103,11 @@ namespace RecipeBuddy.ViewModels
         public void LogOut()
         {
             MainWindowViewModel.Instance.mainTreeViewNav.ClearTree();
-            UsersIDInDB = "";
+            UsersIDInDB = -1;
             AccountName = "";
             UserName = "";
             NewAccountName = "";
             
-
             EpicuriousCheckBoxChecked = false;
             EpicuriousCheckBoxEnabled = true;
 
@@ -150,8 +152,6 @@ namespace RecipeBuddy.ViewModels
         //private void SaveUser(string NewAccountName, string NewEmail, string UserName, SecureString NewPasswordSecureString, SecureString NewConfirmPasswordSecureString)
         private void SaveUser()
         {
-            //byte[] bytePassword = PasswordHashing.CalculateHash(StringToByteArray.ConvertSecureStringToByteArray(NewPasswordSecureString));
-            //byte[] bytePasswordCheck = PasswordHashing.CalculateHash(StringToByteArray.ConvertSecureStringToByteArray(NewConfirmPasswordSecureString));
             byte[] bytePassword = PasswordHashing.CalculateHash(ConvertingStringToByteArray.ConvertStringToByteArray(NewPasswordString));
             byte[] bytePasswordCheck = PasswordHashing.CalculateHash(ConvertingStringToByteArray.ConvertStringToByteArray(NewConfirmPasswordString));
 
@@ -166,8 +166,6 @@ namespace RecipeBuddy.ViewModels
 
             //Reset the "Create Password" section to empty strings.
             NewAccountName = "";
-            //NewPasswordSecureString = null;
-            //NewConfirmPasswordSecureString = null;
             NewPasswordString = "";
             NewConfirmPasswordString = "";
         }
@@ -229,8 +227,8 @@ namespace RecipeBuddy.ViewModels
             set { SetProperty(ref passwordBoxEnabled, value);}
         }
 
-        private string usersIDInDB;
-        public string UsersIDInDB
+        private int usersIDInDB;
+        public int UsersIDInDB
         {
             get { return usersIDInDB; }
             set { SetProperty(ref usersIDInDB, value);}
@@ -319,11 +317,11 @@ namespace RecipeBuddy.ViewModels
             private set;
         }
 
-        public ICommand CmdHyperlinkNav
-        {
-            get;
-            private set;
-        }
+        //public ICommand CmdHyperlinkNav
+        //{
+        //    get;
+        //    private set;
+        //}
 
 
         /// <summary>

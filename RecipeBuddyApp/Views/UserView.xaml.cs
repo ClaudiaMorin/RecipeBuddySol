@@ -11,11 +11,20 @@ namespace RecipeBuddy.Views
     /// </summary>
     public partial class UserView : Page
     {
-
+        public RecipeTreeView recipeTreeView;
         public UserView()
         {
-            InitializeComponent();
-            DataContext = UserViewModel.Instance;
+            try
+            {
+                InitializeComponent();
+                DataContext = UserViewModel.Instance;
+                //SavedRecipesTreeView.DataContext = MainNavTreeViewModel.Instance;
+            }
+            catch (System.Exception e)
+            {
+                string stuff = "stuf";
+            }
+
         }
 
         /// <summary>

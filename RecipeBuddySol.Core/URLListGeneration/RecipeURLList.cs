@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
 
 namespace RecipeBuddy.Core.Models
@@ -12,7 +13,7 @@ namespace RecipeBuddy.Core.Models
         static readonly int MaxEntries = 20;
 
         //List of the Recipe links generated from the user's search terms
-        public List<string> RecipeURLsList;
+        public List<Uri> RecipeURLsList;
 
         //The index of the next valid URL to be returned to a caller
         private int RecipeURLNextIndex;
@@ -21,7 +22,7 @@ namespace RecipeBuddy.Core.Models
         public RecipeURLLists()
         {
             uRLListCount = 0;
-            RecipeURLsList = new List<string>();
+            RecipeURLsList = new List<Uri>();
             RecipeURLNextIndex = 0;
         }
 
@@ -36,7 +37,7 @@ namespace RecipeBuddy.Core.Models
         //Checks to verify that there is still space under the 
         //MaxEntries Cap and if so it adds the new URL and returns 0
         //if not it returns -1
-        public int Add(string url)
+        public int Add(Uri url)
         {
             if (URLListCount >= MaxEntries )
             {
@@ -50,14 +51,14 @@ namespace RecipeBuddy.Core.Models
 
         //Returns the next URL in the list to the caller, if there isn't another URL
         // because we are at the limit of the list we will return a blank string
-        public string GetNextURL()
+        public Uri GetNextURL()
         {
             if (RecipeURLNextIndex >= RecipeURLsList.Count)
             {
-                return "";
+                return null;
             }
 
-            string strReturn = RecipeURLsList[RecipeURLNextIndex];
+            Uri strReturn = RecipeURLsList[RecipeURLNextIndex];
             RecipeURLNextIndex++;
 
             return strReturn;
@@ -65,14 +66,14 @@ namespace RecipeBuddy.Core.Models
 
         //Returns the next URL in the list to the caller, if there isn't another URL
         // because we are at the limit of the list we will return a blank string
-        public string GetNextAllRecipesURL()
+        public Uri GetNextAllRecipesURL()
         {
             if (RecipeURLNextIndex >= RecipeURLsList.Count)
             {
-                return "";
+                return null;
             }
 
-            string strReturn = RecipeURLsList[RecipeURLNextIndex];
+            Uri strReturn = RecipeURLsList[RecipeURLNextIndex];
             RecipeURLNextIndex++;
 
             return strReturn;

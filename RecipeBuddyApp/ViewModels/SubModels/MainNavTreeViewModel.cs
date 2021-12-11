@@ -7,12 +7,17 @@ using RecipeBuddy.ViewModels.Commands;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using RecipeBuddy.Core.Models;
 using RecipeBuddy.Core.Helpers;
+using Windows.UI.Popups;
+using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 
 namespace RecipeBuddy.ViewModels
 {
+    
 
     public class MainNavTreeViewModel : ObservableObject
     {
+        Action<Object> actionRecipeDisplayModel;
 
         private static readonly MainNavTreeViewModel instance = new MainNavTreeViewModel();
         public static MainNavTreeViewModel Instance
@@ -25,77 +30,92 @@ namespace RecipeBuddy.ViewModels
 
         private MainNavTreeViewModel()
         {
-            SavedCakeRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            cakeExp = false;
-            SavedCandyRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            candyExp = false;
-            SavedCookieRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            cookieExp = false;
-            SavedCustardRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            custardExp = false;
-            SavedPastryRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            pastryExp = false;
-            SavedSoupStewRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            soupStewExp = false;
-            SavedPorkRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            porkExp = false;
-            SavedPoultryRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            poultryExp = false;
-            SavedBeefRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            beefExp = false;
-            SavedLambRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            lambExp = false;
-            SavedSeafoodRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            seafoodExp = false;
-            SavedSaladRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            saladExp = false;
-            SavedAppetizerRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            appetizerExp = false;
-            SavedBreadRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            breadExp = false;
-            SavedSideDishRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            sideDishExp = false;
-            SavedTofuRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            tofuExp = false;
-            SavedDairyRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            DairyExp = false;
-            SavedEggsRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            EggsExp = false;
-            SavedUnknownRecipes = new ObservableCollection<RecipeCardTreeItem>();
-            unknownExp = false;
+            RecipeTreeRootNodes = new ObservableCollection<RecipeTreeItem>();
+            CmdSaveDialog = new RBRelayCommandObj(actionRecipeDisplayModel = (RD) => AddRecipeToTreeView((RecipeDisplayModel)RD));
+
+            DessertRecipes = new RecipeTreeItem("Desserts");
+            MainCourseRecipes = new RecipeTreeItem("Main Courses");
+            SavedCakeRecipes = new RecipeTreeItem("Cake");
+            SavedCandyRecipes = new RecipeTreeItem("Candy");
+            SavedCookieRecipes = new RecipeTreeItem("Cookie");
+            SavedCustardRecipes = new RecipeTreeItem("Custard");
+            SavedPastryRecipes = new RecipeTreeItem("Pastry");
+            SavedUnknownRecipes = new RecipeTreeItem("Unknown");
+            SavedSoupStewRecipes = new RecipeTreeItem("Soup and Stews");
+            SavedPorkRecipes = new RecipeTreeItem("Pork");
+            SavedDairyRecipes = new RecipeTreeItem("Dairy");
+            SavedBeefRecipes = new RecipeTreeItem("Beef");
+            SavedEggsRecipes = new RecipeTreeItem("Eggs");
+            SavedPoultryRecipes = new RecipeTreeItem("Poultry");
+            SavedSeafoodRecipes = new RecipeTreeItem("Seafood");
+            SavedLambRecipes = new RecipeTreeItem("Lamb");
+            SavedSaladRecipes = new RecipeTreeItem("Salad");
+            SavedAppetizerRecipes = new RecipeTreeItem("Appetizer");
+            SavedBreadRecipes = new RecipeTreeItem("Bread");
+            SavedSideDishRecipes = new RecipeTreeItem("Side Dish");
+            SavedTofuRecipes = new RecipeTreeItem("Tofu");
+
             mainCourseExp = false;
             DessertExp = false;
+            cakeExp = false;
+            candyExp = false;
+            cookieExp = false;
+            custardExp = false;
+            pastryExp = false;
+            soupStewExp = false;
+            porkExp = false;
+            poultryExp = false;
+            beefExp = false;
+            lambExp = false;
+            seafoodExp = false;
+            saladExp = false;
+            appetizerExp = false;
+            breadExp = false;
+            sideDishExp = false;
+            tofuExp = false;
+            DairyExp = false;
+            EggsExp = false;
+            unknownExp = false;
 
-
-
+            CreateTreeViewHierarchy(RecipeTreeRootNodes);
             FillCatagoryCollectionForDropDown();
+
+            //Add User Data To Tree
+            List<RecipeRecordModel> recipesFromDB =  DataBaseAccessorsForRecipeManager.LoadUserDataByID(UserViewModel.Instance.UserName, UserViewModel.Instance.UsersIDInDB);   
         }
 
         /// <summary>
-        /// Observable collections so it will auto-update when nodes are removed and added
+        /// TreeViewNodes
         /// </summary>
-        public ObservableCollection<RecipeCardTreeItem> SavedCandyRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> SavedCakeRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> SavedCookieRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> SavedCustardRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> SavedPastryRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> SavedUnknownRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> SavedSoupStewRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> SavedPorkRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> SavedBeefRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> SavedDairyRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> SavedEggsRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> SavedPoultryRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> SavedSeafoodRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> SavedLambRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> SavedSaladRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> SavedAppetizerRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> SavedBreadRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> SavedSideDishRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> SavedTofuRecipes { get; set; }
-        public ObservableCollection<RecipeCardTreeItem> AddRemoveItem { get; set; }
-        public ObservableCollection<string> CatagoryTypes { get; set; }
 
+        public RecipeListModel listOfRecipeCards;
+
+        //public RecipeTreeItem RecipeTreeRoot;
+        public RecipeTreeItem DessertRecipes;
+        public RecipeTreeItem MainCourseRecipes;
+
+        public RecipeTreeItem SavedCakeRecipes;
+        public RecipeTreeItem SavedCandyRecipes;
+        public RecipeTreeItem SavedCookieRecipes;
+        public RecipeTreeItem SavedCustardRecipes;
+        public RecipeTreeItem SavedPastryRecipes;
+        public RecipeTreeItem SavedUnknownRecipes;
+        public RecipeTreeItem SavedSoupStewRecipes;
+        public RecipeTreeItem SavedPorkRecipes;
+        public RecipeTreeItem SavedDairyRecipes;
+        public RecipeTreeItem SavedBeefRecipes;
+        public RecipeTreeItem SavedEggsRecipes;
+        public RecipeTreeItem SavedPoultryRecipes;
+        public RecipeTreeItem SavedSeafoodRecipes;
+        public RecipeTreeItem SavedLambRecipes;
+        public RecipeTreeItem SavedSaladRecipes;
+        public RecipeTreeItem SavedAppetizerRecipes;
+        public RecipeTreeItem SavedBreadRecipes;
+        public RecipeTreeItem SavedSideDishRecipes;
+        public RecipeTreeItem SavedTofuRecipes;
+
+        public ObservableCollection<RecipeTreeItem> AddRemoveItem { get; set; }
+        public ObservableCollection<string> CatagoryTypes { get; set; }
 
         private void FillCatagoryCollectionForDropDown()
         {
@@ -107,37 +127,68 @@ namespace RecipeBuddy.ViewModels
             };
         }
 
+        public void CreateTreeViewHierarchy(ObservableCollection<RecipeTreeItem> RecipeTreeRoot)
+        {
+            RecipeTreeRoot.Add(SavedAppetizerRecipes);
+            RecipeTreeRoot.Add(SavedBreadRecipes);
+            RecipeTreeRoot.Add(SavedDairyRecipes);
+            RecipeTreeRoot.Add(DessertRecipes);
+            RecipeTreeRoot.Add(MainCourseRecipes);
+            RecipeTreeRoot.Add(SavedSaladRecipes);
+            RecipeTreeRoot.Add(SavedSideDishRecipes);
+            RecipeTreeRoot.Add(SavedSoupStewRecipes);
+            RecipeTreeRoot.Add(SavedUnknownRecipes);
+
+            DessertRecipes.Children.Add(SavedCakeRecipes);
+            DessertRecipes.Children.Add(SavedCandyRecipes);
+            DessertRecipes.Children.Add(SavedCookieRecipes);
+            DessertRecipes.Children.Add(SavedCustardRecipes);
+            DessertRecipes.Children.Add(SavedPastryRecipes);
+
+            MainCourseRecipes.Children.Add(SavedBeefRecipes);
+            MainCourseRecipes.Children.Add(SavedPorkRecipes);
+            MainCourseRecipes.Children.Add(SavedPoultryRecipes);
+            MainCourseRecipes.Children.Add(SavedLambRecipes);
+            MainCourseRecipes.Children.Add(SavedEggsRecipes);
+            MainCourseRecipes.Children.Add(SavedSeafoodRecipes);
+            MainCourseRecipes.Children.Add(SavedTofuRecipes);
+        }
+
         /// <summary>
         /// Removes all recipes from the tree.
         /// </summary>
         public void ClearTree()
         {
-            SavedCakeRecipes.Clear();
-            SavedCandyRecipes.Clear();
-            SavedCookieRecipes.Clear();
-            SavedCustardRecipes.Clear();
-            SavedPastryRecipes.Clear();
-            SavedPoultryRecipes.Clear();
-            SavedPorkRecipes.Clear();
-            SavedBeefRecipes.Clear();
-            SavedSeafoodRecipes.Clear();
-            SavedSoupStewRecipes.Clear();
-            SavedLambRecipes.Clear();
-            SavedBreadRecipes.Clear();
-            SavedSaladRecipes.Clear();
-            SavedAppetizerRecipes.Clear();
-            SavedSideDishRecipes.Clear();
-            SavedUnknownRecipes.Clear();
-            SavedTofuRecipes.Clear();
-            SavedDairyRecipes.Clear();
-            SavedEggsRecipes.Clear();
+            SavedCakeRecipes.Children.Clear();
+            SavedCandyRecipes.Children.Clear();
+            SavedCookieRecipes.Children.Clear();
+            SavedCustardRecipes.Children.Clear();
+            SavedPastryRecipes.Children.Clear();
+            SavedPoultryRecipes.Children.Clear();
+            SavedPorkRecipes.Children.Clear();
+            SavedBeefRecipes.Children.Clear();
+            SavedSeafoodRecipes.Children.Clear();
+            SavedSoupStewRecipes.Children.Clear();
+            SavedLambRecipes.Children.Clear();
+            SavedBreadRecipes.Children.Clear();
+            SavedSaladRecipes.Children.Clear();
+            SavedAppetizerRecipes.Children.Clear();
+            SavedSideDishRecipes.Children.Clear();
+            SavedUnknownRecipes.Children.Clear();
+            SavedTofuRecipes.Children.Clear();
+            SavedDairyRecipes.Children.Clear();
+            SavedEggsRecipes.Children.Clear();
             MainCourseExp = false;
             DessertExp = false;
         }
 
-        public void AddRecipeModelsToTreeView(List<RecipeCardModel> models)
+        /// <summary>
+        /// Adding a list of recipes to the tree view as part of the initial setup from the DB
+        /// </summary>
+        /// <param name="models">The list of RecipeRecords</param>
+        public void AddRecipeModelsToTreeView(List<RecipeRecordModel> models)
         {
-            foreach (RecipeCardModel recipeCard in models)
+            foreach (RecipeRecordModel recipeCard in models)
             {
                 AddRecipeToTreeView(recipeCard, false);
             }
@@ -149,28 +200,48 @@ namespace RecipeBuddy.ViewModels
         /// <param name="collection">This is going to identify one of the collection lists we are supposed to look for our information in</param>
         /// <param name="titleOfRecipe">The title of the recipe that we are looking for</param>
         /// <returns>RecipeCardModle to find or a null RecipeCardModle if the right one couldn't be found</returns>
-        public RecipeCardTreeItem FindRecipeInCollection(ObservableCollection<RecipeCardTreeItem> collection, string titleOfRecipe)
+        public RecipeTreeItem FindRecipeInCollection(ObservableCollection<RecipeTreeItem> collection, string titleOfRecipe)
         {
 
-            foreach (RecipeCardTreeItem RC in collection)
+            foreach (RecipeTreeItem RC in collection)
             {
-                if (string.Compare(RC.RecipeModelPropertyTV.Title.ToLower(), titleOfRecipe.ToLower()) == 0)
+                if (string.Compare(RC.RecipeModelTV.Title.ToLower(), titleOfRecipe.ToLower()) == 0)
                 {
                     return RC;
                 }
             }
 
-            return new RecipeCardTreeItem();
+            return new RecipeTreeItem(titleOfRecipe);
         }
 
         /// <summary>
         /// Removes a recipe from the treeview 
         /// </summary>
-        /// <param name="recipeCard">The recipe to be added</param>
+        /// <param name="RecipeTreeItem">The recipe to be removed</param>
         /// <returns>A bool with true if the save was successful, false if not</returns>
-        public bool RemoveRecipeFromTreeView(RecipeCardTreeItem recipeCardModel)
+        public bool RemoveRecipeFromTreeView(RecipeTreeItem recipeModel)
         {
-            return RemoveRecipeFromTreeView(recipeCardModel.RecipeModelPropertyTV);
+            return RemoveRecipeFromTreeViewBase(recipeModel.RecipeModelTV.TypeAsInt, recipeModel.RecipeModelTV.Title);
+        }
+
+        /// <summary>
+        /// Removes a recipe from the treeview 
+        /// </summary>
+        /// <param name="RecipeCardModel">The recipe to be removed</param>
+        /// <returns>A bool with true if the save was successful, false if not</returns>
+        public bool RemoveRecipeFromTreeView(RecipeDisplayModel recipeCardModel)
+        {
+            return RemoveRecipeFromTreeViewBase((int)recipeCardModel.RecipeType, recipeCardModel.Title);
+        }
+
+        /// <summary>
+        /// Removes a recipe from the treeview 
+        /// </summary>
+        /// <param name="RecipeCardModel">The recipe to be removed</param>
+        /// <returns>A bool with true if the save was successful, false if not</returns>
+        public bool RemoveRecipeFromTreeView(RecipeRecordModel recipeModel)
+        {
+            return RemoveRecipeFromTreeViewBase(recipeModel.TypeAsInt, recipeModel.Title);
         }
 
         /// <summary>
@@ -178,86 +249,86 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         /// <param name="recipeCard">The recipe to be added</param>
         /// <returns>A bool with true if the save was successful, false if not</returns>
-        public bool RemoveRecipeFromTreeView(RecipeCardModel recipeCardModel)
+        private bool RemoveRecipeFromTreeViewBase(int recipeTypeAsInt, string title)
         {
             bool SavedSucceeded = false;
 
-            switch ((Type_Of_Recipe)recipeCardModel.TypeAsInt)
+            switch ((Type_Of_Recipe)recipeTypeAsInt)
             {
                 case Type_Of_Recipe.Cake:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedCakeRecipes, recipeCardModel);
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedCakeRecipes.Children, title, recipeTypeAsInt);
                     break;
 
                 case Type_Of_Recipe.Candy:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedCandyRecipes, recipeCardModel);
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedCandyRecipes.Children, title, recipeTypeAsInt);
                     break;
 
                 case Type_Of_Recipe.Cookie:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedCookieRecipes, recipeCardModel);
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedCookieRecipes.Children, title, recipeTypeAsInt);
                     break;
 
                 case Type_Of_Recipe.Unknown:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedUnknownRecipes, recipeCardModel);
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedUnknownRecipes.Children, title, recipeTypeAsInt);
                     break;
 
                 case Type_Of_Recipe.Custard:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedCustardRecipes, recipeCardModel);
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedCustardRecipes.Children, title, recipeTypeAsInt);
                     break;
 
-                case Type_Of_Recipe.Pastery:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedPastryRecipes, recipeCardModel);
+                case Type_Of_Recipe.Pastry:
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedPastryRecipes.Children, title, recipeTypeAsInt); ;
                     break;
 
                 case Type_Of_Recipe.SoupStew:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedSoupStewRecipes, recipeCardModel);
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedSoupStewRecipes.Children, title, recipeTypeAsInt);
                     break;
 
                 case Type_Of_Recipe.Poultry:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedPoultryRecipes, recipeCardModel);
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedPoultryRecipes.Children, title, recipeTypeAsInt);
                     break;
 
                 case Type_Of_Recipe.Pork:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedPorkRecipes, recipeCardModel);
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedPorkRecipes.Children, title, recipeTypeAsInt);
                     break;
 
                 case Type_Of_Recipe.Beef:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedBeefRecipes, recipeCardModel);
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedBeefRecipes.Children, title, recipeTypeAsInt);
                     break;
 
                 case Type_Of_Recipe.Lamb:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedLambRecipes, recipeCardModel);
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedLambRecipes.Children, title, recipeTypeAsInt);
                     break;
 
                 case Type_Of_Recipe.Seafood:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedSeafoodRecipes, recipeCardModel);
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedSeafoodRecipes.Children, title, recipeTypeAsInt);
                     break;
 
                 case Type_Of_Recipe.Salad:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedSaladRecipes, recipeCardModel);
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedSaladRecipes.Children, title, recipeTypeAsInt);
                     break;
 
                 case Type_Of_Recipe.Bread:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedBreadRecipes, recipeCardModel);
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedBreadRecipes.Children, title, recipeTypeAsInt);
                     break;
 
                 case Type_Of_Recipe.SideDish:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedSideDishRecipes, recipeCardModel);
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedSideDishRecipes.Children, title, recipeTypeAsInt);
                     break;
 
                 case Type_Of_Recipe.Tofu:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedTofuRecipes, recipeCardModel);
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedTofuRecipes.Children, title, recipeTypeAsInt);
                     break;
 
                 case Type_Of_Recipe.Dairy:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedDairyRecipes, recipeCardModel);
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedDairyRecipes.Children, title, recipeTypeAsInt);
                     break;
 
                 case Type_Of_Recipe.Eggs:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedEggsRecipes, recipeCardModel);
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedEggsRecipes.Children, title, recipeTypeAsInt);
                     break;
 
                 case Type_Of_Recipe.Appetizer:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedAppetizerRecipes, recipeCardModel);
+                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedAppetizerRecipes.Children, title, recipeTypeAsInt);
                     break;
             }
 
@@ -272,11 +343,11 @@ namespace RecipeBuddy.ViewModels
         /// <param name="ListToUse">The preselected list</param>
         /// <param name="recipeCardModel">The RecipeModel we are adding to the preselected list</param>
         /// <param name="action">The specific action keyed to the list</param>
-        private bool AddRecipeToSpecifiedTreeViewList(ObservableCollection<RecipeCardTreeItem> ListToUse, RecipeCardTreeItem recipeCardViewModel, Action<string, Type_Of_Recipe, Type_Of_Recipe_Action, bool> actionAddRemoveList, bool TreeViewItemsExpand)
+        private bool AddRecipeToSpecifiedTreeViewList(ObservableCollection<RecipeTreeItem> ListToUse, RecipeTreeItem recipeCardViewModel, Action<string, Type_Of_Recipe, Type_Of_Recipe_Action, bool> actionAddRemoveList, bool TreeViewItemsExpand)
         {
             for (int i = 0; i < ListToUse.Count; i++)
             {
-                if (ListToUse[i].RecipeModelPropertyTV.Title == recipeCardViewModel.RecipeModelPropertyTV.Title && recipeCardViewModel.RecipeModelPropertyTV.Title != "Search For Your Recipe")
+                if (ListToUse[i].RecipeModelTV.Title == recipeCardViewModel.RecipeModelTV.Title && recipeCardViewModel.RecipeModelTV.Title != "Search For Your Recipe")
                 {
                     //Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("There is a problem with your account!");
 
@@ -301,7 +372,7 @@ namespace RecipeBuddy.ViewModels
 
             ListToUse.Add(recipeCardViewModel);
             //False will add the item to the list
-            actionAddRemoveList(recipeCardViewModel.RecipeModelPropertyTV.Title, (Type_Of_Recipe)recipeCardViewModel.RecipeModelPropertyTV.TypeAsInt, Type_Of_Recipe_Action.Add, TreeViewItemsExpand);
+            actionAddRemoveList(recipeCardViewModel.RecipeModelTV.Title, (Type_Of_Recipe)recipeCardViewModel.RecipeModelTV.TypeAsInt, Type_Of_Recipe_Action.Add, TreeViewItemsExpand);
 
             return true;
         }
@@ -312,7 +383,7 @@ namespace RecipeBuddy.ViewModels
         /// <param name="ListToUse">The preselected list</param>
         /// <param name="recipeCardModel">The RecipeModel we are adding to the preselected list</param>
         /// <param name="action">The specific action keyed to the list</param>
-        private bool AddRecipeToSpecifiedTreeViewList(ObservableCollection<RecipeCardModel> ListToUse, RecipeCardModel recipeCardModel, Action<string, Type_Of_Recipe, Type_Of_Recipe_Action, bool> actionAddRemoveList, bool TreeViewItemsExpand)
+        private bool AddRecipeToSpecifiedTreeViewList(ObservableCollection<RecipeDisplayModel> ListToUse, RecipeDisplayModel recipeCardModel, Action<string, Type_Of_Recipe, Type_Of_Recipe_Action, bool> actionAddRemoveList, bool TreeViewItemsExpand)
         {
             for (int i = 0; i < ListToUse.Count; i++)
             {
@@ -322,54 +393,71 @@ namespace RecipeBuddy.ViewModels
 
                     /*if (results == MessageBoxResult.OK)
                     {
-                        //Overwrite the recipe
+                        Overwrite the recipe
                         ListToUse.Add(recipeCardModel);
-                        //remove the old recipe and then add the new one
+                        remove the old recipe and then add the new one
                         actionAddRemoveList(recipeCardModel.Title,(Type_Of_Recipe)recipeCardModel.TypeAsInt, Type_Of_Recipe_Action.Remove, false);
-                        //Now remove it from the DB
+                        Now remove it from the DB
                         DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(recipeCardModel.Title, recipeCardModel.TypeAsInt);
 
                         actionAddRemoveList(recipeCardModel.Title, (Type_Of_Recipe)recipeCardModel.TypeAsInt, Type_Of_Recipe_Action.Add, TreeViewItemsExpand);
                         return true;
                     }
-                    //user chose to not save
+                    user chose to not save
                     return false;*/
                 }
             }
 
             ListToUse.Add(recipeCardModel);
             //False will add the item to the list
-            actionAddRemoveList(recipeCardModel.Title, (Type_Of_Recipe)recipeCardModel.TypeAsInt, Type_Of_Recipe_Action.Add, TreeViewItemsExpand);
+            actionAddRemoveList(recipeCardModel.Title, (Type_Of_Recipe)recipeCardModel.RecipeType, Type_Of_Recipe_Action.Add, TreeViewItemsExpand);
 
             return true;
         }
 
         /// <summary>
-        /// A private function that actually does the removing from the specified list
+        /// Dialog that pops up after the user attempts to save 
         /// </summary>
-        /// <param name="ListToUse">The preselected list</param>
-        /// <param name="recipeCardModel">The RecipeModel we are removing from the preselected list</param>
-        /// <param name="action">The specific action keyed to the list</param>
-        private bool RemoveRecipeFromSpecifiedTreeViewList(ObservableCollection<RecipeCardTreeItem> ListToUse, RecipeCardTreeItem recipeCardModel)
+        /// <param name="recipeCard"></param>
+        private void ContentDialogOverWriteOrCancel(RecipeDisplayModel recipeCard)
         {
-            return RemoveRecipeFromSpecifiedTreeViewList(ListToUse, recipeCardModel.RecipeModelPropertyTV);
+            ContentDialog overWriteOrCancel = new ContentDialog()
+            {
+                Title = "Overwrite Recipe ?",
+                Content = "A recipe with this title already exists, do you want to overwrite it?",
+                CloseButtonText = "Cancel",
+                PrimaryButtonText = "Overwrite",
+                PrimaryButtonCommand = CmdSaveDialog,
+                PrimaryButtonCommandParameter = recipeCard
+            };
         }
 
         /// <summary>
         /// A private function that actually does the removing from the specified list
         /// </summary>
         /// <param name="ListToUse">The preselected list</param>
-        /// <param name="recipeCardModel">The RecipeModel we are removing from the preselected list</param>
+        /// <param name="recipeModel">The RecipeModel we are removing from the preselected list</param>
         /// <param name="action">The specific action keyed to the list</param>
-        private bool RemoveRecipeFromSpecifiedTreeViewList(ObservableCollection<RecipeCardTreeItem> ListToUse, RecipeCardModel recipeCardModel)
+        private bool RemoveRecipeFromSpecifiedTreeViewList(ObservableCollection<RecipeTreeItem> ListToUse, string title, int recipeTypeAsInt)
+        {
+            return RemoveRecipeFromTreeViewList(ListToUse, title, recipeTypeAsInt);
+        }
+
+        /// <summary>
+        /// A private function that actually does the removing from the specified list
+        /// </summary>
+        /// <param name="ListToUse">The preselected list</param>
+        /// <param name="recipeModel">The RecipeModel we are removing from the preselected list</param>
+        /// <param name="action">The specific action keyed to the list</param>
+        private bool RemoveRecipeFromTreeViewList(ObservableCollection<RecipeTreeItem> ListToUse, string title, int recipeTypeAsInt)
         {
             for (int i = 0; i < ListToUse.Count; i++)
             {
-                if (ListToUse[i].RecipeModelPropertyTV.Title == recipeCardModel.Title && recipeCardModel.Title != "Search For Your Recipe")
+                if (ListToUse[i].RecipeModelTV.Title == title && title != "Search For Your Recipe")
                 {
                     //Remove the recipe
                     ListToUse.RemoveAt(i);
-                    DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(recipeCardModel.Title, recipeCardModel.TypeAsInt, UserViewModel.Instance.UsersIDInDB);
+                    DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(title, recipeTypeAsInt, UserViewModel.Instance.UsersIDInDB);
                     return true;
                 }
             }
@@ -377,182 +465,246 @@ namespace RecipeBuddy.ViewModels
             return false;
         }
 
-        public int AddRecipeToTreeView(RecipeCardModel recipeCardModel, bool expandTreeViewHeader)
+        /// <summary>
+        /// Checks the entry to be saved to see if that title exists in the catagory underwhich the recipe is going to be saved
+        /// </summary>
+        public void SaveEntry(RecipeDisplayModel recipeDisplay)
+        {
+            recipeDisplay.SaveEditsToARecipe();
+
+            int result = MainWindowViewModel.Instance.mainTreeViewNav.AddRecipeToTreeView(recipeDisplay);
+
+            if (result == 0)
+            {
+                MainWindowViewModel.Instance.mainTreeViewNav.ContentDialogOverWriteOrCancel(recipeDisplay);
+            }
+
+            //If the return is 0 we know that it was an overwrite and the dialogbox took care of it already
+            if (result == 1)
+            {
+                //didn't find any conflicts in the first attempt so it has already been saved.
+            }
+        }
+
+        /// <summary>
+        /// Takes the RecipeCardModel, converts it to a recipeModel and then saves it to the treeview
+        /// </summary>
+        /// <param name="recipeDisplayModel">The RecipeDisplayModel to be saved</param>
+        /// <param name="expandTreeViewHeader">are we expanding the tree header when we add the item?</param>
+        /// <returns>0 if we have to overwrite an existing recipe</returns>
+        public int AddRecipeToTreeView(RecipeDisplayModel recipeDisplayModel, bool expandTreeViewHeader = true)
+        {
+            RecipeRecordModel recipeModel = new RecipeRecordModel(recipeDisplayModel);
+            return AddRecipeToTreeViewWork(recipeModel, expandTreeViewHeader);
+        }
+
+        /// <summary>
+        /// Takes a RecipeRecordModel and saves it
+        /// </summary>
+        /// <param name="recipeRecordModel"></param>
+        /// <param name="expandTreeViewHeader"></param>
+        /// <returns></returns>
+        public int AddRecipeToTreeView(RecipeRecordModel recipeRecordModel, bool expandTreeViewHeader = true)
+        {
+            return AddRecipeToTreeViewWork(recipeRecordModel, expandTreeViewHeader);
+        }
+
+        private int AddRecipeToTreeViewWork(RecipeRecordModel recipeModel, bool expandTreeViewHeader)
         {
             int returnOverwriteCmd = 0;
             //Create a new RecipeCardTreeItem
-            RecipeCardTreeItem recipeCardTreeItem = new RecipeCardTreeItem(recipeCardModel);
+            RecipeTreeItem recipeTreeItem = new RecipeTreeItem(recipeModel);
 
-            switch ((Type_Of_Recipe)recipeCardTreeItem.RecipeModelPropertyTV.TypeAsInt)
+            switch ((Type_Of_Recipe)recipeTreeItem.RecipeModelTV.TypeAsInt)
             {
                 case Type_Of_Recipe.Cake:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedCakeRecipes);
-                    if(returnOverwriteCmd == 0)
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedCakeRecipes.Children);
+                    if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedCakeRecipes.Add(recipeCardTreeItem);
+                    SavedCakeRecipes.Children.Add(recipeTreeItem);
                     DessertExp = true;
                     CakeExp = true;
+                    returnOverwriteCmd = 1;
                     break;
 
                 case Type_Of_Recipe.Cookie:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedCookieRecipes);
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedCookieRecipes.Children);
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedCookieRecipes.Add(recipeCardTreeItem);
+                    SavedCookieRecipes.Children.Add(recipeTreeItem);
                     DessertExp = true;
                     CookieExp = true;
+                    returnOverwriteCmd = 1;
                     break;
 
                 case Type_Of_Recipe.Candy:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedCandyRecipes);
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedCandyRecipes.Children);
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedCandyRecipes.Add(recipeCardTreeItem);
+                    SavedCandyRecipes.Children.Add(recipeTreeItem);
                     DessertExp = true;
                     CandyExp = true;
+                    returnOverwriteCmd = 1;
                     break;
 
                 case Type_Of_Recipe.Custard:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedCustardRecipes);
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedCustardRecipes.Children);
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedCustardRecipes.Add(recipeCardTreeItem);
+                    SavedCustardRecipes.Children.Add(recipeTreeItem);
                     DessertExp = true;
                     CustardExp = true;
+                    returnOverwriteCmd = 1;
                     break;
 
-                case Type_Of_Recipe.Pastery:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedPastryRecipes);
+                case Type_Of_Recipe.Pastry:
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedPastryRecipes.Children);
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedPastryRecipes.Add(recipeCardTreeItem);
+                    SavedPastryRecipes.Children.Add(recipeTreeItem);
                     DessertExp = true;
                     PastryExp = true;
+                    returnOverwriteCmd = 1;
                     break;
 
                 case Type_Of_Recipe.SoupStew:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedSoupStewRecipes);
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedSoupStewRecipes.Children);
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedSoupStewRecipes.Add(recipeCardTreeItem);
+                    SavedSoupStewRecipes.Children.Add(recipeTreeItem);
                     SoupStewExp = true;
+                    returnOverwriteCmd = 1;
                     break;
 
                 case Type_Of_Recipe.Seafood:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedSeafoodRecipes);
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedSeafoodRecipes.Children);
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedSeafoodRecipes.Add(recipeCardTreeItem);
+                    SavedSeafoodRecipes.Children.Add(recipeTreeItem);
                     MainCourseExp = true;
                     SeafoodExp = true;
+                    returnOverwriteCmd = 1;
                     break;
 
                 case Type_Of_Recipe.Pork:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedPorkRecipes);
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedPorkRecipes.Children);
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedPorkRecipes.Add(recipeCardTreeItem);
+                    SavedPorkRecipes.Children.Add(recipeTreeItem);
                     MainCourseExp = true;
                     PorkExp = true;
+                    returnOverwriteCmd = 1;
                     break;
 
                 case Type_Of_Recipe.Beef:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedBeefRecipes);
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedBeefRecipes.Children);
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedBeefRecipes.Add(recipeCardTreeItem);
+                    SavedBeefRecipes.Children.Add(recipeTreeItem);
                     MainCourseExp = true;
                     BeefExp = true;
+                    returnOverwriteCmd = 1;
                     break;
 
                 case Type_Of_Recipe.Dairy:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedDairyRecipes);
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedDairyRecipes.Children);
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedDairyRecipes.Add(recipeCardTreeItem);
+                    SavedDairyRecipes.Children.Add(recipeTreeItem);
                     MainCourseExp = true;
                     DairyExp = true;
+                    returnOverwriteCmd = 1;
                     break;
 
                 case Type_Of_Recipe.Eggs:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedEggsRecipes);
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedEggsRecipes.Children);
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedEggsRecipes.Add(recipeCardTreeItem);
+                    SavedEggsRecipes.Children.Add(recipeTreeItem);
                     MainCourseExp = true;
                     EggsExp = true;
+                    returnOverwriteCmd = 1;
                     break;
 
                 case Type_Of_Recipe.Poultry:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedPoultryRecipes);
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedPoultryRecipes.Children);
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedPoultryRecipes.Add(recipeCardTreeItem);
+                    SavedPoultryRecipes.Children.Add(recipeTreeItem);
                     MainCourseExp = true;
                     PoultryExp = true;
+                    returnOverwriteCmd = 1;
                     break;
 
                 case Type_Of_Recipe.Lamb:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedLambRecipes);
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedLambRecipes.Children);
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedLambRecipes.Add(recipeCardTreeItem);
+                    SavedLambRecipes.Children.Add(recipeTreeItem);
                     MainCourseExp = true;
                     LambExp = true;
+                    returnOverwriteCmd = 1;
                     break;
 
                 case Type_Of_Recipe.Salad:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedSaladRecipes);
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedSaladRecipes.Children);
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedSaladRecipes.Add(recipeCardTreeItem);
+                    SavedSaladRecipes.Children.Add(recipeTreeItem);
                     SaladExp = true;
+                    returnOverwriteCmd = 1;
                     break;
 
                 case Type_Of_Recipe.Appetizer:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedAppetizerRecipes);
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedAppetizerRecipes.Children);
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedAppetizerRecipes.Add(recipeCardTreeItem);
+                    SavedAppetizerRecipes.Children.Add(recipeTreeItem);
                     AppetizerExp = true;
+                    returnOverwriteCmd = 1;
                     break;
 
                 case Type_Of_Recipe.Bread:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedBreadRecipes);
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedBreadRecipes.Children);
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedBreadRecipes.Add(recipeCardTreeItem);
+                    SavedBreadRecipes.Children.Add(recipeTreeItem);
                     BreadExp = true;
+                    returnOverwriteCmd = 1;
                     break;
 
                 case Type_Of_Recipe.SideDish:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedSideDishRecipes);
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedSideDishRecipes.Children);
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedSideDishRecipes.Add(recipeCardTreeItem);
+                    SavedSideDishRecipes.Children.Add(recipeTreeItem);
                     SideDishExp = true;
+                    returnOverwriteCmd = 1;
                     break;
 
                 case Type_Of_Recipe.Tofu:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedTofuRecipes);
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedTofuRecipes.Children);
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedTofuRecipes.Add(recipeCardTreeItem);
+                    SavedTofuRecipes.Children.Add(recipeTreeItem);
                     MainCourseExp = true;
                     TofuExp = true;
+                    returnOverwriteCmd = 1;
                     break;
 
                 case Type_Of_Recipe.Unknown:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeCardTreeItem, SavedUnknownRecipes);
+                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedUnknownRecipes.Children);
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
-                    SavedUnknownRecipes.Add(recipeCardTreeItem);
+                    SavedUnknownRecipes.Children.Add(recipeTreeItem);
                     UnknownExp = true;
+                    returnOverwriteCmd = 1;
                     break;
             }
-
             return returnOverwriteCmd;
         }
+
+
 
         /// <summary>
         /// goes through the list looking for the same title that we are trying to add to the list
@@ -561,71 +713,68 @@ namespace RecipeBuddy.ViewModels
         /// <param name="recipeCardTreeItem">the recipe we are attempting to add</param>
         /// <param name="List">the treeviewlist we are attempting to add the recipe to</param>
         /// <returns>true if an identical title if found, false otherwise</returns>
-        private int CheckIfRecipeAlreadyPresent(RecipeCardTreeItem recipeCardTreeItem, ObservableCollection<RecipeCardTreeItem> List)
+        private int CheckIfRecipeAlreadyPresent(RecipeTreeItem recipeCardTreeItem, ObservableCollection<RecipeTreeItem> List)
         {
 
-            foreach (RecipeCardTreeItem recipe in List)
+            foreach (RecipeTreeItem recipe in List)
             {
-                if (string.Compare(recipe.RecipeTitleTreeItem.ToLower(), recipeCardTreeItem.RecipeTitleTreeItem.ToLower()) == 0)
+                if (string.Compare(recipe.TreeItemTitle.ToLower(), recipeCardTreeItem.TreeItemTitle.ToLower()) == 0)
                 {
-                   /* if (MessageBox.Show("Your recipe must have a unique title to be saved here or you will overwrite the existing recipe", "Overwrite Recipe?", MessageBoxButton.OKCancel) == MessageBoxResult.Cancel)
-                    { return 0; } //recipe title already exists so don't overwrite
-                    else
-                    { return 1; } //recipe title already exists but do overwrite*/
+                    return 1;
                 }
             }
 
             return 2; //recipe title doesn't already exists so don't worry about it!
         }
 
-        private ObservableCollection<RecipeCardTreeItem> StringMapParentToCollection(string parentFromArgument)
+        private ObservableCollection<RecipeTreeItem> StringMapParentToCollection(string parentFromArgument)
         {
             switch (parentFromArgument)
             {
                 case "CakeTreeViewHeader":
-                    return SavedCakeRecipes;
+                    return SavedCakeRecipes.Children;
 
                 case "CandyTreeViewHeader":
-                    return SavedCandyRecipes;
+                    return SavedCandyRecipes.Children;
 
                 case "CustardTreeViewHeader":
-                    return SavedCustardRecipes;
+                    return SavedCustardRecipes.Children;
 
                 case "PastryTreeViewHeader":
-                    return SavedPastryRecipes;
+                    return SavedPastryRecipes.Children;
 
                 case "PorkTreeViewHeader":
-                    return SavedPorkRecipes;
+                    return SavedPorkRecipes.Children;
 
                 case "LambTreeViewHeader":
-                    return SavedLambRecipes;
+                    return SavedLambRecipes.Children;
 
                 case "PoultryTreeViewHeader":
-                    return SavedPoultryRecipes;
+                    return SavedPoultryRecipes.Children;
 
                 case "SeafoodTreeViewHeader":
-                    return SavedSeafoodRecipes;
+                    return SavedSeafoodRecipes.Children;
 
                 case "BeefTreeViewHeader":
-                    return SavedBeefRecipes;
+                    return SavedBeefRecipes.Children;
 
                 case "SaladTreeViewHeader":
-                    return SavedSaladRecipes;
+                    return SavedSaladRecipes.Children;
 
                 case "BreadTreeViewHeader":
-                    return SavedBreadRecipes;
+                    return SavedBreadRecipes.Children;
 
                 case "AppitizerTreeViewHeader":
-                    return SavedAppetizerRecipes;
+                    return SavedAppetizerRecipes.Children;
 
                 case "TofuTreeViewHeader":
-                    return SavedTofuRecipes;
+                    return SavedTofuRecipes.Children;
 
                 case "SideDishTreeViewHeader":
-                    return SavedSideDishRecipes;
+                    return SavedSideDishRecipes.Children;
 
                 case "UnknownTreeViewHeader":
-                    return SavedUnknownRecipes;
+                    return SavedUnknownRecipes.Children;
             }
 
             return null;
@@ -636,17 +785,17 @@ namespace RecipeBuddy.ViewModels
         /// Add the recipe to the Borrow list and select that recipe in the combobox as well as 
         /// take the user to the Edit page.
         /// </summary>
-        internal void AddRecipeToSelectList(RecipeCardTreeItem recipeTreeItem)
+        internal void AddRecipeToSelectList(RecipeTreeItem recipeTreeItem)
         {
             MainWindowViewModel.Instance.SelectedTabIndex = (int)MainWindowViewModel.Tabs.EditTab;
-            SelectedViewModel.Instance.AddToListOfRecipeCards(recipeTreeItem.RecipeModelPropertyTV);
+            SelectedViewModel.Instance.AddToListOfRecipeCards(recipeTreeItem.RecipeModelTV);
             MainWindowViewModel.Instance.SelectedTabIndex = (int)MainWindowViewModel.Tabs.SelectedTab;
         }
 
         /// <summary>
         /// Add the recipe to the Edit page
         /// </summary>
-        internal void DeleteRecipe(RecipeCardTreeItem recipeTreeItem)
+        internal void DeleteRecipe(RecipeTreeItem recipeTreeItem)
         {
             RemoveRecipeFromTreeView(recipeTreeItem);
         }
@@ -654,13 +803,30 @@ namespace RecipeBuddy.ViewModels
         /// <summary>
         /// Add the recipe to the Edit page
         /// </summary>
-        internal void AddRecipeToEdit(RecipeCardTreeItem recipeTreeView)
+        internal void AddRecipeToEdit(RecipeTreeItem recipeTreeView)
         {
-            EditViewModel.Instance.UpdateRecipe(recipeTreeView.RecipeModelPropertyTV);
+            EditViewModel.Instance.UpdateRecipe(recipeTreeView.RecipeModelTV);
             MainWindowViewModel.Instance.SelectedTabIndex = (int)MainWindowViewModel.Tabs.EditTab;
         }
 
         #region ICommand  and other Properties
+
+        [Microsoft.UI.Xaml.CustomAttributes.MUXPropertyChangedCallback(enable =true)]
+        public ObservableCollection<RecipeTreeItem> RecipeTreeRootNodes
+        {
+            [Microsoft.UI.Xaml.CustomAttributes.MUXPropertyChangedCallback(enable =true)]
+            get;
+
+            [Microsoft.UI.Xaml.CustomAttributes.MUXPropertyChangedCallback(enable = true)]
+            set;
+        }
+
+        //private RecipeTreeItem recipeTreeRoot;
+        //public RecipeTreeItem RecipeTreeRoot
+        //{
+        //    get { return recipeTreeRoot; }
+        //    set { SetProperty(ref recipeTreeRoot, value); }
+        //}
 
         private bool mainCourseExp;
         public bool MainCourseExp
@@ -808,6 +974,12 @@ namespace RecipeBuddy.ViewModels
         {
             get { return unknownExp; }
             set { SetProperty(ref unknownExp, value); }
+        }
+
+        public RBRelayCommandObj CmdSaveDialog
+        {
+            get;
+            private set;
         }
 
         #endregion

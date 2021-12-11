@@ -27,7 +27,7 @@ namespace RecipeBuddy.Core.Scrapers
         /// Using a search string that is inputted by the user we generate the recipe text for the three pannels.
         /// </summary>
         /// <param name="strSearch"></param>
-        public static int GenerateURLsListFromFoodNetworkSearch(string strSearch, RecipeBlurbListModel listModel)
+        public static int GenerateURLsListFromFoodNetworkSearch(string strSearch, RecipeListModel listModel)
         {
             string strQuery = "https://www.foodnetwork.com/search/";
             var web = new HtmlWeb();
@@ -69,7 +69,7 @@ namespace RecipeBuddy.Core.Scrapers
                     firstStr = list[itemCount].InnerHtml.Substring(i);
                     secondStr = firstStr.Substring(0, firstStr.IndexOf('"'));
 
-                    if (listModel.URLLists.Add("https://" + secondStr) == -1)
+                    if (listModel.URLLists.Add(new Uri("https://" + secondStr)) == -1)
                     {
                         return 0;
                     }
@@ -187,7 +187,7 @@ namespace RecipeBuddy.Core.Scrapers
         /// <param name="doc">HtmlDocument that has the webiste loaded</param>
         /// <param name="splitter">The the way to split up the description so we only keep two sentences</param>
         /// <param name="uri">website</param>
-        public static RecipeBlurbModel ProcessFoodNetworkRecipeType(HtmlDocument doc, char[] splitter, string uri)
+        public static RecipeRecordModel ProcessFoodNetworkRecipeType(HtmlDocument doc, char[] splitter, Uri uri)
         {
 
             List<string> ingredients = FillIngredientListFoodNetworkForRecipeEntry(doc, 50);
@@ -195,30 +195,32 @@ namespace RecipeBuddy.Core.Scrapers
             if (ingredients == null || ingredients.Count == 0)
                 return null;
 
-            List<string> directions = FillDirectionListFoodNetworkForRecipeEntry(doc, 30);
+            List<string> directions = new List<string>();
+            directions.Add("-Direction");
 
-            //RecipeCardModel recipeCardModel = new RecipeCardModel(ingredients, ingredDisplay, directions, directionDisplay);
-            RecipeBlurbModel recipeBlurbModel = new RecipeBlurbModel();
+            RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
-            recipeBlurbModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//span[@class='o-AssetTitle__a-HeadlineText']", doc));
-            recipeBlurbModel.Website = "FoodNetwork";
-            recipeBlurbModel.Description = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='o-AssetDescription__a-Description']", doc));
+            recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//span[@class='o-AssetTitle__a-HeadlineText']", doc));
+            recipeModel.Website = "FoodNetwork";
+            recipeModel.Description = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='o-AssetDescription__a-Description']", doc));
 
 /*            recipeBlurbModel.TotalTime = StringManipulationHelper.CleanHTMLTags(GetTotalTime(doc))*/;
             HtmlNode ingred_top_level = doc.DocumentNode.SelectSingleNode("//span[@class='o-Attribution__a-Name']");
             if (ingred_top_level != null)
             {
                 string str1 = ingred_top_level.InnerText.Replace('\n', ' ').Trim();
-                recipeBlurbModel.Author = StringManipulationHelper.CleanHTMLTags(str1.Substring(str1.IndexOf("of") + 3));
+                recipeModel.Author = StringManipulationHelper.CleanHTMLTags(str1.Substring(str1.IndexOf("of") + 3));
             }
             else
-                recipeBlurbModel.Author = "";
+                recipeModel.Author = "";
 
             //recipeCardModel.Date = "";
-            recipeBlurbModel.Link = uri;
-            recipeBlurbModel.Recipe_Type = Scraper.FillTypeForRecipeEntry(recipeBlurbModel.Title);
+            recipeModel.Link = uri.ToString();
+            recipeModel.TypeAsInt = (int)Scraper.FillTypeForRecipeEntry(recipeModel.Title);
+            recipeModel.ListOfIngredientStrings = ingredients;
+            recipeModel.ListOfDirectionStrings = directions;
 
-            return recipeBlurbModel;
+            return recipeModel;
         }
 
         /// <summary>

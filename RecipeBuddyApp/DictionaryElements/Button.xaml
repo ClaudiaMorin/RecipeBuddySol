@@ -47,7 +47,8 @@
     <Style x:Key="BtnStyleStandard" TargetType="Button">
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="FontSize" Value="12"/>
-        <Setter Property="Height" Value="26"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="FontWeight" Value="Bold"/>
     </Style>
 
     <Style x:Key="BtnStyleSearch" TargetType="Button">

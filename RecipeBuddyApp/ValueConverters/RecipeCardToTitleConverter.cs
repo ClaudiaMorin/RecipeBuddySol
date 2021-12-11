@@ -11,7 +11,7 @@ namespace RecipeBuddy.ValueConverters
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
 
-           ObservableCollection<RecipeCardModel> recipeCards = (ObservableCollection<RecipeCardModel>)value;
+           ObservableCollection<RecipeDisplayModel> recipeCards = (ObservableCollection<RecipeDisplayModel>)value;
            if (recipeCards.Count != 0)
            {
                 return null; // recipeCard.Title; 

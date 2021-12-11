@@ -28,7 +28,7 @@ namespace RecipeBuddy.Core.Scrapers
         /// Using a search string that is inputted by the user we generate the recipe text for the three pannels.
         /// </summary>
         /// <param name="strSearch"></param>
-        public static int GenerateURLsListFromTastySearch(string strSearch, RecipeBlurbListModel listModel)
+        public static int GenerateURLsListFromTastySearch(string strSearch, RecipeListModel listModel)
         {
             string strQuery = "https://www.tasty.co/search?q=";
             var web = new HtmlWeb();
@@ -78,7 +78,7 @@ namespace RecipeBuddy.Core.Scrapers
                     firstStr = list[itemCount].OuterHtml.Substring(i + 7);
                     secondStr = "https://www.tasty.co/" + firstStr.Substring(0, firstStr.IndexOf('\"'));
 
-                    if (listModel.URLLists.Add(secondStr) == -1)
+                    if (listModel.URLLists.Add(new Uri(secondStr)) == -1)
                     {
                         return 0;
                     }
@@ -101,25 +101,28 @@ namespace RecipeBuddy.Core.Scrapers
         /// <param name="doc">HtmlDocument that has the webiste loaded</param>
         /// <param name="splitter">The the way to split up the description so we only keep two sentences</param>
         /// <param name="uri">website</param>
-        public static RecipeBlurbModel ProcessTastyRecipeType(HtmlDocument doc, char[] splitter, string uri)
+        public static RecipeRecordModel ProcessTastyRecipeType(HtmlDocument doc, char[] splitter, Uri uri)
         {
+            List<string> ingredients = FillIngredientListTastyForRecipeEntry(doc, 50);
+            //no ingredients it isn't a real recipe so we bail
+            if (ingredients.Count == 0)
+                return null;
+            List<string> directions = new List<string>();
+            directions.Add("-Direction");
 
-            //List<string> ingredients = FillIngredientListTastyForRecipeEntry(doc, 50);
-            ////no ingredients it isn't a real recipe so we bail
-            //if (ingredients.Count == 0)
-            //    return null;
-            //List<string> directions = FillDirectionListTastyForRecipeEntry(doc, 30);
+            RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
-            RecipeBlurbModel recipeBlurbModel = new RecipeBlurbModel();
-            recipeBlurbModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//h1[@class='recipe-name extra-bold xs-mb05 md-mb1']", doc));
-            recipeBlurbModel.Website = "Tasty.co";
-            recipeBlurbModel.Description = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//p[@class='description xs-text-4 md-text-3 lg-text-2 xs-mb2 lg-mb2 lg-pb05']", doc));
+            recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//h1[@class='recipe-name extra-bold xs-mb05 md-mb1']", doc));
+            recipeModel.Website = "Tasty";
+            recipeModel.Description = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//p[@class='description xs-text-4 md-text-3 lg-text-2 xs-mb2 lg-mb2 lg-pb05']", doc));
             //recipeBlurbModel.TotalTime = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//p[@class='xs-text-5 extra-bold']", doc));
-            recipeBlurbModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='byline extra-bold xs-text-4 md-text-2']", doc));
-            recipeBlurbModel.Link = uri;
-            recipeBlurbModel.Recipe_Type = Scraper.FillTypeForRecipeEntry(recipeBlurbModel.Title);
+            recipeModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='byline extra-bold xs-text-4 md-text-2']", doc));
+            recipeModel.Link = uri.ToString();
+            recipeModel.TypeAsInt = (int)Scraper.FillTypeForRecipeEntry(recipeModel.Title);
+            recipeModel.ListOfIngredientStrings = ingredients;
+            recipeModel.ListOfDirectionStrings = directions;
 
-            return recipeBlurbModel;
+            return recipeModel;
         }
 
         private static List<string> FillIngredientListTastyForRecipeEntry(HtmlDocument doc, int countList)

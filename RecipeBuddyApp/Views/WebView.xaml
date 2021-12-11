@@ -5,54 +5,67 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:RecipeBuddy.Views"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
-      xmlns:i1="using:Microsoft.Xaml.Interactions.Core"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+      mc:Ignorable="d"
+      MaxHeight="800"
+      MaxWidth="1400"
       x:Name="WebTabView">
-    <StackPanel>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="670"/>
-            </Grid.RowDefinitions>
+    <StackPanel x:Name="MasterStackPanel">
+        <Grid Height="798">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="{Binding TreeViewWidth}"/>
+                <ColumnDefinition Width="{Binding MainViewWidth}"/>
             </Grid.ColumnDefinitions>
-            <local:RecipeTreeView Grid.Row="0" Grid.Column="0"/>
-
-            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-                <StackPanel x:Name="SelectedControls"/>
+            <StackPanel x:Name="FirstColumn" Grid.Row="0" Grid.Column="0" Visibility="{Binding FirstColumnTreeView, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Background="LightSteelBlue" >
+                <local:RecipeTreeView x:Name="SavedRecipesTreeView"/>
+            </StackPanel>
+            <StackPanel x:Name="TextBoxRecipe" Grid.Row="0" Grid.Column="0" Visibility="{Binding FirstColumnTreeView, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ResourceKey=ReverseVisibility}}">
+                <StackPanel Orientation="Horizontal" Background="Gray">
+                    <TextBlock Text="Category: " TextAlignment="Left" FontSize="14" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <Border BorderThickness="10" HorizontalAlignment="Center"/>
+                    <ComboBox x:Name="TypesInComboBox" SelectedIndex="{Binding CurrentType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" >
+                        <i:Interaction.Behaviors>
+                            <ic:EventTriggerBehavior  EventName="SelectionChanged">
+                                <ic:InvokeCommandAction x:Name="ICommandSelectTypeChanged" Command="{Binding CmdSelectedTypeChanged}" />
+                            </ic:EventTriggerBehavior >
+                        </i:Interaction.Behaviors>
+                    </ComboBox>
+                    <Border BorderThickness="20"/>
+                    <Button x:Name="Save" Style="{StaticResource BtnStyleStandard}" Content="Save" Background="LightSteelBlue" Width="100" Command="{Binding CmdSaveButton}" HorizontalAlignment="Right" />
+                    <Border BorderThickness="10" HorizontalAlignment="Right" />
+                    <Button x:Name="Cancel" Style="{StaticResource BtnStyleStandard}" Content="Cancel" Background="LightSteelBlue" Width="100" Command="{Binding CmdCancelButton}" HorizontalAlignment="Right" />
+                </StackPanel>
+                <local:RecipeDetailsPanelForWebSave x:Name="RecipeDetailsForEdit" />
+            </StackPanel>
+            
+            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
+                <StackPanel x:Name="SelectedControls" Orientation="Horizontal"/>
                 <Border BorderBrush="Gray" BorderThickness="5"/>
-                <ScrollViewer VerticalScrollBarVisibility="Visible" >
-                    <StackPanel x:Name="MasterStackPanel"  Grid.Column="0" Orientation="Vertical" Background="White" Margin ="0,0,0,0">
-                        <Grid Background="Gray" x:Name="ControlsForSelectView">
-                            <Grid.ColumnDefinitions >
-                                <ColumnDefinition Width="10*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <ComboBox x:Name="RecipesInComboBox" Grid.Column="0" DisplayMemberPath="Link"  SelectedIndex="{Binding IndexOfComboBoxItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="List of selected Recipes" >
-                                <!--<i:Interaction.Triggers>
-                                <i:EventTrigger EventName="SelectionChanged">
-                                    <i:InvokeCommandAction x:Name="ICommandSelectItemChanged" Command="{Binding CmdSelectedItemChanged}" PassEventArgsToCommand="True" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>-->
-                            </ComboBox>
-                            <Button x:Name="btnRemove" Grid.Column="1" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}"  Content="Remove" Command="{Binding CmdRemove}" ToolTipService.ToolTip="Click to remove recipe"  />
-                            <Button x:Name="btnSave" Grid.Column="3"  Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Save" Command="{Binding CmdSave}" ToolTipService.ToolTip="Click to save recipe under the selected Catagory" />
-                        </Grid>
-                        <Border BorderBrush="Gray" BorderThickness="3">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <!--<cefSharp:ChromiumWebBrowser x:Name="chrom" Grid.Column="0" Height="580" Address="{Binding CurrentLink, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                            <cefSharp:ChromiumWebBrowser Grid.Column="0" Height="580" x:Name="chrom" Address="google.com"/>-->
-                                <local:RecipeDetailsPanelForSelected x:Name="DetailsPanelForSelected"/>
-                            </Grid>
-                        </Border>
+                <StackPanel Grid.Column="0" Orientation="Vertical" Background="White" Margin ="0,0,0,0" Width="1108">
+                    <StackPanel Orientation="Horizontal" Background="Gray">
+                        <ComboBox x:Name="RecipesInComboBox" Grid.Column="0" DisplayMemberPath="Title" Width="250" SelectedIndex="{Binding IndexOfComboBoxItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="List of selected Recipes" >
+                            <i:Interaction.Behaviors>
+                                <ic:EventTriggerBehavior EventName="SelectionChanged">
+                                    <ic:InvokeCommandAction x:Name="ICommandSelectItemChanged" Command="{Binding CmdSelectedItemChanged}" />
+                                </ic:EventTriggerBehavior>
+                            </i:Interaction.Behaviors>
+                        </ComboBox>
+                        <Border BorderThickness="5"/>
+                        <Button x:Name="btnRemove" Width="100" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}"  Content="Remove" Command="{Binding CmdRemove}" ToolTipService.ToolTip="Click to remove recipe"  />
+                        <Border BorderThickness="5"/>
+                        <Button x:Name="btnOpenEntry" Width="100" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Open Entry" Command="{Binding CmdOpenEntry}" ToolTipService.ToolTip="Click to save recipe under the selected Catagory" />
                     </StackPanel>
-                </ScrollViewer>
+                    <TextBlock x:Name="currentURI" Text="{Binding CurrentLink}" SelectionHighlightColor="LightSteelBlue"/>
+                    <Border BorderThickness="2" BorderBrush="DarkGray"/>
+                </StackPanel>
+                
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="700"/>
+                    </Grid.RowDefinitions>
+                    <WebView x:Name="WebControl" Source="{Binding CurrentLink, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <!--<WebView x:Name="WebControl"  Source="http://www.google.com"/>-->
+                </Grid>
             </StackPanel>
         </Grid>
     </StackPanel>

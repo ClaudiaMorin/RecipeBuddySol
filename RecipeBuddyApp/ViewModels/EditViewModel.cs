@@ -13,8 +13,8 @@ namespace RecipeBuddy.ViewModels
 {
     public sealed class EditViewModel : ObservableObject
     {
-        public RecipeCardModel recipeCardViewModelForEdit;
-        public RecipeCardModel recipeCardViewModelToBorrowFrom;
+        public RecipeDisplayModel recipeCardViewModelForEdit;
+        public RecipeDisplayModel recipeCardViewModelToBorrowFrom;
 
         public string contextMenuSelectedItemValue;
         public Action<SelectionChangedEventArgs> actionWithEventArgs;
@@ -30,8 +30,8 @@ namespace RecipeBuddy.ViewModels
 
         private EditViewModel()
         {
-            recipeCardViewModelForEdit = new RecipeCardModel();
-            recipeCardViewModelToBorrowFrom = new RecipeCardModel();
+            recipeCardViewModelForEdit = new RecipeDisplayModel();
+            recipeCardViewModelToBorrowFrom = new RecipeDisplayModel();
 
             numberOfIngredients = 0;
             numberOfDirections = 0;
@@ -43,36 +43,35 @@ namespace RecipeBuddy.ViewModels
             borrowTextVisibilty = "Visible";
             CmdSelectedTypeChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeTypeFromComboBox(e), canCallActionFunc => CanSelect);
             CmdClear = new ICommandViewModel<EditViewModel>(Action => ClearRecipe(), canCallActionFunc => CanSelect);
-            CmdSave = new ICommandViewModel<RecipeCardModel>(Action => Save(), canCallActionFunc => CanSelect);
-            CmdNew = new ICommandViewModel<RecipeCardModel>(Action => CreateNewRecipe(), canCallActionFunc => CanSelectNew);
-            CmdRevert = new ICommandViewModel<RecipeCardTreeItem>(Action => RevertRecipe(), canCallActionFunc => CanSelect);
+            CmdSave = new ICommandViewModel<RecipeDisplayModel>(Action => Save(), canCallActionFunc => CanSelect);
+            CmdNew = new ICommandViewModel<RecipeDisplayModel>(Action => CreateNewRecipe(), canCallActionFunc => CanSelectNew);
+            CmdRevert = new ICommandViewModel<RecipeTreeItem>(Action => RevertRecipe(), canCallActionFunc => CanSelect);
             CmdSelectedItemChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeBorrowRecipeFromComboBox(e), canCallActionFunc => CanSelect);
             CmdOpenBorrow = new ICommandViewModel<SelectionChangedEventArgs>(Action => OpenBorrowPanel(), canCallActionFunc => CanSelectBorrow);
             CmdCloseBorrow = new ICommandViewModel<SelectionChangedEventArgs>(Action => CloseBorrowPanel(), canCallActionFunc => CanSelect);
             CmdTypeUpdate = new ICommandViewModel<string>(Action => ChangeVisiblityofTypeComboBox(true), canCallActionFunc => CanSelect);
             CmdCancelUpdate = new ICommandViewModel<string>(Action => ChangeVisiblityofTypeComboBox(false), canCallActionFunc => CanSelect);
-
         }
 
         /// <summary>
         /// Updates the Edit Recipe page with a new entry
         /// </summary>
         /// <param name="recipeItem">RecipeCardTreeItem</param>
-        public void UpdateRecipe(RecipeCardTreeItem recipeItem)
+        public void UpdateRecipe(RecipeTreeItem recipeItem)
         {
-            UpdateRecipe(recipeItem.RecipeModelPropertyTV);
+            UpdateRecipe(recipeItem.RecipeModelTV);
         }
 
         /// <summary>
         /// Updates the Edit Recipe page with a new entry
         /// </summary>
         /// <param name="recipeItem">RecipeCardModel</param>
-        public void UpdateRecipe(RecipeCardModel recipeItem)
+        public void UpdateRecipe(RecipeRecordModel recipeItem)
         {
-            recipeCardViewModelForEdit.UpdateRecipeEntry(recipeItem);
-            CurrentType = recipeItem.TypeAsInt;
-            NumberOfIngredients = recipeItem.listOfIngredientStringsForDisplay.Count;
-            NumberOfDirections = recipeItem.listOfDirectionStringsForDisplay.Count;
+            recipeCardViewModelForEdit.UpdateRecipeDisplayFromRecipeRecord(recipeItem);
+            CurrentType = (Type_Of_Recipe) recipeItem.TypeAsInt;
+            NumberOfIngredients = recipeItem.ListOfIngredientStrings.Count;
+            NumberOfDirections = recipeItem.ListOfDirectionStrings.Count;
         }
 
         /// <summary>
@@ -80,9 +79,9 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void ResetViewModel()
         {
-            UpdateRecipe(new RecipeCardModel());
+            UpdateRecipe(new RecipeRecordModel());
             IndexOfComboBoxItem = 0;
-            CurrentType = recipeCardViewModelForEdit.TypeAsInt;
+            CurrentType = recipeCardViewModelForEdit.RecipeType;
             CloseBorrowPanel();
         }
 
@@ -94,8 +93,8 @@ namespace RecipeBuddy.ViewModels
             //nothing to clear here!
             if (string.Compare(recipeCardViewModelForEdit.Title.ToLower(), "search for your next recipe find!") == 0 || recipeCardViewModelForEdit.listOfIngredientStringsForDisplay.Count == 0)
                 return;
-            recipeCardViewModelForEdit.UpdateRecipeEntry(new RecipeCardModel());
-            CurrentType = (int)recipeCardViewModelForEdit.TypeAsInt;
+            recipeCardViewModelForEdit.UpdateRecipeDisplayFromRecipeRecord(new RecipeRecordModel());
+            CurrentType = recipeCardViewModelForEdit.RecipeType;
             NumberOfIngredients = 0;
             NumberOfDirections = 0;
             CloseBorrowPanel();
@@ -109,15 +108,15 @@ namespace RecipeBuddy.ViewModels
             List<string> ingred = new List<string>() { "-Ingredients" };
             List<string> direct = new List<string>() { "-Directions" };
 
-            RecipeCardModel recipeCardModelForCreate = new RecipeCardModel(ingred, direct);
+            RecipeRecordModel recipeCardModelForCreate = new RecipeRecordModel(ingred, direct);
             recipeCardModelForCreate.Title = "";
             recipeCardModelForCreate.TypeAsInt = (int)Type_Of_Recipe.Unknown;
-            EditViewModel.Instance.CurrentType = (int)Type_Of_Recipe.Unknown;
+            EditViewModel.Instance.CurrentType = Type_Of_Recipe.Unknown;
             //recipeCardModelForCreate.Link = "My Recipe!";
 
-            recipeCardViewModelForEdit.UpdateRecipeEntry(recipeCardModelForCreate);
-            NumberOfIngredients = recipeCardModelForCreate.listOfIngredientStringsForDisplay.Count;
-            NumberOfDirections = recipeCardModelForCreate.listOfDirectionStringsForDisplay.Count;
+            recipeCardViewModelForEdit.UpdateRecipeDisplayFromRecipeRecord(recipeCardModelForCreate);
+            NumberOfIngredients = recipeCardModelForCreate.ListOfIngredientStrings.Count;
+            NumberOfDirections = recipeCardModelForCreate.ListOfDirectionStrings.Count;
         }
 
         /// <summary>
@@ -133,13 +132,13 @@ namespace RecipeBuddy.ViewModels
             }
 
             recipeCardViewModelForEdit.SaveEditsToARecipe();
-            recipeCardViewModelForEdit.TypeAsInt = CurrentType;
+            recipeCardViewModelForEdit.RecipeType = CurrentType;
             int result = MainWindowViewModel.Instance.mainTreeViewNav.AddRecipeToTreeView(recipeCardViewModelForEdit, true);
 
             if (result == 1)
             {
                 MainNavTreeViewModel.Instance.RemoveRecipeFromTreeView(recipeCardViewModelForEdit);
-                DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(recipeCardViewModelForEdit.Title, recipeCardViewModelForEdit.TypeAsInt, UserViewModel.Instance.UsersIDInDB);
+                DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(recipeCardViewModelForEdit.Title, (int)recipeCardViewModelForEdit.RecipeType, UserViewModel.Instance.UsersIDInDB);
             }
             if (result == 1 || result == 2)
             {
@@ -157,7 +156,7 @@ namespace RecipeBuddy.ViewModels
             if (visible == true)
             {
                 TypeComboBoxVisibility = "Visible";
-                CurrentType = recipeCardViewModelForEdit.TypeAsInt;
+                CurrentType = recipeCardViewModelForEdit.RecipeType;
             }
             else
             {
@@ -171,7 +170,7 @@ namespace RecipeBuddy.ViewModels
         internal void RevertRecipe()
         {
             recipeCardViewModelForEdit.SetIngredientAndDirectionProperties();
-            CurrentType = recipeCardViewModelForEdit.TypeAsInt;
+            CurrentType = recipeCardViewModelForEdit.RecipeType;
         }
 
         public int NumberOfIngredients
@@ -197,13 +196,13 @@ namespace RecipeBuddy.ViewModels
         {
             if (e.AddedItems != null && e.AddedItems.Count > 0)
             {
-                RecipeCardModel recipeCardModel = e.AddedItems[0] as RecipeCardModel;
+                RecipeDisplayModel recipeCardModel = e.AddedItems[0] as RecipeDisplayModel;
 
                 if (recipeCardModel != null)
                 {
-                    if (SelectedViewModel.Instance.listOfRecipeCardsModel.SettingCurrentIndexByTitle(recipeCardModel.Title) != -1)
+                    if (SelectedViewModel.Instance.listOfRecipeModel.SettingCurrentIndexByTitle(recipeCardModel.Title) != -1)
                     {
-                        recipeCardViewModelToBorrowFrom.UpdateRecipeEntry(SelectedViewModel.Instance.listOfRecipeCardsModel.RecipesList[IndexOfComboBoxItem]);
+                        recipeCardViewModelToBorrowFrom.UpdateRecipeDisplayFromRecipeRecord(SelectedViewModel.Instance.listOfRecipeModel.RecipesList[IndexOfComboBoxItem]);
                     }
                 }
             }
@@ -214,13 +213,13 @@ namespace RecipeBuddy.ViewModels
             {
                 if (e.RemovedItems != null && e.RemovedItems.Count > 0)
                 {
-                    RecipeCardModel recipeCardModel = e.RemovedItems[0] as RecipeCardModel;
+                    RecipeDisplayModel recipeCardModel = e.RemovedItems[0] as RecipeDisplayModel;
 
                     if (recipeCardModel != null)
                     {
-                        if (SelectedViewModel.Instance.listOfRecipeCardsModel.SettingCurrentIndexByTitle(recipeCardModel.Title) != -1)
+                        if (SelectedViewModel.Instance.listOfRecipeModel.SettingCurrentIndexByTitle(recipeCardModel.Title) != -1)
                         {
-                            recipeCardViewModelToBorrowFrom.UpdateRecipeEntry(SelectedViewModel.Instance.listOfRecipeCardsModel.RecipesList[IndexOfComboBoxItem]);
+                            recipeCardViewModelToBorrowFrom.UpdateRecipeDisplayFromRecipeRecord(SelectedViewModel.Instance.listOfRecipeModel.RecipesList[IndexOfComboBoxItem]);
                         }
                     }
                 }
@@ -241,7 +240,7 @@ namespace RecipeBuddy.ViewModels
                 {
                     if (string.Compare(MainNavTreeViewModel.Instance.CatagoryTypes[index].ToString().ToLower(), type.ToLower()) == 0)
                     {
-                        CurrentType = index;
+                        CurrentType = (Type_Of_Recipe)index;
                     }
                 }
             }
@@ -267,8 +266,8 @@ namespace RecipeBuddy.ViewModels
             CloseButtonVisibilty = "Visible";
 
             //need to update to the current card before opening the Borrow-Panel
-            if (SelectedViewModel.Instance.listOfRecipeCardsModel.RecipesList.Count > 0)
-                recipeCardViewModelToBorrowFrom.UpdateRecipeEntry(SelectedViewModel.Instance.listOfRecipeCardsModel.RecipesList[IndexOfComboBoxItem]);
+            if (SelectedViewModel.Instance.listOfRecipeModel.RecipesList.Count > 0)
+                recipeCardViewModelToBorrowFrom.UpdateRecipeDisplayFromRecipeRecord(SelectedViewModel.Instance.listOfRecipeModel.RecipesList[IndexOfComboBoxItem]);
         }
 
         public static EditViewModel Instance
@@ -380,7 +379,7 @@ namespace RecipeBuddy.ViewModels
         {
             get
             {
-                if (SelectedViewModel.Instance.listOfRecipeCardsModel.ListCount == 0)
+                if (SelectedViewModel.Instance.listOfRecipeModel.ListCount == 0)
                     return false;
                 else
                     return true;
@@ -415,8 +414,8 @@ namespace RecipeBuddy.ViewModels
             set { SetProperty(ref closeButtonVisibilty, value); }
         }
 
-        private int currentType;
-        public int CurrentType
+        private Type_Of_Recipe currentType;
+        public Type_Of_Recipe CurrentType
         {
             get { return currentType; }
             set { SetProperty(ref currentType, value); }

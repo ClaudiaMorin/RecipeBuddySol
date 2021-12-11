@@ -164,7 +164,6 @@
     <Compile Include="ValueConverters\StyleConverterUnhideFirstEmptyTextBox.cs" />
     <Compile Include="ValueConverters\TargetCoverterContextMenu.cs" />
     <Compile Include="ValueConverters\TextToVisibilityConverter.cs" />
-    <Compile Include="ViewModels\Base\ObservableObjBase.cs" />
     <Compile Include="ViewModels\Commands\ICommmandViewModel.cs" />
     <Compile Include="ViewModels\EditViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -173,8 +172,9 @@
     <Compile Include="ViewModels\SelectedViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\SubModels\MainNavTreeViewModel.cs" />
-    <Compile Include="ViewModels\SubModels\RecipeCardTreeItem.cs" />
+    <Compile Include="ViewModels\SubModels\RecipeTreeItem.cs" />
     <Compile Include="ViewModels\SubModels\RecipePanelForSeachViewModel.cs" />
+    <Compile Include="ViewModels\SubModels\RecipePanelWebCopy.cs" />
     <Compile Include="ViewModels\UploadViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="ViewModels\WebViewModel.cs" />
@@ -201,8 +201,8 @@
     </Compile>
     <Compile Include="Views\UserControls\PasswordBoxAttachedProperties.cs" />
     <Compile Include="Views\UserControls\PasswordBoxBindingBehavior.cs" />
-    <Compile Include="Views\UserControls\RecipeDetailsPanel.xaml.cs">
-      <DependentUpon>RecipeDetailsPanel.xaml</DependentUpon>
+    <Compile Include="Views\UserControls\RecipeDetailsPanelForSearch.xaml.cs">
+      <DependentUpon>RecipeDetailsPanelForSearch.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UserControls\RecipeDetailsPanelForEdit.xaml.cs">
       <DependentUpon>RecipeDetailsPanelForEdit.xaml</DependentUpon>
@@ -210,11 +210,11 @@
     <Compile Include="Views\UserControls\RecipeDetailsPanelForSelected.xaml.cs">
       <DependentUpon>RecipeDetailsPanelForSelected.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\UserControls\RecipeDetailsPanelForWebSave.xaml.cs">
+      <DependentUpon>RecipeDetailsPanelForWebSave.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserControls\RecipeDetailsPanelTextBoxCopyOnly.xaml.cs">
       <DependentUpon>RecipeDetailsPanelTextBoxCopyOnly.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\UserControls\RecipeSummaryWithLink.xaml.cs">
-      <DependentUpon>RecipeSummaryWithLink.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UserControls\RecipeTreeView.xaml.cs">
       <DependentUpon>RecipeTreeView.xaml</DependentUpon>
@@ -316,7 +316,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\UserControls\RecipeDetailsPanel.xaml">
+    <Page Include="Views\UserControls\RecipeDetailsPanelForSearch.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -328,11 +328,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\UserControls\RecipeDetailsPanelTextBoxCopyOnly.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Views\UserControls\RecipeDetailsPanelForWebSave.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\UserControls\RecipeSummaryWithLink.xaml">
+    <Page Include="Views\UserControls\RecipeDetailsPanelTextBoxCopyOnly.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

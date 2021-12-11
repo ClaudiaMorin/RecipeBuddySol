@@ -6,35 +6,23 @@
              xmlns:local="using:RecipeBuddy.Views"
              mc:Ignorable="d" >
     <StackPanel>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="16"/>
-                <RowDefinition Height="16"/>
             </Grid.RowDefinitions>
-            <TextBlock x:Name="Author" TextAlignment="Left" Grid.Column= "0" Grid.Row="0" FontSize="12" TextWrapping="Wrap" Text="{Binding Path=Author, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
-                <TextBlock TextAlignment="Right" FontSize="12"  Text="Category: "/>
-                <TextBlock x:Name="Type" TextAlignment="Left" FontSize="12" Grid.Column= "0" Grid.Row="1" TextWrapping="Wrap" Text="{Binding Path=Recipe_Type, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </StackPanel>
-            <TextBlock x:Name="TotalTime" TextAlignment="Right" Grid.Column= "1" Grid.Row="0" FontSize="12" TextWrapping="Wrap" Text="{Binding Path=TotalTime, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <HyperlinkButton x:Name="WebsiteHyperlink" NavigateUri="{Binding Path=Link, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column= "1" Grid.Row="1" >
-                <TextBlock Text="{Binding Path=Website, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </HyperlinkButton>
-            <!--<TextBlock x:Name="WebsiteHyperlink" TextAlignment="Right" Grid.Column= "1" Grid.Row="1" FontSize="12" TextWrapping="Wrap">-->
-
-                <!--<Hyperlink NavigateUri="{Binding Path=Link, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" RequestNavigate="Hyperlink_RequestNavigate" ToolTipService.ToolTip="{Binding Path=Link, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBlock Text="{Binding Path=Website, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </Hyperlink>-->
-            <!--</TextBlock>-->
-    </Grid>
+            <TextBlock x:Name="Author" TextAlignment="Left" Grid.Column= "0" Grid.Row="0" FontSize="14" Text="{Binding Path=Author, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock x:Name="Type" TextAlignment="Right" Grid.Column= "1" Grid.Row="0" FontSize="14" Text="{Binding Path=Recipe_Type, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
     <StackPanel x:Name="IngredientDirections">
-        <Border BorderThickness="2" BorderBrush="DarkGray"/>
-            <TextBlock x:Name="Ingredient1" Style ="{Binding Path=Ingredient1, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1 }" Text ="{Binding Path=Ingredient1}"/>
-        <Border BorderThickness="2" BorderBrush="DarkGray"/>
+            <Border BorderThickness="2" BorderBrush="DarkGray"/>
+            <TextBlock x:Name="Description" TextAlignment="Left" FontSize="14" TextWrapping="Wrap" Text="{Binding Path=Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Border BorderThickness="2" BorderBrush="DarkGray" Background="LightSteelBlue">
+                <TextBlock x:Name="Ingredient1" Style ="{Binding Path=Ingredient1, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1 }" Text ="{Binding Path=Ingredient1}"/>
+            </Border>
             <TextBlock x:Name="Ingredient2" Style ="{Binding Path=Ingredient2, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0 }" Text ="{Binding Path=Ingredient2}"/>
             <TextBlock x:Name="Ingredient3" Style ="{Binding Path=Ingredient3, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1 }" Text ="{Binding Path=Ingredient3}"/>
             <TextBlock x:Name="Ingredient4" Style ="{Binding Path=Ingredient4, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0 }" Text ="{Binding Path=Ingredient4}"/>
@@ -84,9 +72,9 @@
             <TextBlock x:Name="Ingredient48" Style ="{Binding Path=Ingredient48, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient48}"/>
             <TextBlock x:Name="Ingredient49" Style ="{Binding Path=Ingredient49, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Ingredient49}"/>
             <TextBlock x:Name="Ingredient50" Style ="{Binding Path=Ingredient50, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient50}"/>
-        <Border BorderThickness="2" BorderBrush="DarkGray"/>
+        <Border BorderThickness="2" BorderBrush="DarkGray" Background="LightSteelBlue">
             <TextBlock x:Name="Direction1" Style ="{Binding Path=Direction1, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction1}"/>
-        <Border BorderThickness="2" BorderBrush="DarkGray"/>
+        </Border>
             <TextBlock x:Name="Direction2" Style ="{Binding Path=Direction2, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction2}"/>
             <TextBlock x:Name="Direction3" Style ="{Binding Path=Direction3, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction3}"/>
             <TextBlock x:Name="Direction4" Style ="{Binding Path=Direction4, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction4}"/>

@@ -30,7 +30,7 @@ namespace RecipeBuddy.Core.Scrapers
         /// Using a search string that is inputted by the user we generate the recipe text for the three pannels.
         /// </summary>
         /// <param name="strSearch"></param>
-        public static int GenerateURLsListFromEpicuriousSearch(string strSearch, RecipeBlurbListModel listModel)
+        public static int GenerateURLsListFromEpicuriousSearch(string strSearch, RecipeListModel listModel)
         {
             List<string> myQuery = new List<string>();
 
@@ -61,7 +61,7 @@ namespace RecipeBuddy.Core.Scrapers
                 foreach (var item in list)
                 {
                     string str = item.InnerHtml.Substring(item.InnerHtml.IndexOf('/')).Split('\"')[0];
-                    if (listModel.URLLists.Add("https://www.epicurious.com" + str) == -1)
+                    if (listModel.URLLists.Add(new Uri("https://www.epicurious.com" + str)) == -1)
                     {
                         return 0;
                     }
@@ -85,20 +85,19 @@ namespace RecipeBuddy.Core.Scrapers
         /// <param name="doc">HtmlDocument that has the webiste loaded</param>
         /// <param name="splitter">The the way to split up the description so we only keep two sentences</param>
         /// <param name="uri">website</param>
-        public static RecipeBlurbModel ProcessEpicuriousRecipeType(HtmlDocument doc, char[] splitter, string uri)
+        public static RecipeRecordModel ProcessEpicuriousRecipeType(HtmlDocument doc, char[] splitter, Uri uri)
         {
 
-            //List<string> ingredients = FillIngredientListEpicuriousForRecipeEntry(doc, 50);
-            ////no ingredients it isn't a real recipe so we bail
-            //if (ingredients == null || ingredients.Count == 0)
-            //    return null;
+            List<string> ingredients = FillIngredientListEpicuriousForRecipeEntry(doc, 50);
+            //no ingredients it isn't a real recipe so we bail
+            if (ingredients == null || ingredients.Count == 0)
+                return null;
+            List<string> directions = new List<string>();
+            directions.Add("-Direction");
 
-            //List<string> directions = FillDirectionListEpicuriousForRecipeEntry(doc, 30);
+            RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
-            //RecipeCardModel recipeCardModel = new RecipeCardModel(ingredients, directions);
-            RecipeBlurbModel recipeBlurbModel = new RecipeBlurbModel();
-
-            recipeBlurbModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//h1[@data-testid='ContentHeaderHed']", doc));
+            recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//h1[@data-testid='ContentHeaderHed']", doc));
             //HtmlNode timenode = doc.DocumentNode.SelectSingleNode("//ul[@class='InfoSliceList-eUasUM uVRyc']");
             //{
             //    if (timenode != null && timenode.ChildNodes[1] != null)
@@ -107,12 +106,15 @@ namespace RecipeBuddy.Core.Scrapers
             //    }
             //}
 
-            recipeBlurbModel.Website = "Epicurious";
-            recipeBlurbModel.Description = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='container--body-inner']", doc));
-            recipeBlurbModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//span[@data-testid='BylineName']", doc));
-            recipeBlurbModel.Link = uri;
-            recipeBlurbModel.Recipe_Type = Scraper.FillTypeForRecipeEntry(recipeBlurbModel.Title);
-            return recipeBlurbModel;
+            //recipeModel.Website = Type_of_Websource.Epicurious;
+            recipeModel.Description = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='container--body-inner']", doc));
+            recipeModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//span[@data-testid='BylineName']", doc));
+            recipeModel.Link = uri.ToString();
+            recipeModel.TypeAsInt = (int)Scraper.FillTypeForRecipeEntry(recipeModel.Title);
+            recipeModel.ListOfIngredientStrings = ingredients;
+            recipeModel.ListOfDirectionStrings = directions;
+
+            return recipeModel;
         }
 
         private static List<string> FillIngredientListEpicuriousForRecipeEntry(HtmlDocument doc, int countList)

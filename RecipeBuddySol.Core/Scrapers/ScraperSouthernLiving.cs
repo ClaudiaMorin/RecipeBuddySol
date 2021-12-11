@@ -28,7 +28,7 @@ namespace RecipeBuddy.Core.Scrapers
         /// Using a search string that is inputted by the user we generate the recipe text for the three pannels.
         /// </summary>
         /// <param name="strSearch"></param>
-        public static int GenerateURLsListFromSouthernLivingSearch(string strSearch, RecipeBlurbListModel listModel)
+        public static int GenerateURLsListFromSouthernLivingSearch(string strSearch, RecipeListModel listModel)
         {
             string strQuery = "https://www.southernliving.com/search?q=";
             var web = new HtmlWeb();
@@ -77,7 +77,7 @@ namespace RecipeBuddy.Core.Scrapers
                         firstStr = list[itemCount].OuterHtml.Substring(i);
                         secondStr = firstStr.Substring(0, firstStr.IndexOf('"'));
 
-                        if (listModel.URLLists.Add("https://" + secondStr) == -1)
+                        if (listModel.URLLists.Add(new Uri("https://" + secondStr)) == -1)
                         {
                             return 0;
                         }
@@ -130,41 +130,41 @@ namespace RecipeBuddy.Core.Scrapers
         }
 
 
-        private static List<string> FillDirectionListSouthernLivingForRecipeEntry(HtmlDocument doc, int countList)
-        {
-            List<string> directions = new List<string>();
-            string headerTag = "-";
-            try
-            {
-                HtmlNode directions_sub_level = doc.DocumentNode.SelectSingleNode("//ul[@class='instructions-section']");
-                string innerText = directions_sub_level.InnerText.Replace('\n', ' ').Replace("Advertisement", "");
-                List<string> preDirectionsList = new List<string>();
-                string subString;
+        //private static List<string> FillDirectionListSouthernLivingForRecipeEntry(HtmlDocument doc, int countList)
+        //{
+        //    List<string> directions = new List<string>();
+        //    string headerTag = "-";
+        //    try
+        //    {
+        //        HtmlNode directions_sub_level = doc.DocumentNode.SelectSingleNode("//ul[@class='instructions-section']");
+        //        string innerText = directions_sub_level.InnerText.Replace('\n', ' ').Replace("Advertisement", "");
+        //        List<string> preDirectionsList = new List<string>();
+        //        string subString;
 
-                directions.Add(headerTag + "Directions");
+        //        directions.Add(headerTag + "Directions");
 
-                while (innerText.TrimStart().Length > 1)
-                {
-                    innerText = innerText.TrimStart();
-                    subString = innerText.Substring(0, innerText.IndexOf("  "));
-                    preDirectionsList.Add(StringManipulationHelper.CleanHTMLTags(subString));
-                    innerText = innerText.Remove(0, subString.Length);
-                }
+        //        while (innerText.TrimStart().Length > 1)
+        //        {
+        //            innerText = innerText.TrimStart();
+        //            subString = innerText.Substring(0, innerText.IndexOf("  "));
+        //            preDirectionsList.Add(StringManipulationHelper.CleanHTMLTags(subString));
+        //            innerText = innerText.Remove(0, subString.Length);
+        //        }
 
-                for (int count = 0; count < preDirectionsList.Count;)
-                {
-                    directions.Add(preDirectionsList[count] + ":  " + preDirectionsList[count + 1]);
-                    count = count + 2;
-                }
-            }
+        //        for (int count = 0; count < preDirectionsList.Count;)
+        //        {
+        //            directions.Add(preDirectionsList[count] + ":  " + preDirectionsList[count + 1]);
+        //            count = count + 2;
+        //        }
+        //    }
 
-            catch (Exception e)
-            {
-                return null;
-            }
+        //    catch (Exception e)
+        //    {
+        //        return null;
+        //    }
 
-            return Scraper.TrimListToSpecifiedEntries(30, directions);
-        }
+        //    return Scraper.TrimListToSpecifiedEntries(30, directions);
+        //}
 
         /// <summary>
         /// Processes the xml following the SouthernLiving website's specific tweeks that are nessesary to pull data
@@ -173,7 +173,7 @@ namespace RecipeBuddy.Core.Scrapers
         /// <param name="doc">HtmlDocument that has the webiste loaded</param>
         /// <param name="splitter">The the way to split up the description so we only keep two sentences</param>
         /// <param name="uri">website</param>
-        public static RecipeBlurbModel ProcessSouthernLivingRecipeType(HtmlDocument doc, char[] splitter, string uri)
+        public static RecipeRecordModel ProcessSouthernLivingRecipeType(HtmlDocument doc, char[] splitter, Uri uri)
         {
 
             List<string> ingredients = FillIngredientListSouthernLivingForRecipeEntry(doc, 50);
@@ -183,26 +183,26 @@ namespace RecipeBuddy.Core.Scrapers
             if (ingredients.Count < 1)
                 return null;
 
-            List<string> directions = FillDirectionListSouthernLivingForRecipeEntry(doc, 30);
-            //no directions it isn't a real recipe so we bail
-            if (directions == null || directions.Count == 0)
-                return null;
+            List<string> directions = new List<string>();
+            directions.Add("-Direction");
 
-            RecipeBlurbModel recipeBlurbModel = new RecipeBlurbModel();
+            RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
 
-            recipeBlurbModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//h1[@class='headline heading-content elementFont__display']", doc));
-            recipeBlurbModel.Website = "SouthernLiving";
-            recipeBlurbModel.Description = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='recipe-summary elementFont__dek--paragraphWithin elementFont__dek--linkWithin']", doc));
+            recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//h1[@class='headline heading-content elementFont__display']", doc));
+            recipeModel.Website = "SouthernLiving";
+            recipeModel.Description = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='recipe-summary elementFont__dek--paragraphWithin elementFont__dek--linkWithin']", doc));
 
             //recipeBlurbModel.TotalTime = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//div[@class='recipe-meta-item-body']", doc));
 
-            recipeBlurbModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//span[@class='author-name authorName']", doc));
+            recipeModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//span[@class='author-name authorName']", doc));
 
-            recipeBlurbModel.Link = uri;
-            recipeBlurbModel.Recipe_Type = Scraper.FillTypeForRecipeEntry(recipeBlurbModel.Title);
+            recipeModel.Link = uri.ToString();
+            recipeModel.TypeAsInt = (int)Scraper.FillTypeForRecipeEntry(recipeModel.Title);
+            recipeModel.ListOfIngredientStrings = ingredients;
+            recipeModel.ListOfDirectionStrings = directions;
 
-            return recipeBlurbModel;
+            return recipeModel;
         }
     }
 }

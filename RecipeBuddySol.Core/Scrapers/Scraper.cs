@@ -78,60 +78,61 @@ namespace RecipeBuddy.Core.Scrapers
         /// the ingredients and directions bucket are HMLCollections so that I can keep the items seperated
         /// </summary>
         /// <returns>A filled RecipeCard</returns>
-        public static RecipeBlurbModel ScrapeDataForRecipeEntry(string uri)
+        public static RecipeRecordModel ScrapeDataForRecipeEntry(Uri uri)
         {
             //Bad uri string -- Bail.
-            if (uri.Length <= 0)
+            if (uri == null)
                 return null;
             char[] splitter = { '.', '?', '!', '\n' };
+
 
             try
             {
                 HtmlWeb web = new HtmlWeb();
                 HtmlDocument doc = web.Load(uri);
 
-                if (uri.Contains("www.epicurious.com"))
+                if (uri.Host == "www.epicurious.com")
                 {
-                    RecipeBlurbModel recipeBlurbEpicurious = ScraperEpicurious.ProcessEpicuriousRecipeType(doc, splitter, uri);
+                    RecipeRecordModel dataEpicurious = ScraperEpicurious.ProcessEpicuriousRecipeType(doc, splitter, uri);
 
-                    if (recipeBlurbEpicurious != null)
-                        return recipeBlurbEpicurious;
+                    if (dataEpicurious != null)
+                        return dataEpicurious;
                 }
 
-                if (uri.Contains("www.allrecipes.com"))
+                if (uri.Host == "www.allrecipes.com")
                 {
-                    RecipeBlurbModel recipeBlurbAllRecipes = ScraperAllRecipes.ProcessAllRecipesRecipeType(doc, splitter, uri);
-                    if (recipeBlurbAllRecipes != null)
+                    RecipeRecordModel dataBlurbAllRecipes = ScraperAllRecipes.ProcessAllRecipesRecipeType(doc, splitter, uri);
+                    if (dataBlurbAllRecipes != null)
 
-                        return recipeBlurbAllRecipes;
+                        return dataBlurbAllRecipes;
                 }
 
-                if (uri.Contains("www.foodnetwork.com"))
+                if (uri.Host == "www.foodnetwork.com")
                 {
-                    RecipeBlurbModel recipeBlurbFoodNetwork = ScraperFoodNetwork.ProcessFoodNetworkRecipeType(doc, splitter, uri);
-                    if (recipeBlurbFoodNetwork != null)
-                        return recipeBlurbFoodNetwork;
+                    RecipeRecordModel dataFoodNetwork = ScraperFoodNetwork.ProcessFoodNetworkRecipeType(doc, splitter, uri);
+                    if (dataFoodNetwork != null)
+                        return dataFoodNetwork;
                 }
 
-                if (uri.Contains("www.southernliving.com"))
+                if (uri.Host == "www.southernliving.com")
                 {
-                    RecipeBlurbModel recipeBlurbSouthernLiving = ScraperSouthernLiving.ProcessSouthernLivingRecipeType(doc, splitter, uri);
-                    if (recipeBlurbSouthernLiving != null)
-                        return recipeBlurbSouthernLiving;
+                    RecipeRecordModel dataSouthernLiving = ScraperSouthernLiving.ProcessSouthernLivingRecipeType(doc, splitter, uri);
+                    if (dataSouthernLiving != null)
+                        return dataSouthernLiving;
                 }
 
-                if (uri.Contains("www.tasty.co"))
+                if (uri.Host == "www.tasty.co")
                 {
-                    RecipeBlurbModel recipeBlurbTasty = ScraperTasty.ProcessTastyRecipeType(doc, splitter, uri);
-                    if (recipeBlurbTasty != null)
-                        return recipeBlurbTasty;
+                    RecipeRecordModel dataTasty = ScraperTasty.ProcessTastyRecipeType(doc, splitter, uri);
+                    if (dataTasty != null)
+                        return dataTasty;
                 }
 
-                if (uri.Contains("www.foodandwine.com"))
+                if (uri.Host == "www.foodandwine.com")
                 {
-                    RecipeBlurbModel recipeBlurbFoodAndWine = ScraperFoodAndWine.ProcessFoodAndWineRecipeType(doc, splitter, uri);
-                    if (recipeBlurbFoodAndWine != null)
-                        return recipeBlurbFoodAndWine;
+                    RecipeRecordModel dataFoodAndWine = ScraperFoodAndWine.ProcessFoodAndWineRecipeType(doc, splitter, uri);
+                    if (dataFoodAndWine != null)
+                        return dataFoodAndWine;
                 }
             }
             catch (Exception e)
@@ -157,7 +158,7 @@ namespace RecipeBuddy.Core.Scrapers
 
             if (Title.ToLower().Contains("pie") || Title.ToLower().Contains("pastery") || Title.ToLower().Contains("doughnut"))
             {
-                type = Type_Of_Recipe.Pastery;
+                type = Type_Of_Recipe.Pastry;
             }
 
             if (Title.ToLower().Contains("cookie") || Title.ToLower().Contains("bar"))
@@ -280,7 +281,7 @@ namespace RecipeBuddy.Core.Scrapers
         /// </summary>
         /// <param name="UploadedText">The textfile uploaded by the user</param>
         /// <returns>A filled in object of type RecipeCardModel</returns>
-        public static RecipeCardModel ProcessUploatedRecipe(string uploadedText)
+        public static RecipeDisplayModel ProcessUploatedRecipe(string uploadedText)
         {
             string title = uploadedText.Substring(0, uploadedText.IndexOf("\r\n"));
             string recipeStr = uploadedText.Substring(title.Length);
@@ -288,22 +289,22 @@ namespace RecipeBuddy.Core.Scrapers
             int indexIngred = uploadedText.IndexOf("Ingredients");
             if (indexIngred == -1)
             {
-                return new RecipeCardModel();
+                return new RecipeDisplayModel();
             }
 
-            List<string> IngredList = new List<string>();
-            IngredList.Add("-Ingredients");
+            List<string> ingredList = new List<string>();
+            ingredList.Add("-Ingredients");
 
             string ingredStr = uploadedText.Substring(indexIngred).Trim();
             ingredStr = ingredStr.Substring(ingredStr.IndexOf("\r\n")).Trim();
-            string directStr = ingredStr.Substring(ProcessUploatedRecipeIngredients(ingredStr, IngredList)).Trim();
+            string directStr = ingredStr.Substring(ProcessUploatedRecipeIngredients(ingredStr, ingredList)).Trim();
 
             List<string> directList = new List<string>();
             directList.Add("-Directions");
 
             ProcessUploatedRecipeDirections(directStr, directList);
 
-            RecipeCardModel recipeCardModel = new RecipeCardModel(IngredList, directList);
+            RecipeDisplayModel recipeCardModel = new RecipeDisplayModel(ingredList, directList);
             recipeCardModel.Title = title;
 
             return recipeCardModel;

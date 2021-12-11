@@ -1,4 +1,5 @@
 ﻿//using Squirrel;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -22,6 +23,7 @@ namespace RecipeBuddy.ViewModels
         /// Interaction logic for MainWindow.xaml
         /// </summary>
         private static readonly MainWindowViewModel instance = new MainWindowViewModel();
+        
         public MainNavTreeViewModel mainTreeViewNav;
         
         string basketTabName;
@@ -29,9 +31,17 @@ namespace RecipeBuddy.ViewModels
 
         private MainWindowViewModel()
         {
-            selectedTabIndexInt = (int)MainWindowViewModel.Tabs.UserTab;
-            titleAndVersion = "RecipeBuddy    version ";
-            mainTreeViewNav = MainNavTreeViewModel.Instance;
+            try
+            {
+                selectedTabIndexInt = (int)MainWindowViewModel.Tabs.UserTab;
+                titleAndVersion = "RecipeBuddy    version ";
+                //mainTreeViewNav = MainNavTreeViewModel.Instance;
+            }
+            catch (Exception e)
+            {
+                string stuff = "stuff";
+            }
+
             
             //AddVersionNumber();
             //CheckForUpdates();

@@ -21,11 +21,9 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="26"/>
                 </Grid.RowDefinitions>
-                <TextBox x:Name="Author" TextAlignment="Left" Grid.Column= "0" Grid.Row="0" FontSize="12" TextWrapping="Wrap" Text="{Binding Path=Author, Mode=TwoWay}" IsReadOnly="True"/>
-                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="1" >
-                    <TextBlock Text="Category: " TextAlignment="Left" FontSize="14"/>
-                    <TextBlock x:Name="Type" TextAlignment="Left" FontSize="14" Text="{Binding Path=Recipe_Type, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </StackPanel>
+                <TextBox x:Name="Title" TextAlignment="Left" Grid.Column= "0" Grid.Row="0" FontSize="14" TextWrapping="Wrap" FontWeight="Bold" Text="{Binding Path=Title, Mode=TwoWay}" IsReadOnly="True"/>
+                <TextBox x:Name="Author" TextAlignment="Right" Grid.Column= "1" Grid.Row="0" FontSize="14" TextWrapping="Wrap" Text="{Binding Path=Author, Mode=TwoWay}" IsReadOnly="True"/>
+
                 <!--<TextBox x:Name="TotalTime" TextAlignment="Right" Grid.Column= "1" Grid.Row="0" FontSize="12" TextWrapping="Wrap" Text="{Binding Path=TotalTime, Mode=TwoWay}" IsReadOnly="True"/>
                 <TextBlock x:Name="WebsiteHyperlink" TextAlignment="Right" Grid.Column= "1" Grid.Row="1" FontSize="12" TextWrapping="Wrap">
                     <Hyperlink NavigateUri="{Binding Path=Link, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" RequestNavigate="Hyperlink_RequestNavigate" ToolTip="{Binding Path=Link, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">

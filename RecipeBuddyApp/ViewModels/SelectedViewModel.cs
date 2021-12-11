@@ -17,8 +17,8 @@ namespace RecipeBuddy.ViewModels
         Action ActionNoParams;
         Func<bool> FuncBool;
 
-        public RecipeCardModel selectViewMainRecipeCardModel;
-        public RecipeCardsListModel listOfRecipeCardsModel;
+        public RecipeDisplayModel selectViewMainRecipeCardModel;
+        public RecipeListModel listOfRecipeModel;
 
         public string QuantitySelectedAsString;
         public int QuantitySelectedAsInt;
@@ -53,8 +53,8 @@ namespace RecipeBuddy.ViewModels
             
             SetUpComboBox();
             LoadListSettersWithActionDelegatesForIngredientQuantities();
-            selectViewMainRecipeCardModel = new RecipeCardModel();
-            listOfRecipeCardsModel = new RecipeCardsListModel();
+            selectViewMainRecipeCardModel = new RecipeDisplayModel();
+            listOfRecipeModel = new RecipeListModel();
             IngredientQuantityShift = new List<string>();
             typeComboBoxVisibility = "Collapsed";
             CmdRemove = new RBRelayCommand(ActionNoParams = () => RemoveRecipe(), FuncBool = () => CanSelect);
@@ -85,28 +85,28 @@ namespace RecipeBuddy.ViewModels
 
         public void RemoveRecipe()
         {
-            if (listOfRecipeCardsModel.ListCount > 0 && listOfRecipeCardsModel.CurrentCardIndex != -1)
+            if (listOfRecipeModel.ListCount > 0 && listOfRecipeModel.CurrentCardIndex != -1)
             {
-                listOfRecipeCardsModel.Remove(listOfRecipeCardsModel.CurrentCardIndex);
+                listOfRecipeModel.Remove(listOfRecipeModel.CurrentCardIndex);
 
-                if (listOfRecipeCardsModel.CurrentCardIndex > 0)
+                if (listOfRecipeModel.CurrentCardIndex > 0)
                 {
-                    listOfRecipeCardsModel.CurrentCardIndex = listOfRecipeCardsModel.CurrentCardIndex - 1;
-                    ShowSpecifiedEntry(listOfRecipeCardsModel.CurrentCardIndex);
+                    listOfRecipeModel.CurrentCardIndex = listOfRecipeModel.CurrentCardIndex - 1;
+                    ShowSpecifiedEntry(listOfRecipeModel.CurrentCardIndex);
                     //need to reset the starting index of the "borrow recipe" incase it was removed
                     EditViewModel.Instance.IndexOfComboBoxItem = 0;
                 }
-                else if (listOfRecipeCardsModel.ListCount > 0)
+                else if (listOfRecipeModel.ListCount > 0)
                 {
-                    listOfRecipeCardsModel.CurrentCardIndex = listOfRecipeCardsModel.ListCount - 1;
-                    ShowSpecifiedEntry(listOfRecipeCardsModel.CurrentCardIndex);
+                    listOfRecipeModel.CurrentCardIndex = listOfRecipeModel.ListCount - 1;
+                    ShowSpecifiedEntry(listOfRecipeModel.CurrentCardIndex);
                     //need to reset the starting index of the "borrow recipe" incase it was removed
                     EditViewModel.Instance.IndexOfComboBoxItem = 0;
                 }
                 //the last element in the list has been removed so now we need to go back to blank screen
                 else
                 {
-                    selectViewMainRecipeCardModel.CopyRecipeCardModel(new RecipeCardModel());
+                    selectViewMainRecipeCardModel.CopyRecipeDisplayModel(new RecipeDisplayModel());
                     EmptyIngredientQuanityRow();
                 }
 
@@ -119,10 +119,10 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void ResetViewModel()
         {
-            if (listOfRecipeCardsModel.ListCount > 0)
-                listOfRecipeCardsModel.RemoveAll();
+            if (listOfRecipeModel.ListCount > 0)
+                listOfRecipeModel.RemoveAll();
 
-            selectViewMainRecipeCardModel.CopyRecipeCardModel(new RecipeCardModel());
+            selectViewMainRecipeCardModel.CopyRecipeDisplayModel(new RecipeDisplayModel());
             EmptyIngredientQuanityRow();
         }
         /// <summary>
@@ -130,10 +130,10 @@ namespace RecipeBuddy.ViewModels
         /// user can edit the ingredients and we can check it before it is submitted.
         /// </summary>
         /// <param name="recipeCardModel">RecipeCardModel</param>
-        public void UpdateRecipeEntry(RecipeCardModel recipeCardModel)
+        public void UpdateRecipeEntry(RecipeRecordModel recipeModel)
         {
-            selectViewMainRecipeCardModel.CopyRecipeCardModel(recipeCardModel);
-            CurrentType = selectViewMainRecipeCardModel.TypeAsInt;
+            selectViewMainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(recipeModel);
+            CurrentType = (int)selectViewMainRecipeCardModel.RecipeType;
             UpdateQuantityCalc();
         }
 
@@ -142,9 +142,9 @@ namespace RecipeBuddy.ViewModels
         /// user can edit the ingredients and we can check it before it is submitted.
         /// </summary>
         /// <param name="recipeCardModel">RecipeCardTreeItem</param>
-        public void UpdateRecipe(RecipeCardTreeItem recipeCardTreeItem)
+        public void UpdateRecipe(RecipeTreeItem recipeTreeItem)
         {
-            UpdateRecipeEntry(recipeCardTreeItem.RecipeModelPropertyTV);
+            UpdateRecipeEntry(recipeTreeItem.RecipeModelTV);
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace RecipeBuddy.ViewModels
             if (result == 1)
             {
                 MainNavTreeViewModel.Instance.RemoveRecipeFromTreeView(selectViewMainRecipeCardModel);
-                DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(selectViewMainRecipeCardModel.Title, selectViewMainRecipeCardModel.TypeAsInt, UserViewModel.Instance.UsersIDInDB);
+                DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(selectViewMainRecipeCardModel.Title, (int)selectViewMainRecipeCardModel.RecipeType, UserViewModel.Instance.UsersIDInDB);
             }
             if (result == 1 || result == 2)
             {
@@ -173,7 +173,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void EditRecipe()
         {
-            EditViewModel.Instance.UpdateRecipe(selectViewMainRecipeCardModel);
+            //EditViewModel.Instance.UpdateRecipe(selectViewMainRecipeCardModel);
 
 
             //Check to see if this if from the TreeView or from a generic search
@@ -198,31 +198,31 @@ namespace RecipeBuddy.ViewModels
         private void SetUpComboBox()
         {
             indexOfComboBoxItem = 0;
-            listOfRecipeCardsModel = new RecipeCardsListModel();
+            listOfRecipeModel = new RecipeListModel();
         }
 
-        public void AddToListOfRecipeCards(RecipeCardModel recipeCard)
+        public void AddToListOfRecipeCards(RecipeRecordModel recipeCard)
         {
-            if (listOfRecipeCardsModel.IsFoundInList(recipeCard) == true)
+            if (listOfRecipeModel.IsFoundInList(recipeCard) == true)
             {
-                int index = listOfRecipeCardsModel.GetEntryIndex(recipeCard.Title);
+                int index = listOfRecipeModel.GetEntryIndex(recipeCard.Title);
                 ShowSpecifiedEntry(index);
                 return; 
             }
 
-            listOfRecipeCardsModel.Add(recipeCard);
+            listOfRecipeModel.Add(recipeCard);
 
             //If we have nothing in the list we will show the first entry
-            if (listOfRecipeCardsModel.ListCount == 1)
+            if (listOfRecipeModel.ListCount == 1)
             {
-                listOfRecipeCardsModel.CurrentCardIndex = 0;
+                listOfRecipeModel.CurrentCardIndex = 0;
                 EditViewModel.Instance.IndexOfComboBoxItem = 0;
             }
             else
             {
-                listOfRecipeCardsModel.CurrentCardIndex = listOfRecipeCardsModel.ListCount - 1;
+                listOfRecipeModel.CurrentCardIndex = listOfRecipeModel.ListCount - 1;
             }
-            ShowSpecifiedEntry(listOfRecipeCardsModel.CurrentCardIndex);
+            ShowSpecifiedEntry(listOfRecipeModel.CurrentCardIndex);
             
         }
 
@@ -232,7 +232,7 @@ namespace RecipeBuddy.ViewModels
         /// <param name="title">title of the recipe we are looking for</param>
         public void ShowSpecifiedEntry(string title)
         {
-            ShowSpecifiedEntry(listOfRecipeCardsModel.GetEntryIndex(title));
+            ShowSpecifiedEntry(listOfRecipeModel.GetEntryIndex(title));
         }
 
         /// <summary>
@@ -241,11 +241,11 @@ namespace RecipeBuddy.ViewModels
         /// <param name="index"></param>
         public void ShowSpecifiedEntry(int index)
         {
-            if (index < listOfRecipeCardsModel.ListCount && index > -1)
+            if (index < listOfRecipeModel.ListCount && index > -1)
             {
-                listOfRecipeCardsModel.CurrentCardIndex = index;
-                selectViewMainRecipeCardModel.UpdateRecipeEntry(listOfRecipeCardsModel.GetEntry(index));
-                ChangeRecipe(listOfRecipeCardsModel.CurrentCardIndex);
+                listOfRecipeModel.CurrentCardIndex = index;
+                selectViewMainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(listOfRecipeModel.GetEntry(index));
+                ChangeRecipe(listOfRecipeModel.CurrentCardIndex);
                 NumXRecipesIndex = "0";
                 IndexOfComboBoxItem = index;
                 UpdateQuantityCalc();
@@ -258,7 +258,7 @@ namespace RecipeBuddy.ViewModels
         /// <param name="indexOfTitleInComboBox"></param>
         public void ChangeRecipe(int indexOfTitleInComboBox)
         {
-            listOfRecipeCardsModel.CurrentCardIndex = indexOfTitleInComboBox;
+            listOfRecipeModel.CurrentCardIndex = indexOfTitleInComboBox;
 
             for (int count = 0; count < selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay.Count; count++)
             {
@@ -277,7 +277,7 @@ namespace RecipeBuddy.ViewModels
         /// <param name="TitleOfRecipe">Title of the new recipe</param>
         public void ChangeRecipe(string TitleOfRecipe)
         {
-            int index = listOfRecipeCardsModel.SettingCurrentIndexByTitle(TitleOfRecipe);
+            int index = listOfRecipeModel.SettingCurrentIndexByTitle(TitleOfRecipe);
             if (index != -1)
             {
                 ChangeRecipe(index);
@@ -377,15 +377,15 @@ namespace RecipeBuddy.ViewModels
         {
             if (e.AddedItems != null && e.AddedItems.Count > 0)
             {
-                RecipeCardModel recipeCardModelFromChangedEventArgs = e.AddedItems[0] as RecipeCardModel;
+                RecipeDisplayModel recipeCardModelFromChangedEventArgs = e.AddedItems[0] as RecipeDisplayModel;
 
                 if (recipeCardModelFromChangedEventArgs != null)
                 {
-                    if (listOfRecipeCardsModel.SettingCurrentIndexByTitle(recipeCardModelFromChangedEventArgs.Title) != -1)
+                    if (listOfRecipeModel.SettingCurrentIndexByTitle(recipeCardModelFromChangedEventArgs.Title) != -1)
                     {
-                        RecipeCardModel recipeCardModel = listOfRecipeCardsModel.GetCurrentEntry();
+                        RecipeRecordModel recipeModel = listOfRecipeModel.GetCurrentEntry();
                         NumXRecipesIndex = "0";
-                        UpdateRecipeEntry(recipeCardModel);
+                        UpdateRecipeEntry(recipeModel);
                     }
                 }
             }
@@ -395,12 +395,12 @@ namespace RecipeBuddy.ViewModels
             {
                 if (e.RemovedItems != null && e.RemovedItems.Count > 0)
                 {
-                    RecipeCardModel recipeCardModel = e.RemovedItems[0] as RecipeCardModel;
+                    RecipeRecordModel recipeModel = e.RemovedItems[0] as RecipeRecordModel;
 
-                    if (recipeCardModel != null)
+                    if (recipeModel != null)
                     {
-                        ChangeRecipe(recipeCardModel.Title);
-                        recipeCardModel.UpdateRecipeEntry(recipeCardModel);
+                        ChangeRecipe(recipeModel.Title);
+                        //recipeModel.UpdateRecipeEntry(recipeModel);
                         NumXRecipesIndex = "0";
                         UpdateQuantityCalc();
                     }

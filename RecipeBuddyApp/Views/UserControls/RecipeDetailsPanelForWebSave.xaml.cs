@@ -1,8 +1,6 @@
-﻿using RecipeBuddy.Core;
-using RecipeBuddy.ViewModels;
+﻿using RecipeBuddy.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -20,13 +18,12 @@ using Windows.UI.Xaml.Navigation;
 
 namespace RecipeBuddy.Views
 {
-    public sealed partial class RecipeTreeView : UserControl
+    public partial class RecipeDetailsPanelForWebSave : UserControl
     {
-        public ObservableCollection<RecipeTreeItem> RecipeTreeRoot = new ObservableCollection<RecipeTreeItem>();
-        public RecipeTreeView()
+        public RecipeDetailsPanelForWebSave()
         {
             this.InitializeComponent();
-            SavedRecipesTreeRoot.DataContext = MainNavTreeViewModel.Instance;
+            string foo = "bar";
         }
     }
 }

@@ -11,9 +11,18 @@ namespace RecipeBuddy.Views
 
         public ShellPage()
         {
-            InitializeComponent();
-            DataContext = ViewModel;
-            ViewModel.Initialize(shellFrame, navigationView, KeyboardAccelerators);
+            try
+            {
+                InitializeComponent();
+                DataContext = ViewModel;
+                ViewModel.Initialize(shellFrame, navigationView, KeyboardAccelerators);
+
+            }
+            catch (Exception e)
+            {
+                string foo = "var";
+            }
+
 
             //DataContext = MainWindowViewModel.Instance;
             //SavedRecipesTreeRoot.DataContext = MainWindowViewModel.Instance.mainTreeViewNav;

@@ -25,7 +25,7 @@ namespace RecipeBuddy.Core.Scrapers
         /// Using a search string that is inputted by the user we generate the recipe text for the three pannels.
         /// </summary>
         /// <param name="strSearch"></param>
-        public static int GenerateURLsListFromFoodAndWineSearch(string strSearch, RecipeBlurbListModel listModel)
+        public static int GenerateURLsListFromFoodAndWineSearch(string strSearch, RecipeListModel listModel)
         {
             List<string> myQuery = new List<string>();
             string strQuery = "https://www.foodandwine.com/search?q=";
@@ -70,7 +70,7 @@ namespace RecipeBuddy.Core.Scrapers
                     {
                         secondStr = firstStr.Substring(firstStr.IndexOf("https:"));
                         firstStr = secondStr.Substring(0, secondStr.IndexOf(">")-1);
-                        listModel.URLLists.Add(firstStr);
+                        listModel.URLLists.Add(new Uri(firstStr));
                     }
                 }
                 return 0;
@@ -89,7 +89,7 @@ namespace RecipeBuddy.Core.Scrapers
         /// <param name="doc">HtmlDocument that has the webiste loaded</param>
         /// <param name="splitter">The the way to split up the description so we only keep two sentences</param>
         /// <param name="uri">website</param>
-        public static RecipeBlurbModel ProcessFoodAndWineRecipeType(HtmlDocument doc, char[] splitter, string uri)
+        public static RecipeRecordModel ProcessFoodAndWineRecipeType(HtmlDocument doc, char[] splitter, Uri uri)
         {
 
             List<string> ingredients = FillIngredientListFoodAndWineForRecipeEntry(doc, 50);
@@ -97,20 +97,22 @@ namespace RecipeBuddy.Core.Scrapers
             if (ingredients.Count == 0)
                 return null;
 
-            List<string> directions = FillDirectionListFoodAndWineForRecipeEntry(doc, 30);
+            List<string> directions = new List<string>();
+            directions.Add("-Direction");
 
-            RecipeBlurbModel recipeBlurbModel = new RecipeBlurbModel();
+            RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
-
-            recipeBlurbModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//h1[@class='headline heading-content elementFont__display']", doc));
-            recipeBlurbModel.Website = "Food&Wine";
-            recipeBlurbModel.Description = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='recipe-summary elementFont__dek--paragraphWithin elementFont__dek--linkWithin']", doc));
+            recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//h1[@class='headline heading-content elementFont__display']", doc));
+            recipeModel.Website = "FoodAndWine";
+            recipeModel.Description = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='recipe-summary elementFont__dek--paragraphWithin elementFont__dek--linkWithin']", doc));
             //recipeBlurbModel.TotalTime = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='recipe-meta-item-body']", doc));
-            recipeBlurbModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//span[@class='author-name authorName linkHoverStyle']", doc));
-            recipeBlurbModel.Link = uri;
-            recipeBlurbModel.Recipe_Type = Scraper.FillTypeForRecipeEntry(recipeBlurbModel.Title);
+            recipeModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//span[@class='author-name authorName linkHoverStyle']", doc));
+            recipeModel.Link = uri.ToString();
+            recipeModel.TypeAsInt = (int)Scraper.FillTypeForRecipeEntry(recipeModel.Title);
+            recipeModel.ListOfIngredientStrings = ingredients;
+            recipeModel.ListOfDirectionStrings = directions;
 
-            return recipeBlurbModel;
+            return recipeModel;
         }
 
         private static List<string> FillIngredientListFoodAndWineForRecipeEntry(HtmlDocument doc, int countList)

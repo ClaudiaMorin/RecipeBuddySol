@@ -3,7 +3,8 @@ using RecipeBuddy.Core.Helpers;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using RecipeBuddy.Core.Database;
-
+using RecipeBuddy.Core.Scrapers;
+using System;
 
 namespace RecipeBuddy.Core.Helpers
 {
@@ -17,7 +18,7 @@ namespace RecipeBuddy.Core.Helpers
         /// Creates a dictionary of the properties in the recipe for insertion into the DB
         /// </summary>
         /// <returns></returns>
-        public static void ConvertRecipeToDictionaryForDBInsertion(Dictionary<string, object> dictionaryValuePairs, List<string> paramsForSQLStatment, RecipeCardModel recipeCard, string UserIDInDB)
+        public static void ConvertRecipeToDictionaryForDBInsertion(Dictionary<string, object> dictionaryValuePairs, List<string> paramsForSQLStatment, RecipeDisplayModel recipeCard, int UserIDInDB)
         {
             Dictionary<string, object> recipeEntries;
             recipeEntries = GetRecipeDictionaryForDBFunctions(recipeCard, UserIDInDB);
@@ -40,7 +41,7 @@ namespace RecipeBuddy.Core.Helpers
         /// Provides a full dictionary of all the recipe properties to be added to the DB
         /// </summary>
         /// <returns>empty dictionary of all the recipe properties</returns>
-        public static Dictionary<string, object> GetRecipeDictionaryForDBFunctions(RecipeCardModel recipeCard, string UserIDinDB)
+        public static Dictionary<string, object> GetRecipeDictionaryForDBFunctions(RecipeDisplayModel recipeCard, int UserIDinDB)
         {
             string ingredients = StringManipulationHelper.TurnListIntoStringForDB(recipeCard.listOfIngredientStringsForDisplay);
             string directions = StringManipulationHelper.TurnListIntoStringForDB(recipeCard.listOfDirectionStringsForDisplay);
@@ -48,11 +49,11 @@ namespace RecipeBuddy.Core.Helpers
             Dictionary<string, object> recipeDictionary = new Dictionary<string, object>
             {
                 { "@Title", recipeCard.Title },
-                { "@Publication", recipeCard.TotalTime },
+                //{ "@Publication", recipeCard.TotalTime },
                 { "@Author",  recipeCard.Author },
-                { "@Website", recipeCard.Website },
-                //{ "@Link", recipeCard.Link },
-                { "@TypeAsInt", recipeCard.TypeAsInt },
+                //{ "@Website", recipeCard.Website },
+                { "@Link", recipeCard.Link },
+                { "@TypeAsInt", recipeCard.RecipeType },
                 { "@StringOfIngredientForListFromDB", ingredients},
                 { "@StringOfDirectionsForListFromDB", directions },
                 { "@UserID", UserIDinDB}
@@ -89,7 +90,7 @@ namespace RecipeBuddy.Core.Helpers
         /// </summary>
         /// <param name="UserID">The User Key that the strings are associated with</param>
         /// <param name="recipeCard">The recipe that is being saved</param>
-        public static void SaveRecipeToDatabase(string UserID, RecipeCardModel recipeCard, string UserIDInDB)
+        public static void SaveRecipeToDatabase(int UserID, RecipeDisplayModel recipeCard, int UserIDInDB)
         {
             //so that the correct type will be saved to the DB
             //recipeCard.TypeAsInt = (int)recipeCard.Recipe_Type;
@@ -129,7 +130,7 @@ namespace RecipeBuddy.Core.Helpers
         /// </summary>
         /// <param name="title">The name of the recipe to delete</param>
         /// <param name="typeAsInt">The type of recipe to delete, a user could have saved multiple version of same recipe under different types</param>
-        public static void DeleteRecipeFromDatabase(string title, int typeAsInt, string UserIDInDB)
+        public static void DeleteRecipeFromDatabase(string title, int typeAsInt, int UserIDInDB)
         {
             //Find the recipe
             string sqlStatment = "select RecipeID from Recipes Where UserID = @UserID and Title = @Title and TypeAsInt = @TypeAsInt" ;
@@ -213,7 +214,7 @@ namespace RecipeBuddy.Core.Helpers
         /// <param name="user">the username</param>
         /// <returns>The user ID that is held in the DB</returns>
         //public static string LoadUserFromDatabase(SecureString PasswordSecureString, string user)
-        public static string LoadUserFromDatabase(string PasswordString, string user)
+        public static int LoadUserFromDatabase(string PasswordString, string user)
         {
             //string user = SelectedComboBoxItem;
             //SecureString password = PasswordSecureString;
@@ -237,10 +238,10 @@ namespace RecipeBuddy.Core.Helpers
                 //do the two passwords match?
                 if (PasswordHashing.SequenceEquals(bytePassword, userDBModels[0].Password) == true)
                 {
-                    LoadUserDataByID(userDBModels[0].Name, userDBModels[0].ID);
                     //PasswordSecureString.Clear();
                     PasswordString = null;
-                    return userDBModels[0].Name.ToString();
+                    //return userDBModels[0].Name.ToString();
+                    return userDBModels[0].ID;
                 }
                 else
                 {
@@ -248,13 +249,13 @@ namespace RecipeBuddy.Core.Helpers
                 }
             }
 
-            return "";
+            return -1;
         }
 
         /// <summary>
         /// Gets the User's Saved Recipes from the DB and sends them to the TreeViewModel
         /// </summary>
-        private static List<RecipeCardModel> LoadUserDataByID(string username, int userID)
+        public static List<RecipeRecordModel> LoadUserDataByID(string username, int userID)
         {
             string AccountName = username + "'s  ";
             string UsersIDInDB = userID.ToString();
@@ -266,18 +267,22 @@ namespace RecipeBuddy.Core.Helpers
 
             //Get the stored recipies and connect that to the TreeView
             string sql = "SELECT * FROM Recipes WHERE UserID = @UserID";
-            List<RecipeCardModel> recipeModels = SqliteDataAccess.LoadData<RecipeCardModel>(sql, dictionaryUserRecipesFromDB);
+            List<RecipeRecordDBModel> recipeDBModels = SqliteDataAccess.LoadData<RecipeRecordDBModel>(sql, dictionaryUserRecipesFromDB);
+            List<RecipeRecordModel> recipeModels = new List<RecipeRecordModel>();
 
-            foreach (RecipeCardModel recipeCardModel in recipeModels)
+            foreach (var record in recipeDBModels)
             {
-                recipeCardModel.TypeAsInt = recipeCardModel.TypeAsInt;
-                //Converts from the string of all the ingredients that we stored in the DB to a list that the setter/getter list of actions will use to set the properties
-                recipeCardModel.listOfIngredientStringsForDisplay = StringManipulationHelper.TurnStringintoListFromDB(recipeCardModel.StringOfIngredientForListFromDB);
-                recipeCardModel.listOfDirectionStringsForDisplay = StringManipulationHelper.TurnStringintoListFromDB(recipeCardModel.StringOfDirectionsForListFromDB);
+                RecipeRecordModel RRC = new RecipeRecordModel(record.StringOfIngredientForListFromDB, record.StringOfDirectionsForListFromDB);
+                RRC.Title = record.Title;
+                RRC.Author = record.Author;
+                RRC.Website = record.Website;
+                if(record.Link.Length > 0)
+                RRC.Link = record.Link;
+                RRC.TypeAsInt = record.TypeAsInt;
+                recipeModels.Add(RRC);
             }
 
             return recipeModels;
-            //MainWindowViewModel.Instance.mainTreeViewNav.AddRecipeModelsToTreeView(recipeModels);
         }
 
         /// <summary>

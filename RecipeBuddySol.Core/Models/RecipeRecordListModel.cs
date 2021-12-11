@@ -1,6 +1,7 @@
 ﻿using System;
 using RecipeBuddy.Core.Helpers;
 using System.Collections.ObjectModel;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace RecipeBuddy.Core.Models
 {
@@ -8,11 +9,11 @@ namespace RecipeBuddy.Core.Models
     /// <summary>
     /// Class which will contian and manage the Recipe list that is returned from the user's search query and the RecipeURLList.
     /// </summary>
-    public class RecipeCardsListModel : ObservableObjBase
+    public class RecipeListModel : ObservableObject
     {
 
         //List of the Recipe links generated from the user's search terms
-        public ObservableCollection<RecipeCardModel> RecipesList { get; set; }
+        public ObservableCollection<RecipeRecordModel> RecipesList { get; set; }
 
         //The index of the next valid URL to be returned to a caller
         public RecipeURLLists URLLists;
@@ -21,47 +22,15 @@ namespace RecipeBuddy.Core.Models
         private string currentCardTitle;
         private int listCount;
 
-        public RecipeCardsListModel()
+        public RecipeListModel()
         {
-            RecipesList = new ObservableCollection<RecipeCardModel>();
+            RecipesList = new ObservableCollection<RecipeRecordModel>();
             URLLists = new RecipeURLLists();
             CurrentCardIndex = 0;
             ListCount = 0;
         }
 
-        public string CurrentCardTitle
-        {
-            get { return currentCardTitle; }
-            private set
-            {
-                currentCardTitle = value;
-                OnPropertyChanged(CurrentCardTitle);
-            }
-        }
 
-        /// <summary>
-        /// The CurrentCardIndex sets the recipe that has current focus
-        /// </summary>
-        public int CurrentCardIndex
-        {
-            get { return currentCardIndex; }
-            set
-            {
-                currentCardIndex = value;
-                DisplayCurrentCardIndex = currentCardIndex + 1;
-                OnPropertyChanged(CurrentCardIndex.ToString());
-            }
-        }
-
-        public int DisplayCurrentCardIndex
-        {
-            get { return displayCurrentCardIndex; }
-            private set
-            {
-                displayCurrentCardIndex = value;
-                OnPropertyChanged(DisplayCurrentCardIndex.ToString());
-            }
-        }
 
         //Clears the RecipeEntries list if a new search term is used
         public void ClearList()
@@ -77,7 +46,7 @@ namespace RecipeBuddy.Core.Models
         /// <param name="RE">New Entry to our list</param>
         //public void Add(RecipeCardModel RE, Action<RecipePanelForSearchViewModel> action, RecipePanelForSearchViewModel recipeCardViewModel)
         //{
-        public void Add(RecipeCardModel RE)
+        public void Add(RecipeRecordModel RE)
         {
 
             //we just added the first entry to the list
@@ -93,7 +62,7 @@ namespace RecipeBuddy.Core.Models
             {   //Check to see if we already have it in our list.
                 foreach (var RC in RecipesList)
                 {
-                    if (RC.StringOfIngredientForListFromDB == RE.StringOfIngredientForListFromDB)
+                    if (RC.ListOfIngredientStrings == RE.ListOfIngredientStrings)
                         return;
                 }
             }
@@ -149,7 +118,7 @@ namespace RecipeBuddy.Core.Models
 
         //Returns the next Entry in the list to the caller, if we are at the max
         //it will loop back to the begining.
-        public RecipeCardModel GetNextEntryInLoop()
+        public RecipeRecordModel GetNextEntryInLoop()
         {
             if (CurrentCardIndex + 1 == RecipesList.Count)
                 CurrentCardIndex = 0;
@@ -162,7 +131,7 @@ namespace RecipeBuddy.Core.Models
 
         //Returns the next Entry in the list to the caller, if we are at the max
         //it will loop back to the begining.
-        public RecipeCardModel GetCurrentEntry()
+        public RecipeRecordModel GetCurrentEntry()
         {
             if (RecipesList.Count > 0)
                 return RecipesList[CurrentCardIndex];
@@ -175,7 +144,7 @@ namespace RecipeBuddy.Core.Models
         /// </summary>
         /// <param name="index">The index of the item we are looking for</param>
         /// <returns></returns>
-        public RecipeCardModel GetEntry(int index)
+        public RecipeRecordModel GetEntry(int index)
         {
             if (index > RecipesList.Count)
             {
@@ -214,7 +183,7 @@ namespace RecipeBuddy.Core.Models
 
         //Returns the next Entry in the list to the caller, if we are at the max
         //it will loop back to the begining.
-        public RecipeCardModel GetPreviousEntryInLoop()
+        public RecipeRecordModel GetPreviousEntryInLoop()
         {
             if (currentCardIndex == 0)
                 CurrentCardIndex = ListCount - 1;
@@ -225,35 +194,68 @@ namespace RecipeBuddy.Core.Models
             return RecipesList[CurrentCardIndex];
         }
 
-        public bool IsFoundInList(RecipeCardModel recipeCardModel)
+        public bool IsFoundInList(RecipeRecordModel recipeModel)
         {
-            foreach (RecipeCardModel recipe in RecipesList)
-                if (string.Compare(recipe.Title, recipeCardModel.Title) == 0)
+            foreach (RecipeRecordModel recipe in RecipesList)
+                if (string.Compare(recipe.Title, recipeModel.Title) == 0)
                  return true;
 
             return false;
         }
 
+        #region properties
+
         public int ListCount
         {
             get { return listCount; }
-            set
-            {
-                listCount = value;
-                OnPropertyChanged(ListCount.ToString());
-            }
+            set { SetProperty(ref listCount, value); }
         }
 
         public int CurrentIndex
         {
             get { return currentCardIndex; }
+            set { SetProperty(ref currentCardIndex, value); }
+        }
+
+        public string CurrentCardTitle
+        {
+            get { return currentCardTitle; }
+            private set { SetProperty(ref currentCardTitle, value); }
+        }
+
+        /// <summary>
+        /// The CurrentCardIndex sets the recipe that has current focus
+        /// </summary>
+        public int CurrentCardIndex
+        {
+            get { return currentCardIndex; }
             set
             {
-                currentCardIndex = value;
-                OnPropertyChanged(CurrentIndex.ToString());
+                SetProperty(ref currentCardIndex, value);
+                DisplayCurrentCardIndex = currentCardIndex + 1;
             }
         }
 
+        public int DisplayCurrentCardIndex
+        {
+            get { return displayCurrentCardIndex; }
+            set { SetProperty(ref displayCurrentCardIndex, value); }
+        }
+       
+        /// <summary>
+        /// The CurrentCardIndex sets the recipe that has current focus
+        /// </summary>
+        private string currentCardLink;
+        public string CurrentCardLink
+        {
+            get { return currentCardLink; }
+            set
+            {
+                SetProperty(ref currentCardLink, value);
+                DisplayCurrentCardIndex = currentCardIndex + 1;
+            }
+        }
+        #endregion
 
     }
 }

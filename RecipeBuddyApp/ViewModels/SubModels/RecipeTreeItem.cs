@@ -1,32 +1,35 @@
 ﻿using System.Windows.Input;
+using System.Collections.ObjectModel;
 using RecipeBuddy.ViewModels.Commands;
 using RecipeBuddy.Core.Models;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using RecipeBuddy.Core.Helpers;
+using Microsoft.UI.Xaml.Controls;
 
 namespace RecipeBuddy.ViewModels
 {
-     public class RecipeCardTreeItem : ObservableObject
+    public class RecipeTreeItem 
     {
 
-        public RecipeCardTreeItem()
+        public RecipeTreeItem(string titleTreeItem)
         {
-            recipeCardModelTV = new RecipeCardModel();
-            recipeTitleTreeItem = recipeCardModelTV.Title;
-            CmdAddToSelectList = new ICommandViewModel<RecipeCardTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
-            CmdAddToEdit = new ICommandViewModel<RecipeCardTreeItem>(Action => AddRecipeToEdit(), canCallActionFunc => CanSelect);
-            CmdDelete = new ICommandViewModel<RecipeCardTreeItem>(Action => DeleteRecipe(), canCallActionFunc => CanSelect);
-            CmdMouseClick = new ICommandViewModel<RecipeCardTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
-
+            recipeModelTV = new RecipeRecordModel();
+            treeItemTitle = titleTreeItem;
+            CmdAddToSelectList = new ICommandViewModel<RecipeTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
+            CmdAddToEdit = new ICommandViewModel<RecipeTreeItem>(Action => AddRecipeToEdit(), canCallActionFunc => CanSelect);
+            CmdDelete = new ICommandViewModel<RecipeTreeItem>(Action => DeleteRecipe(), canCallActionFunc => CanSelect);
+            CmdMouseClick = new ICommandViewModel<RecipeTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
+            Children = new ObservableCollection<RecipeTreeItem>();
         }
-        public RecipeCardTreeItem(RecipeCardModel recipeCardModel)
+        public RecipeTreeItem(RecipeRecordModel recipeModel)
         {
-            recipeCardModelTV = new RecipeCardModel(recipeCardModel);
-            recipeTitleTreeItem = recipeCardModelTV.Title;
-            CmdAddToSelectList = new ICommandViewModel<RecipeCardTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
-            CmdAddToEdit = new ICommandViewModel<RecipeCardTreeItem>(Action => AddRecipeToEdit(), canCallActionFunc => CanSelect);
-            CmdDelete = new ICommandViewModel<RecipeCardTreeItem>(Action => DeleteRecipe(), canCallActionFunc => CanSelect);
-            CmdMouseClick = new ICommandViewModel<RecipeCardTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
+            recipeModelTV = new RecipeRecordModel(recipeModel);
+            treeItemTitle = recipeModelTV.Title;
+            CmdAddToSelectList = new ICommandViewModel<RecipeTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
+            CmdAddToEdit = new ICommandViewModel<RecipeTreeItem>(Action => AddRecipeToEdit(), canCallActionFunc => CanSelect);
+            CmdDelete = new ICommandViewModel<RecipeTreeItem>(Action => DeleteRecipe(), canCallActionFunc => CanSelect);
+            CmdMouseClick = new ICommandViewModel<RecipeTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
+            Children = new ObservableCollection<RecipeTreeItem>();
         }
 
 
@@ -35,9 +38,9 @@ namespace RecipeBuddy.ViewModels
         /// Adds the ingredents and Directions dynamically and then deletes them before the new recipe is replacing the old one.
         /// </summary>
         /// <param name="reSource">The new RecipeCard which we will use to overwrite the old values</param>
-        public void UpdateRecipeEntry(RecipeCardTreeItem reSource)
+        public void UpdateRecipeEntry(RecipeTreeItem reSource)
         {
-            recipeCardModelTV.CopyRecipeCardModel(reSource.recipeCardModelTV); 
+            recipeModelTV.CopyRecipeModel(reSource.recipeModelTV); 
         }
 
 
@@ -67,7 +70,7 @@ namespace RecipeBuddy.ViewModels
         internal void DeleteRecipe()
         {
             MainNavTreeViewModel.Instance.RemoveRecipeFromTreeView(this);
-            DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(this.recipeTitleTreeItem, recipeCardModelTV.TypeAsInt, UserViewModel.Instance.UsersIDInDB);
+            DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(this.treeItemTitle, recipeModelTV.TypeAsInt, UserViewModel.Instance.UsersIDInDB);
         }
 
 
@@ -78,29 +81,31 @@ namespace RecipeBuddy.ViewModels
         {
             get
             {
-                if (RecipeModelPropertyTV == null)
+                if (RecipeModelTV == null)
                     return false;
                 else
                     return true;
             }
         }
 
-        private RecipeCardModel recipeCardModelTV;
+        public ObservableCollection<RecipeTreeItem> Children { get; set; }
 
-        public RecipeCardModel RecipeModelPropertyTV
+        private RecipeRecordModel recipeModelTV;
+        public RecipeRecordModel RecipeModelTV
         {
             get
-            { return recipeCardModelTV; }
-            set { SetProperty(ref recipeCardModelTV, value); }
+            { return recipeModelTV; }
+            //set { SetProperty(ref recipeModelTV, value); }
+            set { recipeModelTV = value; }
         }
 
-        private string recipeTitleTreeItem;
-
-        public string RecipeTitleTreeItem
+        private string treeItemTitle;
+        public string TreeItemTitle
         {
             get
-            { return recipeTitleTreeItem; }
-            set { SetProperty(ref recipeTitleTreeItem, value); }
+            { return treeItemTitle; }
+            //set { SetProperty(ref treeItemTitle, value); }
+            set { treeItemTitle = value; }
         }
 
         public ICommand CmdAddToSelectList

@@ -16,7 +16,7 @@ namespace RecipeBuddy.ViewModels
 
     public sealed class UploadViewModel : ObservableObject
     {
-        public RecipeCardModel recipeCardViewModelForUpload;
+        public RecipeDisplayModel recipeCardViewModelForUpload;
         public Action<SelectionChangedEventArgs> actionWithEventArgs;
         public string fileContents;
 
@@ -34,7 +34,7 @@ namespace RecipeBuddy.ViewModels
             UploadButtonCmd = new ICommandViewModel<UploadViewModel>(Action => UploadRecipe(), canCallActionFunc => CanSelectUpload);
             ConvertButtonCmd = new ICommandViewModel<UploadViewModel>(Action => ConvertRecipe(), canCallActionFunc => CanSelectConvert);
             SaveButtonCmd = new ICommandViewModel<UploadViewModel>(Action => SaveRecipe(), canCallActionFunc => CanSelectSave);
-            recipeCardViewModelForUpload = new RecipeCardModel();
+            recipeCardViewModelForUpload = new RecipeDisplayModel();
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace RecipeBuddy.ViewModels
                 UploadRecipeText = "";
             }
 
-            recipeCardViewModelForUpload.UpdateRecipeEntry(Scraper.ProcessUploatedRecipe(uploadRecipeText));
+            //recipeCardViewModelForUpload.UpdateRecipeEntry(Scraper.ProcessUploatedRecipe(uploadRecipeText));
 
             ColumnTwo = "*";
         }
@@ -77,13 +77,13 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         private void SaveRecipe()
         {
-            recipeCardViewModelForUpload.TypeAsInt = CurrentType;
+            recipeCardViewModelForUpload.RecipeType = (Type_Of_Recipe) CurrentType;
             int result = MainWindowViewModel.Instance.mainTreeViewNav.AddRecipeToTreeView(recipeCardViewModelForUpload, true);
 
             if (result == 1)
             {
                 MainNavTreeViewModel.Instance.RemoveRecipeFromTreeView(recipeCardViewModelForUpload);
-                DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(recipeCardViewModelForUpload.Title, recipeCardViewModelForUpload.TypeAsInt, UserViewModel.Instance.UsersIDInDB);
+                DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(recipeCardViewModelForUpload.Title, (int)recipeCardViewModelForUpload.RecipeType, UserViewModel.Instance.UsersIDInDB);
             }
             if (result == 1 || result == 2)
             {
@@ -97,8 +97,8 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         internal void ClearRecipe()
         {
-            recipeCardViewModelForUpload.UpdateRecipeEntry(new RecipeCardModel());
-            CurrentType = recipeCardViewModelForUpload.TypeAsInt;
+            //recipeCardViewModelForUpload.UpdateRecipeEntry(new RecipeCardModel());
+            CurrentType = (int)recipeCardViewModelForUpload.RecipeType;
             ColumnTwo = "0";
         }
 

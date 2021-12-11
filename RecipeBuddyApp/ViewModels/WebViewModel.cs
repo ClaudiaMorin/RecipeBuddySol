@@ -12,15 +12,18 @@ namespace RecipeBuddy.ViewModels
     public sealed class WebViewModel : ObservableObject
     {
         private static readonly WebViewModel instance = new WebViewModel();
-        public RecipeBlurbModel selectViewMainRecipeCardModel;
-        public RecipeBlurbListModel listOfRecipeCardsModel;
+        public RecipeDisplayModel mainRecipeCardModel;
+        public RecipeListModel listOfRecipeCards;
+        public RecipePanelForWebCopy recipePanelForWebCopy;
 
-        public List<string> IngredientQuantityShift;
         public Action<SelectionChangedEventArgs> actionWithEventArgs;
         public Action<string> actionWithObject;
 
+        Action action;
+        Func<bool> funcBool;
+
         static WebViewModel()
-        { }
+        {}
 
         public static WebViewModel Instance
         {
@@ -29,36 +32,42 @@ namespace RecipeBuddy.ViewModels
 
         private WebViewModel()
         {
-            currentType = 0;
-
+            //currentType = 0;
+            firstColumnTreeView = "Visible";
+            treeViewWidth = "*";
+            mainViewWidth = "3*";
             SetUpComboBox();
-            selectViewMainRecipeCardModel = new RecipeBlurbModel();
-            currentLink = selectViewMainRecipeCardModel.Link;
-            IngredientQuantityShift = new List<string>();
-            typeComboBoxVisibility = "Collapsed";
-            CmdRemove = new ICommandViewModel<WebViewModel>(Action => RemoveRecipe(), canCallActionFunc => CanSelect);
-            CmdSave = new ICommandViewModel<WebViewModel>(Action => SaveRecipe(), canCallActionFunc => CanSelectSave);
-            CmdEdit = new ICommandViewModel<WebViewModel>(Action => EditRecipe(), canCallActionFunc => CanSelect);
-            CmdSelectedItemChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeFromComboBox(e), canCallActionFunc => CanSelect);
+            mainRecipeCardModel = new RecipeDisplayModel();
+            recipePanelForWebCopy = new RecipePanelForWebCopy();
+            //currentLink = MainRecipeCardModel.Link;
+            canSelectOpenEntry = true;
+            canSelectCancel = true;
+            currentLink = null;
+            CmdRemove = new ICommandViewModel<WebViewModel>(Action => RemoveRecipe(), canCallActionFunc => CanSelectRemove);
+            CmdOpenEntry = new ICommandViewModel<WebViewModel>(Action => OpenKeepRecipePanel(), canCallActionFunc => CanSelectOpenEntry);
+            
+            CmdSaveButton = new RBRelayCommand(action = () => SaveEntry(), funcBool = () => CanSelectSave);
+            CmdCancelButton = new RBRelayCommand(action = () => CancelEntry(), funcBool = () => CanSelectCancel);
+            CmdSelectedItemChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeFromComboBox(e), canCallActionFunc => CanSelectRemove);
         }
 
         public void RemoveRecipe()
         {
-            if (listOfRecipeCardsModel.ListCountOfBlurbs > 0 && listOfRecipeCardsModel.CurrentCardIndex != -1)
+            if (listOfRecipeCards.ListCount > 0 && listOfRecipeCards.CurrentCardIndex != -1)
             {
-                listOfRecipeCardsModel.Remove(listOfRecipeCardsModel.CurrentCardIndex);
+                listOfRecipeCards.Remove(listOfRecipeCards.CurrentCardIndex);
 
-                if (listOfRecipeCardsModel.CurrentCardIndex > 0)
+                if (listOfRecipeCards.CurrentCardIndex > 0)
                 {
-                    listOfRecipeCardsModel.CurrentCardIndex = listOfRecipeCardsModel.CurrentCardIndex - 1;
-                    ShowSpecifiedEntry(listOfRecipeCardsModel.CurrentCardIndex);
+                    listOfRecipeCards.CurrentCardIndex = listOfRecipeCards.CurrentCardIndex - 1;
+                    ShowSpecifiedEntry(listOfRecipeCards.CurrentCardIndex);
                     //need to reset the starting index of the "borrow recipe" incase it was removed
                     EditViewModel.Instance.IndexOfComboBoxItem = 0;
                 }
-                else if (listOfRecipeCardsModel.ListCountOfBlurbs > 0)
+                else if (listOfRecipeCards.ListCount > 0)
                 {
-                    listOfRecipeCardsModel.CurrentCardIndex = listOfRecipeCardsModel.ListCountOfBlurbs - 1;
-                    ShowSpecifiedEntry(listOfRecipeCardsModel.CurrentCardIndex);
+                    listOfRecipeCards.CurrentCardIndex = listOfRecipeCards.ListCount - 1;
+                    ShowSpecifiedEntry(listOfRecipeCards.CurrentCardIndex);
                     //need to reset the starting index of the "borrow recipe" incase it was removed
                     EditViewModel.Instance.IndexOfComboBoxItem = 0;
                 }
@@ -76,63 +85,40 @@ namespace RecipeBuddy.ViewModels
         /// <summary>
         /// For use when a user logs out of his/her account
         /// </summary>
-        public void ResetViewModel()
-        {
-            if (listOfRecipeCardsModel.ListCountOfBlurbs > 0)
-                listOfRecipeCardsModel.RemoveAll();
+        //public void ResetViewModel()
+        //{
+        //    if (listOfRecipeCardsModel.ListCountOfBlurbs > 0)
+        //        listOfRecipeCardsModel.RemoveAll();
 
-            selectViewMainRecipeCardModel.CopyRecipeBlurbModel(new RecipeBlurbModel());
+        //    MainRecipeCardModel.CopyRecipeBlurbModel(new RecipeBlurbModel());
+        //}
+
+        public void CancelEntry()
+        {
+            recipePanelForWebCopy.CancelEntry();
         }
 
-
-        //public void LoadWebPages(string URLlink, bool addToList = true)
-        //{ 
-
-        //}
+        public void SaveEntry()
+        {
+            recipePanelForWebCopy.SaveEntry();
+        }
 
         /// <summary>
         /// Saves the recipe to the DB and the TreeView
         /// </summary>
-        public void SaveRecipe()
+        public void OpenKeepRecipePanel()
         {
-            //selectViewMainRecipeCardModel.SaveEditsToARecipe(selectViewMainRecipeCardModel.Title);
-            //int result = MainWindowViewModel.Instance.mainTreeViewNav.AddRecipeToTreeView(selectViewMainRecipeCardModel, true);
-
-            //if (result == 1)
-            //{
-            //    MainNavTreeViewModel.Instance.RemoveRecipeFromTreeView(selectViewMainRecipeCardModel);
-            //    DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(selectViewMainRecipeCardModel.Title, selectViewMainRecipeCardModel.TypeAsInt);
-            //}
-            //if (result == 1 || result == 2)
-            //{
-            //    DataBaseAccessorsForRecipeManager.SaveRecipeToDatabase(UserViewModel.Instance.UsersIDInDB, selectViewMainRecipeCardModel);
-            //    RemoveRecipe();
-            //}
+            FirstColumnTreeView = "Collapsed";
+            TreeViewWidth = "*";
+            MainViewWidth = "*";
+            recipePanelForWebCopy.LoadRecipeCardModel(mainRecipeCardModel);
         }
 
-        /// <summary>
-        /// ICommand backer for Edit Button on Select page.  Function adds the current recipe to the edit page and removes
-        /// it from the MakeItView
-        /// </summary>
-        public void EditRecipe()
+        public void CloseKeepRecipePanel()
         {
-            //EditViewModel.Instance.UpdateRecipe(selectViewMainRecipeCardModel);
-
-
-            //Check to see if this if from the TreeView or from a generic search
-            MainWindowViewModel.Instance.SelectedTabIndex = (int)MainWindowViewModel.Tabs.EditTab;
-            RemoveRecipe();
-        }
-
-        /// <summary>
-        /// ICommand backer for Create New Button on Select page.  Creates an new recipe and takes the user to the edit panel
-        /// </summary>
-        public void CreateNewRecipe()
-        {
-            EditViewModel.Instance.CreateNewRecipe();
-
-            //Check to see if this if from the TreeView or from a generic search
-            MainWindowViewModel.Instance.SelectedTabIndex = (int)MainWindowViewModel.Tabs.EditTab;
+            FirstColumnTreeView = "Visible";
+            TreeViewWidth = "*";
+            MainViewWidth = "3*";
         }
 
         /// <summary>
@@ -141,31 +127,33 @@ namespace RecipeBuddy.ViewModels
         private void SetUpComboBox()
         {
             indexOfComboBoxItem = 0;
-            listOfRecipeCardsModel = new RecipeBlurbListModel();
+            listOfRecipeCards = new RecipeListModel();
         }
 
-        public void AddToListOfRecipeCards(RecipeBlurbModel recipeBlurbCard)
+        public void AddToListOfRecipeCards(RecipeRecordModel recipeCard)
         {
-            if (listOfRecipeCardsModel.IsFoundInList(recipeBlurbCard) == true)
+            if (listOfRecipeCards.IsFoundInList(recipeCard) == true)
             {
-                int index = listOfRecipeCardsModel.GetEntryIndex(recipeBlurbCard.Title);
+                int index = listOfRecipeCards.GetEntryIndex(recipeCard.Title);
                 ShowSpecifiedEntry(index);
                 return;
             }
 
-            listOfRecipeCardsModel.AddToBlurbList(recipeBlurbCard);
+            listOfRecipeCards.Add(recipeCard);
 
             //If we have nothing in the list we will show the first entry
-            if (listOfRecipeCardsModel.ListCountOfBlurbs == 1)
+            if (listOfRecipeCards.ListCount == 1)
             {
-                listOfRecipeCardsModel.CurrentCardIndex = 0;
+                listOfRecipeCards.CurrentCardIndex = 0;
+                //CurrentCardTitle = recipeBlurbCard.Title;
+                CurrentLink = new Uri(recipeCard.Link);
                 EditViewModel.Instance.IndexOfComboBoxItem = 0;
             }
             else
             {
-                listOfRecipeCardsModel.CurrentCardIndex = listOfRecipeCardsModel.ListCountOfBlurbs - 1;
+                listOfRecipeCards.CurrentCardIndex = listOfRecipeCards.ListCount - 1;
             }
-            ShowSpecifiedEntry(listOfRecipeCardsModel.CurrentCardIndex);
+            ShowSpecifiedEntry(listOfRecipeCards.CurrentCardIndex);
         }
 
         /// <summary>
@@ -174,7 +162,7 @@ namespace RecipeBuddy.ViewModels
         /// <param name="title">title of the recipe we are looking for</param>
         public void ShowSpecifiedEntry(string title)
         {
-            ShowSpecifiedEntry(listOfRecipeCardsModel.GetEntryIndex(title));
+            ShowSpecifiedEntry(listOfRecipeCards.GetEntryIndex(title));
         }
 
         /// <summary>
@@ -183,14 +171,13 @@ namespace RecipeBuddy.ViewModels
         /// <param name="index"></param>
         public void ShowSpecifiedEntry(int index)
         {
-            if (index < listOfRecipeCardsModel.ListCountOfBlurbs && index > -1)
+            if (index < listOfRecipeCards.ListCount && index > -1)
             {
-                listOfRecipeCardsModel.CurrentCardIndex = index;
-                selectViewMainRecipeCardModel.CopyRecipeBlurbModel(listOfRecipeCardsModel.GetEntry(index));
-                ChangeRecipe(listOfRecipeCardsModel.CurrentCardIndex);
+                listOfRecipeCards.CurrentCardIndex = index;
+                mainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(listOfRecipeCards.GetEntry(index));
+                ChangeRecipe(listOfRecipeCards.CurrentCardIndex);
                 NumXRecipesIndex = "0";
                 IndexOfComboBoxItem = index;
-                //UpdateQuantityCalc();
             }
         }
 
@@ -200,7 +187,7 @@ namespace RecipeBuddy.ViewModels
         /// <param name="indexOfTitleInComboBox"></param>
         public void ChangeRecipe(int indexOfTitleInComboBox)
         {
-            listOfRecipeCardsModel.CurrentCardIndex = indexOfTitleInComboBox;
+            listOfRecipeCards.CurrentCardIndex = indexOfTitleInComboBox;
 
         }
 
@@ -210,7 +197,7 @@ namespace RecipeBuddy.ViewModels
         /// <param name="TitleOfRecipe">Title of the new recipe</param>
         public void ChangeRecipe(string TitleOfRecipe)
         {
-            int index = listOfRecipeCardsModel.SettingCurrentIndexByTitle(TitleOfRecipe);
+            int index = listOfRecipeCards.SettingCurrentIndexByTitle(TitleOfRecipe);
             if (index != -1)
             {
                 ChangeRecipe(index);
@@ -225,16 +212,17 @@ namespace RecipeBuddy.ViewModels
         {
             if (e.AddedItems != null && e.AddedItems.Count > 0)
             {
-                RecipeBlurbModel recipeCardModelFromChangedEventArgs = e.AddedItems[0] as RecipeBlurbModel;
+                RecipeRecordModel recipeRecordModelFromChangedEventArgs = e.AddedItems[0] as RecipeRecordModel;
 
-                if (recipeCardModelFromChangedEventArgs != null)
+                if (recipeRecordModelFromChangedEventArgs != null)
                 {
-                    if (listOfRecipeCardsModel.SettingCurrentIndexByTitle(recipeCardModelFromChangedEventArgs.Title) != -1)
+                    if (listOfRecipeCards.SettingCurrentIndexByTitle(recipeRecordModelFromChangedEventArgs.Title) != -1)
                     {
-                        RecipeBlurbModel recipeCardModel = listOfRecipeCardsModel.GetCurrentEntry();
+                        //RecipeCardModel recipeCardModel = new RecipeCardModel(listOfRecipeCards.GetCurrentEntry());
                         NumXRecipesIndex = "0";
-                        selectViewMainRecipeCardModel.CopyRecipeBlurbModel(recipeCardModel);
-                        CurrentLink = selectViewMainRecipeCardModel.Link;
+                        mainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(listOfRecipeCards.GetCurrentEntry());
+                        CurrentLink = mainRecipeCardModel.Link;
+                        recipePanelForWebCopy.LoadRecipeCardModel(mainRecipeCardModel);
                     }
                 }
             }
@@ -244,14 +232,15 @@ namespace RecipeBuddy.ViewModels
             {
                 if (e.RemovedItems != null && e.RemovedItems.Count > 0)
                 {
-                    RecipeBlurbModel recipeCardModel = e.RemovedItems[0] as RecipeBlurbModel;
+                    RecipeRecordModel recipeModel = e.RemovedItems[0] as RecipeRecordModel;
 
-                    if (recipeCardModel != null)
+                    if (recipeModel != null)
                     {
-                        ChangeRecipe(recipeCardModel.Title);
-                        selectViewMainRecipeCardModel.CopyRecipeBlurbModel(recipeCardModel);
-                        CurrentLink = selectViewMainRecipeCardModel.Link;
+                        ChangeRecipe(recipeModel.Title);
+                        mainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(recipeModel);
+                        CurrentLink = mainRecipeCardModel.Link;
                         NumXRecipesIndex = "0";
+                        recipePanelForWebCopy.LoadRecipeCardModel(mainRecipeCardModel);
                     }
                 }
             }
@@ -263,31 +252,46 @@ namespace RecipeBuddy.ViewModels
         /// Indicates whether or not we can click the recipe-related button, there needs to be a recipe in the CardView so the 
         /// total list count has to be greater than 0.
         /// </summary>
-        public bool CanSelect
+        private bool canSelectRemove;
+        public bool CanSelectRemove
         {
             get
             {
-                if (string.Compare(selectViewMainRecipeCardModel.Title.ToLower(), "search for your next recipe find!") == 0)
+                if (string.Compare(mainRecipeCardModel.Title.ToLower(), "search for your next recipe find!") == 0)
                     return false;
                 else
                     return true;
             }
+
+            set { SetProperty(ref canSelectRemove, value); }
         }
 
         /// <summary>
         /// can't select save until the user is logged in
         /// because there is no access to the DB
         /// </summary>
+        ///
+        private bool canSelectSave;
         public bool CanSelectSave
         {
             get
             {
-                if (UserViewModel.Instance.CanSelectLogout == true && selectViewMainRecipeCardModel.Title.Length > 0 &&
-                     string.Compare(selectViewMainRecipeCardModel.Title.ToLower(), "search for your next recipe find!") != 0)
+                if (UserViewModel.Instance.CanSelectLogout == true && mainRecipeCardModel.Title.Length > 0 && mainRecipeCardModel.Title.Length > 0)
                     return true;
                 else
                     return false;
             }
+
+            set { SetProperty(ref canSelectSave, value); }
+        }
+
+        private bool canSelectOpenEntry;
+        public bool CanSelectOpenEntry
+        {
+            get
+            { return canSelectOpenEntry; }
+
+            set { SetProperty(ref canSelectOpenEntry, value); }
         }
 
         /// <summary>
@@ -305,23 +309,7 @@ namespace RecipeBuddy.ViewModels
         /// <summary>
         /// property for the Save button command
         /// </summary>
-        public ICommand CmdSave
-        {
-            get;
-            private set;
-        }
-        /// <summary>
-        /// property for the Edit button command
-        /// </summary>
-        public ICommand CmdEdit
-        {
-            get;
-            private set;
-        }
-        /// <summary>
-        /// property for the Edit button command
-        /// </summary>
-        public ICommand CmdNew
+        public ICommand CmdOpenEntry
         {
             get;
             private set;
@@ -334,6 +322,29 @@ namespace RecipeBuddy.ViewModels
             get;
             private set;
         }
+        public RBRelayCommand CmdSaveButton
+        {
+            get;
+            private set;
+        }
+
+        public RBRelayCommand CmdCancelButton
+        {
+            get;
+            private set;
+        }
+
+
+        /// <summary>
+        /// Always True
+        /// </summary>
+        private bool canSelectCancel;
+        public bool CanSelectCancel
+        {
+            get { return canSelectCancel; }
+            set { SetProperty(ref canSelectCancel, value); }
+        }
+
         /// <summary>
         /// Property for the Recipe combobox change command
         /// </summary>
@@ -355,26 +366,26 @@ namespace RecipeBuddy.ViewModels
         /// <summary>
         /// property for the update button command
         /// </summary>
-        public ICommand CmdUpdate
-        {
-            get;
-            private set;
-        }
+        //public ICommand CmdUpdate
+        //{
+        //    get;
+        //    private set;
+        //}
 
-        public ICommand CmdCancel
-        {
-            get;
-            private set;
-        }
+        //public ICommand CmdCancel
+        //{
+        //    get;
+        //    private set;
+        //}
 
-        public ICommand CmdLineEdit
-        {
-            get;
-            private set;
-        }
+        //public ICommand CmdLineEdit
+        //{
+        //    get;
+        //    private set;
+        //}
 
-        private string currentLink;
-        public string CurrentLink
+        private Uri currentLink;
+        public Uri CurrentLink
         {
             get { return currentLink; }
             set { SetProperty(ref currentLink, value); }
@@ -387,25 +398,46 @@ namespace RecipeBuddy.ViewModels
             set { SetProperty(ref indexOfComboBoxItem, value); }
         }
 
-        private int currentType;
-        public int CurrentType
-        {
-            get { return currentType; }
-            set { SetProperty(ref currentType, value); }
-        }
+        //private int currentType;
+        //public int CurrentType
+        //{
+        //    get { return currentType; }
+        //    set { SetProperty(ref currentType, value); }
+        //}
 
-        private string typeComboBoxVisibility;
-        public string TypeComboBoxVisibility
-        {
-            get { return typeComboBoxVisibility; }
-            set { SetProperty(ref typeComboBoxVisibility, value); }
-        }
+        //private string typeComboBoxVisibility;
+        //public string TypeComboBoxVisibility
+        //{
+        //    get { return typeComboBoxVisibility; }
+        //    set { SetProperty(ref typeComboBoxVisibility, value); }
+        //}
 
         private string numXRecipesIndex;
         public string NumXRecipesIndex
         {
             get { return numXRecipesIndex; }
             set { SetProperty(ref numXRecipesIndex, value); }
+        }
+
+        private string firstColumnTreeView;
+        public string FirstColumnTreeView
+        {
+            get { return firstColumnTreeView; }
+            set { SetProperty(ref firstColumnTreeView, value); }
+        }
+
+        private string treeViewWidth;
+        public string TreeViewWidth
+        {
+            get { return treeViewWidth; }
+            set { SetProperty(ref treeViewWidth, value); }
+        }
+
+        private string mainViewWidth;
+        public string MainViewWidth
+        {
+            get { return mainViewWidth; }
+            set { SetProperty(ref mainViewWidth, value); }
         }
 
         #endregion

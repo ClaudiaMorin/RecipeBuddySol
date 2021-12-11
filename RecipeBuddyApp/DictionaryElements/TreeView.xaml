@@ -4,10 +4,10 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
 
 
-    <StackPanel Orientation="Horizontal" x:Key="MainCourseTV_DT">
+    <!--<StackPanel Orientation="Horizontal" x:Key="MainCourseTV_DT">
         <TextBlock VerticalAlignment="Center" Text="Main Course"/>
         <Image Source="{StaticResource MealImage}" Height="30" />
-    </StackPanel>
+    </StackPanel>-->
 
 
     <Style x:Key="TreeViewStyle" TargetType="TreeViewItem">
@@ -18,198 +18,198 @@
     </Style>
 
 
-    <DataTemplate x:Key="AppetizerTreeViewHeader">
-        <TreeViewItem IsExpanded="{Binding AppetizerExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+    <!--<DataTemplate x:Key="AppetizerTreeViewHeader">
+        <muxc:TreeViewItem IsExpanded="{Binding AppetizerExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource AppitizerImage}" Margin="10, 0" Height="30" />
                 <TextBlock VerticalAlignment="Center" Text="Appetizers"/>
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="AppetizerTreeViewItem">
-        <TreeViewItem ItemsSource="{Binding SavedAppetizerRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem ItemsSource="{Binding SavedAppetizerRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBlock Text="{Binding Path=Title}"/>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="BreadTreeViewHeader">
-        <TreeViewItem IsExpanded="{Binding BreadExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem IsExpanded="{Binding BreadExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource BreadImage}" Margin="10, 0" Height="30" />
                 <TextBlock VerticalAlignment="Center" Text="Breads"/>
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="BreadTreeViewItem">
-        <TreeViewItem ItemsSource="{Binding SavedBreadRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem ItemsSource="{Binding SavedBreadRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBlock Text="{Binding Path=Title}"/>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
 
     <DataTemplate x:Key="CakeTreeViewHeader" >
-        <TreeViewItem IsExpanded="False" >
+        <muxc:TreeViewItem IsExpanded="False" >
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource CakeImage}" Margin="10, 0" Height="30" />
                 <TextBlock Text="Cakes" />
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="CakeTreeViewItem" >
-        <TreeViewItem ItemsSource="{Binding SavedCakeRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem ItemsSource="{Binding SavedCakeRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBlock Text="{Binding Path=Title}"/>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="CandyTreeViewHeader" >
-        <TreeViewItem IsExpanded="False">
+        <muxc:TreeViewItem IsExpanded="False">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource CandyImage}" Margin="10, 0" Height="30" />
                 <TextBlock Text="Candy" />
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="CandyTreeViewItem" >
-        <TreeViewItem ItemsSource="{Binding SavedCandyRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem ItemsSource="{Binding SavedCandyRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBlock Text="{Binding Path=Title}"/>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="CookieTreeViewHeader">
-        <TreeViewItem IsExpanded="{Binding CookieExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem IsExpanded="{Binding CookieExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource CookieImage}" Margin="10, 0" Height="30" />
                 <TextBlock VerticalAlignment="Center" Text="Cookies"/>
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="CookieTreeViewItem">
-        <TreeViewItem ItemsSource="{Binding SavedCandyRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem ItemsSource="{Binding SavedCandyRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBlock Text="{Binding Path=Title}"/>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="CustardTreeViewItem">
-        <TreeViewItem ItemsSource="{Binding SavedCustardRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem ItemsSource="{Binding SavedCustardRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBlock Text="{Binding Path=Title}"/>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="CustardTreeViewHeader">
-        <TreeViewItem IsExpanded="{Binding CustardExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem IsExpanded="{Binding CustardExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource CustardImage}" Margin="10, 0" Height="30" />
                 <TextBlock VerticalAlignment="Center" Text="Custard"/>
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
 
     <DataTemplate x:Key="DessertTreeViewHeader">
-        <TreeViewItem  IsExpanded="{Binding DessertExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem  IsExpanded="{Binding DessertExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource PastryImage}" Margin="10, 0" Height="30" />
                 <TextBlock Text="Desserts" />
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="PastryTreeViewHeader">
-        <TreeViewItem IsExpanded="{Binding PastryExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem IsExpanded="{Binding PastryExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource PastryImage}" Margin="10, 0" Height="30" />
                 <TextBlock VerticalAlignment="Center" Text="Custard"/>
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="PastryTreeViewItem">
-        <TreeViewItem ItemsSource="{Binding SavedPastryRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem ItemsSource="{Binding SavedPastryRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBlock Text="{Binding Path=Title}"/>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="MainCourseTreeViewHeader">
-        <TreeViewItem IsExpanded="{Binding MainCourseExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem IsExpanded="{Binding MainCourseExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource MealImage}" Margin="10, 0" Height="30" />
                 <TextBlock VerticalAlignment="Center" Text="Main Course"/>
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="BeefTreeViewHeader">
-        <TreeViewItem IsExpanded="{Binding BeefExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem IsExpanded="{Binding BeefExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource BeefImage}" Margin="10, 0" Height="30" />
                 <TextBlock VerticalAlignment="Center" Text="Beef"/>
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="BeefTreeViewItem">
-        <TreeViewItem ItemsSource="{Binding SavedBeefRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem ItemsSource="{Binding SavedBeefRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBlock Text="{Binding Path=Title}"/>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="DairyTreeViewHeader">
-        <TreeViewItem IsExpanded="{Binding DairyExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem IsExpanded="{Binding DairyExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource DairyImage}" Margin="10, 0" Height="30" />
                 <TextBlock VerticalAlignment="Center" Text="Dairy"/>
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="DairyTreeViewItem">
-        <TreeViewItem ItemsSource="{Binding SavedDairyRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem ItemsSource="{Binding SavedDairyRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBlock Text="{Binding Path=Title}"/>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="EggsTreeViewHeader">
-        <TreeViewItem IsExpanded="{Binding EggsExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem IsExpanded="{Binding EggsExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource EggsImage}" Margin="10, 0" Height="30" />
                 <TextBlock VerticalAlignment="Center" Text="Eggs"/>
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="EggsTreeViewItem">
-        <TreeViewItem ItemsSource="{Binding SavedDairyRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem ItemsSource="{Binding SavedDairyRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBlock Text="{Binding Path=Title}"/>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="LambTreeViewHeader">
-        <TreeViewItem IsExpanded="{Binding LambExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem IsExpanded="{Binding LambExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource LambImage}" Margin="10, 0" Height="30" />
                 <TextBlock VerticalAlignment="Center" Text="Lamb"/>
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="LambTreeViewItem">
-        <TreeViewItem ItemsSource="{Binding SavedLambRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem ItemsSource="{Binding SavedLambRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBlock Text="{Binding Path=Title}"/>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="PoultryTreeViewHeader">
-        <TreeViewItem IsExpanded="{Binding PoultryExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem IsExpanded="{Binding PoultryExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource PoultryImage}" Margin="10, 0" Height="30" />
                 <TextBlock VerticalAlignment="Center" Text="Poultry"/>
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="PoultryTreeViewItem">
@@ -219,109 +219,109 @@
     </DataTemplate>
 
     <DataTemplate x:Key="PorkTreeViewHeader">
-        <TreeViewItem IsExpanded="{Binding PorkExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem IsExpanded="{Binding PorkExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource PorkImage}" Margin="10, 0" Height="30" />
                 <TextBlock VerticalAlignment="Center" Text="Pork"/>
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="PorkTreeViewItem">
-        <TreeViewItem ItemsSource="{Binding SavedPorkRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem ItemsSource="{Binding SavedPorkRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBlock Text="{Binding Path=Title}"/>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="SeafoodTreeViewHeader">
-        <TreeViewItem IsExpanded="{Binding SeafoodExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem IsExpanded="{Binding SeafoodExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource SeafoodImage}" Margin="10, 0" Height="30" />
                 <TextBlock VerticalAlignment="Center" Text="Seafood"/>
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="SeafoodTreeViewItem">
-        <TreeViewItem ItemsSource="{Binding SavedSeafoodRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem ItemsSource="{Binding SavedSeafoodRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBlock Text="{Binding Path=Title}"/>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="TofuTreeViewHeader">
-        <TreeViewItem IsExpanded="{Binding TofuExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem IsExpanded="{Binding TofuExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource TofuImage}" Margin="10, 0" Height="30" />
                 <TextBlock VerticalAlignment="Center" Text="Tofu"/>
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="TofuTreeViewItem">
-        <TreeViewItem ItemsSource="{Binding SavedTofuRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem ItemsSource="{Binding SavedTofuRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBlock Text="{Binding Path=Title}"/>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="SaladTreeViewHeader">
-        <TreeViewItem IsExpanded="{Binding SaladExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem IsExpanded="{Binding SaladExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource SaladImage}" Margin="10, 0" Height="30" />
                 <TextBlock VerticalAlignment="Center" Text="Salad"/>
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="SaladTreeViewItem">
-        <TreeViewItem ItemsSource="{Binding SavedSaladRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem ItemsSource="{Binding SavedSaladRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBlock Text="{Binding Path=Title}"/>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="SideDishTreeViewHeader">
-        <TreeViewItem IsExpanded="{Binding SideDishExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem IsExpanded="{Binding SideDishExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource SideDishImage}" Margin="10, 0" Height="30" />
                 <TextBlock VerticalAlignment="Center" Text="SideDish"/>
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="SideDishTreeViewItem">
-        <TreeViewItem ItemsSource="{Binding SavedSideDishRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem ItemsSource="{Binding SavedSideDishRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBlock Text="{Binding Path=Title}"/>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="SoupStewTreeViewHeader">
-        <TreeViewItem IsExpanded="{Binding SoupStewExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem IsExpanded="{Binding SoupStewExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource SoupStewImage}" Margin="10, 0" Height="40" />
                 <TextBlock VerticalAlignment="Center" Text="Soup Stew"/>
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="SoupStewTreeViewItem">
-        <TreeViewItem ItemsSource="{Binding SavedSoupStewRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem ItemsSource="{Binding SavedSoupStewRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBlock Text="{Binding Path=Title}"/>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="UnknownTreeViewHeader">
-        <TreeViewItem IsExpanded="{Binding UnknownExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem IsExpanded="{Binding UnknownExp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{StaticResource UnknownImage}" Margin="10, 0" Height="20" />
                 <TextBlock VerticalAlignment="Center" Text="Unknown"/>
             </StackPanel>
-        </TreeViewItem>
+        </muxc:TreeViewItem>
     </DataTemplate>
 
     <DataTemplate x:Key="UnknownTreeViewItem">
-        <TreeViewItem ItemsSource="{Binding SavedUnknownRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <muxc:TreeViewItem ItemsSource="{Binding SavedUnknownRecipes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBlock Text="{Binding Path=Title}"/>
-        </TreeViewItem>
-    </DataTemplate>
+        </muxc:TreeViewItem>
+    </DataTemplate>-->
 
     <DataTemplate x:Key="TreeViewContextMenuAndCommand">
         <Button x:Name="TreeViewTitleBlock" Command="{Binding CmdMouseClick}" Background="LightSteelBlue" ToolTipService.ToolTip="{Binding Path=RecipeTitleTreeItem, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  BorderBrush="Transparent" >

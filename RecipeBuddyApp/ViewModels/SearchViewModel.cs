@@ -43,15 +43,12 @@ namespace RecipeBuddy.ViewModels
             recipePanelForSearch3 = new RecipePanelForSearchViewModel();
             UpdateSearchWebsources();
 
-
             SearchButtonCmd = new RBRelayCommand(ActionNoParams = () => Search(), FuncBool = () => SearchEnabled);
-
         }
 
         /// <summary>
         /// Updates the panel and the Panel map with the new websource
         /// </summary>
-        /// <param name="add">bool, true if adding - false is removing</param>
         public void UpdateSearchWebsources()
         {   
            recipePanelForSearch1.type_Of_Source = UserViewModel.Instance.PanelMap[0];
@@ -65,8 +62,11 @@ namespace RecipeBuddy.ViewModels
         public void ResetViewModel()
         {
             recipePanelForSearch1.ClearRecipeEntry();
+            recipePanelForSearch1.ClearRecipeBlurbModelList();
             recipePanelForSearch2.ClearRecipeEntry();
+            recipePanelForSearch2.ClearRecipeBlurbModelList();
             recipePanelForSearch3.ClearRecipeEntry();
+            recipePanelForSearch3.ClearRecipeBlurbModelList();
             SearchString = "";
         }
 
@@ -76,39 +76,20 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public async Task Search()
         {
-            SearchingChangeToUI();
-
-            recipePanelForSearch1.ClearRecipeEntry();
-            recipePanelForSearch1.ClearRecipeBlurbModelList();
+            SearchingChangeToUIAndLists();
 
             //For Threading callbacks.  
             Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView();
 
-            await Task.Run(() => SearchBackground(recipePanelForSearch1, searchString, coreApplicationView));
-            //Task.Run(() => SearchBackground(recipePanelForSearch1, searchString));
-            //Task.Run(() => SearchBackground(recipePanelForSearch1, searchString));
+            //await Task.Run(() => SearchBackground(recipePanelForSearch1, searchString, coreApplicationView));
+            //await Task.Run(() => SearchBackground(recipePanelForSearch2, searchString, coreApplicationView));
+            //await Task.Run(() => SearchBackground(recipePanelForSearch3, searchString, coreApplicationView));
 
-            //await Task.Run(() => SearchBackgroundAsync(recipePanelForSearch1, searchString));
-
-            //var TaskListOfSearches = new List<Task>();
-            //TaskListOfSearches.Add(Task.Run(() => SearchBackground(recipePanelForSearch1, searchString)));
-            //TaskListOfSearches.Add(Task.Run(() => SearchBackground(recipePanelForSearch2, searchString)));
-            //TaskListOfSearches.Add(Task.Run(() => SearchBackground(recipePanelForSearch3, searchString)));
-
-            //Task t = Task.WhenAll(TaskListOfSearches);
-            //try
-            //{
-            //    t.Wait();
-            //}
-            //catch
-            //{ }
-
-            //recipePanelForSearch1.CanSelectBack = true;
-            //recipePanelForSearch1.CmdBackButton.RaiseCanExecuteChanged();
-            //recipePanelForSearch1.CanSelectNext = true;
-            //recipePanelForSearch1.CmdNextButton.RaiseCanExecuteChanged();
-            //recipePanelForSearch1.CanSelectSelect = true;
-            //recipePanelForSearch1.CmdSelectButton.RaiseCanExecuteChanged();
+            List<Task> TaskListOfSearches = new List<Task>();
+            TaskListOfSearches.Add(Task.Run(() => SearchBackground(recipePanelForSearch1, searchString, coreApplicationView)));
+            TaskListOfSearches.Add(Task.Run(() => SearchBackground(recipePanelForSearch2, searchString, coreApplicationView)));
+            TaskListOfSearches.Add(Task.Run(() => SearchBackground(recipePanelForSearch3, searchString, coreApplicationView)));
+            Task t = Task.WhenAll(TaskListOfSearches);
 
             CursorType = CoreCursorType.Arrow;
             SearchButtonTitle = "Search";
@@ -116,40 +97,37 @@ namespace RecipeBuddy.ViewModels
             SearchButtonCmd.RaiseCanExecuteChanged();      
         }
 
-        private void SearchingChangeToUI()
+        /// <summary>
+        /// Changes to the UI button to indicate that a search is happening
+        /// Clears out lists so that the new search will have a place for the results.
+        /// </summary>
+        private void SearchingChangeToUIAndLists()
         {
             cursorType = CoreCursorType.Wait;
             SearchButtonTitle = "Searching...";
             SearchEnabled = false;
             SearchButtonCmd.RaiseCanExecuteChanged();
+
+            recipePanelForSearch1.ClearRecipeEntry();
+            recipePanelForSearch1.ClearRecipeBlurbModelList();
+            recipePanelForSearch2.ClearRecipeEntry();
+            recipePanelForSearch2.ClearRecipeBlurbModelList();
+            recipePanelForSearch3.ClearRecipeEntry();
+            recipePanelForSearch3.ClearRecipeBlurbModelList();
         }
 
         /// <summary>
-        /// Calls ReturnSearchResults which also splits off into a main thread to return the first
-        /// results of each panel and a background thread to find the rest of the recipes.
+        /// Runs a search on a given searchString and reports the results back.
         /// </summary>
+        /// <param name="panel">The panel 1-3 that is being used to display the search results</param>
+        /// <param name="searchString">The search string used</param>
+        /// <param name="coreApplicationView">Threading, this is the executing UI thread that will need to recieve any callbacks or updates to the UI</param>
+        /// <returns></returns>
         private async Task SearchBackground(RecipePanelForSearchViewModel panel, string searchString, Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView)
         {
             await panel.SearchAndFillList(searchString, coreApplicationView);
         }
 
-        /// <summary>
-        /// Searches for the results and shows if there is an error
-        /// Showing the first result happens via callback in the GenerateSearchResultsList.cs file
-        /// </summary>
-        /// <param name="panel"></param>
-        /// <param name="searchstring"></param>
-        //public void ReturnSearchResults(RecipePanelForSearchViewModel panel, string searchstring)
-        //{
-        //    Task<int> results = panel.SearchAndFillListAsync(searchString);
-
-
-        //    if (result == -1)
-        //    {
-        //        panel.Title = "No Results For: " + searchString + " on " + panel.type_Of_Source.ToString();
-        //    }
-
-        //}
 
         #region Command and Properties
 

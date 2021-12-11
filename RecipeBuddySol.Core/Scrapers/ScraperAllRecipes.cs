@@ -28,7 +28,7 @@ namespace RecipeBuddy.Core.Scrapers
         /// Using a search string that is inputted by the user we generate the recipe text for the three pannels.
         /// </summary>
         /// <param name="strSearch"></param>
-        public static int GenerateURLsListFromAllRecipesSearch(string strSearch, RecipeBlurbListModel listModel)
+        public static int GenerateURLsListFromAllRecipesSearch(string strSearch, RecipeListModel listModel)
         {
             List<string> myQuery = new List<string>();
 
@@ -50,7 +50,7 @@ namespace RecipeBuddy.Core.Scrapers
                 doc = web.Load(strQuery);
             }
 
-                string str1 = "";
+                string str1 = null;
                 string str2 = "";
                 HtmlNodeCollection list1 = doc.DocumentNode.SelectNodes("//a[@class='card__titleLink manual-link-behavior']");
                 List<HtmlNode> list2 = new List<HtmlNode>();
@@ -65,7 +65,7 @@ namespace RecipeBuddy.Core.Scrapers
                 {
                     str1 = list1[count].OuterHtml.Substring(list1[count].OuterHtml.IndexOf("href=")).Split('\"')[1];
                     if (str1 != str2)
-                        if (listModel.URLLists.Add(str1) == -1)
+                        if (listModel.URLLists.Add(new Uri(str1)) == -1)
                         {
                             return 0;
                         }
@@ -93,30 +93,31 @@ namespace RecipeBuddy.Core.Scrapers
         /// <param name="doc">HtmlDocument that has the webiste loaded</param>
         /// <param name="splitter">The the way to split up the description so we only keep two sentences</param>
         /// <param name="uri">website</param>
-        public static RecipeBlurbModel ProcessAllRecipesRecipeType(HtmlDocument doc, char[] splitter, string uri)
+        public static RecipeRecordModel ProcessAllRecipesRecipeType(HtmlDocument doc, char[] splitter, Uri uri)
         {
 
-            //List<string> ingredients = FillIngredientListAllRecipesForRecipeEntry(doc, 50);
-            ////no ingredients it isn't a real recipe so we bail
-            //if (ingredients.Count == 0)
-            //    return null;
+            List<string> ingredients = FillIngredientListAllRecipesForRecipeEntry(doc, 50);
+            List<string> directions = new List<string>();
+            directions.Add("-Direction");
+            //no ingredients it isn't a real recipe so we bail
+            if (ingredients.Count == 0)
+                return null;
 
             //List<string> directions = FillDirectionListAllRecipiesForRecipeEntry(doc, 30);
 
-            //RecipeBlurbModel recipeBlurbModel = new RecipeCardModel(ingredients, directions);
-            RecipeBlurbModel recipeBlurbModel = new RecipeBlurbModel();
-
-            recipeBlurbModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//h1[@class='headline heading-content elementFont__display']", doc));
-            recipeBlurbModel.Website = "AllRecipies";
-            recipeBlurbModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//div[@class='recipe-summary']").InnerText);
+            RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
+            recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//h1[@class='headline heading-content elementFont__display']", doc));
+            recipeModel.Website = "AllRecipes";
+            recipeModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//div[@class='recipe-summary']").InnerText);
 
 
             //recipeCardModel.TotalTime = GetTotalTime(doc.DocumentNode.SelectSingleNode("//div[@class='recipe-info-section']"));
-            recipeBlurbModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//span[@class='author-name authorName linkHoverStyle']", doc));
-            recipeBlurbModel.Link = uri;
-            recipeBlurbModel.Recipe_Type = Scraper.FillTypeForRecipeEntry(recipeBlurbModel.Title);
-
-            return recipeBlurbModel;
+            recipeModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//span[@class='author-name authorName linkHoverStyle']", doc));
+            recipeModel.Link = uri.ToString();
+            recipeModel.TypeAsInt = (int)Scraper.FillTypeForRecipeEntry(recipeModel.Title);
+            recipeModel.ListOfIngredientStrings = ingredients;
+            recipeModel.ListOfDirectionStrings = directions;
+            return recipeModel;
         }
 
         /// <summary>
