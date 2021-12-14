@@ -10,6 +10,7 @@ using Windows.UI.Popups;
 using Windows.System.Threading.Core;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using System.Threading;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -75,8 +76,9 @@ namespace RecipeBuddy.ViewModels
         /// <summary>
         /// Processes the string and attempts to stuff it into one of our RecipeCardModels
         /// </summary>
-        private void SaveRecipe()
+        private int SaveRecipe()
         {
+
             recipeCardViewModelForUpload.RecipeType = (Type_Of_Recipe) CurrentType;
             int result = MainWindowViewModel.Instance.mainTreeViewNav.AddRecipeToTreeView(recipeCardViewModelForUpload, true);
 
@@ -90,6 +92,8 @@ namespace RecipeBuddy.ViewModels
                 DataBaseAccessorsForRecipeManager.SaveRecipeToDatabase(UserViewModel.Instance.UsersIDInDB, recipeCardViewModelForUpload, UserViewModel.Instance.UsersIDInDB);
                 ClearRecipe();
             }
+
+            return result;
         }
 
         /// <summary>

@@ -10,6 +10,8 @@ using RecipeBuddy.Core.Helpers;
 using Windows.UI.Popups;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -32,6 +34,7 @@ namespace RecipeBuddy.ViewModels
         {
             RecipeTreeRootNodes = new ObservableCollection<RecipeTreeItem>();
             CmdSaveDialog = new RBRelayCommandObj(actionRecipeDisplayModel = (RD) => AddRecipeToTreeView((RecipeDisplayModel)RD));
+            //CmdExpandTreeViewItem = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeFromComboBox(e), canCallActionFunc => CanSelectRemove);
 
             DessertRecipes = new RecipeTreeItem("Desserts");
             MainCourseRecipes = new RecipeTreeItem("Main Courses");
@@ -54,28 +57,6 @@ namespace RecipeBuddy.ViewModels
             SavedBreadRecipes = new RecipeTreeItem("Bread");
             SavedSideDishRecipes = new RecipeTreeItem("Side Dish");
             SavedTofuRecipes = new RecipeTreeItem("Tofu");
-
-            mainCourseExp = false;
-            DessertExp = false;
-            cakeExp = false;
-            candyExp = false;
-            cookieExp = false;
-            custardExp = false;
-            pastryExp = false;
-            soupStewExp = false;
-            porkExp = false;
-            poultryExp = false;
-            beefExp = false;
-            lambExp = false;
-            seafoodExp = false;
-            saladExp = false;
-            appetizerExp = false;
-            breadExp = false;
-            sideDishExp = false;
-            tofuExp = false;
-            DairyExp = false;
-            EggsExp = false;
-            unknownExp = false;
 
             CreateTreeViewHierarchy(RecipeTreeRootNodes);
             FillCatagoryCollectionForDropDown();
@@ -152,6 +133,9 @@ namespace RecipeBuddy.ViewModels
             MainCourseRecipes.Children.Add(SavedEggsRecipes);
             MainCourseRecipes.Children.Add(SavedSeafoodRecipes);
             MainCourseRecipes.Children.Add(SavedTofuRecipes);
+
+            //MainCourseRecipes.ItemExpanded = true;
+            //DessertRecipes.ItemExpanded = true;
         }
 
         /// <summary>
@@ -178,20 +162,26 @@ namespace RecipeBuddy.ViewModels
             SavedTofuRecipes.Children.Clear();
             SavedDairyRecipes.Children.Clear();
             SavedEggsRecipes.Children.Clear();
-            MainCourseExp = false;
-            DessertExp = false;
+            MainCourseRecipes.ItemExpanded = false;
+            DessertRecipes.ItemExpanded = false;
         }
 
         /// <summary>
         /// Adding a list of recipes to the tree view as part of the initial setup from the DB
         /// </summary>
         /// <param name="models">The list of RecipeRecords</param>
-        public void AddRecipeModelsToTreeView(List<RecipeRecordModel> models)
+        public void AddRecipeModelsToTreeViewAsPartOfInitialSetup(List<RecipeRecordModel> models)
         {
             foreach (RecipeRecordModel recipeCard in models)
             {
-                AddRecipeToTreeView(recipeCard, false);
+                AddRecipeToTreeViewNoExpand(recipeCard);
             }
+        }
+
+        //public async Task AddRecipeModelsToTreeView(RecipeRecordModel models, bool expandHeader = false, Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView = null)
+        public void AddRecipeModelsToTreeView(RecipeRecordModel models, bool expandHeader = false)
+        {
+            AddRecipeToTreeView(models, expandHeader);
         }
 
         /// <summary>
@@ -499,17 +489,35 @@ namespace RecipeBuddy.ViewModels
         }
 
         /// <summary>
-        /// Takes a RecipeRecordModel and saves it
+        /// Adding a record to the treeview
         /// </summary>
-        /// <param name="recipeRecordModel"></param>
-        /// <param name="expandTreeViewHeader"></param>
-        /// <returns></returns>
+        /// <param name="recipeRecordModel">The RecipeDisplayModel to be saved</param>
+        /// <param name="expandTreeViewHeader">are we expanding the tree header when we add the item?</param>
+        /// <param name="view"></param>
+        /// <returns>0 if we have to overwrite an existing recipe</returns>
         public int AddRecipeToTreeView(RecipeRecordModel recipeRecordModel, bool expandTreeViewHeader = true)
         {
             return AddRecipeToTreeViewWork(recipeRecordModel, expandTreeViewHeader);
         }
 
-        private int AddRecipeToTreeViewWork(RecipeRecordModel recipeModel, bool expandTreeViewHeader)
+        /// <summary>
+        /// Takes a RecipeRecordModel and saves it
+        /// </summary>
+        /// <param name="recipeRecordModel"></param>
+        /// <param name="expandTreeViewHeader"></param>
+        /// <returns></returns>
+        public int AddRecipeToTreeViewNoExpand(RecipeRecordModel recipeRecordModel)
+        {
+            return  AddRecipeToTreeViewWork(recipeRecordModel);
+        }
+
+        /// <summary>
+        /// Does the work of adding a recipe to the treeview
+        /// </summary>
+        /// <param name="recipeModel">the recipeModel record we are adding/param>
+        /// <param name="expandTreeViewHeader">default is true, should the node be expanded when the addition happens</param>
+        /// <returns></returns>
+        private int AddRecipeToTreeViewWork(RecipeRecordModel recipeModel, bool expandTreeViewHeader = false)
         {
             int returnOverwriteCmd = 0;
             //Create a new RecipeCardTreeItem
@@ -522,8 +530,8 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedCakeRecipes.Children.Add(recipeTreeItem);
-                    DessertExp = true;
-                    CakeExp = true;
+                    DessertRecipes.ItemExpanded = expandTreeViewHeader;
+                    SavedCakeRecipes.ItemExpanded = expandTreeViewHeader;
                     returnOverwriteCmd = 1;
                     break;
 
@@ -532,8 +540,8 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedCookieRecipes.Children.Add(recipeTreeItem);
-                    DessertExp = true;
-                    CookieExp = true;
+                    DessertRecipes.ItemExpanded = expandTreeViewHeader;
+                    SavedCookieRecipes.ItemExpanded = expandTreeViewHeader;
                     returnOverwriteCmd = 1;
                     break;
 
@@ -542,8 +550,8 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedCandyRecipes.Children.Add(recipeTreeItem);
-                    DessertExp = true;
-                    CandyExp = true;
+                    DessertRecipes.ItemExpanded = expandTreeViewHeader;
+                    SavedCandyRecipes.ItemExpanded = expandTreeViewHeader;
                     returnOverwriteCmd = 1;
                     break;
 
@@ -552,8 +560,8 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedCustardRecipes.Children.Add(recipeTreeItem);
-                    DessertExp = true;
-                    CustardExp = true;
+                    DessertRecipes.ItemExpanded = expandTreeViewHeader;
+                    SavedCustardRecipes.ItemExpanded = expandTreeViewHeader;
                     returnOverwriteCmd = 1;
                     break;
 
@@ -562,8 +570,8 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedPastryRecipes.Children.Add(recipeTreeItem);
-                    DessertExp = true;
-                    PastryExp = true;
+                    DessertRecipes.ItemExpanded = expandTreeViewHeader;
+                    SavedPastryRecipes.ItemExpanded = expandTreeViewHeader;
                     returnOverwriteCmd = 1;
                     break;
 
@@ -572,7 +580,7 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedSoupStewRecipes.Children.Add(recipeTreeItem);
-                    SoupStewExp = true;
+                    SavedSoupStewRecipes.ItemExpanded = expandTreeViewHeader;
                     returnOverwriteCmd = 1;
                     break;
 
@@ -581,8 +589,8 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedSeafoodRecipes.Children.Add(recipeTreeItem);
-                    MainCourseExp = true;
-                    SeafoodExp = true;
+                    MainCourseRecipes.ItemExpanded = expandTreeViewHeader;
+                    SavedSeafoodRecipes.ItemExpanded = true;
                     returnOverwriteCmd = 1;
                     break;
 
@@ -591,8 +599,8 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedPorkRecipes.Children.Add(recipeTreeItem);
-                    MainCourseExp = true;
-                    PorkExp = true;
+                    MainCourseRecipes.ItemExpanded = expandTreeViewHeader;
+                    SavedPorkRecipes.ItemExpanded = expandTreeViewHeader;
                     returnOverwriteCmd = 1;
                     break;
 
@@ -601,8 +609,8 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedBeefRecipes.Children.Add(recipeTreeItem);
-                    MainCourseExp = true;
-                    BeefExp = true;
+                    MainCourseRecipes.ItemExpanded = expandTreeViewHeader;
+                    SavedBeefRecipes.ItemExpanded = expandTreeViewHeader;
                     returnOverwriteCmd = 1;
                     break;
 
@@ -611,8 +619,7 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedDairyRecipes.Children.Add(recipeTreeItem);
-                    MainCourseExp = true;
-                    DairyExp = true;
+                    SavedDairyRecipes.ItemExpanded = expandTreeViewHeader;
                     returnOverwriteCmd = 1;
                     break;
 
@@ -621,8 +628,8 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedEggsRecipes.Children.Add(recipeTreeItem);
-                    MainCourseExp = true;
-                    EggsExp = true;
+                    MainCourseRecipes.ItemExpanded = expandTreeViewHeader;
+                    SavedEggsRecipes.ItemExpanded = expandTreeViewHeader;
                     returnOverwriteCmd = 1;
                     break;
 
@@ -631,8 +638,8 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedPoultryRecipes.Children.Add(recipeTreeItem);
-                    MainCourseExp = true;
-                    PoultryExp = true;
+                    MainCourseRecipes.ItemExpanded = expandTreeViewHeader;
+                    SavedPoultryRecipes.ItemExpanded = expandTreeViewHeader;
                     returnOverwriteCmd = 1;
                     break;
 
@@ -641,8 +648,8 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedLambRecipes.Children.Add(recipeTreeItem);
-                    MainCourseExp = true;
-                    LambExp = true;
+                    MainCourseRecipes.ItemExpanded = expandTreeViewHeader;
+                    SavedLambRecipes.ItemExpanded = expandTreeViewHeader;
                     returnOverwriteCmd = 1;
                     break;
 
@@ -651,7 +658,7 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedSaladRecipes.Children.Add(recipeTreeItem);
-                    SaladExp = true;
+                    SavedSaladRecipes.ItemExpanded = expandTreeViewHeader;
                     returnOverwriteCmd = 1;
                     break;
 
@@ -660,7 +667,7 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedAppetizerRecipes.Children.Add(recipeTreeItem);
-                    AppetizerExp = true;
+                    SavedAppetizerRecipes.ItemExpanded = expandTreeViewHeader;
                     returnOverwriteCmd = 1;
                     break;
 
@@ -669,7 +676,7 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedBreadRecipes.Children.Add(recipeTreeItem);
-                    BreadExp = true;
+                    SavedBreadRecipes.ItemExpanded = expandTreeViewHeader;
                     returnOverwriteCmd = 1;
                     break;
 
@@ -678,7 +685,8 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedSideDishRecipes.Children.Add(recipeTreeItem);
-                    SideDishExp = true;
+                    SavedSideDishRecipes.ItemExpanded = expandTreeViewHeader;
+
                     returnOverwriteCmd = 1;
                     break;
 
@@ -687,8 +695,10 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedTofuRecipes.Children.Add(recipeTreeItem);
-                    MainCourseExp = true;
-                    TofuExp = true;
+                    MainCourseRecipes.ItemExpanded = expandTreeViewHeader;
+                    SavedTofuRecipes.ItemExpanded = expandTreeViewHeader;
+
+
                     returnOverwriteCmd = 1;
                     break;
 
@@ -697,7 +707,8 @@ namespace RecipeBuddy.ViewModels
                     if (returnOverwriteCmd == 0)
                         return returnOverwriteCmd;
                     SavedUnknownRecipes.Children.Add(recipeTreeItem);
-                    UnknownExp = true;
+                    SavedUnknownRecipes.ItemExpanded = expandTreeViewHeader;
+
                     returnOverwriteCmd = 1;
                     break;
             }
@@ -732,6 +743,7 @@ namespace RecipeBuddy.ViewModels
             switch (parentFromArgument)
             {
                 case "CakeTreeViewHeader":
+                    SavedCakeRecipes.ItemExpanded = true;
                     return SavedCakeRecipes.Children;
 
                 case "CandyTreeViewHeader":
@@ -821,162 +833,17 @@ namespace RecipeBuddy.ViewModels
             set;
         }
 
-        //private RecipeTreeItem recipeTreeRoot;
-        //public RecipeTreeItem RecipeTreeRoot
-        //{
-        //    get { return recipeTreeRoot; }
-        //    set { SetProperty(ref recipeTreeRoot, value); }
-        //}
-
-        private bool mainCourseExp;
-        public bool MainCourseExp
-        {
-            get { return mainCourseExp; }
-            set { SetProperty(ref mainCourseExp, value); }
-        }
-
-        private bool dessertExp;
-        public bool DessertExp
-        {
-            get { return dessertExp; }
-            set { SetProperty(ref dessertExp, value); }
-        }
-
-        private bool cakeExp;
-        public bool CakeExp
-        {
-            get { return cakeExp; }
-            set { SetProperty(ref cakeExp, value); }
-        }
-
-        private bool cookieExp;
-        public bool CookieExp
-        {
-            get { return cookieExp; }
-            set { SetProperty(ref cookieExp, value); }
-        }
-
-
-        private bool candyExp;
-        public bool CandyExp
-        {
-            get { return candyExp; }
-            set { SetProperty(ref candyExp, value); }
-        }
-
-        private bool custardExp;
-        public bool CustardExp
-        {
-            get { return custardExp; }
-            set { SetProperty(ref custardExp, value); }
-        }
-
-        private bool pastryExp;
-        public bool PastryExp
-        {
-            get { return pastryExp; }
-            set { SetProperty(ref pastryExp, value); }
-        }
-
-        private bool soupStewExp;
-        public bool SoupStewExp
-        {
-            get { return soupStewExp; }
-            set { SetProperty(ref soupStewExp, value); }
-        }
-
-        private bool porkExp;
-        public bool PorkExp
-        {
-            get { return porkExp; }
-            set { SetProperty(ref porkExp, value); }
-        }
-
-        private bool poultryExp;
-        public bool PoultryExp
-        {
-            get { return poultryExp; }
-            set { SetProperty(ref poultryExp, value); }
-        }
-
-        private bool beefExp;
-        public bool BeefExp
-        {
-            get { return beefExp; }
-            set { SetProperty(ref beefExp, value); }
-        }
-
-        private bool lambExp;
-        public bool LambExp
-        {
-            get { return lambExp; }
-            set { SetProperty(ref lambExp, value); }
-        }
-
-        private bool seafoodExp;
-        public bool SeafoodExp
-        {
-            get { return seafoodExp; }
-            set { SetProperty(ref seafoodExp, value); }
-        }
-
-        private bool saladExp;
-        public bool SaladExp
-        {
-            get { return saladExp; }
-            set { SetProperty(ref saladExp, value); }
-        }
-
-        private bool appetizerExp;
-        public bool AppetizerExp
-        {
-            get { return appetizerExp; }
-            set { SetProperty(ref appetizerExp, value); }
-        }
-
-        private bool sideDishExp;
-        public bool SideDishExp
-        {
-            get { return sideDishExp; }
-            set { SetProperty(ref sideDishExp, value); }
-        }
-
-        private bool tofuExp;
-        public bool TofuExp
-        {
-            get { return tofuExp; }
-            set { SetProperty(ref tofuExp, value); }
-        }
-
-        private bool dairyExp;
-        public bool DairyExp
-        {
-            get { return dairyExp; }
-            set { SetProperty(ref dairyExp, value); }
-        }
-
-        private bool eggsExp;
-        public bool EggsExp
-        {
-            get { return eggsExp; }
-            set { SetProperty(ref eggsExp, value); }
-        }
-
-        private bool breadExp;
-        public bool BreadExp
-        {
-            get { return breadExp; }
-            set { SetProperty(ref breadExp, value); }
-        }
-
-        private bool unknownExp;
-        public bool UnknownExp
-        {
-            get { return unknownExp; }
-            set { SetProperty(ref unknownExp, value); }
-        }
-
         public RBRelayCommandObj CmdSaveDialog
+        {
+            get;
+            private set;
+        }
+
+
+        /// <summary>
+        /// Property for the Recipe combobox change command
+        /// </summary>
+        public ICommand CmdExpandTreeViewItem
         {
             get;
             private set;

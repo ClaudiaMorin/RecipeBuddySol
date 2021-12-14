@@ -57,7 +57,7 @@ namespace RecipeBuddy.Core.Scrapers
                     return -1;
                 }
 
-                //listModel.URLLists.ClearLists();
+                listModel.URLLists.ClearLists();
 
                 string firstStr;
                 string secondStr;

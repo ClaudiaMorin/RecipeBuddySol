@@ -25,7 +25,7 @@
                 <TextBlock Text="Title: " HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBox Text="{Binding Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" HorizontalAlignment="Center" Height="26"/>
             </StackPanel>
-            <TextBlock x:Name="Author" TextAlignment="Left" Grid.Row="0"  Grid.Column= "1" FontSize="14" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Path=Author, Mode=OneWay}" />
+            <TextBlock x:Name="Author" TextAlignment="Right" Grid.Row="0"  Grid.Column= "1" FontSize="14" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Path=Author, Mode=OneWay}" />
             <HyperlinkButton x:Name="Link" VerticalAlignment="Top" Grid.Row="0" Grid.Column= "2" FontSize="14" Content="{Binding Path=Website, Mode=OneWay}" NavigateUri="{Binding Path=Link, Mode=OneWay}" />
         </Grid>
         <Border x:Name="IngredientDirections" BorderThickness="2" Background="LightSteelBlue" BorderBrush="DarkGray">

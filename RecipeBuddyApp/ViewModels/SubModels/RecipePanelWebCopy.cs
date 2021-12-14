@@ -33,6 +33,9 @@ namespace RecipeBuddy.ViewModels
         /// <param name="type"></param>
         public RecipePanelForWebCopy(RecipeRecordModel recipeBlurbModel)
         {
+            //For Threading callbacks.  
+            Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView();
+
             recipeCardModel = new RecipeDisplayModel(recipeBlurbModel);
             CanSelectSave = false;
             CanSelectCancel = true;
@@ -45,6 +48,9 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void LoadRecipeCardModel(RecipeDisplayModel recipeModel)
         {
+            //For Threading callbacks.  
+            Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView();
+
             recipeCardModel.CopyRecipeDisplayModel(recipeModel);
             CanSelectSave = true;
             CanSelectCancel = true;
@@ -62,20 +68,24 @@ namespace RecipeBuddy.ViewModels
         public void CancelEntry()
         {
             ClearRecipeEntry();
-            WebViewModel.Instance.CloseKeepRecipePanel();
+            //WebViewModel.Instance.CloseKeepRecipePanel();
         }
 
         /// <summary>
         /// This does the actual Entry Saving and can be called from either the overwrite? dialog or the CheckEntrySave function
         /// </summary>
         /// <param name="recipeCard">This is an object that is then cast back to a RecipeCardModel to satisfy the ICommandInterface</param>
+        //public async Task SaveEntry(Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView)
         public void SaveEntry()
         {
             recipeCardModel.SaveEditsToARecipe();
             DataBaseAccessorsForRecipeManager.SaveRecipeToDatabase(UserViewModel.Instance.UsersIDInDB, recipeCardModel, UserViewModel.Instance.UsersIDInDB);
-            MainWindowViewModel.Instance.mainTreeViewNav.AddRecipeToTreeView(recipeCardModel);
+            MainNavTreeViewModel.Instance.AddRecipeModelsToTreeView(new RecipeRecordModel(recipeCardModel), true);
+            
             ClearRecipeEntry();
-           WebViewModel.Instance.CloseKeepRecipePanel();  
+            //MainNavTreeViewModel.Instance.DessertRecipes.ItemExpanded = true;
+            //MainNavTreeViewModel.Instance.SavedCakeRecipes.ItemExpanded = true;
+            //MainWindowViewModel.Instance.mainTreeViewNav.AddRecipeToTreeView(recipeCardModel);
         }
 
         #region Properties and ICommand functions 

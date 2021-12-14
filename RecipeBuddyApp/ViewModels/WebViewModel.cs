@@ -6,6 +6,8 @@ using RecipeBuddy.Core.Models;
 using RecipeBuddy.Core.Helpers;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using System.Threading.Tasks;
+using Windows.UI.Core;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -34,7 +36,6 @@ namespace RecipeBuddy.ViewModels
         {
             //currentType = 0;
             firstColumnTreeView = "Visible";
-            treeViewWidth = "*";
             mainViewWidth = "3*";
             SetUpComboBox();
             mainRecipeCardModel = new RecipeDisplayModel();
@@ -100,6 +101,7 @@ namespace RecipeBuddy.ViewModels
 
         public void SaveEntry()
         {
+            CloseKeepRecipePanel();
             recipePanelForWebCopy.SaveEntry();
         }
 
@@ -109,16 +111,14 @@ namespace RecipeBuddy.ViewModels
         public void OpenKeepRecipePanel()
         {
             FirstColumnTreeView = "Collapsed";
-            TreeViewWidth = "*";
             MainViewWidth = "*";
             recipePanelForWebCopy.LoadRecipeCardModel(mainRecipeCardModel);
         }
 
         public void CloseKeepRecipePanel()
         {
-            FirstColumnTreeView = "Visible";
-            TreeViewWidth = "*";
             MainViewWidth = "3*";
+            FirstColumnTreeView = "Visible";
         }
 
         /// <summary>
@@ -424,13 +424,6 @@ namespace RecipeBuddy.ViewModels
         {
             get { return firstColumnTreeView; }
             set { SetProperty(ref firstColumnTreeView, value); }
-        }
-
-        private string treeViewWidth;
-        public string TreeViewWidth
-        {
-            get { return treeViewWidth; }
-            set { SetProperty(ref treeViewWidth, value); }
         }
 
         private string mainViewWidth;

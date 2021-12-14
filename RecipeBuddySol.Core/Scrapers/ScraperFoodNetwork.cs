@@ -57,7 +57,7 @@ namespace RecipeBuddy.Core.Scrapers
                 }
 
                 //we need to zero out all our lists.
-                //listModel.URLLists.ClearLists();
+                listModel.URLLists.ClearLists();
                
 
                 string firstStr;

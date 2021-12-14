@@ -18,7 +18,7 @@ namespace RecipeBuddy.Core.Helpers
         /// Creates a dictionary of the properties in the recipe for insertion into the DB
         /// </summary>
         /// <returns></returns>
-        public static void ConvertRecipeToDictionaryForDBInsertion(Dictionary<string, object> dictionaryValuePairs, List<string> paramsForSQLStatment, RecipeDisplayModel recipeCard, int UserIDInDB)
+        public static void ConvertRecipeToDictionaryForDBInsertion(Dictionary<string, object> dictionaryValuePairs, List<string> paramsForSQLStatment, RecipeRecordModel recipeCard, int UserIDInDB)
         {
             Dictionary<string, object> recipeEntries;
             recipeEntries = GetRecipeDictionaryForDBFunctions(recipeCard, UserIDInDB);
@@ -41,10 +41,10 @@ namespace RecipeBuddy.Core.Helpers
         /// Provides a full dictionary of all the recipe properties to be added to the DB
         /// </summary>
         /// <returns>empty dictionary of all the recipe properties</returns>
-        public static Dictionary<string, object> GetRecipeDictionaryForDBFunctions(RecipeDisplayModel recipeCard, int UserIDinDB)
+        public static Dictionary<string, object> GetRecipeDictionaryForDBFunctions(RecipeRecordModel recipeCard, int UserIDinDB)
         {
-            string ingredients = StringManipulationHelper.TurnListIntoStringForDB(recipeCard.listOfIngredientStringsForDisplay);
-            string directions = StringManipulationHelper.TurnListIntoStringForDB(recipeCard.listOfDirectionStringsForDisplay);
+            string ingredients = StringManipulationHelper.TurnListIntoStringForDB(recipeCard.ListOfIngredientStrings);
+            string directions = StringManipulationHelper.TurnListIntoStringForDB(recipeCard.ListOfDirectionStrings);
 
             Dictionary<string, object> recipeDictionary = new Dictionary<string, object>
             {
@@ -53,7 +53,7 @@ namespace RecipeBuddy.Core.Helpers
                 { "@Author",  recipeCard.Author },
                 //{ "@Website", recipeCard.Website },
                 { "@Link", recipeCard.Link },
-                { "@TypeAsInt", recipeCard.RecipeType },
+                { "@TypeAsInt", recipeCard.TypeAsInt },
                 { "@StringOfIngredientForListFromDB", ingredients},
                 { "@StringOfDirectionsForListFromDB", directions },
                 { "@UserID", UserIDinDB}
@@ -98,8 +98,9 @@ namespace RecipeBuddy.Core.Helpers
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             List<string> paramsForSQLStatment = new List<string>();
 
+            RecipeRecordModel recipeRecordModel = new RecipeRecordModel(recipeCard);
             //Put the new users information into a dictionary which will be part of the SQL query
-            ConvertRecipeToDictionaryForDBInsertion(parameters, paramsForSQLStatment, recipeCard, UserIDInDB);
+            ConvertRecipeToDictionaryForDBInsertion(parameters, paramsForSQLStatment, recipeRecordModel, UserIDInDB);
 
             string sqlString1 = "insert into Recipes (";
             string sqlString2 = " values (";

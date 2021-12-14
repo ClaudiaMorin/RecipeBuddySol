@@ -13,7 +13,7 @@
     <StackPanel x:Name="MasterStackPanel">
         <Grid Height="798">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{Binding TreeViewWidth}"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="{Binding MainViewWidth}"/>
             </Grid.ColumnDefinitions>
             <StackPanel x:Name="FirstColumn" Grid.Row="0" Grid.Column="0" Visibility="{Binding FirstColumnTreeView, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Background="LightSteelBlue" >

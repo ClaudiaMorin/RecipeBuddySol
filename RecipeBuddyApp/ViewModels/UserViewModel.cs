@@ -88,7 +88,10 @@ namespace RecipeBuddy.ViewModels
                 PasswordBoxEnabled = "false";
                 //Set Up TreeView
                 List<RecipeRecordModel> recipeRecords = DataBaseAccessorsForRecipeManager.LoadUserDataByID(AccountName, UsersIDInDB);
-                MainNavTreeViewModel.Instance.AddRecipeModelsToTreeView(recipeRecords);
+                MainNavTreeViewModel.Instance.AddRecipeModelsToTreeViewAsPartOfInitialSetup(recipeRecords);
+                //MainNavTreeViewModel.Instance.MainCourseRecipes.ItemExpanded = true;
+                //MainNavTreeViewModel.Instance.DessertRecipes.ItemExpanded = true;
+                //MainNavTreeViewModel.Instance.MainCourseRecipes.TreeItemTitle = "fooBar";
 
                 //passwordSecureString.Clear();
                 //MainWindowViewModel.Instance.SelectedTabIndex = (int)MainWindowViewModel.Tabs.SearchTab;

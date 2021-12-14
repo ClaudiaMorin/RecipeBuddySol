@@ -1,6 +1,6 @@
 ﻿using RecipeBuddy.Core;
 using RecipeBuddy.ViewModels;
-using System;
+using System.Windows;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;

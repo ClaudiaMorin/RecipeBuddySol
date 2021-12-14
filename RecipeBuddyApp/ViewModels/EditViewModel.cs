@@ -8,6 +8,7 @@ using RecipeBuddy.Core.Models;
 using RecipeBuddy.Core.Helpers;
 using RecipeBuddy.Core.Database;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using System.Threading.Tasks;
 
 namespace RecipeBuddy.ViewModels
 {

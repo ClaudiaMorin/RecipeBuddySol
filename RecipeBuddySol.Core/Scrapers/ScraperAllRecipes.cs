@@ -60,8 +60,10 @@ namespace RecipeBuddy.Core.Scrapers
                 {
                     return -1;
                 }
+                //we need to zero out all our lists.
+                listModel.URLLists.ClearLists();
 
-                for (int count = 1; count < list1.Count; count++)
+            for (int count = 1; count < list1.Count; count++)
                 {
                     str1 = list1[count].OuterHtml.Substring(list1[count].OuterHtml.IndexOf("href=")).Split('\"')[1];
                     if (str1 != str2)

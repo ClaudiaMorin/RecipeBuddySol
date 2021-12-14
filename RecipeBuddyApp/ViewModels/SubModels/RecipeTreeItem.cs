@@ -5,10 +5,11 @@ using RecipeBuddy.Core.Models;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using RecipeBuddy.Core.Helpers;
 using Microsoft.UI.Xaml.Controls;
+using System.ComponentModel;
 
 namespace RecipeBuddy.ViewModels
 {
-    public class RecipeTreeItem 
+    public class RecipeTreeItem : ObservableObject
     {
 
         public RecipeTreeItem(string titleTreeItem)
@@ -95,7 +96,6 @@ namespace RecipeBuddy.ViewModels
         {
             get
             { return recipeModelTV; }
-            //set { SetProperty(ref recipeModelTV, value); }
             set { recipeModelTV = value; }
         }
 
@@ -104,8 +104,15 @@ namespace RecipeBuddy.ViewModels
         {
             get
             { return treeItemTitle; }
-            //set { SetProperty(ref treeItemTitle, value); }
             set { treeItemTitle = value; }
+        }
+
+        private bool itemExpanded;
+        public bool ItemExpanded
+        {
+            get { return itemExpanded; }
+            //set { itemExpanded = value; }
+            set { SetProperty(ref itemExpanded, value); }
         }
 
         public ICommand CmdAddToSelectList

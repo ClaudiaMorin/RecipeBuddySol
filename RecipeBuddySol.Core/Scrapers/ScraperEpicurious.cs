@@ -55,8 +55,8 @@ namespace RecipeBuddy.Core.Scrapers
                 {
                     return -1;
                 }
-                ////we need to zero out all our lists.
-                //listModel.URLLists.ClearLists();
+                //we need to zero out all our lists.
+                listModel.URLLists.ClearLists();
 
                 foreach (var item in list)
                 {
