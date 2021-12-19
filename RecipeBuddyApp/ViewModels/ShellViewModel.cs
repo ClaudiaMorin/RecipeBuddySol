@@ -18,8 +18,14 @@ using WinUI = Microsoft.UI.Xaml.Controls;
 namespace RecipeBuddy.ViewModels
 {
 
-    public class ShellViewModel : ObservableObject
+    public sealed class ShellViewModel : ObservableObject
     {
+        //public WinUI.NavigationViewItem searchNavItem;
+        
+            
+        //public ObservableObject<WinUI.NavigationViewItem> = new ObservableObject<WinUI.NavigationViewItem>{searchNavItem}
+        
+        private static readonly ShellViewModel instance = new ShellViewModel();
         private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
         private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
 
@@ -46,8 +52,16 @@ namespace RecipeBuddy.ViewModels
 
         public ICommand ItemInvokedCommand => _itemInvokedCommand ?? (_itemInvokedCommand = new RelayCommand<WinUI.NavigationViewItemInvokedEventArgs>(OnItemInvoked));
 
-        public ShellViewModel()
+        private ShellViewModel()
         {
+        }
+
+        static ShellViewModel()
+        { }
+
+        public static ShellViewModel Instance
+        {
+            get { return instance; }
         }
 
         public void Initialize(Frame frame, WinUI.NavigationView navigationView, IList<KeyboardAccelerator> keyboardAccelerators)
@@ -58,6 +72,11 @@ namespace RecipeBuddy.ViewModels
             NavigationService.NavigationFailed += Frame_NavigationFailed;
             NavigationService.Navigated += Frame_Navigated;
             _navigationView.BackRequested += OnBackRequested;
+            //winui:NavigationViewItem x:Uid="Shell_Search" x:Name="SearchView"  helpers:NavHelper.NavigateTo ="views:SearchView"  
+            //searchNavItem = new WinUI.NavigationViewItem();
+            //searchNavItem.Content = "Search";
+            //searchNavItem.
+
         }
 
         private async void OnLoaded()

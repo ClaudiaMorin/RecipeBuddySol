@@ -9,6 +9,8 @@ using RecipeBuddy.Core.Scrapers;
 using RecipeBuddy.Core.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using RecipeBuddy.Services;
+using RecipeBuddy.Views;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -72,7 +74,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         internal void AddToSelectedList()
         {
-            WebViewModel.Instance.AddToListOfRecipeCards(listOfRecipeModel.GetCurrentEntry());
+            SearchViewModel.Instance.AddToListOfRecipeCards(listOfRecipeModel.GetCurrentEntry());
         }
 
         /// <summary>

@@ -15,12 +15,12 @@ namespace RecipeBuddy.Views
         {
 
             InitializeComponent();
-            //DetailsPanelForSelected.DataContext = SelectedViewModel.Instance.selectViewMainRecipeCardModel;
-            //Title.DataContext = SelectedViewModel.Instance.selectViewMainRecipeCardModel;
+            DetailsPanelForSelected.DataContext = SelectedViewModel.Instance.selectViewMainRecipeCardModel;
+            Title.DataContext = SelectedViewModel.Instance.selectViewMainRecipeCardModel;
             //DetailsPanelForSelected.NumXComboBox.DataContext = SelectedViewModel.Instance;
             //ControlsForSelectView.DataContext = SelectedViewModel.Instance;
             ////Wires the combobox to the list of recipes 
-            RecipesInComboBox.ItemsSource = SelectedViewModel.Instance.listOfRecipeModel.RecipesList;
+            //RecipesInComboBox.ItemsSource = SelectedViewModel.Instance.listOfRecipeModel.RecipesList;
 
             //DetailsPanelForSelected.EditRow2.DataContext = SelectedViewModel.Instance;
             //DetailsPanelForSelected.TextBox2.DataContext = SelectedViewModel.Instance;

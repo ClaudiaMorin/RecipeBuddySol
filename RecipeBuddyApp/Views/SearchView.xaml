@@ -7,15 +7,19 @@
     xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
     xmlns:ui ="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:extensions="using:Microsoft.Toolkit.Extensions"
+    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d"
     xmlns:local="using:RecipeBuddy.Views" 
-      x:Name="SeachTabView">
+    x:Name="SeachTabView"
+    MaxHeight="800"
+    MaxWidth="1400">
     <!--<UserControl.InputBindings>
         <KeyBinding Key="Return" Command="{Binding SearchButtonCmd}" />
     </UserControl.InputBindings>-->
 
     <StackPanel x:Name="SeachDockPanelUserControl" ui:FrameworkElementExtensions.Cursor ="{Binding CursorType, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-        <StackPanel Orientation="Horizontal" >
+        <local:AppHeader/>
+        <StackPanel Orientation="Horizontal" Background="LightSteelBlue" >
             <Border BorderThickness="3" BorderBrush="Gray"/>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -25,8 +29,12 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
-                <TextBox x:Name="SearchTB" Grid.Column="0" Text="{Binding SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="30" Background="White" TextAlignment="left" FontSize="14"/>
-                <Button x:Name="SearchButton" Grid.Column="1" Height="30" Style="{StaticResource BtnStyleSearch}" IsEnabled="{Binding SearchTitleChangeConverter}" Command="{Binding SearchButtonCmd}" Content="{Binding SearchButtonTitle, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <StackPanel Orientation="Horizontal" Grid.Column="0">
+                    <TextBox x:Name="SearchTB" Width="300" Text="{Binding SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="30" Background="White" TextAlignment="left" FontSize="14"/>
+                    <Button x:Name="SearchButton" Width="100" Height="30" Style="{StaticResource BtnStyleSearch}" IsEnabled="{Binding SearchTitleChangeConverter}" Command="{Binding SearchButtonCmd}" Content="{Binding SearchButtonTitle, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Border BorderThickness="50" />
+                </StackPanel>
+                <ComboBox x:Name="RecipesInComboBox" HorizontalAlignment="Right" Width="300" Grid.Column="1" DisplayMemberPath="Title" SelectedIndex="{Binding IndexOfComboBoxItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="List of selected Recipes" />
             </Grid>
             <StackPanel x:Name="searchControls" Orientation="Horizontal"/>
         </StackPanel>
@@ -53,17 +61,17 @@
                                 <StackPanel x:Name="ListControls1" Orientation="Horizontal">
                                     <TextBlock x:Name="Progress1" Margin="7,0,0,0" TextAlignment="Center"  Height="24" FontSize="14" Visibility="{Binding ElementName=TotalCount1, Converter={StaticResource BoolToVisibility}}" Text="{Binding Path=DisplayCurrentCardIndex, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                                     <TextBlock x:Name="Seperator1" TextAlignment="Center" Height="24" FontSize="14" HorizontalAlignment="Center" Text="/" Visibility="{Binding ElementName=TotalCount1, Converter={StaticResource BoolToVisibility}}"/>
-                                    <TextBlock x:Name="TotalCount1" TextAlignment="Center" Height="24" FontSize="14" HorizontalAlignment="Center" Visibility="{Binding Path=ListCountOfBlurbs, Converter={StaticResource IntToVisibility}}" Text="{Binding Path=ListCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBlock x:Name="TotalCount1" TextAlignment="Center" Height="24" FontSize="14" HorizontalAlignment="Center" Visibility="{Binding Path=ListCount, Converter={StaticResource IntToVisibility}}" Text="{Binding Path=ListCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
                             </Border>
                             <Button x:Name="btnBack1" Height="30" Grid.Column="2" BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="&lt; Back" Command="{Binding CmdBackButton}"/>
                             <Button x:Name="btnNext1" Height="30" Grid.Column="3" BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Next >" Command="{Binding CmdNextButton}"/>
-                            <Button x:Name="btnSelect1"  Height="30" Grid.Column="0" BorderBrush="Gray"  Background="#eee" Style="{StaticResource BtnStyleStandard}" Content="See Pics and Reviews!" Command="{Binding CmdSelectButton}"/>
+                            <Button x:Name="btnSelect1"  Height="30" Grid.Column="0" BorderBrush="Gray"  Background="#eee" Style="{StaticResource BtnStyleStandard}" Content="Add to Weblist!" Command="{Binding CmdSelectButton}" ToolTipService.ToolTip="Create a list of recipes sites to visit under the Web tab!"/>
                         </Grid>
                         <Border BorderThickness="2" BorderBrush="Gray" >
                             <StackPanel Height="590">
-                                <local:RecipeDetailsPanel x:Name="DetailsPanelView1"/>
-                                <Button x:Name="btnSelectDirections1"  Height="30" Grid.Column="0" BorderBrush="Gray"  Background="#eee" Style="{StaticResource BtnStyleStandard}" Content="Click Here, for Directions, Pictures and Reviews!" Command="{Binding CmdSelectButton}"/>
+                                <local:RecipeDetailsPanelForSearch x:Name="DetailsPanelView1"/>
+                                <TextBlock  Height="50" Text="For directions, pictures, and reviews add recipe to the Weblist and view on the Web tab!" TextWrapping="WrapWholeWords" Foreground="red" />
                             </StackPanel>
                         </Border>
                     </StackPanel>
@@ -84,17 +92,17 @@
                                 <StackPanel x:Name="ListControls2" Orientation="Horizontal">
                                     <TextBlock x:Name="Progress2" Margin="7,0,0,0" TextAlignment="Center"  Height="24" FontSize="14" Visibility="{Binding ElementName=TotalCount2, Converter={StaticResource BoolToVisibility}}" Text="{Binding Path=DisplayCurrentCardIndex, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                                     <TextBlock x:Name="Seperator2" TextAlignment="Center" Height="24" FontSize="14" HorizontalAlignment="Center" Text="/" Visibility="{Binding ElementName=TotalCount2, Converter={StaticResource BoolToVisibility}}"/>
-                                    <TextBlock x:Name="TotalCount2" TextAlignment="Center" Height="24" FontSize="14" HorizontalAlignment="Center" Visibility="{Binding Path=ListCountOfBlurbs, Converter={StaticResource IntToVisibility}}" Text="{Binding Path=ListCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBlock x:Name="TotalCount2" TextAlignment="Center" Height="24" FontSize="14" HorizontalAlignment="Center" Visibility="{Binding Path=ListCount, Converter={StaticResource IntToVisibility}}" Text="{Binding Path=ListCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
                             </Border>
                             <Button x:Name="btnBack2" Height="30" Grid.Column="2" BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="&lt; Back" Command="{Binding CmdBackButton}"/>
                             <Button x:Name="btnNext2" Height="30" Grid.Column="3" BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Next >" Command="{Binding CmdNextButton}"/>
-                            <Button x:Name="btnSelect2"  Height="30" Grid.Column="0" BorderThickness="2" BorderBrush="Gray"  Background="#eee" Style="{StaticResource BtnStyleStandard}" Content="See Pics and Reviews!" Command="{Binding CmdSelectButton}"/>
+                            <Button x:Name="btnSelect2"  Height="30" Grid.Column="0" BorderThickness="2" BorderBrush="Gray"  Background="#eee" Style="{StaticResource BtnStyleStandard}" Content="Add to Weblist!" Command="{Binding CmdSelectButton}" ToolTipService.ToolTip="Create a list of recipes sites to visit under the Web tab!"/>
                         </Grid>
                         <Border BorderThickness="2" BorderBrush="Gray">
                             <StackPanel Height="590">
-                                <local:RecipeDetailsPanel x:Name="DetailsPanelView2"/>
-                                <Button x:Name="btnSelectDirections2"  Height="30" Grid.Column="0" BorderBrush="Gray"  Background="#eee" Style="{StaticResource BtnStyleStandard}" Content="Click Here, for Directions, Pictures and Reviews!" Command="{Binding CmdSelectButton}"/>
+                                <local:RecipeDetailsPanelForSearch x:Name="DetailsPanelView2"/>
+                                <TextBlock  Height="50" Text="For directions, pictures, and reviews add recipe to the Weblist and view on the Web tab!" TextWrapping="WrapWholeWords" Foreground="red" />
                             </StackPanel>
                         </Border>
                     </StackPanel>
@@ -115,17 +123,17 @@
                                 <StackPanel x:Name="ListControls3" Orientation="Horizontal">
                                     <TextBlock x:Name="Progress3" Margin="7,0,0,0" TextAlignment="Center"  Height="24" FontSize="14" Visibility="{Binding ElementName=TotalCount3, Converter={StaticResource BoolToVisibility}}" Text="{Binding Path=DisplayCurrentCardIndex, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                                     <TextBlock x:Name="Seperator3" TextAlignment="Center" Height="24" FontSize="14" HorizontalAlignment="Center" Text="/" Visibility="{Binding ElementName=TotalCount3, Converter={StaticResource BoolToVisibility}}"/>
-                                    <TextBlock x:Name="TotalCount3" TextAlignment="Center" Height="24" FontSize="14" HorizontalAlignment="Center" Visibility="{Binding Path=ListCountOfBlurbs, Converter={StaticResource IntToVisibility}}" Text="{Binding Path=ListCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBlock x:Name="TotalCount3" TextAlignment="Center" Height="24" FontSize="14" HorizontalAlignment="Center" Visibility="{Binding Path=ListCount, Converter={StaticResource IntToVisibility}}" Text="{Binding Path=ListCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
                             </Border>
                             <Button x:Name="btnBack3" Height="30" Grid.Column="2" BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="&lt; Back" Command="{Binding CmdBackButton}"/>
                             <Button x:Name="btnNext3" Height="30" Grid.Column="3" BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Next >" Command="{Binding CmdNextButton}"/>
-                            <Button x:Name="btnSelect3"  Height="30" Grid.Column="0" BorderThickness="2" BorderBrush="Gray"  Background="#eee" Style="{StaticResource BtnStyleStandard}" Content="See Pics and Reviews!" Command="{Binding CmdSelectButton}"/>
+                            <Button x:Name="btnSelect3"  Height="30" Grid.Column="0" BorderThickness="2" BorderBrush="Gray"  Background="#eee" Style="{StaticResource BtnStyleStandard}" Content="Add to Weblist!" Command="{Binding CmdSelectButton}" ToolTipService.ToolTip="Create a list of recipes sites to visit under the Web tab!"/>
                         </Grid>
                         <Border BorderThickness="2" BorderBrush="Gray" >
                             <StackPanel Height="590">
-                                <local:RecipeDetailsPanel x:Name="DetailsPanelView3"/>
-                                <Button x:Name="btnSelectDirections3"  Height="30" BorderBrush="Gray"  Background="#eee" Style="{StaticResource BtnStyleStandard}" Content="Click Here, for Directions, Pictures and Reviews!" Command="{Binding CmdSelectButton}"/>
+                                <local:RecipeDetailsPanelForSearch x:Name="DetailsPanelView3"/>
+                                <TextBlock  Height="50" Text="For directions, pictures, and reviews add recipe to the Weblist and view on the Web tab!" TextWrapping="WrapWholeWords" Foreground="red" />
                             </StackPanel>
                         </Border>
                     </StackPanel>

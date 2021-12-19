@@ -19,7 +19,7 @@ namespace RecipeBuddy.ViewModels
         Func<bool> FuncBool;
 
         public RecipeDisplayModel selectViewMainRecipeCardModel;
-        public RecipeListModel listOfRecipeModel;
+        //public RecipeListModel listOfRecipeModel;
 
         public string QuantitySelectedAsString;
         public int QuantitySelectedAsInt;
@@ -52,17 +52,17 @@ namespace RecipeBuddy.ViewModels
 
             listOfIngredientQuantitySetters = new List<Action<string>>();
             
-            SetUpComboBox();
+            //SetUpComboBox();
             LoadListSettersWithActionDelegatesForIngredientQuantities();
             selectViewMainRecipeCardModel = new RecipeDisplayModel();
-            listOfRecipeModel = new RecipeListModel();
+            //listOfRecipeModel = new RecipeListModel();
             IngredientQuantityShift = new List<string>();
             typeComboBoxVisibility = "Collapsed";
-            CmdRemove = new RBRelayCommand(ActionNoParams = () => RemoveRecipe(), FuncBool = () => CanSelect);
+            //CmdRemove = new RBRelayCommand(ActionNoParams = () => RemoveRecipe(), FuncBool = () => CanSelect);
             CmdSave = new RBRelayCommand(ActionNoParams = () => SaveRecipe(), FuncBool = () => CanSelectSave);
             CmdNew = new RBRelayCommand(ActionNoParams = () => CreateNewRecipe(), FuncBool = () => CanSelectNew);
             CmdEdit = new RBRelayCommand(ActionNoParams = () => EditRecipe(), FuncBool = () => CanSelect);
-            CmdSelectedItemChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeFromComboBox(e), canCallActionFunc => CanSelect);
+            //CmdSelectedItemChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeFromComboBox(e), canCallActionFunc => CanSelect);
             CmdSelectedQuantityChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeQuantityFromComboBox(e), canCallActionFunc => CanSelect);
 
             CmdUpdate = new ICommandViewModel<string>(actionWithObject = s => Update(s), canCallActionFunc => CanSelect);
@@ -84,44 +84,44 @@ namespace RecipeBuddy.ViewModels
         private string direction21Edits = ""; private string direction22Edits = ""; private string direction23Edits = ""; private string direction24Edits = ""; private string direction25Edits = ""; private string direction26Edits = ""; private string direction27Edits = ""; private string direction28Edits = ""; private string direction29Edits = ""; private string direction30Edits = "";
         #endregion
 
-        public void RemoveRecipe()
-        {
-            if (listOfRecipeModel.ListCount > 0 && listOfRecipeModel.CurrentCardIndex != -1)
-            {
-                listOfRecipeModel.Remove(listOfRecipeModel.CurrentCardIndex);
+        //public void RemoveRecipe()
+        //{
+        //    if (listOfRecipeModel.ListCount > 0 && listOfRecipeModel.CurrentCardIndex != -1)
+        //    {
+        //        listOfRecipeModel.Remove(listOfRecipeModel.CurrentCardIndex);
 
-                if (listOfRecipeModel.CurrentCardIndex > 0)
-                {
-                    listOfRecipeModel.CurrentCardIndex = listOfRecipeModel.CurrentCardIndex - 1;
-                    ShowSpecifiedEntry(listOfRecipeModel.CurrentCardIndex);
-                    //need to reset the starting index of the "borrow recipe" incase it was removed
-                    EditViewModel.Instance.IndexOfComboBoxItem = 0;
-                }
-                else if (listOfRecipeModel.ListCount > 0)
-                {
-                    listOfRecipeModel.CurrentCardIndex = listOfRecipeModel.ListCount - 1;
-                    ShowSpecifiedEntry(listOfRecipeModel.CurrentCardIndex);
-                    //need to reset the starting index of the "borrow recipe" incase it was removed
-                    EditViewModel.Instance.IndexOfComboBoxItem = 0;
-                }
-                //the last element in the list has been removed so now we need to go back to blank screen
-                else
-                {
-                    selectViewMainRecipeCardModel.CopyRecipeDisplayModel(new RecipeDisplayModel());
-                    EmptyIngredientQuanityRow();
-                }
+        //        if (listOfRecipeModel.CurrentCardIndex > 0)
+        //        {
+        //            listOfRecipeModel.CurrentCardIndex = listOfRecipeModel.CurrentCardIndex - 1;
+        //            ShowSpecifiedEntry(listOfRecipeModel.CurrentCardIndex);
+        //            //need to reset the starting index of the "borrow recipe" incase it was removed
+        //            EditViewModel.Instance.IndexOfComboBoxItem = 0;
+        //        }
+        //        else if (listOfRecipeModel.ListCount > 0)
+        //        {
+        //            listOfRecipeModel.CurrentCardIndex = listOfRecipeModel.ListCount - 1;
+        //            ShowSpecifiedEntry(listOfRecipeModel.CurrentCardIndex);
+        //            //need to reset the starting index of the "borrow recipe" incase it was removed
+        //            EditViewModel.Instance.IndexOfComboBoxItem = 0;
+        //        }
+        //        //the last element in the list has been removed so now we need to go back to blank screen
+        //        else
+        //        {
+        //            selectViewMainRecipeCardModel.CopyRecipeDisplayModel(new RecipeDisplayModel());
+        //            EmptyIngredientQuanityRow();
+        //        }
 
-                return;
-            }
-        }
+        //        return;
+        //    }
+        //}
 
         /// <summary>
         /// For use when a user logs out of his/her account
         /// </summary>
         public void ResetViewModel()
         {
-            if (listOfRecipeModel.ListCount > 0)
-                listOfRecipeModel.RemoveAll();
+            //if (listOfRecipeModel.ListCount > 0)
+            //    listOfRecipeModel.RemoveAll();
 
             selectViewMainRecipeCardModel.CopyRecipeDisplayModel(new RecipeDisplayModel());
             EmptyIngredientQuanityRow();
@@ -164,7 +164,7 @@ namespace RecipeBuddy.ViewModels
             if (result == 1 || result == 2)
             {
                 DataBaseAccessorsForRecipeManager.SaveRecipeToDatabase(UserViewModel.Instance.UsersIDInDB, selectViewMainRecipeCardModel, UserViewModel.Instance.UsersIDInDB);
-                RemoveRecipe();
+                //RemoveRecipe();
             }
         }
 
@@ -179,7 +179,7 @@ namespace RecipeBuddy.ViewModels
 
             //Check to see if this if from the TreeView or from a generic search
             MainWindowViewModel.Instance.SelectedTabIndex = (int)MainWindowViewModel.Tabs.EditTab;
-            RemoveRecipe();
+            //RemoveRecipe();
         }
 
         /// <summary>
@@ -196,94 +196,96 @@ namespace RecipeBuddy.ViewModels
         /// <summary>
         /// sets up the first entry in the dropdown list and the initial index.
         /// </summary>
-        private void SetUpComboBox()
-        {
-            indexOfComboBoxItem = 0;
-            listOfRecipeModel = new RecipeListModel();
-        }
+        //private void SetUpComboBox()
+        //{
+        //    indexOfComboBoxItem = 0;
+        //    listOfRecipeModel = new RecipeListModel();
+        //}
 
-        public void AddToListOfRecipeCards(RecipeRecordModel recipeCard)
-        {
-            if (listOfRecipeModel.IsFoundInList(recipeCard) == true)
-            {
-                int index = listOfRecipeModel.GetEntryIndex(recipeCard.Title);
-                ShowSpecifiedEntry(index);
-                return; 
-            }
+        //public void AddToListOfRecipeCards(RecipeRecordModel recipeCard)
+        //{
+        //    if (listOfRecipeModel.IsFoundInList(recipeCard) == true)
+        //    {
+        //        int index = listOfRecipeModel.GetEntryIndex(recipeCard.Title);
+        //        ShowSpecifiedEntry(index);
+        //        return; 
+        //    }
 
-            listOfRecipeModel.Add(recipeCard);
+        //    listOfRecipeModel.Add(recipeCard);
 
-            //If we have nothing in the list we will show the first entry
-            if (listOfRecipeModel.ListCount == 1)
-            {
-                listOfRecipeModel.CurrentCardIndex = 0;
-                EditViewModel.Instance.IndexOfComboBoxItem = 0;
-            }
-            else
-            {
-                listOfRecipeModel.CurrentCardIndex = listOfRecipeModel.ListCount - 1;
-            }
-            ShowSpecifiedEntry(listOfRecipeModel.CurrentCardIndex);
+        //    //If we have nothing in the list we will show the first entry
+        //    if (listOfRecipeModel.ListCount == 1)
+        //    {
+        //        listOfRecipeModel.CurrentCardIndex = 0;
+        //        EditViewModel.Instance.IndexOfComboBoxItem = 0;
+        //    }
+        //    else
+        //    {
+        //        listOfRecipeModel.CurrentCardIndex = listOfRecipeModel.ListCount - 1;
+        //    }
+        //    ShowSpecifiedEntry(listOfRecipeModel.CurrentCardIndex);
             
-        }
+        //}
 
         /// <summary>
         /// For use with the ComboBox navigation
         /// </summary>
         /// <param name="title">title of the recipe we are looking for</param>
-        public void ShowSpecifiedEntry(string title)
-        {
-            ShowSpecifiedEntry(listOfRecipeModel.GetEntryIndex(title));
-        }
+        //public void ShowSpecifiedEntry(string title)
+        //{
+        //    ShowSpecifiedEntry(listOfRecipeModel.GetEntryIndex(title));
+        //}
 
         /// <summary>
         /// For use with the ComboBox navigation
         /// </summary>
         /// <param name="index"></param>
-        public void ShowSpecifiedEntry(int index)
+        public void ShowSpecifiedEntry(RecipeRecordModel recipeRecordModel)
         {
-            if (index < listOfRecipeModel.ListCount && index > -1)
-            {
-                listOfRecipeModel.CurrentCardIndex = index;
-                selectViewMainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(listOfRecipeModel.GetEntry(index));
-                ChangeRecipe(listOfRecipeModel.CurrentCardIndex);
-                NumXRecipesIndex = "0";
-                IndexOfComboBoxItem = index;
-                UpdateQuantityCalc();
-            }
+            selectViewMainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(recipeRecordModel);
+
+            //if (index < listOfRecipeModel.ListCount && index > -1)
+            //{
+            //    listOfRecipeModel.CurrentCardIndex = index;
+            //    selectViewMainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(listOfRecipeModel.GetEntry(index));
+            //    ChangeRecipe(listOfRecipeModel.CurrentCardIndex);
+            //    NumXRecipesIndex = "0";
+            //    IndexOfComboBoxItem = index;
+            //    UpdateQuantityCalc();
+            //}
         }
 
         /// <summary>
         /// Updates the current card display and updates the edit-textboxes for the ingredient and direction editing
         /// </summary>
         /// <param name="indexOfTitleInComboBox"></param>
-        public void ChangeRecipe(int indexOfTitleInComboBox)
-        {
-            listOfRecipeModel.CurrentCardIndex = indexOfTitleInComboBox;
+        //public void ChangeRecipe(int indexOfTitleInComboBox)
+        //{
+        //    listOfRecipeModel.CurrentCardIndex = indexOfTitleInComboBox;
 
-            for (int count = 0; count < selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay.Count; count++)
-            {
-                listOfIngredientEditStringsSetters[count].Invoke(selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[count]);
-            }
+        //    for (int count = 0; count < selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay.Count; count++)
+        //    {
+        //        listOfIngredientEditStringsSetters[count].Invoke(selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[count]);
+        //    }
 
-            for (int countDirect = 0; countDirect < selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay.Count; countDirect++)
-            {
-                listOfDirectionEditStringsSetters[countDirect].Invoke(selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[countDirect]);
-            }
-        }
+        //    for (int countDirect = 0; countDirect < selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay.Count; countDirect++)
+        //    {
+        //        listOfDirectionEditStringsSetters[countDirect].Invoke(selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[countDirect]);
+        //    }
+        //}
 
         /// <summary>
         /// Called by the RecipiesInComboBox_SelectionChanged function to shift the listOfRecipeCards and update the entry
         /// </summary>
         /// <param name="TitleOfRecipe">Title of the new recipe</param>
-        public void ChangeRecipe(string TitleOfRecipe)
-        {
-            int index = listOfRecipeModel.SettingCurrentIndexByTitle(TitleOfRecipe);
-            if (index != -1)
-            {
-                ChangeRecipe(index);
-            }
-        }
+        //public void ChangeRecipe(string TitleOfRecipe)
+        //{
+        //    int index = listOfRecipeModel.SettingCurrentIndexByTitle(TitleOfRecipe);
+        //    if (index != -1)
+        //    {
+        //        ChangeRecipe(index);
+        //    }
+        //}
 
         /// <summary>
         /// Getting the new Quantity in string form 
@@ -374,40 +376,40 @@ namespace RecipeBuddy.ViewModels
         /// This manages changes that come in through the user manipulating the combobox on the Basket page
         /// </summary>
         /// <param name="e"></param>
-        internal void ChangeRecipeFromComboBox(SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems != null && e.AddedItems.Count > 0)
-            {
-                RecipeDisplayModel recipeCardModelFromChangedEventArgs = e.AddedItems[0] as RecipeDisplayModel;
+        //internal void ChangeRecipeFromComboBox(SelectionChangedEventArgs e)
+        //{
+        //    if (e.AddedItems != null && e.AddedItems.Count > 0)
+        //    {
+        //        RecipeDisplayModel recipeCardModelFromChangedEventArgs = e.AddedItems[0] as RecipeDisplayModel;
 
-                if (recipeCardModelFromChangedEventArgs != null)
-                {
-                    if (listOfRecipeModel.SettingCurrentIndexByTitle(recipeCardModelFromChangedEventArgs.Title) != -1)
-                    {
-                        RecipeRecordModel recipeModel = listOfRecipeModel.GetCurrentEntry();
-                        NumXRecipesIndex = "0";
-                        UpdateRecipeEntry(recipeModel);
-                    }
-                }
-            }
-            //need to make this a sub to the first if statment because adding a new item to the listbox
-            //removes the other which doesn't actually happen but the EventArgs still sends it as e.RemoveItems[0]
-            else
-            {
-                if (e.RemovedItems != null && e.RemovedItems.Count > 0)
-                {
-                    RecipeRecordModel recipeModel = e.RemovedItems[0] as RecipeRecordModel;
+        //        if (recipeCardModelFromChangedEventArgs != null)
+        //        {
+        //            if (listOfRecipeModel.SettingCurrentIndexByTitle(recipeCardModelFromChangedEventArgs.Title) != -1)
+        //            {
+        //                RecipeRecordModel recipeModel = listOfRecipeModel.GetCurrentEntry();
+        //                NumXRecipesIndex = "0";
+        //                UpdateRecipeEntry(recipeModel);
+        //            }
+        //        }
+        //    }
+        //    //need to make this a sub to the first if statment because adding a new item to the listbox
+        //    //removes the other which doesn't actually happen but the EventArgs still sends it as e.RemoveItems[0]
+        //    else
+        //    {
+        //        if (e.RemovedItems != null && e.RemovedItems.Count > 0)
+        //        {
+        //            RecipeRecordModel recipeModel = e.RemovedItems[0] as RecipeRecordModel;
 
-                    if (recipeModel != null)
-                    {
-                        ChangeRecipe(recipeModel.Title);
-                        //recipeModel.UpdateRecipeEntry(recipeModel);
-                        NumXRecipesIndex = "0";
-                        UpdateQuantityCalc();
-                    }
-                }
-            }
-        }
+        //            if (recipeModel != null)
+        //            {
+        //                ChangeRecipe(recipeModel.Title);
+        //                //recipeModel.UpdateRecipeEntry(recipeModel);
+        //                NumXRecipesIndex = "0";
+        //                UpdateQuantityCalc();
+        //            }
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Responds to the changes in the multiplier ComboBox by getting the value from the ingredient string

@@ -3,12 +3,16 @@ using System.Windows.Input;
 using RecipeBuddy.ViewModels.Commands;
 using System.Collections.ObjectModel;
 using System.Security;
+using System;
 using RecipeBuddy.Core.Helpers;
 using RecipeBuddy.Core.Scrapers;
 using System;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using RecipeBuddy.Core.Models;
+using RecipeBuddy.Views;
+using RecipeBuddy.Services;
+using Microsoft.UI.Xaml.Controls;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -89,12 +93,7 @@ namespace RecipeBuddy.ViewModels
                 //Set Up TreeView
                 List<RecipeRecordModel> recipeRecords = DataBaseAccessorsForRecipeManager.LoadUserDataByID(AccountName, UsersIDInDB);
                 MainNavTreeViewModel.Instance.AddRecipeModelsToTreeViewAsPartOfInitialSetup(recipeRecords);
-                //MainNavTreeViewModel.Instance.MainCourseRecipes.ItemExpanded = true;
-                //MainNavTreeViewModel.Instance.DessertRecipes.ItemExpanded = true;
-                //MainNavTreeViewModel.Instance.MainCourseRecipes.TreeItemTitle = "fooBar";
-
-                //passwordSecureString.Clear();
-                //MainWindowViewModel.Instance.SelectedTabIndex = (int)MainWindowViewModel.Tabs.SearchTab;
+                NavigationService.Navigate(typeof(SearchView));
             }
             else //user password didm't match
             {
@@ -105,7 +104,7 @@ namespace RecipeBuddy.ViewModels
 
         public void LogOut()
         {
-            MainWindowViewModel.Instance.mainTreeViewNav.ClearTree();
+            MainNavTreeViewModel.Instance.ClearTree();
             UsersIDInDB = -1;
             AccountName = "";
             UserName = "";
@@ -194,7 +193,7 @@ namespace RecipeBuddy.ViewModels
             {
                 if (string.Compare(s.ToLower(), name.ToLower()) == 0)
                 {
-                    Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("The user name is too short.");
+                    Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("The user name is taken");
                     newAccountName = "";
                     return false;
                 }
@@ -215,9 +214,36 @@ namespace RecipeBuddy.ViewModels
         private void ToggleLogin()
         {
             if (PasswordString != null && PasswordString.Length > 6 && checkBoxEnabledCount == 3 && loggedin == false)
+                CanSelectLogin = true;
+            else
+                CanSelectLogin = false;
+        }
+
+        //Used to flip the Login button on and off.
+        private void ToggleCreatUser()
+        {
+            if (newAccountName == null || newConfirmPasswordString == null || newPasswordString == null)
             {
-                CanSelectLogin = true;   
+                CanSelectCreateUser = false;
+                return;
             }
+
+
+            if (newAccountName.Length < 3 || newConfirmPasswordString.Length < 6 || newPasswordString.Length < 6)
+            {
+                CanSelectCreateUser = false;
+                return;
+            }
+
+            if (string.Compare(newConfirmPasswordString, newPasswordString) != 0)
+            {
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("Passwords must match.");
+                CanSelectCreateUser = false;
+                return;
+            }
+
+            else
+                CanSelectCreateUser = true;
         }
 
         #region properties, private strings, and ICommands
@@ -256,7 +282,11 @@ namespace RecipeBuddy.ViewModels
         public string NewAccountName
         {
             get { return newAccountName; }
-            set { SetProperty(ref newAccountName, value);}
+            set
+            {
+                SetProperty(ref newAccountName, value);
+                ToggleCreatUser();
+            }
         }
 
         private String passwordString;
@@ -275,14 +305,22 @@ namespace RecipeBuddy.ViewModels
         public String NewPasswordString
         {
             get { return newPasswordString; }
-            set { SetProperty(ref newPasswordString, value);}
+            set
+            {
+                SetProperty(ref newPasswordString, value);
+                ToggleCreatUser();
+            }
         }
 
         private String newConfirmPasswordString;
         public String NewConfirmPasswordString
         {
             get { return newConfirmPasswordString; }
-            set { SetProperty(ref newConfirmPasswordString, value); }
+            set
+            {
+                SetProperty(ref newConfirmPasswordString, value);
+                ToggleCreatUser();
+            }
         }
 
         /// <summary>
@@ -320,12 +358,6 @@ namespace RecipeBuddy.ViewModels
             private set;
         }
 
-        //public ICommand CmdHyperlinkNav
-        //{
-        //    get;
-        //    private set;
-        //}
-
 
         /// <summary>
         /// The user needs to have a valid Account name as well as an email address and the passwords have to match
@@ -333,17 +365,7 @@ namespace RecipeBuddy.ViewModels
         public bool canSelectCreateUser;
         public bool CanSelectCreateUser
         {
-            get
-            {
-                if (newAccountName == null || newConfirmPasswordString == null || newPasswordString == null)
-                    return false;
-
-                if (newAccountName.Length == 0 ||  newConfirmPasswordString.Length == 0 || newPasswordString.Length == 0)
-                    return false;
-
-                else
-                    return true;
-            }
+            get { return canSelectCreateUser; }
 
             set
             {
@@ -362,7 +384,10 @@ namespace RecipeBuddy.ViewModels
             get { return canSelectLogin; }
             set
             {
+                bool temp = CanSelectLogin;
                 SetProperty(ref canSelectLogin, value);
+
+                if(canSelectLogin != temp)
                 CmdLoginBtn.RaiseCanExecuteChanged();
             }
         }
@@ -441,6 +466,7 @@ namespace RecipeBuddy.ViewModels
                 SouthernLivingCheckBoxEnabled = true;
                 TastyCheckBoxEnabled = true;
                 FoodAndWineCheckBoxEnabled = true;
+                ToggleLogin();
             }
         }
 
@@ -597,6 +623,8 @@ namespace RecipeBuddy.ViewModels
                 SetProperty(ref foodAndWineCheckBoxEnabled, value);
             }
         }
+
+        public object Navigate { get; private set; }
 
         #endregion
 

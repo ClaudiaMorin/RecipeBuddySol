@@ -9,9 +9,9 @@ namespace RecipeBuddy.Views
     /// <summary>
     /// Interaction logic for SingleRecipeDetailsPanel.xaml
     /// </summary>
-    public partial class RecipeDetailsPanel : UserControl
+    public partial class RecipeDetailsPanelForSearch : UserControl
     {
-        public RecipeDetailsPanel()
+        public RecipeDetailsPanelForSearch()
         {
             InitializeComponent();
         }

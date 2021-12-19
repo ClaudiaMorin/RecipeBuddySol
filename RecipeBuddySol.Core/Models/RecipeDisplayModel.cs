@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace RecipeBuddy.Core.Models
 {
     public enum Type_Of_Ingredient { ingredient, subheader, non_consumable }
-    public enum Type_Of_Recipe { Appetizer, Beef, Bread, Cake, Candy, Cookie, Custard, Dairy, Eggs, Lamb, Pastry, Pork, Poultry, Salad, Seafood, SideDish, SoupStew, Tofu, Unknown }
+    public enum Type_Of_Recipe { Appetizer, Beef, Bread, Cake, Candy, Cookie, Custard, Dairy, Eggs, Lamb, Pastry, Pork, Poultry, Salad, Seafood, SideDish, SoupStew, Tofu, Unknown}
 
     /// <summary>
     /// indicates whether we are adding a recipe to the treeview and DB or removing it

@@ -9,13 +9,15 @@ using System;
 using Windows.UI.Core;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
+using RecipeBuddy.Core.Models;
 
 namespace RecipeBuddy.ViewModels
 {
 
     public sealed class SearchViewModel : ObservableObject
     {
-     
+        public RecipeListModel listOfRecipeCards;
         public RecipePanelForSearchViewModel recipePanelForSearch1;
         public RecipePanelForSearchViewModel recipePanelForSearch2;
         public RecipePanelForSearchViewModel recipePanelForSearch3;
@@ -37,7 +39,7 @@ namespace RecipeBuddy.ViewModels
             searchEnabled = true;
             cursorType = CoreCursorType.Arrow;
             searchWait = false;
-
+            listOfRecipeCards = new RecipeListModel();
             recipePanelForSearch1 = new RecipePanelForSearchViewModel();
             recipePanelForSearch2 = new RecipePanelForSearchViewModel();
             recipePanelForSearch3 = new RecipePanelForSearchViewModel();
@@ -129,6 +131,119 @@ namespace RecipeBuddy.ViewModels
         }
 
 
+        public void RemoveRecipe()
+        {
+            if (listOfRecipeCards.ListCount > 0 && listOfRecipeCards.CurrentCardIndex != -1)
+            {
+                listOfRecipeCards.Remove(listOfRecipeCards.CurrentCardIndex);
+
+                if (listOfRecipeCards.CurrentCardIndex > 0)
+                {
+                    listOfRecipeCards.CurrentCardIndex = listOfRecipeCards.CurrentCardIndex - 1;
+                    ShowSpecifiedEntry(listOfRecipeCards.CurrentCardIndex);
+                    //need to reset the starting index of the "borrow recipe" incase it was removed
+                    EditViewModel.Instance.IndexOfComboBoxItem = 0;
+                }
+                else if (listOfRecipeCards.ListCount > 0)
+                {
+                    listOfRecipeCards.CurrentCardIndex = listOfRecipeCards.ListCount - 1;
+                    ShowSpecifiedEntry(listOfRecipeCards.CurrentCardIndex);
+                    //need to reset the starting index of the "borrow recipe" incase it was removed
+                    EditViewModel.Instance.IndexOfComboBoxItem = 0;
+                }
+                //the last element in the list has been removed so now we need to go back to blank screen
+                else
+                {
+                    //selectViewMainRecipeCardModel.CopyRecipeCardModel(new RecipeCardModel());
+                    //EmptyIngredientQuanityRow();
+                }
+
+                return;
+            }
+        }
+
+        /// <summary>
+        /// For use with the ComboBox navigation
+        /// </summary>
+        /// <param name="index"></param>
+        public void ShowSpecifiedEntry(int index)
+        {
+            if (index <listOfRecipeCards.ListCount && index > -1)
+            {
+                listOfRecipeCards.CurrentCardIndex = index;
+                WebViewModel.Instance.mainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(listOfRecipeCards.GetEntry(index));
+                ChangeRecipe(listOfRecipeCards.CurrentCardIndex);
+                NumXRecipesIndex = "0";
+                IndexOfComboBoxItem = index;
+            }
+        }
+
+        /// <summary>
+        /// sets up the first entry in the dropdown list and the initial index.
+        /// </summary>
+        private void SetUpComboBox()
+        {
+            indexOfComboBoxItem = 0;
+            listOfRecipeCards = new RecipeListModel();
+        }
+
+        public void AddToListOfRecipeCards(RecipeRecordModel recipeCard)
+        {
+            if (listOfRecipeCards.IsFoundInList(recipeCard) == true)
+            {
+                int index = listOfRecipeCards.GetEntryIndex(recipeCard.Title);
+                ShowSpecifiedEntry(index);
+                return;
+            }
+
+            listOfRecipeCards.Add(recipeCard);
+
+            //If we have nothing in the list we will show the first entry
+            if (listOfRecipeCards.ListCount == 1)
+            {
+                listOfRecipeCards.CurrentCardIndex = 0;
+                EditViewModel.Instance.IndexOfComboBoxItem = 0;
+            }
+            else
+            {
+                listOfRecipeCards.CurrentCardIndex = listOfRecipeCards.ListCount - 1;
+            }
+            ShowSpecifiedEntry(listOfRecipeCards.CurrentCardIndex);
+        }
+
+        /// <summary>
+        /// For use with the ComboBox navigation
+        /// </summary>
+        /// <param name="title">title of the recipe we are looking for</param>
+        public void ShowSpecifiedEntry(string title)
+        {
+            ShowSpecifiedEntry(listOfRecipeCards.GetEntryIndex(title));
+        }
+
+        /// <summary>
+        /// Updates the current card display and updates the edit-textboxes for the ingredient and direction editing
+        /// </summary>
+        /// <param name="indexOfTitleInComboBox"></param>
+        public void ChangeRecipe(int indexOfTitleInComboBox)
+        {
+            listOfRecipeCards.CurrentCardIndex = indexOfTitleInComboBox;
+
+        }
+
+        /// <summary>
+        /// Called by the RecipiesInComboBox_SelectionChanged function to shift the listOfRecipeCards and update the entry
+        /// </summary>
+        /// <param name="TitleOfRecipe">Title of the new recipe</param>
+        public void ChangeRecipe(string TitleOfRecipe)
+        {
+            int index = listOfRecipeCards.SettingCurrentIndexByTitle(TitleOfRecipe);
+            if (index != -1)
+            {
+                ChangeRecipe(index);
+            }
+        }
+
+
         #region Command and Properties
 
         private bool searchEnabled;
@@ -145,6 +260,7 @@ namespace RecipeBuddy.ViewModels
             get { return cursorType; }
             set { SetProperty(ref cursorType, value); }
         }
+
 
         private bool searchWait;
         public bool SearchWait
@@ -170,6 +286,20 @@ namespace RecipeBuddy.ViewModels
                 if (SearchString.Length > 0)
                     CanSelectSearch = true;
             }
+        }
+
+        private int indexOfComboBoxItem;
+        public int IndexOfComboBoxItem
+        {
+            get { return indexOfComboBoxItem; }
+            set { SetProperty(ref indexOfComboBoxItem, value); }
+        }
+
+        private string numXRecipesIndex;
+        public string NumXRecipesIndex
+        {
+            get { return numXRecipesIndex; }
+            set { SetProperty(ref numXRecipesIndex, value); }
         }
 
         public RBRelayCommand SearchButtonCmd

@@ -47,7 +47,7 @@ namespace RecipeBuddy.ViewModels
             CmdSave = new ICommandViewModel<RecipeDisplayModel>(Action => Save(), canCallActionFunc => CanSelect);
             CmdNew = new ICommandViewModel<RecipeDisplayModel>(Action => CreateNewRecipe(), canCallActionFunc => CanSelectNew);
             CmdRevert = new ICommandViewModel<RecipeTreeItem>(Action => RevertRecipe(), canCallActionFunc => CanSelect);
-            CmdSelectedItemChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeBorrowRecipeFromComboBox(e), canCallActionFunc => CanSelect);
+            //CmdSelectedItemChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeBorrowRecipeFromComboBox(e), canCallActionFunc => CanSelect);
             CmdOpenBorrow = new ICommandViewModel<SelectionChangedEventArgs>(Action => OpenBorrowPanel(), canCallActionFunc => CanSelectBorrow);
             CmdCloseBorrow = new ICommandViewModel<SelectionChangedEventArgs>(Action => CloseBorrowPanel(), canCallActionFunc => CanSelect);
             CmdTypeUpdate = new ICommandViewModel<string>(Action => ChangeVisiblityofTypeComboBox(true), canCallActionFunc => CanSelect);
@@ -189,43 +189,43 @@ namespace RecipeBuddy.ViewModels
         }
 
 
-        /// <summary>
-        /// This manages changes that come in through the user manipulating the combobox on the Basket page
-        /// </summary>
-        /// <param name="e"></param>
-        internal void ChangeBorrowRecipeFromComboBox(SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems != null && e.AddedItems.Count > 0)
-            {
-                RecipeDisplayModel recipeCardModel = e.AddedItems[0] as RecipeDisplayModel;
+        ///// <summary>
+        ///// This manages changes that come in through the user manipulating the combobox on the Basket page
+        ///// </summary>
+        ///// <param name="e"></param>
+        //internal void ChangeBorrowRecipeFromComboBox(SelectionChangedEventArgs e)
+        //{
+        //    if (e.AddedItems != null && e.AddedItems.Count > 0)
+        //    {
+        //        RecipeDisplayModel recipeCardModel = e.AddedItems[0] as RecipeDisplayModel;
 
-                if (recipeCardModel != null)
-                {
-                    if (SelectedViewModel.Instance.listOfRecipeModel.SettingCurrentIndexByTitle(recipeCardModel.Title) != -1)
-                    {
-                        recipeCardViewModelToBorrowFrom.UpdateRecipeDisplayFromRecipeRecord(SelectedViewModel.Instance.listOfRecipeModel.RecipesList[IndexOfComboBoxItem]);
-                    }
-                }
-            }
+        //        if (recipeCardModel != null)
+        //        {
+        //            if (SelectedViewModel.Instance.listOfRecipeModel.SettingCurrentIndexByTitle(recipeCardModel.Title) != -1)
+        //            {
+        //                recipeCardViewModelToBorrowFrom.UpdateRecipeDisplayFromRecipeRecord(SelectedViewModel.Instance.listOfRecipeModel.RecipesList[IndexOfComboBoxItem]);
+        //            }
+        //        }
+        //    }
 
-            //need to make this a sub to the first if statment because adding a new item to the listbox
-            //removes the other which doesn't actually happen but the EventArgs still sends it as e.RemoveItems[0]
-            else
-            {
-                if (e.RemovedItems != null && e.RemovedItems.Count > 0)
-                {
-                    RecipeDisplayModel recipeCardModel = e.RemovedItems[0] as RecipeDisplayModel;
+        //    //need to make this a sub to the first if statment because adding a new item to the listbox
+        //    //removes the other which doesn't actually happen but the EventArgs still sends it as e.RemoveItems[0]
+        //    else
+        //    {
+        //        if (e.RemovedItems != null && e.RemovedItems.Count > 0)
+        //        {
+        //            RecipeDisplayModel recipeCardModel = e.RemovedItems[0] as RecipeDisplayModel;
 
-                    if (recipeCardModel != null)
-                    {
-                        if (SelectedViewModel.Instance.listOfRecipeModel.SettingCurrentIndexByTitle(recipeCardModel.Title) != -1)
-                        {
-                            recipeCardViewModelToBorrowFrom.UpdateRecipeDisplayFromRecipeRecord(SelectedViewModel.Instance.listOfRecipeModel.RecipesList[IndexOfComboBoxItem]);
-                        }
-                    }
-                }
-            }
-        }
+        //            if (recipeCardModel != null)
+        //            {
+        //                if (SelectedViewModel.Instance.listOfRecipeModel.SettingCurrentIndexByTitle(recipeCardModel.Title) != -1)
+        //                {
+        //                    recipeCardViewModelToBorrowFrom.UpdateRecipeDisplayFromRecipeRecord(SelectedViewModel.Instance.listOfRecipeModel.RecipesList[IndexOfComboBoxItem]);
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Changes the Type of recipe which effects where the recipe is stored and retreved on the Tree View
@@ -266,9 +266,9 @@ namespace RecipeBuddy.ViewModels
             BorrowWidthSelected = "*";
             CloseButtonVisibilty = "Visible";
 
-            //need to update to the current card before opening the Borrow-Panel
-            if (SelectedViewModel.Instance.listOfRecipeModel.RecipesList.Count > 0)
-                recipeCardViewModelToBorrowFrom.UpdateRecipeDisplayFromRecipeRecord(SelectedViewModel.Instance.listOfRecipeModel.RecipesList[IndexOfComboBoxItem]);
+            ////need to update to the current card before opening the Borrow-Panel
+            //if (SelectedViewModel.Instance.listOfRecipeModel.RecipesList.Count > 0)
+            //    recipeCardViewModelToBorrowFrom.UpdateRecipeDisplayFromRecipeRecord(SelectedViewModel.Instance.listOfRecipeModel.RecipesList[IndexOfComboBoxItem]);
         }
 
         public static EditViewModel Instance
@@ -380,9 +380,9 @@ namespace RecipeBuddy.ViewModels
         {
             get
             {
-                if (SelectedViewModel.Instance.listOfRecipeModel.ListCount == 0)
-                    return false;
-                else
+                //if (SelectedViewModel.Instance.listOfRecipeModel.ListCount == 0)
+                //    return false;
+                //else
                     return true;
             }
         }

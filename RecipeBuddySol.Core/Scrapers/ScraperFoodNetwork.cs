@@ -164,6 +164,8 @@ namespace RecipeBuddy.Core.Scrapers
                         else if (firstIngred == true)
                         {
                             ingredients.Add(headerTag + "Ingredients");
+                            innerText1 = node.InnerText.Replace('\n', ' ').Trim();
+                            ingredients.Add(StringManipulationHelper.CleanHTMLTags(innerText1));
                             firstIngred = false;
                         }
                         else
@@ -189,7 +191,6 @@ namespace RecipeBuddy.Core.Scrapers
         /// <param name="uri">website</param>
         public static RecipeRecordModel ProcessFoodNetworkRecipeType(HtmlDocument doc, char[] splitter, Uri uri)
         {
-
             List<string> ingredients = FillIngredientListFoodNetworkForRecipeEntry(doc, 50);
             //no ingredients it isn't a real recipe so we bail
             if (ingredients == null || ingredients.Count == 0)

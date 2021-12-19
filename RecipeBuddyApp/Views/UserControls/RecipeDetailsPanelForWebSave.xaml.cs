@@ -23,7 +23,6 @@ namespace RecipeBuddy.Views
         public RecipeDetailsPanelForWebSave()
         {
             this.InitializeComponent();
-            string foo = "bar";
         }
     }
 }

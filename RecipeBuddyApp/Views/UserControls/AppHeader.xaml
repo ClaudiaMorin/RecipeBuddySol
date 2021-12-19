@@ -8,12 +8,11 @@
     mc:Ignorable="d">
 
     <StackPanel Orientation="Vertical">
-        <Border Padding="10,0"  BorderBrush="DarkGray">
+        <Border BorderThickness="2"  BorderBrush="DarkGray">
             <StackPanel Orientation="Vertical" Background="LightSteelBlue">
-               <Border BorderThickness="2" BorderBrush="DarkGray"/>
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="70"/>
+                        <RowDefinition Height="50"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -32,14 +31,13 @@
                     <Image Source="{StaticResource Cookie2Image}" Grid.Column="2" VerticalAlignment="Bottom"   Grid.Row="1" />
                     <Image Source="{StaticResource SaladImage}" Grid.Column="3" VerticalAlignment="Bottom"  Grid.Row="1" />
 
-                    <TextBlock HorizontalAlignment="Center" Grid.Column="4" Text=" Recipe Buddy " FontSize="45" Height="65" FontWeight="ExtraBold" Grid.RowSpan="2"/>
+                    <TextBlock HorizontalAlignment="Center" Grid.Column="4" Text=" Recipe Buddy " FontSize="35" Height="65" FontWeight="ExtraBold" Grid.RowSpan="2"/>
                     <Image Source="{StaticResource SoupImage}" Grid.Column="5" VerticalAlignment="Bottom" Grid.Row="1" />
                     <Image Source="{StaticResource CookieImage}" Grid.Column="6" VerticalAlignment="Bottom" Grid.Row="1" />
                     <Image Source="{StaticResource CupcakeImage}" Grid.Column="7" VerticalAlignment="Bottom" Grid.Row="1" />
                     <Image Source="{StaticResource BowlsImage}" Grid.Column="8" VerticalAlignment="Bottom" Grid.Row="1" />
                     <Image x:Name="CoffeeImg" Source="{StaticResource TeaCupImage}" Grid.Column="9" VerticalAlignment="Bottom" Grid.Row="1" />
                 </Grid>
-                <Border BorderThickness="2" BorderBrush="DarkGray"/>
             </StackPanel>
         </Border>
     </StackPanel>

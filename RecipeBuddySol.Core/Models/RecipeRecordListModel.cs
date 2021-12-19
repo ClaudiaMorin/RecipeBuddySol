@@ -48,6 +48,8 @@ namespace RecipeBuddy.Core.Models
         //{
         public void Add(RecipeRecordModel RE)
         {
+            if (RE == null)
+                return;
 
             //we just added the first entry to the list
             if (listCount == 0)
@@ -242,19 +244,7 @@ namespace RecipeBuddy.Core.Models
             set { SetProperty(ref displayCurrentCardIndex, value); }
         }
        
-        /// <summary>
-        /// The CurrentCardIndex sets the recipe that has current focus
-        /// </summary>
-        private string currentCardLink;
-        public string CurrentCardLink
-        {
-            get { return currentCardLink; }
-            set
-            {
-                SetProperty(ref currentCardLink, value);
-                DisplayCurrentCardIndex = currentCardIndex + 1;
-            }
-        }
+
         #endregion
 
     }

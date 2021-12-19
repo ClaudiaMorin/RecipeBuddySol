@@ -8,46 +8,59 @@
              xmlns:i="using:Microsoft.Xaml.Interactivity"
              xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
              d:DataContext="{d:DesignInstance Type=viewmodels:UserViewModel}"
-             mc:Ignorable="d" 
-      x:Name="SelectedTabView">
+             mc:Ignorable="d"
+             MaxHeight="800"
+             MaxWidth="1400"
+             x:Name="SelectedViewTab">
 
-    <StackPanel x:Name="SelectedUserControl">
+    <StackPanel>
         <local:AppHeader/>
-        <StackPanel Orientation="Horizontal" >
-            <StackPanel x:Name="SelectedControls"/>
-        </StackPanel>
-        <Border BorderBrush="Gray" BorderThickness="5">
-            <ScrollViewer VerticalScrollBarVisibility="Visible" >
-                <StackPanel x:Name="MasterStackPanel"  Grid.Column="0" Orientation="Vertical" Background="White" Margin ="0,0,0,0">
-                    <TextBox x:Name="Title" Style="{StaticResource TitleTbxStyleBasket}" Text="{Binding Path=Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <Border  BorderThickness="2" BorderBrush="Gray"/>
-                    <Grid Background="Gray" x:Name="ControlsForSelectView">
-                        <Grid.ColumnDefinitions >
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="3*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text=" Recipe List: " Grid.Column="0" />
-                        <ComboBox x:Name="RecipesInComboBox" Grid.Column="1" DisplayMemberPath="Title"  SelectedIndex="{Binding IndexOfComboBoxItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="List of selected Recipes" >
-                            <i:Interaction.Behaviors>
-                                <icore:EventTriggerBehavior EventName="SelectionChanged">
-                                    <!--<icore:InvokeCommandAction x:Name="ICommandSelectItemChanged" Command="{Binding CmdSelectedItemChanged}"  PassEventArgsToCommand="True" />-->
-                                    <icore:InvokeCommandAction x:Name="ICommandSelectItemChanged" Command="{Binding CmdSelectedItemChanged}" />
-                                </icore:EventTriggerBehavior>
-                            </i:Interaction.Behaviors>
-                        </ComboBox>
-                        <Button x:Name="btnRemove" Grid.Column="2" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}"  Content="Remove" Command="{Binding CmdRemove}" ToolTipService.ToolTip="Click to remove recipe"  />
-                        <Button x:Name="btnEdit" Grid.Column="3" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Edit" Command="{Binding CmdEdit}" ToolTipService.ToolTip="Click to add recipe To Edit Page" />
-                        <Button x:Name="btnCreate" Grid.Column="4" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="New" Command="{Binding CmdNew}" ToolTipService.ToolTip="Click to create a recipe from scratch" />
-                        <Button x:Name="btnSave" Grid.Column="5" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Save" Command="{Binding CmdSave}" ToolTipService.ToolTip="Click to save recipe under the selected Catagory" />
-                    </Grid>
-                    <Border  BorderThickness="2" BorderBrush="Gray"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel x:Name="TreeView"  Grid.Column="0" Background="LightSteelBlue" >
+                <local:RecipeTreeView x:Name="SavedRecipesTreeView"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1" x:Name="SelectedControls">
+                <Border BorderBrush="Gray" BorderThickness="5">
+                    <ScrollViewer VerticalScrollBarVisibility="Visible" >
+                        <StackPanel x:Name="MasterStackPanel" Orientation="Vertical" Background="#eee" Margin ="0,0,0,0">
+                            <TextBox x:Name="Title" Style="{StaticResource TitleTbxStyleBasket}" Text="{Binding Path=Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <!--<Border  BorderThickness="2" BorderBrush="Gray">-->
+                    <!--<Grid Background="Gray" x:Name="ControlsForSelectView">
+                                <Grid.ColumnDefinitions >
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text=" Recipe List: " Grid.Column="0" />
+                                <ComboBox x:Name="RecipesInComboBox" Grid.Column="1" DisplayMemberPath="Title"  SelectedIndex="{Binding IndexOfComboBoxItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="List of selected Recipes" >
+                                    <i:Interaction.Behaviors>
+                                        <icore:EventTriggerBehavior EventName="SelectionChanged">
+                                            -->
+                    <!--<icore:InvokeCommandAction x:Name="ICommandSelectItemChanged" Command="{Binding CmdSelectedItemChanged}"  PassEventArgsToCommand="True" />-->
+                    <!--
+                                            <icore:InvokeCommandAction x:Name="ICommandSelectItemChanged" Command="{Binding CmdSelectedItemChanged}" />
+                                        </icore:EventTriggerBehavior>
+                                    </i:Interaction.Behaviors>
+                                </ComboBox>
+                                <Button x:Name="btnRemove" Grid.Column="2" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}"  Content="Remove" Command="{Binding CmdRemove}" ToolTipService.ToolTip="Click to remove recipe"  />
+                                <Button x:Name="btnEdit" Grid.Column="3" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Edit" Command="{Binding CmdEdit}" ToolTipService.ToolTip="Click to add recipe To Edit Page" />
+                                <Button x:Name="btnCreate" Grid.Column="4" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="New" Command="{Binding CmdNew}" ToolTipService.ToolTip="Click to create a recipe from scratch" />
+                                <Button x:Name="btnSave" Grid.Column="5" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Save" Command="{Binding CmdSave}" ToolTipService.ToolTip="Click to save recipe under the selected Catagory" />
+                            </Grid>-->
+                    <!--<Border  BorderThickness="2" BorderBrush="Gray"/>-->
                     <local:RecipeDetailsPanelForSelected x:Name="DetailsPanelForSelected"/>
-                </StackPanel>
-            </ScrollViewer>
-        </Border>
+                <!--</Border>-->
+            </StackPanel>
+        </ScrollViewer>
+     </Border>
+            </StackPanel>
+        </Grid>
     </StackPanel>
 </Page>

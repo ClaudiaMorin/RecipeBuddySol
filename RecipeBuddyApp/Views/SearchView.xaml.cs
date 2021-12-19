@@ -25,6 +25,7 @@ namespace RecipeBuddy.Views
             InitializeComponent();
 
             DataContext = SearchViewModel.Instance;
+            RecipesInComboBox.ItemsSource = SearchViewModel.Instance.listOfRecipeCards.RecipesList;
 
             ///Search1Panel Panel Setup
             Title1.DataContext = SearchViewModel.Instance.recipePanelForSearch1.recipeCard;
@@ -33,7 +34,6 @@ namespace RecipeBuddy.Views
             btnBack1.DataContext = SearchViewModel.Instance.recipePanelForSearch1;
             btnNext1.Command = SearchViewModel.Instance.recipePanelForSearch1.CmdNextButton;
             btnSelect1.Command = SearchViewModel.Instance.recipePanelForSearch1.CmdSelectButton;
-            btnSelectDirections1.DataContext = SearchViewModel.Instance.recipePanelForSearch1;
 
             ///Search2Panel Panel Setup
             Title2.DataContext = SearchViewModel.Instance.recipePanelForSearch2.recipeCard; 
@@ -42,7 +42,6 @@ namespace RecipeBuddy.Views
             btnBack2.Command = SearchViewModel.Instance.recipePanelForSearch2.CmdBackButton;
             btnNext2.Command = SearchViewModel.Instance.recipePanelForSearch2.CmdNextButton;
             btnSelect2.Command = SearchViewModel.Instance.recipePanelForSearch2.CmdSelectButton;
-            btnSelectDirections2.DataContext = SearchViewModel.Instance.recipePanelForSearch2;
 
             ///Search3Panel Panel Setup
             Title3.DataContext = SearchViewModel.Instance.recipePanelForSearch3.recipeCard; 
@@ -51,7 +50,6 @@ namespace RecipeBuddy.Views
             btnBack3.Command = SearchViewModel.Instance.recipePanelForSearch3.CmdBackButton;
             btnNext3.Command = SearchViewModel.Instance.recipePanelForSearch3.CmdNextButton;
             btnSelect3.Command = SearchViewModel.Instance.recipePanelForSearch3.CmdSelectButton;
-            btnSelectDirections3.DataContext = SearchViewModel.Instance.recipePanelForSearch3;
         }
     }
 }

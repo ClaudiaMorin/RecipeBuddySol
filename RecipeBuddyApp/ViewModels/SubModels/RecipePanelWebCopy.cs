@@ -61,6 +61,7 @@ namespace RecipeBuddy.ViewModels
         public void ClearRecipeEntry()
         {
             recipeCardModel = new RecipeDisplayModel();
+            WebViewModel.Instance.CloseKeepRecipePanel();
             CanSelectSave= false;
             CanSelectCancel = false;
         }
@@ -83,9 +84,6 @@ namespace RecipeBuddy.ViewModels
             MainNavTreeViewModel.Instance.AddRecipeModelsToTreeView(new RecipeRecordModel(recipeCardModel), true);
             
             ClearRecipeEntry();
-            //MainNavTreeViewModel.Instance.DessertRecipes.ItemExpanded = true;
-            //MainNavTreeViewModel.Instance.SavedCakeRecipes.ItemExpanded = true;
-            //MainWindowViewModel.Instance.mainTreeViewNav.AddRecipeToTreeView(recipeCardModel);
         }
 
         #region Properties and ICommand functions 

@@ -11,6 +11,7 @@
       MaxWidth="1400"
       x:Name="WebTabView">
     <StackPanel x:Name="MasterStackPanel">
+        <local:AppHeader/>
         <Grid Height="798">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -51,9 +52,9 @@
                             </i:Interaction.Behaviors>
                         </ComboBox>
                         <Border BorderThickness="5"/>
-                        <Button x:Name="btnRemove" Width="100" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}"  Content="Remove" Command="{Binding CmdRemove}" ToolTipService.ToolTip="Click to remove recipe"  />
+                            <Button x:Name="btnOpenEntry" Width="150" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Create/Update Entry" Command="{Binding CmdOpenEntry}" ToolTipService.ToolTip="Click to save recipe under the selected Catagory." />
                         <Border BorderThickness="5"/>
-                        <Button x:Name="btnOpenEntry" Width="100" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Open Entry" Command="{Binding CmdOpenEntry}" ToolTipService.ToolTip="Click to save recipe under the selected Catagory" />
+                            <Button x:Name="btnRemove" Width="150" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}"  Content="Remove from List" Command="{Binding CmdRemove}" ToolTipService.ToolTip="Click to remove recipe from list."  />
                     </StackPanel>
                     <TextBlock x:Name="currentURI" Text="{Binding CurrentLink}" SelectionHighlightColor="LightSteelBlue"/>
                     <Border BorderThickness="2" BorderBrush="DarkGray"/>

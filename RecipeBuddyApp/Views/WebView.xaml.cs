@@ -21,7 +21,7 @@ namespace RecipeBuddy.Views
 
             //TextBoxRecipe.DataContext = 
             //Wires the combobox to the list of recipes
-            RecipesInComboBox.ItemsSource = WebViewModel.Instance.listOfRecipeCards.RecipesList;
+            RecipesInComboBox.ItemsSource = SearchViewModel.Instance.listOfRecipeCards.RecipesList;
         }
     }
 }

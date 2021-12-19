@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using RecipeBuddy.Services;
+using RecipeBuddy.Views;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -799,9 +801,8 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         internal void AddRecipeToSelectList(RecipeTreeItem recipeTreeItem)
         {
-            MainWindowViewModel.Instance.SelectedTabIndex = (int)MainWindowViewModel.Tabs.EditTab;
-            SelectedViewModel.Instance.AddToListOfRecipeCards(recipeTreeItem.RecipeModelTV);
-            MainWindowViewModel.Instance.SelectedTabIndex = (int)MainWindowViewModel.Tabs.SelectedTab;
+            NavigationService.Navigate(typeof(SelectedView));
+            SelectedViewModel.Instance.UpdateRecipeEntry(recipeTreeItem.RecipeModelTV);
         }
 
         /// <summary>
