@@ -9,7 +9,7 @@
     <converters:ButtonStyleConverter x:Key="ButtonStyleConverter"/>
     <converters:ButtonIsVisibleRedFontConverter x:Key="ButtonVisibleRedFontConverter"/>
     <converters:CheckBoxEnabledConverter x:Key="CheckBoxEnableConvert"/>
-    <converters:HeightConverter x:Key="HeightConverter"/>
+    <converters:ButtonHeightConverter x:Key="ButtonHeightConverter"/>
     <converters:IntToVisibilityConverter x:Key="IntToVisibility"/>
     <converters:IntToEnabledConverter x:Key="IntToEnableConvert"/>
     <converters:IntToVisibilityWithParamsMaxConverter x:Key="IntToVisibilityWithParamsMaxConverter"/>

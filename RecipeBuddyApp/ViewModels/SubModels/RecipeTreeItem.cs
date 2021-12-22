@@ -115,6 +115,8 @@ namespace RecipeBuddy.ViewModels
             set { SetProperty(ref itemExpanded, value); }
         }
 
+
+
         public ICommand CmdAddToSelectList
         {
             get;

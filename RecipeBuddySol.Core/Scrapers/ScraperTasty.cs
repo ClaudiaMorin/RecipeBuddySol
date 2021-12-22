@@ -108,7 +108,7 @@ namespace RecipeBuddy.Core.Scrapers
             if (ingredients.Count == 0)
                 return null;
             List<string> directions = new List<string>();
-            directions.Add("-Direction");
+            //directions.Add("-Direction");
 
             RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
@@ -134,8 +134,8 @@ namespace RecipeBuddy.Core.Scrapers
 
             try
             {
-                string section_header = "Ingredients";
-                ingredients.Add(headerTag + section_header);
+                //string section_header = "Ingredients";
+                //ingredients.Add(headerTag + section_header);
                 HtmlNodeCollection htmlNodes = ingred_node.SelectNodes("//li[@class='ingredient xs-mb1 xs-mt0']");
 
                 for (int i = 0; i < countList; i++)
@@ -160,7 +160,7 @@ namespace RecipeBuddy.Core.Scrapers
             {
                 try
                 {
-                    directions.Add(headerTag + "Directions");
+                    //directions.Add(headerTag + "Directions");
                     List<HtmlNode> groupslist = directions_top_level.SelectNodes("//li[@class='xs-mb2']").ToList<HtmlNode>();
 
                     foreach (HtmlNode section_node in groupslist)

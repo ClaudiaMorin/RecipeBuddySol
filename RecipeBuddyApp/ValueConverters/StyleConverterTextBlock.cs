@@ -26,7 +26,7 @@ namespace RecipeBuddy.ValueConverters
                     return App.Current.Resources["NormalTbkStyle"];
 
                 if (string.Compare(alternateColor, "1")==0)
-                    return App.Current.Resources["NormalTbkStyleYellow"];
+                    return App.Current.Resources["NormalTbkStyleBlue"];
             }
 
             return App.Current.Resources["CollapsedTbkStyle"];

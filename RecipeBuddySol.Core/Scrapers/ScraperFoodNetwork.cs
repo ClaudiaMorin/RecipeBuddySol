@@ -96,8 +96,8 @@ namespace RecipeBuddy.Core.Scrapers
                 HtmlNodeCollection directions_sub_level = directions_top_level.SelectNodes("//li[@class='o-Method__m-Step']");
                 if (directions_sub_level != null)
                 {
-                    string section_header = "Directions";
-                    directions.Add(headerTag + section_header);
+                    //string section_header = "Directions";
+                    //directions.Add(headerTag + section_header);
 
                     List<HtmlNode> groupslist = directions_sub_level.ToList<HtmlNode>();
                     string innerText1;
@@ -163,7 +163,7 @@ namespace RecipeBuddy.Core.Scrapers
                         }
                         else if (firstIngred == true)
                         {
-                            ingredients.Add(headerTag + "Ingredients");
+                            //ingredients.Add(headerTag + "Ingredients");
                             innerText1 = node.InnerText.Replace('\n', ' ').Trim();
                             ingredients.Add(StringManipulationHelper.CleanHTMLTags(innerText1));
                             firstIngred = false;
@@ -197,7 +197,7 @@ namespace RecipeBuddy.Core.Scrapers
                 return null;
 
             List<string> directions = new List<string>();
-            directions.Add("-Direction");
+            //directions.Add("-Direction");
 
             RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 

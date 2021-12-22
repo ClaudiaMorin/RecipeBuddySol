@@ -93,7 +93,7 @@ namespace RecipeBuddy.Core.Scrapers
             if (ingredients == null || ingredients.Count == 0)
                 return null;
             List<string> directions = new List<string>();
-            directions.Add("-Direction");
+            //directions.Add("-Direction");
 
             RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
@@ -130,7 +130,7 @@ namespace RecipeBuddy.Core.Scrapers
                 {
 
                     HtmlNodeCollection groupslistHeaders = ingred_top_level.ChildNodes[2].ChildNodes;
-                    ingredients.Add(headerTag + "Ingredients");
+                    //ingredients.Add(headerTag + "Ingredients");
                     if (groupslistHeaders.Count > 0)
                     {
                         foreach (HtmlNode sectionHeader_node in groupslistHeaders)
@@ -141,7 +141,7 @@ namespace RecipeBuddy.Core.Scrapers
                 }
                 catch (Exception e) //no subheaders
                 {
-                    ingredients.Add(headerTag + "Ingredients");
+                    //ingredients.Add(headerTag + "Ingredients");
                     FillIngredientsSub(ingred_top_level, ingredients, headerTag);
                 }
             }
@@ -180,8 +180,8 @@ namespace RecipeBuddy.Core.Scrapers
 
             if (groupslist != null)
             {
-                string section_header = "Directions";
-                directions.Add(headerTag + section_header);
+                //string section_header = "Directions";
+                //directions.Add(headerTag + section_header);
 
                 try
                 {

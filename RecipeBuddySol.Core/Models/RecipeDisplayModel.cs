@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace RecipeBuddy.Core.Models
 {
     public enum Type_Of_Ingredient { ingredient, subheader, non_consumable }
-    public enum Type_Of_Recipe { Appetizer, Beef, Bread, Cake, Candy, Cookie, Custard, Dairy, Eggs, Lamb, Pastry, Pork, Poultry, Salad, Seafood, SideDish, SoupStew, Tofu, Unknown}
+    public enum Type_Of_Recipe { Appetizer, Beef, Bread, Cake, Candy, Cookie, Custard, Dairy, Eggs, Lamb, Pastry, Pork, Poultry, Salad, Seafood, SideDish, SoupStew, Tofu, Unknown, Header}
 
     /// <summary>
     /// indicates whether we are adding a recipe to the treeview and DB or removing it
@@ -1214,7 +1214,17 @@ namespace RecipeBuddy.Core.Models
             Description = reSource.Description;
             Author = reSource.Author;
             //Website = reSource.Website;
-            Link = new Uri(reSource.Link);
+
+            //Sometimes we have a good link, sometimes we don't
+            try
+            {
+                Link = new Uri(reSource.Link);
+            }
+            catch (Exception e)
+            {
+                Link = null;
+            }
+            
             RecipeType = (Type_Of_Recipe) reSource.TypeAsInt;
             ID = -1;
 
@@ -1378,7 +1388,7 @@ namespace RecipeBuddy.Core.Models
             {
                 if (listOfIngredientStringsForDisplay[IngredientCount].Length > 0 && IngredientCount < 50)
                 {
-                        listOfIngredientSetters[IngredientCount].Invoke(listOfIngredientStringsForDisplay[IngredientCount]);
+                    listOfIngredientSetters[IngredientCount].Invoke(listOfIngredientStringsForDisplay[IngredientCount]);
                 }
             }
 

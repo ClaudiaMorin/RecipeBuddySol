@@ -98,7 +98,7 @@ namespace RecipeBuddy.Core.Scrapers
                 return null;
 
             List<string> directions = new List<string>();
-            directions.Add("-Direction");
+            //directions.Add("-Direction");
 
             RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
@@ -124,8 +124,8 @@ namespace RecipeBuddy.Core.Scrapers
 
             try
             {
-                string section_header = "Ingredients";
-                ingredients.Add(headerTag + section_header);
+                //string section_header = "Ingredients";
+                //ingredients.Add(headerTag + section_header);
                 HtmlNode htmlNode = ingred_node.SelectSingleNode("//ul[@class='ingredients-section']");
                 HtmlNodeCollection htmlNodes = htmlNode.SelectNodes("//li[@class='ingredients-item']");
                 string node;
@@ -157,7 +157,7 @@ namespace RecipeBuddy.Core.Scrapers
                 try
                 {
                     HtmlNodeCollection htmlNodes = directions_top_level.SelectNodes("//li[@class='subcontainer instructions-section-item']");
-                    directions.Add("-Directions");
+                    //directions.Add("-Directions");
                     foreach (HtmlNode section_node in htmlNodes)
                     {
                         string str1 = section_node.OuterHtml;

@@ -147,7 +147,7 @@
     <Compile Include="ValueConverters\ButtonIsVisableRedFontConverter.cs" />
     <Compile Include="ValueConverters\ButtonStyleConverter.cs" />
     <Compile Include="ValueConverters\CheckBoxEnabledConverter.cs" />
-    <Compile Include="ValueConverters\HeightConverter.cs" />
+    <Compile Include="ValueConverters\ButtonHeightConverter.cs" />
     <Compile Include="ValueConverters\IntToEnabledConverter.cs" />
     <Compile Include="ValueConverters\IntToVisibilityConverter.cs" />
     <Compile Include="ValueConverters\IntToVisibilityWithParamsMaxConverter.cs" />

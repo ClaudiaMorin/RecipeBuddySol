@@ -100,7 +100,7 @@ namespace RecipeBuddy.Core.Scrapers
 
             List<string> ingredients = FillIngredientListAllRecipesForRecipeEntry(doc, 50);
             List<string> directions = new List<string>();
-            directions.Add("-Direction");
+            //directions.Add("-Direction");
             //no ingredients it isn't a real recipe so we bail
             if (ingredients.Count == 0)
                 return null;
@@ -159,8 +159,8 @@ namespace RecipeBuddy.Core.Scrapers
 
             try
             {
-                string section_header = "Ingredients";
-                ingredients.Add(headerTag + section_header);
+                //string section_header = "Ingredients";
+                //ingredients.Add(headerTag + section_header);
                 HtmlNodeCollection htmlNodes = ingred_node.SelectNodes("//*[@class='ingredients-item-name']");
 
                 for (int i = 0; i < countList; i++)
@@ -185,7 +185,7 @@ namespace RecipeBuddy.Core.Scrapers
             {
                 try
                 {
-                    directions.Add(headerTag + "Directions");
+                    //directions.Add(headerTag + "Directions");
                     List<HtmlNode> groupslist = directions_top_level.SelectNodes("//div[@class='paragraph']").ToList<HtmlNode>();
 
                     foreach (HtmlNode section_node in groupslist)

@@ -18,10 +18,24 @@
         <ScrollViewer VerticalScrollBarVisibility="Visible" >
             <StackPanel>
                 <TextBlock Text=" Saved Recipes " Style="{StaticResource TitleTbkStyle}"  FontSize="25" TextAlignment="Center" VerticalAlignment="Bottom"/>
-                <TreeView x:Name="SavedRecipesTreeRoot" ItemsSource="{Binding RecipeTreeRootNodes}" SelectionMode="Single" >
+                <TreeView x:Name="SavedRecipesTreeRoot" ItemsSource="{Binding RecipeTreeRootNodes}" SelectionMode="Single">
+                    <i:Interaction.Behaviors>
+                        <ic:EventTriggerBehavior EventName="ItemInvoked">
+                            <ic:InvokeCommandAction x:Name="ICommandAddToView" Command="{Binding CmdAddTreeVeiwItemToSelectList}" />
+                        </ic:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
                     <TreeView.ItemTemplate >
                         <DataTemplate x:DataType="viewModel:RecipeTreeItem" >
-                            <TreeViewItem ItemsSource="{x:Bind Children, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding TreeItemTitle, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" IsExpanded="{Binding ItemExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <TreeViewItem ItemsSource="{x:Bind Children, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding TreeItemTitle, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                          IsExpanded="{Binding ItemExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                                <FlyoutBase.AttachedFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem x:Name="ContextMenuSelect" Text="+ Select List" Command="{Binding CmdAddToSelectList}"/>
+                                        <MenuFlyoutItem x:Name="ContextMenuEdit" Text="+ Edit!" Command="{Binding CmdAddToEdit}"/>
+                                        <MenuFlyoutItem x:Name="ContextMenuDelete" Text="- Delete!" Command="{Binding CmdDelete}"/>
+                                    </MenuFlyout>
+                                </FlyoutBase.AttachedFlyout>
+                            </TreeViewItem>
                         </DataTemplate>
                     </TreeView.ItemTemplate>
                 </TreeView>

@@ -1,6 +1,7 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
 using RecipeBuddy;
+using Windows.UI.Xaml.Controls;
 
 namespace RecipeBuddy.ValueConverters
 {
@@ -9,22 +10,27 @@ namespace RecipeBuddy.ValueConverters
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
 
-            string alternateColor = parameter as string;
-
-            if (value.ToString().Length > 0)
+            if (value != null && value.GetType() == typeof(TextBlock))
             {
-                char myfirstChar = value.ToString()[0];
-                if (myfirstChar == '-' || myfirstChar == '!')
+                TextBlock textBlock = value as TextBlock;
+                string alternateColor = parameter as string;
+
+                //The parameters 1 and 0 deal with making the textbox visible or not as the parameter changes
+                if (textBlock.Text.Length > 0)
                 {
-                    //reset so we start with white after the gray subheader
-                    return App.Current.Resources["RowButtonNotVisible"];
+                    char myfirstChar = value.ToString()[0];
+                    if (myfirstChar == '-' || myfirstChar == '!')
+                    {
+                        //reset so we start with white after the gray subheader
+                        return App.Current.Resources["RowButtonNotVisible"];
+                    }
+
+                    if (string.Compare(alternateColor, "0") == 0)
+                        return App.Current.Resources["RowButtonVisibleWhite"];
+
+                    if (string.Compare(alternateColor, "1") == 0)
+                        return App.Current.Resources["RowButtonVisibleColor"];
                 }
-
-                if (string.Compare(alternateColor, "0") == 0)
-                    return App.Current.Resources["RowButtonVisibleWhite"];
-
-                if (string.Compare(alternateColor, "1") == 0)
-                    return App.Current.Resources["RowButtonVisibleColor"];
             }
 
             return App.Current.Resources["RowButtonNotVisible"];

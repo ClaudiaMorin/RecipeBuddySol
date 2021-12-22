@@ -30,11 +30,9 @@
 
     <Style x:Key="NormalTbkStyle" TargetType="TextBlock">
         <Setter Property="TextAlignment" Value="Left" />
-        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="Black"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="TextWrapping" Value="WrapWholeWords" />
-        <Setter Property="Height" Value="Auto" />
-        <Setter Property="SelectionHighlightColor" Value="White"/>
     </Style>
 
     <Style x:Key="NormalTbkStyleRed" TargetType="TextBlock">
@@ -55,13 +53,11 @@
         <Setter Property="SelectionHighlightColor" Value="White"/>
     </Style>
 
-    <Style x:Key="NormalTbkStyleYellow" TargetType="TextBlock">
+    <Style x:Key="NormalTbkStyleBlue" TargetType="TextBlock">
         <Setter Property="TextAlignment" Value="Left" />
-        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="Blue" />
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="TextWrapping" Value="WrapWholeWords" />
-        <Setter Property="Height" Value="Auto" />
-        <Setter Property="SelectionHighlightColor" Value="#eee"/>
     </Style>
 
     <Style x:Key="NormalTbkStyleYellowRed" TargetType="TextBlock">

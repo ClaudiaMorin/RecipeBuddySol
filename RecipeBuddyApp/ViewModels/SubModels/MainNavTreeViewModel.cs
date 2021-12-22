@@ -22,6 +22,7 @@ namespace RecipeBuddy.ViewModels
     public class MainNavTreeViewModel : ObservableObject
     {
         Action<Object> actionRecipeDisplayModel;
+        //public Action<TreeViewItemInvokedEventArgs> actionWithEventArgs;
 
         private static readonly MainNavTreeViewModel instance = new MainNavTreeViewModel();
         public static MainNavTreeViewModel Instance
@@ -36,14 +37,22 @@ namespace RecipeBuddy.ViewModels
         {
             RecipeTreeRootNodes = new ObservableCollection<RecipeTreeItem>();
             CmdSaveDialog = new RBRelayCommandObj(actionRecipeDisplayModel = (RD) => AddRecipeToTreeView((RecipeDisplayModel)RD));
+            CmdAddTreeVeiwItemToSelectList = new RBRelayCommandObj(actionRecipeDisplayModel = (TreeViewArg) => AddSelectedTreeViewItem((TreeViewItemInvokedEventArgs)TreeViewArg));
+            //CmdAddTreeVeiwItemToSelectList = new ICommandViewModel<TreeViewItemInvokedEventArgs>(actionWithEventArgs = e => AddSelectedTreeViewItem(e), canCallActionFunc => CanSelectTrue);
             //CmdExpandTreeViewItem = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeFromComboBox(e), canCallActionFunc => CanSelectRemove);
 
             DessertRecipes = new RecipeTreeItem("Desserts");
+            DessertRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
             MainCourseRecipes = new RecipeTreeItem("Main Courses");
+            DessertRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
             SavedCakeRecipes = new RecipeTreeItem("Cake");
+            DessertRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
             SavedCandyRecipes = new RecipeTreeItem("Candy");
+            DessertRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
             SavedCookieRecipes = new RecipeTreeItem("Cookie");
+            DessertRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
             SavedCustardRecipes = new RecipeTreeItem("Custard");
+            DessertRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
             SavedPastryRecipes = new RecipeTreeItem("Pastry");
             SavedUnknownRecipes = new RecipeTreeItem("Unknown");
             SavedSoupStewRecipes = new RecipeTreeItem("Soup and Stews");
@@ -112,6 +121,30 @@ namespace RecipeBuddy.ViewModels
 
         public void CreateTreeViewHierarchy(ObservableCollection<RecipeTreeItem> RecipeTreeRoot)
         {
+            DessertRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+            MainCourseRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+            SavedCakeRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+            SavedCandyRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+            SavedCookieRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+            SavedCustardRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+            SavedPastryRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+
+            SavedUnknownRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+            SavedSoupStewRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+            SavedPorkRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+            SavedDairyRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+            SavedBeefRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+            SavedEggsRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+            SavedPoultryRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+
+            SavedSeafoodRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+            SavedLambRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+            SavedSaladRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+            SavedAppetizerRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+            SavedBreadRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+            SavedSideDishRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+            SavedTofuRecipes.RecipeModelTV.TypeAsInt = (int)Type_Of_Recipe.Header;
+
             RecipeTreeRoot.Add(SavedAppetizerRecipes);
             RecipeTreeRoot.Add(SavedBreadRecipes);
             RecipeTreeRoot.Add(SavedDairyRecipes);
@@ -406,6 +439,34 @@ namespace RecipeBuddy.ViewModels
 
             return true;
         }
+
+        /// <summary>
+        /// Changes the Type of recipe which effects where the recipe is stored and retreved on the Tree View
+        /// </summary>
+        /// <param name="e"></param>
+        internal void AddSelectedTreeViewItem(TreeViewItemInvokedEventArgs arg)
+        {
+            if (arg.InvokedItem != null && arg.InvokedItem.GetType() == typeof(RecipeTreeItem))
+            {
+                RecipeTreeItem recipeTreeItem = arg.InvokedItem as RecipeTreeItem;
+
+                if(recipeTreeItem.RecipeModelTV.TypeAsInt != (int)Type_Of_Recipe.Header)
+                SelectedViewModel.Instance.UpdateRecipeEntry(recipeTreeItem.RecipeModelTV);
+            }
+        }
+
+        ///// <summary>
+        ///// Changes the Type of recipe which effects where the recipe is stored and retreved on the Tree View
+        ///// </summary>
+        ///// <param name="e"></param>
+        //internal void AddSelectedTreeViewItem(SelectionChangedEventArgs e)
+        //{
+        //    if (e.AddedItems != null && e.AddedItems.Count > 0)
+        //    {
+        //        RecipeRecordModel recipeRecordModel = e.AddedItems[0] as RecipeRecordModel;
+        //        SelectedViewModel.Instance.UpdateRecipeEntry(recipeRecordModel);
+        //    }
+        //}
 
         /// <summary>
         /// Dialog that pops up after the user attempts to save 
@@ -840,6 +901,14 @@ namespace RecipeBuddy.ViewModels
             private set;
         }
 
+        ///// <summary>
+        ///// Property for the Recipe combobox change command
+        ///// </summary>
+        //public RBRelayCommandObj CmdExpandTreeViewItem
+        //{
+        //    get;
+        //    private set;
+        //}
 
         /// <summary>
         /// Property for the Recipe combobox change command
@@ -848,6 +917,29 @@ namespace RecipeBuddy.ViewModels
         {
             get;
             private set;
+        }
+
+        /// <summary>
+        /// property for the Quantity combobox change command
+        /// </summary>
+        public RBRelayCommandObj CmdAddTreeVeiwItemToSelectList
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Alwasy returns true
+        /// </summary>
+        private bool canSelectTrue;
+        public bool CanSelectTrue
+        {
+            get
+            {
+                return true;
+            }
+
+            set { SetProperty(ref canSelectTrue, value); }
         }
 
         #endregion

@@ -44,14 +44,14 @@ namespace RecipeBuddy.ViewModels
         private SelectedViewModel()
         {
 
-            LoadIngredList();
-            LoadDirectList();
+            LoadIngredList("0");
+            LoadDirectList("0");
             QuantitySelectedAsString = "1";
             QuantitySelectedAsInt = 1;
             currentType = 0;
 
             listOfIngredientQuantitySetters = new List<Action<string>>();
-            
+
             //SetUpComboBox();
             LoadListSettersWithActionDelegatesForIngredientQuantities();
             selectViewMainRecipeCardModel = new RecipeDisplayModel();
@@ -224,7 +224,7 @@ namespace RecipeBuddy.ViewModels
         //        listOfRecipeModel.CurrentCardIndex = listOfRecipeModel.ListCount - 1;
         //    }
         //    ShowSpecifiedEntry(listOfRecipeModel.CurrentCardIndex);
-            
+
         //}
 
         /// <summary>
@@ -477,7 +477,7 @@ namespace RecipeBuddy.ViewModels
                 //messed up someplace
                 if (success == false)
                 { return; }
-                IngredHeightList[results-2].Invoke("Auto");
+                IngredHeightList[results - 2].Invoke("Auto");
             }
 
             if (string.Compare(parameters[1].ToString().ToLower().Trim(), "direction") == 0)
@@ -507,12 +507,12 @@ namespace RecipeBuddy.ViewModels
                 //messed up someplace
                 if (success == false)
                 { return; }
-                IngredHeightList[results-2].Invoke("0");
+                IngredHeightList[results - 2].Invoke("0");
 
                 selectViewMainRecipeCardModel.listOfIngredientSetters[results - 1].Invoke(listOfIngredientEditStringsGetters[results - 1].Invoke());
                 selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[results - 1] = listOfIngredientEditStringsGetters[results - 1].Invoke();
                 listOfIngredientQuantitySetters[results - 1].Invoke(CreateQuantityString(selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[results - 1]));
-                
+
             }
 
             if (string.Compare(parameters[1].ToString().ToLower().Trim(), "direction") == 0)
@@ -554,12 +554,12 @@ namespace RecipeBuddy.ViewModels
             }
         }
 
-        private void LoadIngredList()
+        private void LoadIngredList(string val)
         {
             IngredHeightList = new List<Action<string>>();
 
-            IngredHeightList.Add(SetIngred2Height);
-            IngredHeightList.Add(SetIngred3Height); IngredHeightList.Add(SetIngred4Height); IngredHeightList.Add(SetIngred5Height);
+
+            IngredHeightList.Add(SetIngred1Height); IngredHeightList.Add(SetIngred2Height); IngredHeightList.Add(SetIngred3Height); IngredHeightList.Add(SetIngred4Height); IngredHeightList.Add(SetIngred5Height);
             IngredHeightList.Add(SetIngred6Height); IngredHeightList.Add(SetIngred7Height); IngredHeightList.Add(SetIngred8Height); IngredHeightList.Add(SetIngred9Height); IngredHeightList.Add(SetIngred10Height);
             IngredHeightList.Add(SetIngred11Height); IngredHeightList.Add(SetIngred12Height); IngredHeightList.Add(SetIngred13Height); IngredHeightList.Add(SetIngred14Height); IngredHeightList.Add(SetIngred15Height);
             IngredHeightList.Add(SetIngred16Height); IngredHeightList.Add(SetIngred17Height); IngredHeightList.Add(SetIngred18Height); IngredHeightList.Add(SetIngred19Height); IngredHeightList.Add(SetIngred20Height);
@@ -572,7 +572,7 @@ namespace RecipeBuddy.ViewModels
 
             foreach (var action in IngredHeightList)
             {
-                action.Invoke("0");
+                action.Invoke(val);
             }
 
             listOfIngredientEditStringsSetters = new List<Action<string>>();
@@ -603,11 +603,11 @@ namespace RecipeBuddy.ViewModels
             listOfIngredientEditStringsGetters.Add(GetIngredient46Edits); listOfIngredientEditStringsGetters.Add(GetIngredient47Edits); listOfIngredientEditStringsGetters.Add(GetIngredient48Edits); listOfIngredientEditStringsGetters.Add(GetIngredient49Edits); listOfIngredientEditStringsGetters.Add(GetIngredient50Edits);
         }
 
-        private void LoadDirectList()
+        private void LoadDirectList(string val)
         {
             DirectHeightList = new List<Action<string>>();
 
-            DirectHeightList.Add(SetDirect2Height); DirectHeightList.Add(SetDirect3Height); DirectHeightList.Add(SetDirect4Height); DirectHeightList.Add(SetDirect5Height);
+            DirectHeightList.Add(SetDirect1Height); DirectHeightList.Add(SetDirect2Height); DirectHeightList.Add(SetDirect3Height); DirectHeightList.Add(SetDirect4Height); DirectHeightList.Add(SetDirect5Height);
             DirectHeightList.Add(SetDirect6Height); DirectHeightList.Add(SetDirect7Height); DirectHeightList.Add(SetDirect8Height); DirectHeightList.Add(SetDirect9Height); DirectHeightList.Add(SetDirect10Height);
             DirectHeightList.Add(SetDirect11Height); DirectHeightList.Add(SetDirect12Height); DirectHeightList.Add(SetDirect13Height); DirectHeightList.Add(SetDirect14Height); DirectHeightList.Add(SetDirect15Height);
             DirectHeightList.Add(SetDirect16Height); DirectHeightList.Add(SetDirect17Height); DirectHeightList.Add(SetDirect18Height); DirectHeightList.Add(SetDirect19Height); DirectHeightList.Add(SetDirect20Height);
@@ -616,12 +616,12 @@ namespace RecipeBuddy.ViewModels
 
             foreach (var action in DirectHeightList)
             {
-                action.Invoke("0");
+                action.Invoke(val);
             }
 
             listOfDirectionEditStringsSetters = new List<Action<string>>();
 
-            listOfDirectionEditStringsSetters.Add(SetDirection1Edits); listOfDirectionEditStringsSetters.Add(SetDirection2Edits);listOfDirectionEditStringsSetters.Add(SetDirection3Edits); listOfDirectionEditStringsSetters.Add(SetDirection4Edits); listOfDirectionEditStringsSetters.Add(SetDirection5Edits);
+            listOfDirectionEditStringsSetters.Add(SetDirection1Edits); listOfDirectionEditStringsSetters.Add(SetDirection2Edits); listOfDirectionEditStringsSetters.Add(SetDirection3Edits); listOfDirectionEditStringsSetters.Add(SetDirection4Edits); listOfDirectionEditStringsSetters.Add(SetDirection5Edits);
             listOfDirectionEditStringsSetters.Add(SetDirection6Edits); listOfDirectionEditStringsSetters.Add(SetDirection7Edits); listOfDirectionEditStringsSetters.Add(SetDirection8Edits); listOfDirectionEditStringsSetters.Add(SetDirection9Edits); listOfDirectionEditStringsSetters.Add(SetDirection10Edits);
             listOfDirectionEditStringsSetters.Add(SetDirection11Edits); listOfDirectionEditStringsSetters.Add(SetDirection12Edits); listOfDirectionEditStringsSetters.Add(SetDirection13Edits); listOfDirectionEditStringsSetters.Add(SetDirection14Edits); listOfDirectionEditStringsSetters.Add(SetDirection15Edits);
             listOfDirectionEditStringsSetters.Add(SetDirection16Edits); listOfDirectionEditStringsSetters.Add(SetDirection17Edits); listOfDirectionEditStringsSetters.Add(SetDirection18Edits); listOfDirectionEditStringsSetters.Add(SetDirection19Edits); listOfDirectionEditStringsSetters.Add(SetDirection20Edits);
@@ -664,8 +664,9 @@ namespace RecipeBuddy.ViewModels
         {
             set { canSelectSave = value; }
             get
-            {  if (UserViewModel.Instance.CanSelectLogout == true && selectViewMainRecipeCardModel.Title.Length > 0 &&
-                    string.Compare(selectViewMainRecipeCardModel.Title.ToLower(), "search for your next recipe find!") != 0)
+            {
+                if (UserViewModel.Instance.CanSelectLogout == true && selectViewMainRecipeCardModel.Title.Length > 0 &&
+                     string.Compare(selectViewMainRecipeCardModel.Title.ToLower(), "search for your next recipe find!") != 0)
                 {
                     canSelectSave = true;
                 }
@@ -741,6 +742,7 @@ namespace RecipeBuddy.ViewModels
             private set;
         }
 
+
         /// <summary>
         /// property for the update button command
         /// </summary>
@@ -793,6 +795,15 @@ namespace RecipeBuddy.ViewModels
         #endregion
 
         #region rowHeightPropertiesFor Ingredient and Directions
+
+        private string ingred1Height;
+        private void SetIngred1Height(string value)
+        { Ingred1Height = value; }
+        public string Ingred1Height
+        {
+            get { return ingred1Height; }
+            set { SetProperty(ref ingred1Height, value); }
+        }
 
         private string ingred2Height;
         private void SetIngred2Height(string value)
@@ -1146,7 +1157,6 @@ namespace RecipeBuddy.ViewModels
             set { SetProperty(ref ingred40Height, value); }
         }
 
-
         private string ingred41Height;
         private void SetIngred41Height(string value)
         { Ingred41Height = value; }
@@ -1235,6 +1245,15 @@ namespace RecipeBuddy.ViewModels
         {
             get { return ingred50Height; }
             set { SetProperty(ref ingred50Height, value); }
+        }
+
+        private string direct1Height;
+        private void SetDirect1Height(string value)
+        { Direct1Height = value; }
+        public string Direct1Height
+        {
+            get { return direct1Height; }
+            set { SetProperty(ref direct1Height, value); }
         }
 
         private string direct2Height;
@@ -2026,6 +2045,7 @@ namespace RecipeBuddy.ViewModels
             get { return ingredient4Edits; }
             set { SetProperty(ref ingredient4Edits, value); }
         }
+
         internal void SetIngredient5Edits(string value)
         { Ingredient5Edits = value; }
         internal string GetIngredient5Edits()
@@ -2035,6 +2055,7 @@ namespace RecipeBuddy.ViewModels
             get { return ingredient5Edits; }
             set { SetProperty(ref ingredient5Edits, value); }
         }
+
         internal void SetIngredient6Edits(string value)
         { Ingredient6Edits = value; }
         internal string GetIngredient6Edits()
@@ -2044,6 +2065,7 @@ namespace RecipeBuddy.ViewModels
             get { return ingredient6Edits; }
             set { SetProperty(ref ingredient6Edits, value); }
         }
+
         internal void SetIngredient7Edits(string value)
         { Ingredient7Edits = value; }
         internal string GetIngredient7Edits()
@@ -2453,7 +2475,7 @@ namespace RecipeBuddy.ViewModels
         public string Direction1Edits
         {
             get { return direction1Edits; }
-            set {SetProperty(ref direction1Edits, value);}
+            set { SetProperty(ref direction1Edits, value); }
         }
 
         internal void SetDirection2Edits(string value)
@@ -2464,7 +2486,7 @@ namespace RecipeBuddy.ViewModels
         {
             get { return direction2Edits; }
             set
-            { SetProperty(ref direction2Edits, value);}
+            { SetProperty(ref direction2Edits, value); }
         }
 
         internal void SetDirection3Edits(string value)
@@ -2724,5 +2746,11 @@ namespace RecipeBuddy.ViewModels
 
         #endregion
 
+
+        public RecipeDisplayModel SelectViewMainRecipeCardModel
+        {
+            get { return selectViewMainRecipeCardModel; }
+            set { SetProperty(ref selectViewMainRecipeCardModel, value); }
+        }
     }
 }

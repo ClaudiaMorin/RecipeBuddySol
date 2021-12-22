@@ -27,7 +27,7 @@ namespace RecipeBuddy.ValueConverters
             if (string.Compare(alternateColor, "0") == 0)
                 return App.Current.Resources["NormalTbxStyle"];
 
-            return App.Current.Resources["NormalTbxStyleYellow"];
+            return App.Current.Resources["NormalTbxStyleBlue"];
 
         }
 

@@ -112,7 +112,7 @@ namespace RecipeBuddy.Core.Scrapers
                 else
                 {
                     List<HtmlNode> groupslist = ingred_top_level.SelectNodes("//li[@class='ingredients-item']").ToList<HtmlNode>();
-                    ingredients.Add(headerTag + "Ingredients");
+                    //ingredients.Add(headerTag + "Ingredients");
 
                     foreach (HtmlNode node in groupslist)
                     {
@@ -184,7 +184,7 @@ namespace RecipeBuddy.Core.Scrapers
                 return null;
 
             List<string> directions = new List<string>();
-            directions.Add("-Direction");
+            //directions.Add("-Direction");
 
             RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
