@@ -67,7 +67,7 @@ namespace RecipeBuddy.ViewModels
 
             CmdUpdate = new ICommandViewModel<string>(actionWithObject = s => Update(s), canCallActionFunc => CanSelect);
             CmdCancel = new ICommandViewModel<string>(actionWithObject = s => Cancel(s), canCallActionFunc => CanSelect);
-            CmdLineEdit = new ICommandViewModel<string>(actionWithObject = s => LineEdit(s), canCallActionFunc => CanSelect);
+            CmdLineEdit = new ICommandViewModel<string>(actionWithObject = s => LineEdit(s), canCallActionFunc => CanSelectAlwaysTrue);
 
         }
 
@@ -295,7 +295,8 @@ namespace RecipeBuddy.ViewModels
         private string CreateQuantityString(string ingredient)
         {
             string ingredQuantity;
-            string measureType;
+
+            string measureType = "";
             bool resultsTest;
             float quantityAsfloat;
             int quantityAsInt;
@@ -332,18 +333,20 @@ namespace RecipeBuddy.ViewModels
 
                 if (ingredQuantity.Contains("/") == true || ingredQuantity.Contains("½") == true || ingredQuantity.Contains("¼") == true || ingredQuantity.Contains("¾") == true || ingredQuantity.Contains("⅓") == true || ingredQuantity.Contains("⅔") == true)
                 {
-                    ingredQuantity = StringManipulationHelper.ConvertVulgarFaction(ingredQuantity);
-                }
-                else
-                {
-                    string ingred2 = ingredient.ToString().Substring(0, ingredient.ToString().IndexOf(' ') + 1).Trim();
-                    //if the second quantity string is a vulgar fraction we need to convert it and remove if from the string
-                    if (ingred2.Contains("/") == true || ingred2.Contains("½") == true || ingred2.Contains("¼") == true || ingred2.Contains("¾") == true || ingred2.Contains("⅓") == true || ingred2.Contains("⅔") == true)
+                    //We know we have a fraction someplace, we just need to figure out where? It will either be at the beginging of the string or at the end
+                    //Fraction is at the start of the string so there isn't anything else to worry about.
+                    if (ingredQuantity[0].ToString().Contains("/") == true || ingredQuantity[0].ToString().Contains("½") == true || ingredQuantity[0].ToString().Contains("¼") == true || ingredQuantity[0].ToString().Contains("¾") == true || ingredQuantity[0].ToString().Contains("⅓") == true || ingredQuantity[0].ToString().Contains("⅔") == true)
                     {
-                        string temp1 = StringManipulationHelper.ConvertVulgarFaction(ingred2);
-                        string temp2 = ingredQuantity + temp1;
-                        ingredQuantity = temp2;
-                        ingredient = ingredient.Substring(ingredient.ToString().IndexOf(' ') + 1).Trim();
+                        ingredQuantity = StringManipulationHelper.ConvertVulgarFaction(ingredQuantity);
+                    }
+                    else //The fraction is at the end of the number so we need to add them up after they fraction is converted to a float!
+                    {
+                        if (ingredQuantity[ingredQuantity.Length - 1].ToString().Contains("/") == true || ingredQuantity[ingredQuantity.Length - 1].ToString().Contains("½") == true || ingredQuantity[ingredQuantity.Length - 1].ToString().Contains("¼") == true || ingredQuantity[ingredQuantity.Length - 1].ToString().Contains("¾") == true || ingredQuantity[ingredQuantity.Length - 1].ToString().Contains("⅓") == true || ingredQuantity[ingredQuantity.Length - 1].ToString().Contains("⅔") == true)
+                        {
+                            string temp1 = StringManipulationHelper.ConvertVulgarFaction(ingredQuantity[ingredQuantity.Length - 1].ToString());
+                            string temp2 = ingredQuantity.Substring(0, ingredQuantity.Length - 1);
+                            ingredQuantity = temp2 + temp1;
+                        }
                     }
                 }
 
@@ -432,8 +435,7 @@ namespace RecipeBuddy.ViewModels
             //filling the ingredientQuantiy properties
             for (int IngredientCount = 0; IngredientCount < IngredientQuantityShift.Count; IngredientCount++)
             {
-                if (IngredientQuantityShift[IngredientCount].Length > 0)
-                    listOfIngredientQuantitySetters[IngredientCount].Invoke(IngredientQuantityShift[IngredientCount]);
+                listOfIngredientQuantitySetters[IngredientCount].Invoke(IngredientQuantityShift[IngredientCount]);
             }
         }
 
@@ -455,7 +457,7 @@ namespace RecipeBuddy.ViewModels
         private void ChangeQuantityFromComboBox(SelectionChangedEventArgs e)
         {
             ComboBoxItem comboBoxItem = (ComboBoxItem)e.AddedItems[0];
-            QuantitySelectedAsString = comboBoxItem.Content.ToString().Substring(0, 1);
+            QuantitySelectedAsString = comboBoxItem.Content.ToString().Trim().Substring(0, 1);
             //get the multipler and part it to an int
             bool success = Int32.TryParse(QuantitySelectedAsString, out QuantitySelectedAsInt);
             UpdateQuantityCalc();
@@ -652,6 +654,17 @@ namespace RecipeBuddy.ViewModels
                     return false;
                 else
                     return true;
+            }
+        }
+
+        /// <summary>
+        /// Will always return True
+        /// </summary>
+        public bool CanSelectAlwaysTrue
+        {
+            get
+            {
+                 return true;
             }
         }
 

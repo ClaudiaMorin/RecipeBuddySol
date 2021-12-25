@@ -10,7 +10,7 @@ namespace RecipeBuddy.ValueConverters
         {
             string alternateColor = parameter as string;
 
-            if (value.ToString().Length > 1)
+            if (value.ToString().Length > 0)
             {
                 char myfirstChar = value.ToString()[0];
                 if (myfirstChar == '-')

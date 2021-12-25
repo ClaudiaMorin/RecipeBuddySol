@@ -75,17 +75,29 @@
     </Style>
 
     <Style x:Key="BtnStyleEditRecipeItem" TargetType="Button">
-        <Setter Property="Width" Value="23"/>
+        <Setter Property="Width" Value="50"/>
+        <Setter Property="BorderThickness" Value="0,0"/>
+        <Setter Property="Margin" Value="0,0,0,0"/>
         <Setter Property="Content" Value="Edit"/>
         <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="Background" Value="#eee"/>
-        <Setter Property="Foreground" Value="Red"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="MaxHeight"  Value="20"/>
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="MaxHeight"  Value="25"/>
     </Style>
-    
+
+    <Style x:Key="BtnStyleEditRecipeItemBlue" TargetType="Button">
+        <Setter Property="Width" Value="50"/>
+        <Setter Property="Background" Value="LightSteelBlue"/>
+        <Setter Property="Margin" Value="0,0,0,0"/>
+        <Setter Property="Content" Value="Edit"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="MaxHeight"  Value="25"/>
+    </Style>
+
     <!--<Style>
         <Style x:Key="CursorControlWait" TargetType="">
             <i:Interaction.Behaviors>
