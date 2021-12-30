@@ -99,7 +99,7 @@
         <Setter Property="TextAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="FontSize" Value="18"/>
-        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+        <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Height" Value="50"/>
     </Style>
@@ -108,7 +108,7 @@
         <Setter Property="TextAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="FontSize" Value="24"/>
-        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+        <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Height" Value="42"/>
     </Style>

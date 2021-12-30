@@ -17,7 +17,10 @@ namespace RecipeBuddy.Views
             InitializeComponent();
             //DetailsPanelForSelected.DataContext = SelectedViewModel.Instance.selectViewMainRecipeCardModel;
             DetailsPanelForSelected.DataContext = SelectedViewModel.Instance;
+            
+            TitleGrid.DataContext = SelectedViewModel.Instance;
             Title.DataContext = SelectedViewModel.Instance.selectViewMainRecipeCardModel;
+
 
 
             //DetailsPanelForSelected.NumXComboBox.DataContext = SelectedViewModel.Instance;
@@ -25,9 +28,9 @@ namespace RecipeBuddy.Views
             ////Wires the combobox to the list of recipes 
             //RecipesInComboBox.ItemsSource = SelectedViewModel.Instance.listOfRecipeModel.RecipesList;
 
-            
 
-          
+
+
         }
     }
 }

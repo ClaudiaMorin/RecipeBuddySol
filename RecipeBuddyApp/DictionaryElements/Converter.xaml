@@ -26,5 +26,6 @@
     <converters:StyleConverterUnhideFirstEmptyTextBox x:Key="StyleConverterUnhideFirstEmptyTextBox"/>
     <converters:TargetCoverterContextMenu x:Key="TargetContextMenuConvert"/>
     <converters:TextToVisibilityConverter x:Key="TextToVisibility"/>
+    <converters:StyleConverterTextBoxSlim x:Key="StyleTextBoxSlim"/>
 
 </ResourceDictionary>

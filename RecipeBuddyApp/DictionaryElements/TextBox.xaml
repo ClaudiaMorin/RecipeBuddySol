@@ -30,12 +30,13 @@
     </Style>
 
     <Style x:Key="SubHeaderTbxStyle" TargetType="TextBox">
-        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="TextAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="TextWrapping" Value="WrapWholeWords" />
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="Height" Value="20" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="AcceptsReturn" Value="True"/>
+        <Setter Property="IsSpellCheckEnabled" Value="True"/>
+        <Setter Property="Height" Value="100" />
     </Style>
 
     <Style x:Key="CollapsedTbxStyle" TargetType="TextBox">
@@ -46,25 +47,50 @@
         <Setter Property="TextAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="TextWrapping" Value="WrapWholeWords" />
-        <Setter Property="Height" Value="Auto" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="AcceptsReturn" Value="True"/>
+        <Setter Property="IsSpellCheckEnabled" Value="True"/>
+        <Setter Property="Height" Value="100" />
         <Setter Property="Foreground" Value="Blue"/>
     </Style>
 
     <Style x:Key="NormalTbxStyle" TargetType="TextBox">
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="TextAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="AcceptsReturn" Value="True"/>
+        <Setter Property="IsSpellCheckEnabled" Value="True"/>
+        <Setter Property="Height" Value="100" />
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style x:Key="NormalTbxStyleBlueSlim" TargetType="TextBox">
         <Setter Property="TextAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="AcceptsReturn" Value="True"/>
+        <Setter Property="IsSpellCheckEnabled" Value="True"/>
         <Setter Property="Height" Value="Auto" />
-        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+        <Setter Property="Foreground" Value="Blue"/>
     </Style>
 
+    <Style x:Key="NormalTbxStyleSlim" TargetType="TextBox">
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="TextAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="AcceptsReturn" Value="True"/>
+        <Setter Property="IsSpellCheckEnabled" Value="True"/>
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+    
     <Style x:Key="NormalTbxStyleRed" TargetType="TextBox">
+        <Setter Property="TextWrapping" Value="WrapWholeWords" />
         <Setter Property="TextAlignment" Value="Left" />
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Height" Value="Auto" />
         <Setter Property="Foreground" Value="Red"/>
-        <Setter Property="TextWrapping" Value="WrapWholeWords" />
     </Style>
 
     <Style x:Key="NormalTbxStyleYellowRed" TargetType="TextBox">

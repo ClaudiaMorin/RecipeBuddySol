@@ -239,6 +239,40 @@ namespace RecipeBuddy.ViewModels
             return new RecipeTreeItem(titleOfRecipe);
         }
 
+        public void ChangedTreeItemTitle(string oldTitle, string newTitle, Type_Of_Recipe type_Of_Recipe)
+        {
+            RecipeTreeItem recipeTreeNode = GetRecipeTreeItem(oldTitle, type_Of_Recipe);
+            if (recipeTreeNode != null)
+            {
+                recipeTreeNode.RecipeModelTV.Title = newTitle;
+                recipeTreeNode.TreeItemTitle = newTitle;
+            }
+        }
+
+        /// <summary>
+        /// uses the type_of_Recipe to identify the Parent Header node and then itterates through the children to find one where
+        /// the title matches and returns that to the caller
+        /// </summary>
+        /// <param name="title">The title of the recipe we are looking for</param>
+        /// <param name="type_Of_Recipe">The recipe type which gives us the "parent node type"</param>
+        /// <returns>The recipe tree Item we are looking for</returns>
+        private RecipeTreeItem GetRecipeTreeItem(string title, Type_Of_Recipe type_Of_Recipe)
+        {
+            RecipeTreeItem recipeTreeNode = GetRecipeParentNodeFromType(type_Of_Recipe);
+            RecipeTreeItem recipeTreeItem = null;
+
+            for (int count = 0; count < recipeTreeNode.Children.Count; count++)
+            {
+                if (string.Compare(recipeTreeNode.Children[count].TreeItemTitle.ToLower(), title.ToLower()) == 0)
+                {
+                    recipeTreeItem = recipeTreeNode.Children[count];
+                    break;
+                }
+            }
+
+            return recipeTreeItem;
+        }
+
         /// <summary>
         /// Removes a recipe from the treeview 
         /// </summary>
@@ -277,89 +311,113 @@ namespace RecipeBuddy.ViewModels
         private bool RemoveRecipeFromTreeViewBase(int recipeTypeAsInt, string title)
         {
             bool SavedSucceeded = false;
+            RecipeTreeItem parentTreeNode = GetRecipeParentNodeFromType(recipeTypeAsInt);
+            return SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(parentTreeNode.Children, title, recipeTypeAsInt);
+        }
 
-            switch ((Type_Of_Recipe)recipeTypeAsInt)
+        /// <summary>
+        /// Uses the recipe type to return the correct parent node
+        /// </summary>
+        /// <param name="recipeType">The type of a given recipe in an int format</param>
+        /// <returns></returns>
+        private RecipeTreeItem GetRecipeParentNodeFromType(int recipeType)
+        {
+            Type_Of_Recipe type = (Type_Of_Recipe)recipeType;
+            RecipeTreeItem recipeTreeItem = GetRecipeParentNodeFromType(type);
+
+            return recipeTreeItem;
+        }
+
+        /// <summary>
+        /// Uses the recipe type to return the correct parent node
+        /// </summary>
+        /// <param name="recipeType">Type of the recipe in the Type_Of_Recipe enum format</param>
+        /// <returns>The parent node to which the recipetype belongs</returns>
+        private RecipeTreeItem GetRecipeParentNodeFromType(Type_Of_Recipe recipeType)
+        {
+            RecipeTreeItem recipeTreeItem = null;
+
+            switch (recipeType)
             {
                 case Type_Of_Recipe.Cake:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedCakeRecipes.Children, title, recipeTypeAsInt);
+                    recipeTreeItem = SavedCakeRecipes;
                     break;
 
                 case Type_Of_Recipe.Candy:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedCandyRecipes.Children, title, recipeTypeAsInt);
+                    recipeTreeItem = SavedCandyRecipes;
                     break;
 
                 case Type_Of_Recipe.Cookie:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedCookieRecipes.Children, title, recipeTypeAsInt);
+                    recipeTreeItem = SavedCookieRecipes;
                     break;
 
                 case Type_Of_Recipe.Unknown:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedUnknownRecipes.Children, title, recipeTypeAsInt);
+                    recipeTreeItem = SavedUnknownRecipes;
                     break;
 
                 case Type_Of_Recipe.Custard:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedCustardRecipes.Children, title, recipeTypeAsInt);
+                    recipeTreeItem = SavedCustardRecipes;
                     break;
 
                 case Type_Of_Recipe.Pastry:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedPastryRecipes.Children, title, recipeTypeAsInt); ;
+                    recipeTreeItem = SavedPastryRecipes;
                     break;
 
                 case Type_Of_Recipe.SoupStew:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedSoupStewRecipes.Children, title, recipeTypeAsInt);
+                    recipeTreeItem = SavedSoupStewRecipes;
                     break;
 
                 case Type_Of_Recipe.Poultry:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedPoultryRecipes.Children, title, recipeTypeAsInt);
+                    recipeTreeItem = SavedPoultryRecipes;
                     break;
 
                 case Type_Of_Recipe.Pork:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedPorkRecipes.Children, title, recipeTypeAsInt);
+                    recipeTreeItem = SavedPorkRecipes;
                     break;
 
                 case Type_Of_Recipe.Beef:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedBeefRecipes.Children, title, recipeTypeAsInt);
+                    recipeTreeItem = SavedPorkRecipes;
                     break;
 
                 case Type_Of_Recipe.Lamb:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedLambRecipes.Children, title, recipeTypeAsInt);
+                    recipeTreeItem = SavedLambRecipes;
                     break;
 
                 case Type_Of_Recipe.Seafood:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedSeafoodRecipes.Children, title, recipeTypeAsInt);
+                    recipeTreeItem = SavedSeafoodRecipes;
                     break;
 
                 case Type_Of_Recipe.Salad:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedSaladRecipes.Children, title, recipeTypeAsInt);
+                    recipeTreeItem = SavedSaladRecipes;
                     break;
 
                 case Type_Of_Recipe.Bread:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedBreadRecipes.Children, title, recipeTypeAsInt);
+                    recipeTreeItem = SavedBreadRecipes;
                     break;
 
                 case Type_Of_Recipe.SideDish:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedSideDishRecipes.Children, title, recipeTypeAsInt);
+                    recipeTreeItem = SavedSideDishRecipes;
                     break;
 
                 case Type_Of_Recipe.Tofu:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedTofuRecipes.Children, title, recipeTypeAsInt);
+                    recipeTreeItem = SavedTofuRecipes;
                     break;
 
                 case Type_Of_Recipe.Dairy:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedDairyRecipes.Children, title, recipeTypeAsInt);
+                    recipeTreeItem = SavedDairyRecipes;
                     break;
 
                 case Type_Of_Recipe.Eggs:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedEggsRecipes.Children, title, recipeTypeAsInt);
+                    recipeTreeItem = SavedEggsRecipes;
                     break;
 
                 case Type_Of_Recipe.Appetizer:
-                    SavedSucceeded = RemoveRecipeFromSpecifiedTreeViewList(SavedAppetizerRecipes.Children, title, recipeTypeAsInt);
+                    recipeTreeItem = SavedAppetizerRecipes;
                     break;
             }
 
-            return SavedSucceeded;
+            return recipeTreeItem;
         }
-
 
 
         /// <summary>
@@ -585,196 +643,36 @@ namespace RecipeBuddy.ViewModels
             int returnOverwriteCmd = 0;
             //Create a new RecipeCardTreeItem
             RecipeTreeItem recipeTreeItem = new RecipeTreeItem(recipeModel);
+            RecipeTreeItem parentTreeNode = GetRecipeParentNodeFromType(recipeTreeItem.RecipeModelTV.TypeAsInt);
 
-            switch ((Type_Of_Recipe)recipeTreeItem.RecipeModelTV.TypeAsInt)
+            returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, parentTreeNode.Children);
+            if (returnOverwriteCmd == 0)
+                return returnOverwriteCmd;
+            parentTreeNode.Children.Add(recipeTreeItem);
+            parentTreeNode.ItemExpanded = expandTreeViewHeader;
+            returnOverwriteCmd = 1;
+
+            switch ((Type_Of_Recipe)parentTreeNode.RecipeModelTV.TypeAsInt)
             {
                 case Type_Of_Recipe.Cake:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedCakeRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedCakeRecipes.Children.Add(recipeTreeItem);
-                    DessertRecipes.ItemExpanded = expandTreeViewHeader;
-                    SavedCakeRecipes.ItemExpanded = expandTreeViewHeader;
-                    returnOverwriteCmd = 1;
-                    break;
-
                 case Type_Of_Recipe.Cookie:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedCookieRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedCookieRecipes.Children.Add(recipeTreeItem);
-                    DessertRecipes.ItemExpanded = expandTreeViewHeader;
-                    SavedCookieRecipes.ItemExpanded = expandTreeViewHeader;
-                    returnOverwriteCmd = 1;
-                    break;
-
                 case Type_Of_Recipe.Candy:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedCandyRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedCandyRecipes.Children.Add(recipeTreeItem);
-                    DessertRecipes.ItemExpanded = expandTreeViewHeader;
-                    SavedCandyRecipes.ItemExpanded = expandTreeViewHeader;
-                    returnOverwriteCmd = 1;
-                    break;
-
                 case Type_Of_Recipe.Custard:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedCustardRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedCustardRecipes.Children.Add(recipeTreeItem);
-                    DessertRecipes.ItemExpanded = expandTreeViewHeader;
-                    SavedCustardRecipes.ItemExpanded = expandTreeViewHeader;
-                    returnOverwriteCmd = 1;
-                    break;
-
                 case Type_Of_Recipe.Pastry:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedPastryRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedPastryRecipes.Children.Add(recipeTreeItem);
                     DessertRecipes.ItemExpanded = expandTreeViewHeader;
-                    SavedPastryRecipes.ItemExpanded = expandTreeViewHeader;
-                    returnOverwriteCmd = 1;
-                    break;
-
-                case Type_Of_Recipe.SoupStew:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedSoupStewRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedSoupStewRecipes.Children.Add(recipeTreeItem);
-                    SavedSoupStewRecipes.ItemExpanded = expandTreeViewHeader;
-                    returnOverwriteCmd = 1;
                     break;
 
                 case Type_Of_Recipe.Seafood:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedSeafoodRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedSeafoodRecipes.Children.Add(recipeTreeItem);
-                    MainCourseRecipes.ItemExpanded = expandTreeViewHeader;
-                    SavedSeafoodRecipes.ItemExpanded = true;
-                    returnOverwriteCmd = 1;
-                    break;
-
                 case Type_Of_Recipe.Pork:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedPorkRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedPorkRecipes.Children.Add(recipeTreeItem);
-                    MainCourseRecipes.ItemExpanded = expandTreeViewHeader;
-                    SavedPorkRecipes.ItemExpanded = expandTreeViewHeader;
-                    returnOverwriteCmd = 1;
-                    break;
-
                 case Type_Of_Recipe.Beef:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedBeefRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedBeefRecipes.Children.Add(recipeTreeItem);
-                    MainCourseRecipes.ItemExpanded = expandTreeViewHeader;
-                    SavedBeefRecipes.ItemExpanded = expandTreeViewHeader;
-                    returnOverwriteCmd = 1;
-                    break;
-
-                case Type_Of_Recipe.Dairy:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedDairyRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedDairyRecipes.Children.Add(recipeTreeItem);
-                    SavedDairyRecipes.ItemExpanded = expandTreeViewHeader;
-                    returnOverwriteCmd = 1;
-                    break;
-
                 case Type_Of_Recipe.Eggs:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedEggsRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedEggsRecipes.Children.Add(recipeTreeItem);
-                    MainCourseRecipes.ItemExpanded = expandTreeViewHeader;
-                    SavedEggsRecipes.ItemExpanded = expandTreeViewHeader;
-                    returnOverwriteCmd = 1;
-                    break;
-
                 case Type_Of_Recipe.Poultry:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedPoultryRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedPoultryRecipes.Children.Add(recipeTreeItem);
-                    MainCourseRecipes.ItemExpanded = expandTreeViewHeader;
-                    SavedPoultryRecipes.ItemExpanded = expandTreeViewHeader;
-                    returnOverwriteCmd = 1;
-                    break;
-
                 case Type_Of_Recipe.Lamb:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedLambRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedLambRecipes.Children.Add(recipeTreeItem);
-                    MainCourseRecipes.ItemExpanded = expandTreeViewHeader;
-                    SavedLambRecipes.ItemExpanded = expandTreeViewHeader;
-                    returnOverwriteCmd = 1;
-                    break;
-
-                case Type_Of_Recipe.Salad:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedSaladRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedSaladRecipes.Children.Add(recipeTreeItem);
-                    SavedSaladRecipes.ItemExpanded = expandTreeViewHeader;
-                    returnOverwriteCmd = 1;
-                    break;
-
-                case Type_Of_Recipe.Appetizer:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedAppetizerRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedAppetizerRecipes.Children.Add(recipeTreeItem);
-                    SavedAppetizerRecipes.ItemExpanded = expandTreeViewHeader;
-                    returnOverwriteCmd = 1;
-                    break;
-
-                case Type_Of_Recipe.Bread:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedBreadRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedBreadRecipes.Children.Add(recipeTreeItem);
-                    SavedBreadRecipes.ItemExpanded = expandTreeViewHeader;
-                    returnOverwriteCmd = 1;
-                    break;
-
-                case Type_Of_Recipe.SideDish:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedSideDishRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedSideDishRecipes.Children.Add(recipeTreeItem);
-                    SavedSideDishRecipes.ItemExpanded = expandTreeViewHeader;
-
-                    returnOverwriteCmd = 1;
-                    break;
-
                 case Type_Of_Recipe.Tofu:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedTofuRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedTofuRecipes.Children.Add(recipeTreeItem);
                     MainCourseRecipes.ItemExpanded = expandTreeViewHeader;
-                    SavedTofuRecipes.ItemExpanded = expandTreeViewHeader;
-
-
-                    returnOverwriteCmd = 1;
-                    break;
-
-                case Type_Of_Recipe.Unknown:
-                    returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, SavedUnknownRecipes.Children);
-                    if (returnOverwriteCmd == 0)
-                        return returnOverwriteCmd;
-                    SavedUnknownRecipes.Children.Add(recipeTreeItem);
-                    SavedUnknownRecipes.ItemExpanded = expandTreeViewHeader;
-
-                    returnOverwriteCmd = 1;
                     break;
             }
+
             return returnOverwriteCmd;
         }
 
@@ -801,59 +699,59 @@ namespace RecipeBuddy.ViewModels
             return 2; //recipe title doesn't already exists so don't worry about it!
         }
 
-        private ObservableCollection<RecipeTreeItem> StringMapParentToCollection(string parentFromArgument)
-        {
-            switch (parentFromArgument)
-            {
-                case "CakeTreeViewHeader":
-                    SavedCakeRecipes.ItemExpanded = true;
-                    return SavedCakeRecipes.Children;
+        //private ObservableCollection<RecipeTreeItem> StringMapParentToCollection(string parentFromArgument)
+        //{
+        //    switch (parentFromArgument)
+        //    {
+        //        case "CakeTreeViewHeader":
+        //            SavedCakeRecipes.ItemExpanded = true;
+        //            return SavedCakeRecipes.Children;
 
-                case "CandyTreeViewHeader":
-                    return SavedCandyRecipes.Children;
+        //        case "CandyTreeViewHeader":
+        //            return SavedCandyRecipes.Children;
 
-                case "CustardTreeViewHeader":
-                    return SavedCustardRecipes.Children;
+        //        case "CustardTreeViewHeader":
+        //            return SavedCustardRecipes.Children;
 
-                case "PastryTreeViewHeader":
-                    return SavedPastryRecipes.Children;
+        //        case "PastryTreeViewHeader":
+        //            return SavedPastryRecipes.Children;
 
-                case "PorkTreeViewHeader":
-                    return SavedPorkRecipes.Children;
+        //        case "PorkTreeViewHeader":
+        //            return SavedPorkRecipes.Children;
 
-                case "LambTreeViewHeader":
-                    return SavedLambRecipes.Children;
+        //        case "LambTreeViewHeader":
+        //            return SavedLambRecipes.Children;
 
-                case "PoultryTreeViewHeader":
-                    return SavedPoultryRecipes.Children;
+        //        case "PoultryTreeViewHeader":
+        //            return SavedPoultryRecipes.Children;
 
-                case "SeafoodTreeViewHeader":
-                    return SavedSeafoodRecipes.Children;
+        //        case "SeafoodTreeViewHeader":
+        //            return SavedSeafoodRecipes.Children;
 
-                case "BeefTreeViewHeader":
-                    return SavedBeefRecipes.Children;
+        //        case "BeefTreeViewHeader":
+        //            return SavedBeefRecipes.Children;
 
-                case "SaladTreeViewHeader":
-                    return SavedSaladRecipes.Children;
+        //        case "SaladTreeViewHeader":
+        //            return SavedSaladRecipes.Children;
 
-                case "BreadTreeViewHeader":
-                    return SavedBreadRecipes.Children;
+        //        case "BreadTreeViewHeader":
+        //            return SavedBreadRecipes.Children;
 
-                case "AppitizerTreeViewHeader":
-                    return SavedAppetizerRecipes.Children;
+        //        case "AppitizerTreeViewHeader":
+        //            return SavedAppetizerRecipes.Children;
 
-                case "TofuTreeViewHeader":
-                    return SavedTofuRecipes.Children;
+        //        case "TofuTreeViewHeader":
+        //            return SavedTofuRecipes.Children;
 
-                case "SideDishTreeViewHeader":
-                    return SavedSideDishRecipes.Children;
+        //        case "SideDishTreeViewHeader":
+        //            return SavedSideDishRecipes.Children;
 
-                case "UnknownTreeViewHeader":
-                    return SavedUnknownRecipes.Children;
-            }
+        //        case "UnknownTreeViewHeader":
+        //            return SavedUnknownRecipes.Children;
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
 
         /// <summary>

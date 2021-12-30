@@ -26,10 +26,10 @@ namespace RecipeBuddy.ValueConverters
                     }
 
                     if (string.Compare(alternateColor, "0") == 0)
-                        return App.Current.Resources["RowButtonVisibleWhite"];
+                        return App.Current.Resources["BtnStyleUpdateEditRecipeItem"];
 
                     if (string.Compare(alternateColor, "1") == 0)
-                        return App.Current.Resources["RowButtonVisibleColor"];
+                        return App.Current.Resources["BtnStyleUpdateEditRecipeItem"];
                 }
             }
 

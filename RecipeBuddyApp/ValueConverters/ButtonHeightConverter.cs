@@ -16,7 +16,7 @@ namespace RecipeBuddy.ValueConverters
                 }
             }
 
-            return null;
+            return "Auto";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string culture)

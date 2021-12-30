@@ -28,7 +28,6 @@ namespace RecipeBuddy.ValueConverters
                 return App.Current.Resources["NormalTbxStyle"];
 
             return App.Current.Resources["NormalTbxStyleBlue"];
-
         }
 
             public object ConvertBack(object value, Type targetType, object parameter, string culture)

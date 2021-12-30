@@ -22,8 +22,8 @@ namespace RecipeBuddy.Core.Models
             Website = "";
             Link = reSource.Link;
             TypeAsInt = reSource.TypeAsInt;
-            ListOfIngredientStrings = reSource.ListOfIngredientStrings;
-            ListOfDirectionStrings = reSource.ListOfDirectionStrings;
+            ListOfIngredientStrings = new List<string>(reSource.ListOfIngredientStrings);
+            ListOfDirectionStrings = new List<string>(reSource.ListOfDirectionStrings);
         }
 
         public RecipeRecordModel(RecipeDisplayModel reSource)
@@ -32,10 +32,11 @@ namespace RecipeBuddy.Core.Models
             Title = reSource.Title;
             Author = reSource.Author;
             Website = "";
+            if(reSource.Link != null)
             Link = reSource.Link.ToString();
             TypeAsInt = (int)reSource.RecipeType;
-            ListOfIngredientStrings = reSource.listOfIngredientStringsForDisplay;
-            ListOfDirectionStrings = reSource.listOfDirectionStringsForDisplay;
+            ListOfIngredientStrings = new List<string> (reSource.listOfIngredientStringsForDisplay);
+            ListOfDirectionStrings = new List<string> (reSource.listOfDirectionStringsForDisplay);
         }
 
         /// <summary>
@@ -67,8 +68,8 @@ namespace RecipeBuddy.Core.Models
             Link = null;
             TypeAsInt = (int)Type_Of_Recipe.Unknown;
 
-            ListOfIngredientStrings = StringManipulationHelper.TurnStringintoListFromDB(ingredString);
-            ListOfDirectionStrings = StringManipulationHelper.TurnStringintoListFromDB(descripString);
+            ListOfIngredientStrings = new List<string>(StringManipulationHelper.TurnStringintoListFromDB(ingredString));
+            ListOfDirectionStrings = new List<string>(StringManipulationHelper.TurnStringintoListFromDB(descripString));
         }
 
         public RecipeRecordModel(List<string> ingredString, List<string> descripString)
@@ -80,8 +81,8 @@ namespace RecipeBuddy.Core.Models
             Link = null;
             TypeAsInt = (int)Type_Of_Recipe.Unknown;
 
-            ListOfIngredientStrings = ingredString;
-            ListOfDirectionStrings = descripString;
+            ListOfIngredientStrings = new List<string>(ingredString);
+            ListOfDirectionStrings = new List<string>(descripString);
         }
 
 
@@ -93,7 +94,7 @@ namespace RecipeBuddy.Core.Models
             Website = reSource.Website;
             Link = reSource.Link;
             TypeAsInt = reSource.TypeAsInt;
-            ListOfIngredientStrings = reSource.ListOfIngredientStrings;
+            ListOfIngredientStrings = new List<string>(reSource.ListOfIngredientStrings);
             ListOfDirectionStrings = new List<string>();
             ListOfDirectionStrings.Add("-Directions");
         }

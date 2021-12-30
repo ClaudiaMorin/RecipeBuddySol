@@ -59,14 +59,15 @@
                     <TextBlock x:Name="currentURI" Text="{Binding CurrentLink}" SelectionHighlightColor="LightSteelBlue"/>
                     <Border BorderThickness="2" BorderBrush="DarkGray"/>
                 </StackPanel>
-                
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="700"/>
-                    </Grid.RowDefinitions>
-                    <WebView x:Name="WebControl" Source="{Binding CurrentLink, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <!--<WebView x:Name="WebControl"  Source="http://www.google.com"/>-->
-                </Grid>
+                <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollMode="Enabled" >
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="800"/>
+                        </Grid.RowDefinitions>
+                        <WebView x:Name="WebControl" Source="{Binding CurrentLink, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <!--<WebView x:Name="WebControl"  Source="http://www.google.com"/>-->
+                    </Grid>
+                </ScrollViewer>
             </StackPanel>
         </Grid>
     </StackPanel>

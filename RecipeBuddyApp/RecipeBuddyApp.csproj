@@ -163,6 +163,7 @@
     <Compile Include="ValueConverters\StyleConverterTextBoxRedFont.cs" />
     <Compile Include="ValueConverters\StyleConverterUnhideFirstEmptyTextBox.cs" />
     <Compile Include="ValueConverters\TargetCoverterContextMenu.cs" />
+    <Compile Include="ValueConverters\StyleConverterTextBoxSlim.cs" />
     <Compile Include="ValueConverters\TextToVisibilityConverter.cs" />
     <Compile Include="ViewModels\Commands\ICommmandViewModel.cs" />
     <Compile Include="ViewModels\EditViewModel.cs" />

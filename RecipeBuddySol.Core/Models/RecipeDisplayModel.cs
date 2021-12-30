@@ -1375,6 +1375,8 @@ namespace RecipeBuddy.Core.Models
             for (int count = 0; count < 50; count++)
             {
                 listOfIngredientSetters[count].Invoke("");
+                //LoadIngredList("0");
+                //LoadDirectList("0");
             }
 
             for (int count = 0; count < 30; count++)

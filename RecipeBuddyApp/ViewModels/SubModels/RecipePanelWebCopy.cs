@@ -60,7 +60,7 @@ namespace RecipeBuddy.ViewModels
 
         public void ClearRecipeEntry()
         {
-            recipeCardModel = new RecipeDisplayModel();
+            LoadRecipeCardModel(new RecipeDisplayModel());
             WebViewModel.Instance.CloseKeepRecipePanel();
             CanSelectSave= false;
             CanSelectCancel = false;

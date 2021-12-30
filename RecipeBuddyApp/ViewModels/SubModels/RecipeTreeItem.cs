@@ -96,7 +96,8 @@ namespace RecipeBuddy.ViewModels
         {
             get
             { return recipeModelTV; }
-            set { recipeModelTV = value; }
+            //set { recipeModelTV = value; }
+            set { SetProperty(ref recipeModelTV, value); }
         }
 
         private string treeItemTitle;
@@ -104,7 +105,7 @@ namespace RecipeBuddy.ViewModels
         {
             get
             { return treeItemTitle; }
-            set { treeItemTitle = value; }
+            set { SetProperty(ref treeItemTitle, value); }
         }
 
         private bool itemExpanded;

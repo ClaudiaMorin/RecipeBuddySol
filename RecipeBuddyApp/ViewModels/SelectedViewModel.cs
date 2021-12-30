@@ -49,7 +49,8 @@ namespace RecipeBuddy.ViewModels
             QuantitySelectedAsString = "1";
             QuantitySelectedAsInt = 1;
             currentType = 0;
-
+            titleEditHeight = "0";
+            titleEditString = "";
             listOfIngredientQuantitySetters = new List<Action<string>>();
 
             //SetUpComboBox();
@@ -65,8 +66,8 @@ namespace RecipeBuddy.ViewModels
             //CmdSelectedItemChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeFromComboBox(e), canCallActionFunc => CanSelect);
             CmdSelectedQuantityChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeQuantityFromComboBox(e), canCallActionFunc => CanSelect);
 
-            CmdUpdate = new ICommandViewModel<string>(actionWithObject = s => Update(s), canCallActionFunc => CanSelect);
-            CmdCancel = new ICommandViewModel<string>(actionWithObject = s => Cancel(s), canCallActionFunc => CanSelect);
+            CmdUpdate = new ICommandViewModel<string>(actionWithObject = s => Update(s), canCallActionFunc => CanSelectAlwaysTrue);
+            CmdCancel = new ICommandViewModel<string>(actionWithObject = s => Cancel(s), canCallActionFunc => CanSelectAlwaysTrue);
             CmdLineEdit = new ICommandViewModel<string>(actionWithObject = s => LineEdit(s), canCallActionFunc => CanSelectAlwaysTrue);
 
         }
@@ -134,6 +135,7 @@ namespace RecipeBuddy.ViewModels
         public void UpdateRecipeEntry(RecipeRecordModel recipeModel)
         {
             selectViewMainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(recipeModel);
+            UpdateEditTextBoxes();
             CurrentType = (int)selectViewMainRecipeCardModel.RecipeType;
             UpdateQuantityCalc();
         }
@@ -258,21 +260,19 @@ namespace RecipeBuddy.ViewModels
         /// <summary>
         /// Updates the current card display and updates the edit-textboxes for the ingredient and direction editing
         /// </summary>
-        /// <param name="indexOfTitleInComboBox"></param>
-        //public void ChangeRecipe(int indexOfTitleInComboBox)
-        //{
-        //    listOfRecipeModel.CurrentCardIndex = indexOfTitleInComboBox;
+        public void UpdateEditTextBoxes()
+        {
 
-        //    for (int count = 0; count < selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay.Count; count++)
-        //    {
-        //        listOfIngredientEditStringsSetters[count].Invoke(selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[count]);
-        //    }
+            for (int count = 0; count < selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay.Count; count++)
+            {
+                listOfIngredientEditStringsSetters[count].Invoke(selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[count]);
+            }
 
-        //    for (int countDirect = 0; countDirect < selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay.Count; countDirect++)
-        //    {
-        //        listOfDirectionEditStringsSetters[countDirect].Invoke(selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[countDirect]);
-        //    }
-        //}
+            for (int countDirect = 0; countDirect < selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay.Count; countDirect++)
+            {
+                listOfDirectionEditStringsSetters[countDirect].Invoke(selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[countDirect]);
+            }
+        }
 
         /// <summary>
         /// Called by the RecipiesInComboBox_SelectionChanged function to shift the listOfRecipeCards and update the entry
@@ -372,7 +372,7 @@ namespace RecipeBuddy.ViewModels
             { }
 
             //************************************ Can't figure it out!
-            return "---";
+            return "";
         }
 
         /// <summary>
@@ -479,7 +479,7 @@ namespace RecipeBuddy.ViewModels
                 //messed up someplace
                 if (success == false)
                 { return; }
-                IngredHeightList[results - 2].Invoke("Auto");
+                IngredHeightList[results - 1].Invoke("Auto");
             }
 
             if (string.Compare(parameters[1].ToString().ToLower().Trim(), "direction") == 0)
@@ -489,7 +489,18 @@ namespace RecipeBuddy.ViewModels
                 //messed up someplace
                 if (success == false)
                 { return; }
-                DirectHeightList[results - 2].Invoke("Auto");
+                DirectHeightList[results - 1].Invoke("Auto");
+            }
+
+            if (string.Compare(parameters[1].ToString().ToLower().Trim(), "title") == 0)
+            {
+                int results;
+                bool success = Int32.TryParse(parameters[0], out results);
+                //messed up someplace
+                if (success == false)
+                { return; }
+
+                TitleEditHeight = "Auto";
             }
         }
 
@@ -509,12 +520,11 @@ namespace RecipeBuddy.ViewModels
                 //messed up someplace
                 if (success == false)
                 { return; }
-                IngredHeightList[results - 2].Invoke("0");
 
+                IngredHeightList[results - 1].Invoke("0");
                 selectViewMainRecipeCardModel.listOfIngredientSetters[results - 1].Invoke(listOfIngredientEditStringsGetters[results - 1].Invoke());
                 selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[results - 1] = listOfIngredientEditStringsGetters[results - 1].Invoke();
                 listOfIngredientQuantitySetters[results - 1].Invoke(CreateQuantityString(selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[results - 1]));
-
             }
 
             if (string.Compare(parameters[1].ToString().ToLower().Trim(), "direction") == 0)
@@ -523,10 +533,22 @@ namespace RecipeBuddy.ViewModels
                 //messed up someplace
                 if (success == false)
                 { return; }
-                DirectHeightList[results - 2].Invoke("0");
 
+                DirectHeightList[results - 1].Invoke("0");
                 selectViewMainRecipeCardModel.listOfDirectionSetters[results - 1].Invoke(listOfDirectionEditStringsGetters[results - 1].Invoke());
                 selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[results - 1] = listOfDirectionEditStringsGetters[results - 1].Invoke();
+            }
+
+            if (string.Compare(parameters[1].ToString().ToLower().Trim(), "title") == 0)
+            {
+                success = Int32.TryParse(parameters[0], out results);
+                //messed up someplace
+                if (success == false)
+                { return; }
+
+                TitleEditHeight = "0";
+                MainNavTreeViewModel.Instance.ChangedTreeItemTitle(selectViewMainRecipeCardModel.Title, TitleEditString, selectViewMainRecipeCardModel.RecipeType);
+                selectViewMainRecipeCardModel.Title = TitleEditString;
             }
         }
 
@@ -542,9 +564,8 @@ namespace RecipeBuddy.ViewModels
                 //messed up someplace
                 if (success == false)
                 { return; }
-                IngredHeightList[results - 2].Invoke("0");
+                IngredHeightList[results - 1].Invoke("0");
             }
-
 
             if (string.Compare(parameters[1].ToString().ToLower().Trim(), "direction") == 0)
             {
@@ -552,7 +573,16 @@ namespace RecipeBuddy.ViewModels
                 //messed up someplace
                 if (success == false)
                 { return; }
-                DirectHeightList[results - 2].Invoke("0");
+                DirectHeightList[results - 1].Invoke("0");
+            }
+
+            if (string.Compare(parameters[1].ToString().ToLower().Trim(), "title") == 0)
+            {
+                success = Int32.TryParse(parameters[0], out results);
+                //messed up someplace
+                if (success == false)
+                { return; }
+                TitleEditHeight = "0";
             }
         }
 
@@ -803,6 +833,20 @@ namespace RecipeBuddy.ViewModels
         {
             get { return numXRecipesIndex; }
             set { SetProperty(ref numXRecipesIndex, value); }
+        }
+
+        private string titleEditHeight;
+        public string TitleEditHeight
+        {
+            get { return titleEditHeight; }
+            set { SetProperty(ref titleEditHeight, value); }
+        }
+
+        private string titleEditString;
+        public string TitleEditString
+        {
+            get { return titleEditString; }
+            set { SetProperty(ref titleEditString, value); }
         }
 
         #endregion
@@ -1816,7 +1860,7 @@ namespace RecipeBuddy.ViewModels
         public string IngredientQuantity17
         {
             get { return ingredientQuantity17; }
-            set { SetProperty(ref ingredientQuantity19, value); }
+            set { SetProperty(ref ingredientQuantity17, value); }
         }
 
         public string IngredientQuantity18
@@ -1935,7 +1979,7 @@ namespace RecipeBuddy.ViewModels
 
         public string IngredientQuantity37
         {
-            get { return ingredientQuantity7; }
+            get { return ingredientQuantity37; }
             set { SetProperty(ref ingredientQuantity37, value); }
         }
 
@@ -1984,7 +2028,7 @@ namespace RecipeBuddy.ViewModels
         public string IngredientQuantity45
         {
             get { return ingredientQuantity45; }
-            set { SetProperty(ref ingredientQuantity48, value); }
+            set { SetProperty(ref ingredientQuantity45, value); }
         }
 
         public string IngredientQuantity46
