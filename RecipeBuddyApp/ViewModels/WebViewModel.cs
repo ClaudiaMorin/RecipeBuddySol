@@ -46,7 +46,7 @@ namespace RecipeBuddy.ViewModels
             
             CmdRemove = new ICommandViewModel<WebViewModel>(Action => SearchViewModel.Instance.RemoveRecipe(), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
             CmdOpenEntry = new ICommandViewModel<WebViewModel>(Action => OpenKeepRecipePanel(), canCallActionFunc => CanSelectOpenEntry);
-            CmdSelectedTypeChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTpeFromComboBox(e), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
+            CmdSelectedTypeChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
 
             CmdSaveButton = new RBRelayCommand(action = () => SaveEntry(), funcBool = () => CanSelectSave);
             CmdCancelButton = new RBRelayCommand(action = () => CancelEntry(), funcBool = () => CanSelectCancel);
@@ -73,8 +73,9 @@ namespace RecipeBuddy.ViewModels
 
         public void SaveEntry()
         {
-            CloseKeepRecipePanel();
+            //recipePanelForWebCopy.recipeCardModel.RecipeType = (Type_Of_Recipe)CurrentTypeIndexForComboBox;
             recipePanelForWebCopy.SaveEntry();
+            CloseKeepRecipePanel();
         }
 
         /// <summary>
@@ -85,6 +86,7 @@ namespace RecipeBuddy.ViewModels
             FirstColumnTreeView = "Collapsed";
             MainViewWidth = "*";
             recipePanelForWebCopy.LoadRecipeCardModel(mainRecipeCardModel);
+            ComboBoxIndexForRecipeType = (int)mainRecipeCardModel.RecipeType;
         }
 
         public void CloseKeepRecipePanel()
@@ -93,6 +95,15 @@ namespace RecipeBuddy.ViewModels
             FirstColumnTreeView = "Visible";
         }
 
+        /// <summary>
+        /// used when programatically shifting from the SearchViewModel to the WebViewModel
+        /// we don't need to send anything because both pages use the same recipelist.
+        /// </summary>
+        public void ChangeRecipeFromModel()
+        {
+            ComboBoxIndexForRecipeTitle = SearchViewModel.Instance.IndexOfComboBoxItem;
+            CurrentLink = mainRecipeCardModel.Link;
+        }
 
         /// <summary>
         /// This manages changes that come in through the user manipulating the combobox on the Web page
@@ -140,9 +151,9 @@ namespace RecipeBuddy.ViewModels
         /// This manages changes that come in through the user manipulating the combobox on the Basket page
         /// </summary>
         /// <param name="e"></param>
-        internal void ChangeRecipeTpeFromComboBox(SelectionChangedEventArgs e)
+        internal void ChangeRecipeTypeFromComboBox(SelectionChangedEventArgs e)
         {
-            recipePanelForWebCopy.recipeCardModel.RecipeType = (Type_Of_Recipe)CurrentType;
+            recipePanelForWebCopy.recipeCardModel.RecipeType = (Type_Of_Recipe)ComboBoxIndexForRecipeType;
         }
 
         #region ICommand, Properties, CanSelect
@@ -271,32 +282,18 @@ namespace RecipeBuddy.ViewModels
             private set;
         }
 
-        /// <summary>
-        /// property for the update button command
-        /// </summary>
-        //public ICommand CmdUpdate
-        //{
-        //    get;
-        //    private set;
-        //}
-
-        //public ICommand CmdCancel
-        //{
-        //    get;
-        //    private set;
-        //}
-
-        //public ICommand CmdLineEdit
-        //{
-        //    get;
-        //    private set;
-        //}
-
-        private int currentType;
-        public int CurrentType
+        private int comboBoxIndexForRecipeType;
+        public int ComboBoxIndexForRecipeType
         {
-            get { return currentType; }
-            set { SetProperty(ref currentType, value); }
+            get { return comboBoxIndexForRecipeType; }
+            set { SetProperty(ref comboBoxIndexForRecipeType, value); }
+        }
+
+        private int comboBoxIndexForRecipeTitle;
+        public int ComboBoxIndexForRecipeTitle
+        {
+            get { return comboBoxIndexForRecipeTitle; }
+            set { SetProperty(ref comboBoxIndexForRecipeTitle, value); }
         }
 
         /// <summary>

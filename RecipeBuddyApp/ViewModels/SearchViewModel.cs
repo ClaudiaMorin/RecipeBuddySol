@@ -7,10 +7,11 @@ using System.Threading;
 using Windows.Foundation;
 using System;
 using Windows.UI.Core;
-using System.ComponentModel;
+using RecipeBuddy.Views;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using RecipeBuddy.Core.Models;
+using RecipeBuddy.Services;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -37,6 +38,7 @@ namespace RecipeBuddy.ViewModels
             searchString = "";
             searchButtonTitle = "Search";
             searchEnabled = true;
+            webViewEnabled = false;
             cursorType = CoreCursorType.Arrow;
             searchWait = false;
             listOfRecipeCards = new RecipeListModel();
@@ -46,6 +48,7 @@ namespace RecipeBuddy.ViewModels
             UpdateSearchWebsources();
 
             SearchButtonCmd = new RBRelayCommand(ActionNoParams = () => Search(), FuncBool = () => SearchEnabled);
+            WebButtonCmd = new RBRelayCommand(ActionNoParams = () => GoToWebView(), FuncBool = () => WebViewEnabled);
         }
 
         /// <summary>
@@ -83,10 +86,6 @@ namespace RecipeBuddy.ViewModels
             //For Threading callbacks.  
             Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView();
 
-            //await Task.Run(() => SearchBackground(recipePanelForSearch1, searchString, coreApplicationView));
-            //await Task.Run(() => SearchBackground(recipePanelForSearch2, searchString, coreApplicationView));
-            //await Task.Run(() => SearchBackground(recipePanelForSearch3, searchString, coreApplicationView));
-
             List<Task> TaskListOfSearches = new List<Task>();
             TaskListOfSearches.Add(Task.Run(() => SearchBackground(recipePanelForSearch1, searchString, coreApplicationView)));
             TaskListOfSearches.Add(Task.Run(() => SearchBackground(recipePanelForSearch2, searchString, coreApplicationView)));
@@ -97,6 +96,12 @@ namespace RecipeBuddy.ViewModels
             SearchButtonTitle = "Search";
             SearchEnabled = true;
             SearchButtonCmd.RaiseCanExecuteChanged();      
+        }
+
+        public void GoToWebView()
+        {
+            WebViewModel.Instance.ChangeRecipeFromModel();
+            NavigationService.Navigate(typeof(Views.WebView));
         }
 
         /// <summary>
@@ -154,8 +159,7 @@ namespace RecipeBuddy.ViewModels
                 //the last element in the list has been removed so now we need to go back to blank screen
                 else
                 {
-                    //selectViewMainRecipeCardModel.CopyRecipeCardModel(new RecipeCardModel());
-                    //EmptyIngredientQuanityRow();
+                    WebViewEnabled = false;
                 }
 
                 return;
@@ -197,6 +201,7 @@ namespace RecipeBuddy.ViewModels
             }
 
             listOfRecipeCards.Add(recipeCard);
+            WebViewEnabled = true;
 
             //If we have nothing in the list we will show the first entry
             if (listOfRecipeCards.ListCount == 1)
@@ -253,6 +258,16 @@ namespace RecipeBuddy.ViewModels
             set { SetProperty(ref searchEnabled, value); }
         }
 
+        private bool webViewEnabled;
+        public bool WebViewEnabled
+        {
+            get { return webViewEnabled; }
+            set
+            {   SetProperty(ref webViewEnabled, value);
+                WebButtonCmd.RaiseCanExecuteChanged();
+            }
+        }
+
 
         private CoreCursorType cursorType;
         public CoreCursorType CursorType
@@ -303,6 +318,12 @@ namespace RecipeBuddy.ViewModels
         }
 
         public RBRelayCommand SearchButtonCmd
+        {
+            get;
+            private set;
+        }
+
+        public RBRelayCommand WebButtonCmd
         {
             get;
             private set;

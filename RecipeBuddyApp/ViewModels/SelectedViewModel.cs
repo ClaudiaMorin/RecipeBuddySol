@@ -807,11 +807,11 @@ namespace RecipeBuddy.ViewModels
             private set;
         }
 
-        private int indexOfComboBoxItem;
-        public int IndexOfComboBoxItem
+        private int comboBoxIndexForRecipeMultiplier;
+        public int ComboBoxIndexForRecipeMultiplier
         {
-            get { return indexOfComboBoxItem; }
-            set { SetProperty(ref indexOfComboBoxItem, value); }
+            get { return comboBoxIndexForRecipeMultiplier; }
+            set { SetProperty(ref comboBoxIndexForRecipeMultiplier, value); }
         }
 
         private int currentType;

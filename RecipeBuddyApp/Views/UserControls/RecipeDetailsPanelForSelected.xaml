@@ -38,7 +38,7 @@
                     <ColumnDefinition Width="10*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <ComboBox x:Name="NumXComboBox" HorizontalContentAlignment="Center" SelectedIndex="{Binding NumXRecipesIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Grid.Row="0">
+            <ComboBox x:Name="NumXComboBox" HorizontalContentAlignment="Center" SelectedIndex="{Binding ComboBoxIndexForRecipeMultiplier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Grid.Row="0">
                     <ComboBoxItem Content=" 1X " Foreground="red"  IsSelected="True" HorizontalContentAlignment="Center"/>
                     <ComboBoxItem Content=" 2X " Foreground="red" HorizontalContentAlignment="Center" />
                     <ComboBoxItem Content=" 3X " Foreground="red" HorizontalContentAlignment="Center" />

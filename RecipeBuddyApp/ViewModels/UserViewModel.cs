@@ -66,7 +66,7 @@ namespace RecipeBuddy.ViewModels
             canSelectLogout = false;
             canSelectCreateUser = false;
             loggedin = false;
-            selectedComboBoxIndex = 0;
+            comboBoxIndexOfUserFromDB = 0;
 
             CmdLogoutBtn = new RBRelayCommand(ActionNoParams = () => LogOut(), FuncBool = () => CanSelectLogout);
             CmdLoginBtn = new RBRelayCommand(ActionNoParams = () => SetUpUser(), FuncBool = () => CanSelectLogin);
@@ -80,9 +80,9 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void SetUpUser()
         {
-            string AccountName = ListOfUserAccountsInDB[SelectedComboBoxIndex];
+            string AccountName = ListOfUserAccountsInDB[ComboBoxIndexOfUserFromDB];
 
-            UsersIDInDB = DataBaseAccessorsForRecipeManager.LoadUserFromDatabase(PasswordString, ListOfUserAccountsInDB[SelectedComboBoxIndex]);
+            UsersIDInDB = DataBaseAccessorsForRecipeManager.LoadUserFromDatabase(PasswordString, ListOfUserAccountsInDB[ComboBoxIndexOfUserFromDB]);
             if (AccountName.Length > 0)
             {
                 SetUpSearchWebsources(false);
@@ -145,7 +145,7 @@ namespace RecipeBuddy.ViewModels
             SaveUser();
             //SetUpSearchWebsources(true);
             DataBaseAccessorsForRecipeManager.LoadUsersFromDatabase(ListOfUserAccountsInDB);
-            SelectedComboBoxIndex = ListOfUserAccountsInDB.Count - 1;
+            ComboBoxIndexOfUserFromDB = ListOfUserAccountsInDB.Count - 1;
         }
 
         /// <summary>
@@ -327,16 +327,16 @@ namespace RecipeBuddy.ViewModels
         /// SecureString doesn't work with UWP so until I figure out a workaround this is dead!
         /// </summary>
 
-        private int selectedComboBoxIndex;
-        public int SelectedComboBoxIndex
+        private int comboBoxIndexOfUserFromDB;
+        public int ComboBoxIndexOfUserFromDB
         {
-            get { return selectedComboBoxIndex; }
+            get { return comboBoxIndexOfUserFromDB; }
             set
             {
-                if (selectedComboBoxIndex == value)
+                if (comboBoxIndexOfUserFromDB == value)
                     return;
 
-                SetProperty(ref selectedComboBoxIndex, value);
+                SetProperty(ref comboBoxIndexOfUserFromDB, value);
             }
         }
 

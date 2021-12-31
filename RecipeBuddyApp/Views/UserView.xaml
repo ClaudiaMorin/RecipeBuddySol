@@ -31,7 +31,7 @@
                     <StackPanel x:Name="UserLoginStackPanel" Grid.Column="0" Margin="10, 10, 10, 10" >
                         <TextBlock x:Name="Login" Text="User Login" TextAlignment="Center" Margin=" 0, 0, 0, 50" FontSize="30" />
                         <TextBlock x:Name="AccountLable" Text="Account"/>
-                        <ComboBox x:Name="AccountNames" Grid.Column="0" MinWidth="100" ItemsSource="{Binding ListOfUserAccountsInDB}" SelectedIndex="{Binding SelectedComboBoxIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin=" 0, 0, 0, 20"/>
+                        <ComboBox x:Name="AccountNames" Grid.Column="0" MinWidth="100" ItemsSource="{Binding ListOfUserAccountsInDB}" SelectedIndex="{Binding ComboBoxIndexOfUserFromDB, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin=" 0, 0, 0, 20"/>
                         <TextBlock x:Name="PasswordLable"  Text="Password:"/>
 
                         <PasswordBox Password="{Binding PasswordString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
