@@ -48,6 +48,13 @@
         </TextBox>
     </ControlTemplate>
 
+    <ControlTemplate x:Key="ComboBoxRecipeListItem" TargetType="ComboBoxItem">
+        <StackPanel Orientation="Horizontal">
+            <Button x:Name="Cancel" Content="X" Foreground="Red"/>
+            <TextBlock x:Name="Title" />
+        </StackPanel>
+    </ControlTemplate>
+
     <!--#endregion Control Templates -->
 
 

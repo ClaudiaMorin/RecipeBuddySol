@@ -20,7 +20,7 @@
             <StackPanel x:Name="FirstColumn" Grid.Row="0" Grid.Column="0" Visibility="{Binding FirstColumnTreeView, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Background="LightSteelBlue" >
                 <local:RecipeTreeView x:Name="SavedRecipesTreeView"/>
             </StackPanel>
-            <StackPanel x:Name="TextBoxRecipe" Grid.Row="0" Grid.Column="0" Visibility="{Binding FirstColumnTreeView, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ResourceKey=ReverseVisibility}}">
+            <StackPanel x:Name="TextBoxRecipe" Grid.Row="0" Grid.Column="0" Visibility="{Binding RecipeEntryVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                 <StackPanel Orientation="Horizontal" Background="Gray">
                     <TextBlock Text="Category: " TextAlignment="Left" FontSize="14" VerticalAlignment="Center" FontWeight="Bold"/>
                     <Border BorderThickness="10" HorizontalAlignment="Center"/>
@@ -36,15 +36,28 @@
                     <Border BorderThickness="10" HorizontalAlignment="Right" />
                     <Button x:Name="Cancel" Style="{StaticResource BtnStyleStandard}" Content="Cancel" Background="LightSteelBlue" Width="100" Command="{Binding CmdCancelButton}" HorizontalAlignment="Right" />
                 </StackPanel>
-                <local:RecipeDetailsPanelForWebSave x:Name="RecipeDetailsForEdit" />
+                <StackPanel x:Name="WebSaveDetails" Visibility="{Binding RecipeEntryFromWebVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <local:RecipeDetailsPanelForWebSave x:Name="RecipeDetailsForEdit"  />
+                </StackPanel >
+                <StackPanel x:Name="NewRecipeDetails" Visibility="{Binding NewRecipeEntryVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <local:RecipeDetailsPanelForEmptyRecipe x:Name="RecipeDetailsForEditEmpty"  />
             </StackPanel>
-            
+
             <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
                 <StackPanel x:Name="SelectedControls" Orientation="Horizontal"/>
                 <Border BorderBrush="Gray" BorderThickness="5"/>
                 <StackPanel Grid.Column="0" Orientation="Vertical" Background="White" Margin ="0,0,0,0" Width="1108">
                     <StackPanel Orientation="Horizontal" Background="Gray">
-                        <ComboBox x:Name="RecipesInComboBox" Grid.Column="0" DisplayMemberPath="Title" Width="250" SelectedIndex="{Binding ComboBoxIndexForRecipeTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="List of selected Recipes" >
+                        <ComboBox x:Name="RecipesInComboBox" Grid.Column="0" Width="250" SelectedIndex="{Binding ComboBoxIndexForRecipeTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="List of selected Recipes" >
+                                <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock x:Name="Title" Text="{Binding Title}" VerticalAlignment="Center"/>
+                                        <Border BorderThickness="5" />
+                                        <Button x:Name="RemoveRecipeFromComboBox" DataContext="{Binding ElementName=RecipesInComboBox, Path=DataContext}" Content="X"  Foreground="Red" Command="{Binding CmdRemove}" CommandParameter="{Binding ElementName=Title, Path=Text}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
                             <i:Interaction.Behaviors>
                                 <ic:EventTriggerBehavior EventName="SelectionChanged">
                                     <ic:InvokeCommandAction x:Name="ICommandSelectItemChanged" Command="{Binding CmdSelectedItemChanged}" />
@@ -52,9 +65,11 @@
                             </i:Interaction.Behaviors>
                         </ComboBox>
                         <Border BorderThickness="5"/>
-                            <Button x:Name="btnOpenEntry" Width="150" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Create/Update Entry" Command="{Binding CmdOpenEntry}" ToolTipService.ToolTip="Click to save recipe under the selected Catagory." />
+                            <Button x:Name="btnOpenEntry" Width="150" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Entry for web recipe" Command="{Binding CmdOpenEntry}" ToolTipService.ToolTip="Click to save recipe under the selected Catagory." />
                         <Border BorderThickness="5"/>
-                            <Button x:Name="btnRemove" Width="150" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}"  Content="Remove from List" Command="{Binding CmdRemove}" ToolTipService.ToolTip="Click to remove recipe from list."  />
+                            <!--<Button x:Name="btnRemove" Width="150" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}"  Content="Remove from List"  ToolTipService.ToolTip="Click to remove recipe from list."  />
+                        <Border BorderThickness="5"/>-->
+                            <Button x:Name="btnOpenEmptyEntry" Width="150" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}"  Content="Create empty entry" Command="{Binding CmdOpenEmptyEntry}" ToolTipService.ToolTip="Click create an blank entry."  />
                     </StackPanel>
                     <TextBlock x:Name="currentURI" Text="{Binding CurrentLink}" SelectionHighlightColor="LightSteelBlue"/>
                     <Border BorderThickness="2" BorderBrush="DarkGray"/>

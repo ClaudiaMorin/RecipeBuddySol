@@ -15,11 +15,13 @@ namespace RecipeBuddy.Views
             MasterStackPanel.DataContext = WebViewModel.Instance;
             WebControl.DataContext = WebViewModel.Instance;
             SavedRecipesTreeView.DataContext = MainNavTreeViewModel.Instance;
-            //SavedRecipesTreeView.DataContext = MainWindowViewModel.Instance.mainTreeViewNav;
+            WebSaveDetails.DataContext = WebViewModel.Instance;
             RecipeDetailsForEdit.DataContext = WebViewModel.Instance.recipePanelForWebCopy.recipeCardModel;
-            TypesInComboBox.ItemsSource = MainNavTreeViewModel.Instance.CatagoryTypes;
+            NewRecipeDetails.DataContext = WebViewModel.Instance;
+            RecipeDetailsForEditEmpty.DataContext = WebViewModel.Instance.recipePanelForWebCopy.recipeCardModel;
 
-            //TextBoxRecipe.DataContext = 
+            
+            TypesInComboBox.ItemsSource = MainNavTreeViewModel.Instance.CatagoryTypes;
             //Wires the combobox to the list of recipes
             RecipesInComboBox.ItemsSource = SearchViewModel.Instance.listOfRecipeCards.RecipesList;
         }

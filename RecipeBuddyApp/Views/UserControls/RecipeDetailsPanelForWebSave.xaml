@@ -2,7 +2,7 @@
     x:Class="RecipeBuddy.Views.RecipeDetailsPanelForWebSave"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:RecipeBuddyApp.Views"
+    xmlns:local="using:RecipeBuddy.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="using:RecipeBuddy.ViewModels"
@@ -11,7 +11,7 @@
 
     <StackPanel x:Name="MasterStackPanel" Background="White" Margin ="0,0,0,0">
         <StackPanel  Orientation="Horizontal">
-            <TextBox Text="{Binding Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" HorizontalAlignment="Center" Height="26"/>
+            <TextBox Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" HorizontalAlignment="Center" Height="26"/>
         </StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>

@@ -699,60 +699,7 @@ namespace RecipeBuddy.ViewModels
             return 2; //recipe title doesn't already exists so don't worry about it!
         }
 
-        //private ObservableCollection<RecipeTreeItem> StringMapParentToCollection(string parentFromArgument)
-        //{
-        //    switch (parentFromArgument)
-        //    {
-        //        case "CakeTreeViewHeader":
-        //            SavedCakeRecipes.ItemExpanded = true;
-        //            return SavedCakeRecipes.Children;
-
-        //        case "CandyTreeViewHeader":
-        //            return SavedCandyRecipes.Children;
-
-        //        case "CustardTreeViewHeader":
-        //            return SavedCustardRecipes.Children;
-
-        //        case "PastryTreeViewHeader":
-        //            return SavedPastryRecipes.Children;
-
-        //        case "PorkTreeViewHeader":
-        //            return SavedPorkRecipes.Children;
-
-        //        case "LambTreeViewHeader":
-        //            return SavedLambRecipes.Children;
-
-        //        case "PoultryTreeViewHeader":
-        //            return SavedPoultryRecipes.Children;
-
-        //        case "SeafoodTreeViewHeader":
-        //            return SavedSeafoodRecipes.Children;
-
-        //        case "BeefTreeViewHeader":
-        //            return SavedBeefRecipes.Children;
-
-        //        case "SaladTreeViewHeader":
-        //            return SavedSaladRecipes.Children;
-
-        //        case "BreadTreeViewHeader":
-        //            return SavedBreadRecipes.Children;
-
-        //        case "AppitizerTreeViewHeader":
-        //            return SavedAppetizerRecipes.Children;
-
-        //        case "TofuTreeViewHeader":
-        //            return SavedTofuRecipes.Children;
-
-        //        case "SideDishTreeViewHeader":
-        //            return SavedSideDishRecipes.Children;
-
-        //        case "UnknownTreeViewHeader":
-        //            return SavedUnknownRecipes.Children;
-        //    }
-
-        //    return null;
-        //}
-
+        
 
         /// <summary>
         /// Add the recipe to the Borrow list and select that recipe in the combobox as well as 

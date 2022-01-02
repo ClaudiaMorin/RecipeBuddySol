@@ -202,6 +202,9 @@
     </Compile>
     <Compile Include="Views\UserControls\PasswordBoxAttachedProperties.cs" />
     <Compile Include="Views\UserControls\PasswordBoxBindingBehavior.cs" />
+    <Compile Include="Views\UserControls\RecipeDetailsPanelForEmptyRecipe.xaml.cs">
+      <DependentUpon>RecipeDetailsPanelForEmptyRecipe.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserControls\RecipeDetailsPanelForSearch.xaml.cs">
       <DependentUpon>RecipeDetailsPanelForSearch.xaml</DependentUpon>
     </Compile>
@@ -314,6 +317,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\UserControls\AppHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\RecipeDetailsPanelForEmptyRecipe.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

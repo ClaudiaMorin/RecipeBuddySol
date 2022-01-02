@@ -5,6 +5,7 @@ using RecipeBuddy.Core.Scrapers;
 using RecipeBuddy.ViewModels.Commands;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace RecipeBuddy.ViewModels
     public class RecipePanelForWebCopy : ObservableObject
     {
         public RecipeDisplayModel recipeCardModel;
+        
 
         Action action;
         Func<bool> funcBool;
@@ -25,6 +27,10 @@ namespace RecipeBuddy.ViewModels
         public RecipePanelForWebCopy()
         {
             recipeCardModel = new RecipeDisplayModel();
+            measureTypes = new ObservableCollection<string>()
+            {
+               "Cup(s)","Tablespoon(s)","Teaspoon(s)", "---"
+            };
         }
 
         /// <summary>
@@ -35,6 +41,10 @@ namespace RecipeBuddy.ViewModels
         {
             //For Threading callbacks.  
             Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView();
+            measureTypes = new ObservableCollection<string>()
+            {
+               "Cup(s)","Tablespoon(s)","Teaspoon(s)", "---"
+            };
 
             recipeCardModel = new RecipeDisplayModel(recipeBlurbModel);
             CanSelectSave = false;
@@ -108,6 +118,23 @@ namespace RecipeBuddy.ViewModels
         {
             get { return canSelectCancel; }
             set { SetProperty(ref canSelectCancel, value); }
+        }
+
+        /// <summary>
+        /// Always True
+        /// </summary>
+        private int currentMeasurementType1;
+        public int CurrentMeasurementType1
+        {
+            get { return currentMeasurementType1; }
+            set { SetProperty(ref currentMeasurementType1, value); }
+        }
+
+        private ObservableCollection<string> measureTypes;
+        public ObservableCollection<string> MeasureTypes
+        {
+            get { return measureTypes; }
+            set { SetProperty(ref measureTypes, value); }
         }
 
         public RBRelayCommand CmdSaveButton

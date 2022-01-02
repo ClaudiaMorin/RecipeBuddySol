@@ -136,33 +136,43 @@ namespace RecipeBuddy.ViewModels
         }
 
 
-        public void RemoveRecipe()
+        public void RemoveRecipe(string title)
         {
             if (listOfRecipeCards.ListCount > 0 && listOfRecipeCards.CurrentCardIndex != -1)
             {
-                listOfRecipeCards.Remove(listOfRecipeCards.CurrentCardIndex);
+                int indexToRemove = listOfRecipeCards.GetEntryIndex(title);
 
-                if (listOfRecipeCards.CurrentCardIndex > 0)
+                if (indexToRemove == listOfRecipeCards.CurrentCardIndex)
                 {
-                    listOfRecipeCards.CurrentCardIndex = listOfRecipeCards.CurrentCardIndex - 1;
-                    ShowSpecifiedEntry(listOfRecipeCards.CurrentCardIndex);
-                    //need to reset the starting index of the "borrow recipe" incase it was removed
-                    EditViewModel.Instance.IndexOfComboBoxItem = 0;
-                }
-                else if (listOfRecipeCards.ListCount > 0)
-                {
-                    listOfRecipeCards.CurrentCardIndex = listOfRecipeCards.ListCount - 1;
-                    ShowSpecifiedEntry(listOfRecipeCards.CurrentCardIndex);
-                    //need to reset the starting index of the "borrow recipe" incase it was removed
-                    EditViewModel.Instance.IndexOfComboBoxItem = 0;
-                }
-                //the last element in the list has been removed so now we need to go back to blank screen
-                else
-                {
-                    WebViewEnabled = false;
+                    if (listOfRecipeCards.CurrentCardIndex != listOfRecipeCards.ListCount - 1)
+                    { listOfRecipeCards.CurrentCardIndex++; }
+                    else
+                    { listOfRecipeCards.CurrentCardIndex = 0; }
                 }
 
-                return;
+                listOfRecipeCards.Remove(listOfRecipeCards.GetEntryIndex(title));
+
+                //if (listOfRecipeCards.CurrentCardIndex > 0)
+                //{
+                //    listOfRecipeCards.CurrentCardIndex = listOfRecipeCards.CurrentCardIndex - 1;
+                //    ShowSpecifiedEntry(listOfRecipeCards.CurrentCardIndex);
+                //    //need to reset the starting index of the "borrow recipe" incase it was removed
+                //    EditViewModel.Instance.IndexOfComboBoxItem = 0;
+                //}
+                //else if (listOfRecipeCards.ListCount > 0)
+                //{
+                //    listOfRecipeCards.CurrentCardIndex = listOfRecipeCards.ListCount - 1;
+                //    ShowSpecifiedEntry(listOfRecipeCards.CurrentCardIndex);
+                //    //need to reset the starting index of the "borrow recipe" incase it was removed
+                //    EditViewModel.Instance.IndexOfComboBoxItem = 0;
+                //}
+                ////the last element in the list has been removed so now we need to go back to blank screen
+                //else
+                //{
+                //    WebViewEnabled = false;
+                //}
+
+                //return;
             }
         }
 

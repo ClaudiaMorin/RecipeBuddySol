@@ -12,15 +12,18 @@ using RecipeBuddy.Views;
 
 namespace RecipeBuddy.ViewModels
 {
+
+
     public sealed class WebViewModel : ObservableObject
     {
         private static readonly WebViewModel instance = new WebViewModel();
         public RecipeDisplayModel mainRecipeCardModel;
         
         public RecipePanelForWebCopy recipePanelForWebCopy;
+        //public RecipeDetailsPanelForEmptyRecipe recipePanelForNewRecipe;
 
         public Action<SelectionChangedEventArgs> actionWithEventArgs;
-        public Action<string> actionWithObject;
+        public Action<string> actionWithString;
 
         Action action;
         Func<bool> funcBool;
@@ -36,17 +39,24 @@ namespace RecipeBuddy.ViewModels
         private WebViewModel()
         {
             //currentType = 0;
-            firstColumnTreeView = "Visible";
+            firstColumnTreeViewVisibility = "Visible";
+            recipeEntryVisibility = "Collapsed";
+            recipeEntryFromWebVisibility = "Collapsed";
+            newRecipeEntryVisibility = "Collapsed";
+            alwaysTrue = true;
             mainViewWidth = "3*";
             mainRecipeCardModel = new RecipeDisplayModel();
             recipePanelForWebCopy = new RecipePanelForWebCopy();
+            //recipePanelForNewRecipe = new RecipeDetailsPanelForEmptyRecipe();
             //currentLink = MainRecipeCardModel.Link;
             canSelectOpenEntry = true;
             canSelectCancel = true;
             
-            CmdRemove = new ICommandViewModel<WebViewModel>(Action => SearchViewModel.Instance.RemoveRecipe(), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
+            CmdRemove = new ICommandViewModel<string>(actionWithString = s => SearchViewModel.Instance.RemoveRecipe(s), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
             CmdOpenEntry = new ICommandViewModel<WebViewModel>(Action => OpenKeepRecipePanel(), canCallActionFunc => CanSelectOpenEntry);
+            CmdOpenEmptyEntry = new ICommandViewModel<WebViewModel>(Action => OpenKeepEmptyRecipePanel(), canCallActionFunc => CanSelectOpenEntry);
             CmdSelectedTypeChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
+            CmdSelectedMeasurementChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeMeasurementTypeFromComboBox(e), canCallActionFunc => AlwaysTrue);
 
             CmdSaveButton = new RBRelayCommand(action = () => SaveEntry(), funcBool = () => CanSelectSave);
             CmdCancelButton = new RBRelayCommand(action = () => CancelEntry(), funcBool = () => CanSelectCancel);
@@ -73,7 +83,11 @@ namespace RecipeBuddy.ViewModels
 
         public void SaveEntry()
         {
-            //recipePanelForWebCopy.recipeCardModel.RecipeType = (Type_Of_Recipe)CurrentTypeIndexForComboBox;
+            recipePanelForWebCopy.recipeCardModel.RecipeType = (Type_Of_Recipe) ComboBoxIndexForRecipeType;
+            if (string.Compare(mainRecipeCardModel.Title, "Search for your next recipe find!") == 0)
+            {
+                //Launch dialog saying that the new recipe must have a title
+            }
             recipePanelForWebCopy.SaveEntry();
             CloseKeepRecipePanel();
         }
@@ -83,7 +97,25 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void OpenKeepRecipePanel()
         {
-            FirstColumnTreeView = "Collapsed";
+            FirstColumnTreeViewVisibility = "Collapsed";
+            RecipeEntryVisibility = "Visible";
+            RecipeEntryFromWebVisibility = "Visible";
+            MainViewWidth = "*";
+            recipePanelForWebCopy.LoadRecipeCardModel(mainRecipeCardModel);
+            ComboBoxIndexForRecipeType = (int)mainRecipeCardModel.RecipeType;
+        }
+
+        /// <summary>
+        /// Saves the recipe to the DB and the TreeView
+        /// </summary>
+        public void OpenKeepEmptyRecipePanel()
+        {
+            mainRecipeCardModel = new RecipeDisplayModel();
+            mainRecipeCardModel.Title = "Recipe Title Here";
+            FirstColumnTreeViewVisibility = "Collapsed";
+            RecipeEntryVisibility = "Visible";
+            //RecipeEntryFromWebVisibility = "Collapsed";
+            NewRecipeEntryVisibility = "Visible";
             MainViewWidth = "*";
             recipePanelForWebCopy.LoadRecipeCardModel(mainRecipeCardModel);
             ComboBoxIndexForRecipeType = (int)mainRecipeCardModel.RecipeType;
@@ -92,7 +124,10 @@ namespace RecipeBuddy.ViewModels
         public void CloseKeepRecipePanel()
         {
             MainViewWidth = "3*";
-            FirstColumnTreeView = "Visible";
+            FirstColumnTreeViewVisibility = "Visible";
+            NewRecipeEntryVisibility = "Collapsed";
+            RecipeEntryFromWebVisibility = "Collapsed";
+            RecipeEntryVisibility = "Collapsed";
         }
 
         /// <summary>
@@ -151,6 +186,15 @@ namespace RecipeBuddy.ViewModels
         /// This manages changes that come in through the user manipulating the combobox on the Basket page
         /// </summary>
         /// <param name="e"></param>
+        internal void ChangeMeasurementTypeFromComboBox(SelectionChangedEventArgs e)
+        {
+            recipePanelForWebCopy.recipeCardModel.RecipeType = (Type_Of_Recipe)ComboBoxIndexForRecipeType;
+        }
+
+        /// <summary>
+        /// This manages changes that come in through the user manipulating the combobox on the Basket page
+        /// </summary>
+        /// <param name="e"></param>
         internal void ChangeRecipeTypeFromComboBox(SelectionChangedEventArgs e)
         {
             recipePanelForWebCopy.recipeCardModel.RecipeType = (Type_Of_Recipe)ComboBoxIndexForRecipeType;
@@ -174,6 +218,21 @@ namespace RecipeBuddy.ViewModels
             }
 
             set { SetProperty(ref canSelectTrueIfThereIsARecipe, value); }
+        }
+
+        /// <summary>
+        /// Indicates whether or not we can click the recipe-related button, there needs to be a recipe in the CardView so the 
+        /// total list count has to be greater than 0.
+        /// </summary>
+        private bool alwaysTrue;
+        public bool AlwaysTrue
+        {
+            get
+            {
+                return alwaysTrue;
+            }
+
+            set { SetProperty(ref alwaysTrue, value); }
         }
 
         /// <summary>
@@ -224,6 +283,16 @@ namespace RecipeBuddy.ViewModels
             get;
             private set;
         }
+
+        /// <summary>
+        /// property for the Save button command
+        /// </summary>
+        public ICommand CmdOpenEmptyEntry
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// property for the Remove button command
         /// </summary>
@@ -274,6 +343,15 @@ namespace RecipeBuddy.ViewModels
         }
 
         /// <summary>
+        /// Property for the Recipe combobox change command
+        /// </summary>
+        public ICommand CmdSelectedMeasurementChanged
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// property for the Quantity combobox change command
         /// </summary>
         public ICommand CmdSelectedQuantityChanged
@@ -309,21 +387,33 @@ namespace RecipeBuddy.ViewModels
             }
         }
 
-
-        //private string typeComboBoxVisibility;
-        //public string TypeComboBoxVisibility
-        //{
-        //    get { return typeComboBoxVisibility; }
-        //    set { SetProperty(ref typeComboBoxVisibility, value); }
-        //}
-
-
-
-        private string firstColumnTreeView;
-        public string FirstColumnTreeView
+        private string recipeEntryFromWebVisibility;
+        public string RecipeEntryFromWebVisibility
         {
-            get { return firstColumnTreeView; }
-            set { SetProperty(ref firstColumnTreeView, value); }
+            get { return recipeEntryFromWebVisibility; }
+            set { SetProperty(ref recipeEntryFromWebVisibility, value); }
+        }
+
+        private string recipeEntryVisibility;
+        public string RecipeEntryVisibility
+        {
+            get { return recipeEntryVisibility; }
+            set { SetProperty(ref recipeEntryVisibility, value); }
+        }
+
+        private string newRecipeEntryVisibility;
+        public string NewRecipeEntryVisibility
+        {
+            get { return newRecipeEntryVisibility; }
+            set { SetProperty(ref newRecipeEntryVisibility, value); }
+        }
+
+
+        private string firstColumnTreeViewVisibility;
+        public string FirstColumnTreeViewVisibility
+        {
+            get { return firstColumnTreeViewVisibility; }
+            set { SetProperty(ref firstColumnTreeViewVisibility, value); }
         }
 
         private string mainViewWidth;
@@ -331,6 +421,13 @@ namespace RecipeBuddy.ViewModels
         {
             get { return mainViewWidth; }
             set { SetProperty(ref mainViewWidth, value); }
+        }
+
+        private string mainViewNewRecipeWidth;
+        public string MainViewNewRecipeWidth
+        {
+            get { return mainViewNewRecipeWidth; }
+            set { SetProperty(ref mainViewNewRecipeWidth, value); }
         }
 
         #endregion
