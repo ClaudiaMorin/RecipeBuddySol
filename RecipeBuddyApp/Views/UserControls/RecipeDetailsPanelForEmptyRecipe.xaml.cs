@@ -11,7 +11,10 @@ namespace RecipeBuddy.Views
         public RecipeDetailsPanelForEmptyRecipe()
         {
             this.InitializeComponent();
+            TypesInComboBox.ItemsSource = MainNavTreeViewModel.Instance.CatagoryTypes;
             DataContext = WebViewModel.Instance.recipePanelForWebCopy;
+            
+
             ComboBoxMeasure1Types.ItemsSource = WebViewModel.Instance.recipePanelForWebCopy.MeasureTypes;
             ComboBoxMeasure2Types.ItemsSource = WebViewModel.Instance.recipePanelForWebCopy.MeasureTypes;
             ComboBoxMeasure3Types.ItemsSource = WebViewModel.Instance.recipePanelForWebCopy.MeasureTypes;

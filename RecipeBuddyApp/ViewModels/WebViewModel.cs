@@ -53,7 +53,7 @@ namespace RecipeBuddy.ViewModels
             canSelectCancel = true;
             
             CmdRemove = new ICommandViewModel<string>(actionWithString = s => SearchViewModel.Instance.RemoveRecipe(s), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
-            CmdOpenEntry = new ICommandViewModel<WebViewModel>(Action => OpenKeepRecipePanel(), canCallActionFunc => CanSelectOpenEntry);
+            CmdOpenEntry = new ICommandViewModel<WebViewModel>(Action  => OpenKeepRecipePanel(), canCallActionFunc => CanSelectOpenEntry);
             CmdOpenEmptyEntry = new ICommandViewModel<WebViewModel>(Action => OpenKeepEmptyRecipePanel(), canCallActionFunc => CanSelectOpenEntry);
             CmdSelectedTypeChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
             CmdSelectedMeasurementChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeMeasurementTypeFromComboBox(e), canCallActionFunc => AlwaysTrue);
@@ -97,6 +97,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void OpenKeepRecipePanel()
         {
+            mainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(SearchViewModel.Instance.listOfRecipeCards.GetCurrentEntry());
             FirstColumnTreeViewVisibility = "Collapsed";
             RecipeEntryVisibility = "Visible";
             RecipeEntryFromWebVisibility = "Visible";

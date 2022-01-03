@@ -5,12 +5,12 @@
     xmlns:local="using:RecipeBuddy.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewmodels="using:RecipeBuddy.ViewModels"
+    xmlns:viewmodels="using:RecipeBuddy.ViewModels" xmlns:i="using:Microsoft.Xaml.Interactivity" xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     d:DataContext="{d:DesignInstance Type=viewmodels:RecipePanelForWebCopy}"
     mc:Ignorable="d">
 
     <StackPanel x:Name="MasterStackPanel" Background="White" Margin ="0,0,0,0">
-        <StackPanel  Orientation="Horizontal">
+        <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center">
             <TextBox Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" HorizontalAlignment="Center" Height="26"/>
         </StackPanel>
         <Grid>
@@ -21,8 +21,20 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
-            <TextBox x:Name="Author" TextAlignment="Left" Grid.Row="0"  Grid.Column= "0" FontSize="14" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Path=Author, Mode=OneWay}" />
-            <HyperlinkButton x:Name="Link" VerticalAlignment="Top" Grid.Row="0" Grid.Column= "1" FontSize="14" Content="{Binding Path=Website, Mode=OneWay}" NavigateUri="{Binding Path=Link, Mode=OneWay}" />
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" >
+                <TextBlock Text="Save Category: " FontSize="14" VerticalAlignment="Center" FontWeight="Bold"/>
+                <Border BorderThickness="10"/>
+                <ComboBox x:Name="TypesInComboBox" SelectedIndex="{Binding ComboBoxIndexForRecipeType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" >
+                    <i:Interaction.Behaviors>
+                        <ic:EventTriggerBehavior  EventName="SelectionChanged">
+                            <ic:InvokeCommandAction x:Name="ICommandSelectTypeChanged" Command="{Binding CmdSelectedTypeChanged}" />
+                        </ic:EventTriggerBehavior >
+                    </i:Interaction.Behaviors>
+                </ComboBox>
+            </StackPanel>
+            <TextBox x:Name="Author" TextAlignment="Left" Grid.Row="0"  Grid.Column= "1" FontSize="14" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Path=Author, Mode=OneWay}" />
+
+            <!--<HyperlinkButton x:Name="Link" VerticalAlignment="Top" Grid.Row="0" Grid.Column= "1" FontSize="14" Content="{Binding Path=Website, Mode=OneWay}" NavigateUri="{Binding Path=Link, Mode=OneWay}" />-->
         </Grid>
         <Border x:Name="IngredientDirections" BorderThickness="2" Background="LightSteelBlue" BorderBrush="DarkGray">
             <StackPanel Background="LightSteelBlue" Grid.Column="1" Grid.Row="0">

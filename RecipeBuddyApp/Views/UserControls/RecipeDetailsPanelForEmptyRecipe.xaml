@@ -23,7 +23,18 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
-            <TextBox x:Name="Author" TextAlignment="Left" Grid.Row="0"  Grid.Column= "0" FontSize="14" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Path=Author, Mode=OneWay}" />
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" >
+                <TextBlock Text="Save Category: " FontSize="14" VerticalAlignment="Center" FontWeight="Bold"/>
+                <Border BorderThickness="10"/>
+                <ComboBox x:Name="TypesInComboBox" SelectedIndex="{Binding ComboBoxIndexForRecipeType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" >
+                    <i:Interaction.Behaviors>
+                        <icore:EventTriggerBehavior  EventName="SelectionChanged">
+                            <icore:InvokeCommandAction x:Name="ICommandSelectTypeChanged" Command="{Binding CmdSelectedTypeChanged}" />
+                        </icore:EventTriggerBehavior >
+                    </i:Interaction.Behaviors>
+                </ComboBox>
+            </StackPanel>
+            <TextBox x:Name="Author" TextAlignment="Left" Grid.Row="0"  Grid.Column= "1" FontSize="14" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Path=Author, Mode=OneWay}" />
             <HyperlinkButton x:Name="Link" VerticalAlignment="Top" Grid.Row="0" Grid.Column= "1" FontSize="14" Content="{Binding Path=Website, Mode=OneWay}" NavigateUri="{Binding Path=Link, Mode=OneWay}" />
         </Grid>
         <Border x:Name="IngredientDirections" BorderThickness="2" Background="LightSteelBlue" BorderBrush="DarkGray">

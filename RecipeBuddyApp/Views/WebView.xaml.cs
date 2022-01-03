@@ -20,8 +20,6 @@ namespace RecipeBuddy.Views
             NewRecipeDetails.DataContext = WebViewModel.Instance;
             RecipeDetailsForEditEmpty.DataContext = WebViewModel.Instance.recipePanelForWebCopy.recipeCardModel;
 
-            
-            TypesInComboBox.ItemsSource = MainNavTreeViewModel.Instance.CatagoryTypes;
             //Wires the combobox to the list of recipes
             RecipesInComboBox.ItemsSource = SearchViewModel.Instance.listOfRecipeCards.RecipesList;
         }

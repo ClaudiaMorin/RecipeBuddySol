@@ -23,6 +23,7 @@ namespace RecipeBuddy.Views
         public RecipeDetailsPanelForWebSave()
         {
             this.InitializeComponent();
+            TypesInComboBox.ItemsSource = MainNavTreeViewModel.Instance.CatagoryTypes;
         }
     }
 }

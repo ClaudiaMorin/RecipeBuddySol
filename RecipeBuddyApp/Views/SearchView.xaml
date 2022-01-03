@@ -32,7 +32,22 @@
                     <Border BorderThickness="50" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Column="1">
-                    <ComboBox x:Name="RecipesInComboBox" HorizontalAlignment="Right" Width="300" Grid.Column="1" DisplayMemberPath="Title" SelectedIndex="{Binding IndexOfComboBoxItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="List of selected Recipes" />
+                    <ComboBox x:Name="RecipesInComboBox" HorizontalAlignment="Right" Width="300" Grid.Column="1" SelectedIndex="{Binding IndexOfComboBoxItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="List of selected Recipes">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock x:Name="Title" Text="{Binding Title}" VerticalAlignment="Center"/>
+                                    <Border BorderThickness="10" />
+                                    <Button x:Name="RemoveRecipeFromComboBox" DataContext="{Binding ElementName=RecipesInComboBox, Path=DataContext}" Content="X"  Foreground="Red" Command="{Binding CmdRemove}" CommandParameter="{Binding ElementName=Title, Path=Text}" Padding="0,0,0,0" HorizontalAlignment="Right" FontSize="14" Background='Transparent'/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <i:Interaction.Behaviors>
+                            <ic:EventTriggerBehavior EventName="SelectionChanged">
+                                <ic:InvokeCommandAction x:Name="ICommandSelectItemChanged" Command="{Binding CmdSelectedItemChanged}" />
+                            </ic:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                    </ComboBox>
                     <Button x:Name="GoToWeb" Width="100" Height="30" Content="WebView" Style="{StaticResource BtnStyleSearch}" Command="{Binding WebButtonCmd}" />
                 </StackPanel>
             </Grid>

@@ -135,7 +135,10 @@ namespace RecipeBuddy.ViewModels
             await panel.SearchAndFillList(searchString, coreApplicationView);
         }
 
-
+        /// <summary>
+        /// Linked to the command behind the button to remove a recipe from the combobox
+        /// </summary>
+        /// <param name="title">Title of the recipe to remove</param>
         public void RemoveRecipe(string title)
         {
             if (listOfRecipeCards.ListCount > 0 && listOfRecipeCards.CurrentCardIndex != -1)
@@ -151,28 +154,6 @@ namespace RecipeBuddy.ViewModels
                 }
 
                 listOfRecipeCards.Remove(listOfRecipeCards.GetEntryIndex(title));
-
-                //if (listOfRecipeCards.CurrentCardIndex > 0)
-                //{
-                //    listOfRecipeCards.CurrentCardIndex = listOfRecipeCards.CurrentCardIndex - 1;
-                //    ShowSpecifiedEntry(listOfRecipeCards.CurrentCardIndex);
-                //    //need to reset the starting index of the "borrow recipe" incase it was removed
-                //    EditViewModel.Instance.IndexOfComboBoxItem = 0;
-                //}
-                //else if (listOfRecipeCards.ListCount > 0)
-                //{
-                //    listOfRecipeCards.CurrentCardIndex = listOfRecipeCards.ListCount - 1;
-                //    ShowSpecifiedEntry(listOfRecipeCards.CurrentCardIndex);
-                //    //need to reset the starting index of the "borrow recipe" incase it was removed
-                //    EditViewModel.Instance.IndexOfComboBoxItem = 0;
-                //}
-                ////the last element in the list has been removed so now we need to go back to blank screen
-                //else
-                //{
-                //    WebViewEnabled = false;
-                //}
-
-                //return;
             }
         }
 
@@ -242,7 +223,6 @@ namespace RecipeBuddy.ViewModels
         public void ChangeRecipe(int indexOfTitleInComboBox)
         {
             listOfRecipeCards.CurrentCardIndex = indexOfTitleInComboBox;
-
         }
 
         /// <summary>
