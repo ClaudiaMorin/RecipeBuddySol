@@ -11,7 +11,7 @@
 
     <StackPanel x:Name="MasterStackPanel" Background="White" Margin ="0,0,0,0">
         <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBox Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" HorizontalAlignment="Center" Height="26"/>
+            <TextBox x:Name="Title" Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" HorizontalAlignment="Center" Height="26"/>
         </StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -24,7 +24,7 @@
             <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" >
                 <TextBlock Text="Save Category: " FontSize="14" VerticalAlignment="Center" FontWeight="Bold"/>
                 <Border BorderThickness="10"/>
-                <ComboBox x:Name="TypesInComboBox" SelectedIndex="{Binding ComboBoxIndexForRecipeType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" >
+                <ComboBox x:Name="TypesInComboBox" VerticalAlignment="Center" SelectedIndex="{Binding RecipeTypeInt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <i:Interaction.Behaviors>
                         <ic:EventTriggerBehavior  EventName="SelectionChanged">
                             <ic:InvokeCommandAction x:Name="ICommandSelectTypeChanged" Command="{Binding CmdSelectedTypeChanged}" />
@@ -101,7 +101,7 @@
             </StackPanel>
         </Border>
         <ScrollViewer Visibility="Visible" Height="270">
-            <StackPanel>
+            <StackPanel x:Name="ScrollingDirec">
                 <TextBox x:Name="Direction1" Style ="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text, Converter={StaticResource StyleConverterTextBox},ConverterParameter = 1}" Text ="{Binding Path=Direction1, Mode=TwoWay}"/>
                 <TextBox x:Name="Direction2" Style ="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text, Converter={StaticResource StyleConverterTextBox}, ConverterParameter = 0}" Text ="{Binding Path=Direction2, Mode=TwoWay}"/>
                 <TextBox x:Name="Direction3" Style ="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text, Converter={StaticResource StyleConverterTextBox},ConverterParameter = 1}" Text ="{Binding Path=Direction3, Mode=TwoWay}"/>

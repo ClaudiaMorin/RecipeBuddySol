@@ -18,7 +18,7 @@
         <local:AppHeader/>
         <StackPanel Orientation="Horizontal" Background="LightSteelBlue" >
             <Border BorderThickness="3" BorderBrush="Gray"/>
-            <Grid>
+            <Grid x:Name="SearchViewItems" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -51,7 +51,6 @@
                     <Button x:Name="GoToWeb" Width="100" Height="30" Content="WebView" Style="{StaticResource BtnStyleSearch}" Command="{Binding WebButtonCmd}" />
                 </StackPanel>
             </Grid>
-            <StackPanel x:Name="searchControls" Orientation="Horizontal"/>
         </StackPanel>
             <Border BorderBrush="Gray" BorderThickness="5">
                 <Grid x:Name="RecipeStackPanelCollection" >
@@ -67,7 +66,7 @@
                         <Border BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue">
                             <TextBlock x:Name="Title1" Style="{StaticResource TitleTbkStyle}" Text="{Binding Path=Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                         </Border>
-                        <Grid Background="Gray">
+                        <Grid x:Name="ControlsPanel1" Background="Gray">
                             <Grid.ColumnDefinitions >
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="50" />
@@ -87,7 +86,7 @@
                         </Grid>
                         <Border BorderThickness="2" BorderBrush="Gray" >
                             <StackPanel>
-                                <local:RecipeDetailsPanelForSearch x:Name="DetailsPanelView1"/>
+                                <local:RecipeDetailsPanelForSearch x:Name="DetailsPanelView1" DataContext="{Binding ElementName=Title1, Path=DataContext}"/>
                                 <TextBlock  Height="50" Text="For directions, pictures, and reviews add recipe to the Weblist and view on the Web tab!" TextWrapping="WrapWholeWords" Foreground="red" />
                             </StackPanel>
                         </Border>
@@ -96,7 +95,7 @@
                     <Border BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue">
                             <TextBlock x:Name="Title2" Style="{StaticResource TitleTbkStyle}" Text="{Binding Path=Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                         </Border>
-                        <Grid Background="Gray">
+                    <Grid x:Name="ControlsPanel2" Background="Gray">
                             <Grid.ColumnDefinitions >
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="50" />
@@ -116,7 +115,7 @@
                         </Grid>
                         <Border BorderThickness="2" BorderBrush="Gray">
                             <StackPanel>
-                                <local:RecipeDetailsPanelForSearch x:Name="DetailsPanelView2"/>
+                            <local:RecipeDetailsPanelForSearch x:Name="DetailsPanelView2" DataContext="{Binding ElementName=Title2, Path=DataContext}"/>
                                 <TextBlock  Height="50" Text="For directions, pictures, and reviews add recipe to the Weblist and view on the Web tab!" TextWrapping="WrapWholeWords" Foreground="red" />
                             </StackPanel>
                         </Border>
@@ -125,7 +124,7 @@
                         <Border BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue">
                             <TextBlock x:Name="Title3" Style="{StaticResource TitleTbkStyle}" Text="{Binding Path=Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                         </Border>
-                        <Grid Background="Gray">
+                    <Grid x:Name="ControlsPanel3" Background="Gray">
                             <Grid.ColumnDefinitions >
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="50" />
@@ -145,7 +144,7 @@
                         </Grid>
                         <Border BorderThickness="2" BorderBrush="Gray" >
                             <StackPanel>
-                                <local:RecipeDetailsPanelForSearch x:Name="DetailsPanelView3"/>
+                            <local:RecipeDetailsPanelForSearch x:Name="DetailsPanelView3" DataContext="{Binding ElementName=Title3, Path=DataContext}"/>
                                 <TextBlock  Height="50" Text="For directions, pictures, and reviews add recipe to the Weblist and view on the Web tab!" TextWrapping="WrapWholeWords" Foreground="red" />
                             </StackPanel>
                         </Border>

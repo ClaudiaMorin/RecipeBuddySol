@@ -581,7 +581,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void SaveEntry(RecipeDisplayModel recipeDisplay)
         {
-            recipeDisplay.SaveEditsToARecipe();
+            recipeDisplay.SaveEditsToARecipeModel();
 
             int result = MainWindowViewModel.Instance.mainTreeViewNav.AddRecipeToTreeView(recipeDisplay);
 

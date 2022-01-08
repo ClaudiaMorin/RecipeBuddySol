@@ -24,32 +24,25 @@ namespace RecipeBuddy.Views
         {
             InitializeComponent();
 
-            DataContext = SearchViewModel.Instance;
+            SearchViewItems.DataContext = SearchViewModel.Instance;
             RecipesInComboBox.ItemsSource = SearchViewModel.Instance.listOfRecipeCards.RecipesList;
 
             ///Search1Panel Panel Setup
-            Title1.DataContext = SearchViewModel.Instance.recipePanelForSearch1.recipeCard;
-            ListControls1.DataContext = SearchViewModel.Instance.recipePanelForSearch1.listOfRecipeModel;
-            DetailsPanelView1.DataContext = SearchViewModel.Instance.recipePanelForSearch1.recipeCard;
-            btnBack1.DataContext = SearchViewModel.Instance.recipePanelForSearch1;
-            btnNext1.Command = SearchViewModel.Instance.recipePanelForSearch1.CmdNextButton;
-            btnSelect1.Command = SearchViewModel.Instance.recipePanelForSearch1.CmdSelectButton;
+            Title1.DataContext = SearchViewModel.Instance.recipePanelForSearch1.RecipeCard;
+            ControlsPanel1.DataContext = SearchViewModel.Instance.recipePanelForSearch1;
+            ListControls1.DataContext = SearchViewModel.Instance.recipePanelForSearch1.ListOfRecipeModels;
 
             ///Search2Panel Panel Setup
-            Title2.DataContext = SearchViewModel.Instance.recipePanelForSearch2.recipeCard; 
-            ListControls2.DataContext = SearchViewModel.Instance.recipePanelForSearch2.listOfRecipeModel;
-            DetailsPanelView2.DataContext = SearchViewModel.Instance.recipePanelForSearch2.recipeCard;
-            btnBack2.Command = SearchViewModel.Instance.recipePanelForSearch2.CmdBackButton;
-            btnNext2.Command = SearchViewModel.Instance.recipePanelForSearch2.CmdNextButton;
-            btnSelect2.Command = SearchViewModel.Instance.recipePanelForSearch2.CmdSelectButton;
+            Title2.DataContext = SearchViewModel.Instance.recipePanelForSearch2.RecipeCard;
+            ControlsPanel2.DataContext = SearchViewModel.Instance.recipePanelForSearch2;
+            ListControls2.DataContext = SearchViewModel.Instance.recipePanelForSearch2.ListOfRecipeModels;
 
-            ///Search3Panel Panel Setup
-            Title3.DataContext = SearchViewModel.Instance.recipePanelForSearch3.recipeCard; 
-            ListControls3.DataContext = SearchViewModel.Instance.recipePanelForSearch3.listOfRecipeModel;
-            DetailsPanelView3.DataContext = SearchViewModel.Instance.recipePanelForSearch3.recipeCard;
-            btnBack3.Command = SearchViewModel.Instance.recipePanelForSearch3.CmdBackButton;
-            btnNext3.Command = SearchViewModel.Instance.recipePanelForSearch3.CmdNextButton;
-            btnSelect3.Command = SearchViewModel.Instance.recipePanelForSearch3.CmdSelectButton;
+
+            /////Search3Panel Panel Setup
+            Title3.DataContext = SearchViewModel.Instance.recipePanelForSearch3.RecipeCard;
+            ControlsPanel3.DataContext = SearchViewModel.Instance.recipePanelForSearch3;
+            ListControls3.DataContext = SearchViewModel.Instance.recipePanelForSearch3.ListOfRecipeModels;
+
         }
     }
 }

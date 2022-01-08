@@ -27,6 +27,8 @@ namespace RecipeBuddy.Core.Models
             listOfIngredientStringsForDisplay = new List<string>(ingredDisplay);
             listOfDirectionStringsForDisplay = new List<string>(directionDisplay);
             SetIngredientAndDirectionProperties();
+            recipeType = Type_Of_Recipe.Unknown;
+            recipeTypeInt = (int)recipeType;
         }
 
         /// <summary>
@@ -44,6 +46,7 @@ namespace RecipeBuddy.Core.Models
             //Website = reSource.Website;
             Link = reSource.Link;
             recipeType = reSource.recipeType;
+            recipeTypeInt = (int)reSource.recipeTypeInt;
             ID = reSource.ID;
 
             //Test for null which will throw and exception before creating the lists!
@@ -76,6 +79,7 @@ namespace RecipeBuddy.Core.Models
             Website = reSource.Website;
             Link = new Uri(reSource.Link);
             recipeType = (Type_Of_Recipe) reSource.TypeAsInt;
+            recipeTypeInt = reSource.TypeAsInt;
             ID = -1;
 
             //Test for null which will throw and exception before creating the lists!
@@ -109,6 +113,7 @@ namespace RecipeBuddy.Core.Models
             //Website = Type_of_Websource.None;
             Link = null;
             recipeType = Type_Of_Recipe.Unknown;
+            recipeTypeInt = (int)recipeType;
             ID = -1;
 
             listOfIngredientStringsForDisplay = new List<string>();
@@ -134,9 +139,9 @@ namespace RecipeBuddy.Core.Models
         /// <summary>
         /// Steps requires to update a recipe for saving to the TreeView and DB
         /// </summary>
-        public void SaveEditsToARecipe()
+        public void SaveEditsToARecipeModel()
         {
-            UpdatelistOfIngredientStringsAndDirectionsForDisplayAfterEdits();
+            UpdateRecipeForDisplayAfterEdits();
             LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
             SetIngredientAndDirectionProperties();
         }
@@ -1213,6 +1218,7 @@ namespace RecipeBuddy.Core.Models
             Title = reSource.Title;
             Description = reSource.Description;
             Author = reSource.Author;
+            RecipeType = (Type_Of_Recipe)reSource.TypeAsInt;
             //Website = reSource.Website;
 
             //Sometimes we have a good link, sometimes we don't
@@ -1225,7 +1231,6 @@ namespace RecipeBuddy.Core.Models
                 Link = null;
             }
             
-            RecipeType = (Type_Of_Recipe) reSource.TypeAsInt;
             ID = -1;
 
             if (reSource.ListOfIngredientStrings != null)
@@ -1409,7 +1414,7 @@ namespace RecipeBuddy.Core.Models
         /// and listOfDirectionStringsForDisplay of the RecipeCardModel
         /// </summary>
         /// <returns>The string to be added to the DB</returns>
-        private void UpdatelistOfIngredientStringsAndDirectionsForDisplayAfterEdits()
+        private void UpdateRecipeForDisplayAfterEdits()
         { 
             List<string> newListIngredients = new List<string>();
 
@@ -1444,6 +1449,13 @@ namespace RecipeBuddy.Core.Models
         {
             get { return recipeType; }
             set { SetProperty(ref recipeType, value); }
+        }
+
+        private int recipeTypeInt;
+        public int RecipeTypeInt
+        {
+            get { return recipeTypeInt; }
+            set { SetProperty(ref recipeTypeInt, value); }
         }
 
         private string title;

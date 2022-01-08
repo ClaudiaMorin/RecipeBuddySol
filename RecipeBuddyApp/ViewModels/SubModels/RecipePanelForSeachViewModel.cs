@@ -17,8 +17,8 @@ namespace RecipeBuddy.ViewModels
     public class RecipePanelForSearchViewModel : ObservableObject
     {
         public Type_of_Websource type_Of_Source;
-        public RecipeListModel listOfRecipeModel;
-        public RecipeDisplayModel recipeCard;
+        //public RecipeListModel listOfRecipeModel;
+        //public RecipeDisplayModel recipeCard;
 
         Action ActionShowCurrentEntry;
         Func<bool> FuncBool;
@@ -28,7 +28,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public RecipePanelForSearchViewModel(RecipeListModel listOfRecipeCardsModel)
         {
-            listOfRecipeModel = listOfRecipeCardsModel;
+            listOfRecipeModels = listOfRecipeCardsModel;
             recipeCard = new RecipeDisplayModel();
         }
 
@@ -40,7 +40,7 @@ namespace RecipeBuddy.ViewModels
         {   
             type_Of_Source = type;
             recipeCard = new RecipeDisplayModel();
-            listOfRecipeModel = new RecipeListModel();
+            listOfRecipeModels = new RecipeListModel();
             canSelectBack = false;
             canSelectNext = false;
             canSelectSelect = false;
@@ -56,7 +56,7 @@ namespace RecipeBuddy.ViewModels
         public RecipePanelForSearchViewModel()
         {
             type_Of_Source = Type_of_Websource.None;
-            listOfRecipeModel = new RecipeListModel();
+            listOfRecipeModels= new RecipeListModel();
             recipeCard = new RecipeDisplayModel();
             CanSelectBack = false;
             CanSelectNext = false;
@@ -74,7 +74,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         internal void AddToSelectedList()
         {
-            SearchViewModel.Instance.AddToListOfRecipeCards(listOfRecipeModel.GetCurrentEntry());
+            SearchViewModel.Instance.AddToListOfRecipeCards(listOfRecipeModels.GetCurrentEntry());
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void ClearRecipeBlurbModelList()
         {
-            listOfRecipeModel.ClearList();
+            listOfRecipeModels.ClearList();
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void ShowCurrentEntry()
         {
-            UpdateRecipeEntry(listOfRecipeModel.GetCurrentEntry());
+            UpdateRecipeEntry(listOfRecipeModels.GetCurrentEntry());
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void ShowCurrentEntryAndActivateButtons()
         {
-            UpdateRecipeEntry(listOfRecipeModel.GetCurrentEntry());
+            UpdateRecipeEntry(listOfRecipeModels.GetCurrentEntry());
 
             CanSelectSelect = true;
             CmdSelectButton.RaiseCanExecuteChanged();
@@ -123,13 +123,13 @@ namespace RecipeBuddy.ViewModels
         /// Used by the nextbutton to show the next entry in the list
         /// </summary>
         public void ShowNextEntry()
-        {UpdateRecipeEntry(listOfRecipeModel.GetNextEntryInLoop());}
+        {UpdateRecipeEntry(listOfRecipeModels.GetNextEntryInLoop());}
 
         /// <summary>
         /// Used by the backbutton to show the previous entry in the list
         /// </summary>
         public void ShowPreviousEntry()
-        {UpdateRecipeEntry(listOfRecipeModel.GetPreviousEntryInLoop());}
+        {UpdateRecipeEntry(listOfRecipeModels.GetPreviousEntryInLoop());}
 
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace RecipeBuddy.ViewModels
         {
 
             ActionShowCurrentEntry = () => ShowCurrentEntryAndActivateButtons();
-            int results = await GenerateSearchResultsLists.SearchSitesAndGenerateEntryList(searchTerms, listOfRecipeModel, type_Of_Source, ActionShowCurrentEntry, coreApplicationView);
+            int results = await GenerateSearchResultsLists.SearchSitesAndGenerateEntryList(searchTerms, listOfRecipeModels, type_Of_Source, ActionShowCurrentEntry, coreApplicationView);
 
             if (results == -1)
             {
@@ -205,11 +205,11 @@ namespace RecipeBuddy.ViewModels
 
         public void RemoveRecipe()
         {
-            if (listOfRecipeModel.RecipesList.Count > 0)
+            if (listOfRecipeModels.RecipesList.Count > 0)
             {
-                listOfRecipeModel.Remove(listOfRecipeModel.CurrentCardIndex);
-                if (listOfRecipeModel.CurrentCardIndex > 0)
-                    listOfRecipeModel.CurrentCardIndex = listOfRecipeModel.CurrentCardIndex - 1;
+                listOfRecipeModels.Remove(listOfRecipeModels.CurrentCardIndex);
+                if (listOfRecipeModels.CurrentCardIndex > 0)
+                    listOfRecipeModels.CurrentCardIndex = listOfRecipeModels.CurrentCardIndex - 1;
 
                 ShowCurrentEntry();
                 return;
@@ -220,8 +220,8 @@ namespace RecipeBuddy.ViewModels
         {
             get
             {
-                if (listOfRecipeModel.RecipesList.Count > 0)
-                    return listOfRecipeModel.GetCurrentEntry();
+                if (listOfRecipeModels.RecipesList.Count > 0)
+                    return listOfRecipeModels.GetCurrentEntry();
 
                 else
                     return null;
@@ -237,6 +237,21 @@ namespace RecipeBuddy.ViewModels
         {
             get { return canSelectNext; }
             set { SetProperty(ref canSelectNext, value); }
+        }
+
+        /// <summary>
+        /// Indicates whether or not we can click the recipe-related button, there needs to be a recipe in the CardView so the 
+        /// total list count has to be greater than 0.
+        /// </summary>
+        private bool alwaysTrue;
+        public bool AlwaysTrue
+        {
+            get
+            {
+                return alwaysTrue;
+            }
+
+            set { SetProperty(ref alwaysTrue, value); }
         }
 
         /// <summary>
@@ -321,6 +336,20 @@ namespace RecipeBuddy.ViewModels
         {
             get { return author; }
             set { SetProperty(ref author, value); }
+        }
+
+        private RecipeDisplayModel recipeCard;
+        public RecipeDisplayModel RecipeCard
+        {
+            get { return recipeCard; }
+            set { SetProperty(ref recipeCard, value); }
+        }
+
+        private RecipeListModel listOfRecipeModels;
+        public RecipeListModel ListOfRecipeModels
+        {
+            get { return listOfRecipeModels; }
+            set { SetProperty(ref listOfRecipeModels, value); }
         }
 
         private Type_of_Websource website;

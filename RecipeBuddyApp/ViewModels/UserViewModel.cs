@@ -220,7 +220,7 @@ namespace RecipeBuddy.ViewModels
         }
 
         //Used to flip the Login button on and off.
-        private void ToggleCreatUser()
+        private void ToggleCreateUser()
         {
             if (newAccountName == null || newConfirmPasswordString == null || newPasswordString == null)
             {
@@ -285,7 +285,7 @@ namespace RecipeBuddy.ViewModels
             set
             {
                 SetProperty(ref newAccountName, value);
-                ToggleCreatUser();
+                ToggleCreateUser();
             }
         }
 
@@ -308,7 +308,7 @@ namespace RecipeBuddy.ViewModels
             set
             {
                 SetProperty(ref newPasswordString, value);
-                ToggleCreatUser();
+                ToggleCreateUser();
             }
         }
 
@@ -319,7 +319,7 @@ namespace RecipeBuddy.ViewModels
             set
             {
                 SetProperty(ref newConfirmPasswordString, value);
-                ToggleCreatUser();
+                ToggleCreateUser();
             }
         }
 

@@ -132,7 +132,7 @@ namespace RecipeBuddy.ViewModels
                 return;
             }
 
-            recipeCardViewModelForEdit.SaveEditsToARecipe();
+            recipeCardViewModelForEdit.SaveEditsToARecipeModel();
             recipeCardViewModelForEdit.RecipeType = CurrentType;
             int result = MainWindowViewModel.Instance.mainTreeViewNav.AddRecipeToTreeView(recipeCardViewModelForEdit, true);
 

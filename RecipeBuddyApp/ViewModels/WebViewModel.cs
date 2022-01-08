@@ -46,7 +46,7 @@ namespace RecipeBuddy.ViewModels
             alwaysTrue = true;
             mainViewWidth = "3*";
             mainRecipeCardModel = new RecipeDisplayModel();
-            recipePanelForWebCopy = new RecipePanelForWebCopy();
+            recipePanelForWebCopy = RecipePanelForWebCopy.Instance;
             //recipePanelForNewRecipe = new RecipeDetailsPanelForEmptyRecipe();
             //currentLink = MainRecipeCardModel.Link;
             canSelectOpenEntry = true;
@@ -56,7 +56,7 @@ namespace RecipeBuddy.ViewModels
             CmdOpenEntry = new ICommandViewModel<WebViewModel>(Action  => OpenKeepRecipePanel(), canCallActionFunc => CanSelectOpenEntry);
             CmdOpenEmptyEntry = new ICommandViewModel<WebViewModel>(Action => OpenKeepEmptyRecipePanel(), canCallActionFunc => CanSelectOpenEntry);
             CmdSelectedTypeChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
-            CmdSelectedMeasurementChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeMeasurementTypeFromComboBox(e), canCallActionFunc => AlwaysTrue);
+
 
             CmdSaveButton = new RBRelayCommand(action = () => SaveEntry(), funcBool = () => CanSelectSave);
             CmdCancelButton = new RBRelayCommand(action = () => CancelEntry(), funcBool = () => CanSelectCancel);
@@ -83,12 +83,12 @@ namespace RecipeBuddy.ViewModels
 
         public void SaveEntry()
         {
-            recipePanelForWebCopy.recipeCardModel.RecipeType = (Type_Of_Recipe) ComboBoxIndexForRecipeType;
-            if (string.Compare(mainRecipeCardModel.Title, "Search for your next recipe find!") == 0)
+            //recipePanelForWebCopy.recipeCardModel.RecipeType = (Type_Of_Recipe) ComboBoxIndexForRecipeType;
+            if (mainRecipeCardModel.Title.Length < 1 || string.Compare(mainRecipeCardModel.Title, "Recipe Title Here") == 0)
             {
                 //Launch dialog saying that the new recipe must have a title
             }
-            recipePanelForWebCopy.SaveEntry();
+            recipePanelForWebCopy.SaveEntryToDB();
             CloseKeepRecipePanel();
         }
 
@@ -103,7 +103,8 @@ namespace RecipeBuddy.ViewModels
             RecipeEntryFromWebVisibility = "Visible";
             MainViewWidth = "*";
             recipePanelForWebCopy.LoadRecipeCardModel(mainRecipeCardModel);
-            ComboBoxIndexForRecipeType = (int)mainRecipeCardModel.RecipeType;
+            //int mytype = (int)mainRecipeCardModel.RecipeType;
+            //ComboBoxIndexForRecipeType = mytype;
         }
 
         /// <summary>
@@ -175,7 +176,6 @@ namespace RecipeBuddy.ViewModels
                     {
                         SearchViewModel.Instance.ChangeRecipe(recipeModel.Title);
                         mainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(recipeModel);
-                        //SearchViewModel.Instance.CurrentLink = mainRecipeCardModel.Link;
                         SearchViewModel.Instance.NumXRecipesIndex = "0";
                         //recipePanelForWebCopy.LoadRecipeCardModel(mainRecipeCardModel);
                     }
@@ -183,14 +183,6 @@ namespace RecipeBuddy.ViewModels
             }
         }
 
-        /// <summary>
-        /// This manages changes that come in through the user manipulating the combobox on the Basket page
-        /// </summary>
-        /// <param name="e"></param>
-        internal void ChangeMeasurementTypeFromComboBox(SelectionChangedEventArgs e)
-        {
-            recipePanelForWebCopy.recipeCardModel.RecipeType = (Type_Of_Recipe)ComboBoxIndexForRecipeType;
-        }
 
         /// <summary>
         /// This manages changes that come in through the user manipulating the combobox on the Basket page
@@ -198,7 +190,18 @@ namespace RecipeBuddy.ViewModels
         /// <param name="e"></param>
         internal void ChangeRecipeTypeFromComboBox(SelectionChangedEventArgs e)
         {
-            recipePanelForWebCopy.recipeCardModel.RecipeType = (Type_Of_Recipe)ComboBoxIndexForRecipeType;
+            if (e.AddedItems != null && e.AddedItems.Count > 0)
+            {
+                string type = e.AddedItems[0].ToString();
+
+                for (int index = 0; index < MainNavTreeViewModel.Instance.CatagoryTypes.Count; index++)
+                {
+                    if (string.Compare(MainNavTreeViewModel.Instance.CatagoryTypes[index].ToString().ToLower(), type.ToLower()) == 0)
+                    {
+                        recipePanelForWebCopy.recipeCardModel.RecipeType = (Type_Of_Recipe)index;
+                    }
+                }
+            }
         }
 
         #region ICommand, Properties, CanSelect
@@ -343,14 +346,7 @@ namespace RecipeBuddy.ViewModels
             private set;
         }
 
-        /// <summary>
-        /// Property for the Recipe combobox change command
-        /// </summary>
-        public ICommand CmdSelectedMeasurementChanged
-        {
-            get;
-            private set;
-        }
+
 
         /// <summary>
         /// property for the Quantity combobox change command
