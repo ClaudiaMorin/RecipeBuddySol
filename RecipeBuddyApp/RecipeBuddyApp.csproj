@@ -166,8 +166,6 @@
     <Compile Include="ValueConverters\StyleConverterTextBoxSlim.cs" />
     <Compile Include="ValueConverters\TextToVisibilityConverter.cs" />
     <Compile Include="ViewModels\Commands\ICommmandViewModel.cs" />
-    <Compile Include="ViewModels\EditViewModel.cs" />
-    <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
     <Compile Include="ViewModels\SelectedViewModel.cs" />
@@ -176,15 +174,8 @@
     <Compile Include="ViewModels\SubModels\RecipeTreeItem.cs" />
     <Compile Include="ViewModels\SubModels\RecipePanelForSeachViewModel.cs" />
     <Compile Include="ViewModels\SubModels\RecipePanelWebCopy.cs" />
-    <Compile Include="ViewModels\UploadViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="ViewModels\WebViewModel.cs" />
-    <Compile Include="Views\EditView.xaml.cs">
-      <DependentUpon>EditView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\MainPageView.xaml.cs">
-      <DependentUpon>MainPageView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\SearchView.xaml.cs">
       <DependentUpon>SearchView.xaml</DependentUpon>
     </Compile>
@@ -193,9 +184,6 @@
     </Compile>
     <Compile Include="Views\ShellPage.xaml.cs">
       <DependentUpon>ShellPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\UploadView.xaml.cs">
-      <DependentUpon>UploadView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UserControls\AppHeader.xaml.cs">
       <DependentUpon>AppHeader.xaml</DependentUpon>
@@ -222,9 +210,6 @@
     </Compile>
     <Compile Include="Views\UserControls\RecipeTreeView.xaml.cs">
       <DependentUpon>RecipeTreeView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\UserControls\UploadRecipeConvertedPanel.xaml.cs">
-      <DependentUpon>UploadRecipeConvertedPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UserView.xaml.cs">
       <DependentUpon>UserView.xaml</DependentUpon>
@@ -292,14 +277,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\EditView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\MainPageView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\SearchView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -309,10 +286,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ShellPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\UploadView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -347,10 +320,6 @@
     <Page Include="Views\UserControls\RecipeTreeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\UserControls\UploadRecipeConvertedPanel.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\UserView.xaml">
       <Generator>MSBuild:Compile</Generator>

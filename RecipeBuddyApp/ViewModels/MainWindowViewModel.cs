@@ -16,7 +16,7 @@ namespace RecipeBuddy.ViewModels
     public sealed class MainWindowViewModel : ObservableObject
     {
 
-        public enum Tabs { SearchTab, WebViewTab, SelectedTab, EditTab, UploadTab, UserTab };
+        public enum Tabs { SearchTab, WebViewTab, SelectedTab,  UserTab };
 
 
         /// <summary>

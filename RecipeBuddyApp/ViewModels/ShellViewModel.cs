@@ -72,11 +72,6 @@ namespace RecipeBuddy.ViewModels
             NavigationService.NavigationFailed += Frame_NavigationFailed;
             NavigationService.Navigated += Frame_Navigated;
             _navigationView.BackRequested += OnBackRequested;
-            //winui:NavigationViewItem x:Uid="Shell_Search" x:Name="SearchView"  helpers:NavHelper.NavigateTo ="views:SearchView"  
-            //searchNavItem = new WinUI.NavigationViewItem();
-            //searchNavItem.Content = "Search";
-            //searchNavItem.
-
         }
 
         private async void OnLoaded()

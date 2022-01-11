@@ -61,8 +61,8 @@ namespace RecipeBuddy.ViewModels
             typeComboBoxVisibility = "Collapsed";
             //CmdRemove = new RBRelayCommand(ActionNoParams = () => RemoveRecipe(), FuncBool = () => CanSelect);
             CmdSave = new RBRelayCommand(ActionNoParams = () => SaveRecipe(), FuncBool = () => CanSelectSave);
-            CmdNew = new RBRelayCommand(ActionNoParams = () => CreateNewRecipe(), FuncBool = () => CanSelectNew);
-            CmdEdit = new RBRelayCommand(ActionNoParams = () => EditRecipe(), FuncBool = () => CanSelect);
+            //CmdNew = new RBRelayCommand(ActionNoParams = () => CreateNewRecipe(), FuncBool = () => CanSelectNew);
+            //CmdEdit = new RBRelayCommand(ActionNoParams = () => EditRecipe(), FuncBool = () => CanSelect);
             //CmdSelectedItemChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeFromComboBox(e), canCallActionFunc => CanSelect);
             CmdSelectedQuantityChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeQuantityFromComboBox(e), canCallActionFunc => CanSelect);
 
@@ -174,26 +174,26 @@ namespace RecipeBuddy.ViewModels
         /// ICommand backer for Edit Button on Select page.  Function adds the current recipe to the edit page and removes
         /// it from the MakeItView
         /// </summary>
-        public void EditRecipe()
-        {
-            //EditViewModel.Instance.UpdateRecipe(selectViewMainRecipeCardModel);
+        //public void EditRecipe()
+        //{
+        //    //EditViewModel.Instance.UpdateRecipe(selectViewMainRecipeCardModel);
 
 
-            //Check to see if this if from the TreeView or from a generic search
-            MainWindowViewModel.Instance.SelectedTabIndex = (int)MainWindowViewModel.Tabs.EditTab;
-            //RemoveRecipe();
-        }
+        //    //Check to see if this if from the TreeView or from a generic search
+        //    MainWindowViewModel.Instance.SelectedTabIndex = (int)MainWindowViewModel.Tabs.EditTab;
+        //    //RemoveRecipe();
+        //}
 
         /// <summary>
         /// ICommand backer for Create New Button on Select page.  Creates an new recipe and takes the user to the edit panel
         /// </summary>
-        public void CreateNewRecipe()
-        {
-            EditViewModel.Instance.CreateNewRecipe();
+        //public void CreateNewRecipe()
+        //{
+        //    EditViewModel.Instance.CreateNewRecipe();
 
-            //Check to see if this if from the TreeView or from a generic search
-            MainWindowViewModel.Instance.SelectedTabIndex = (int)MainWindowViewModel.Tabs.EditTab;
-        }
+        //    //Check to see if this if from the TreeView or from a generic search
+        //    MainWindowViewModel.Instance.SelectedTabIndex = (int)MainWindowViewModel.Tabs.EditTab;
+        //}
 
         /// <summary>
         /// sets up the first entry in the dropdown list and the initial index.
@@ -335,10 +335,13 @@ namespace RecipeBuddy.ViewModels
                 {
                     //We know we have a fraction someplace, we just need to figure out where? It will either be at the beginging of the string or at the end
                     //Fraction is at the start of the string so there isn't anything else to worry about.
-                    if (ingredQuantity[0].ToString().Contains("/") == true || ingredQuantity[0].ToString().Contains("½") == true || ingredQuantity[0].ToString().Contains("¼") == true || ingredQuantity[0].ToString().Contains("¾") == true || ingredQuantity[0].ToString().Contains("⅓") == true || ingredQuantity[0].ToString().Contains("⅔") == true)
+                    if (ingredQuantity[1].ToString().Contains("/") == true || ingredQuantity[0].ToString().Contains("½") == true || ingredQuantity[0].ToString().Contains("¼") == true || ingredQuantity[0].ToString().Contains("¾") == true || ingredQuantity[0].ToString().Contains("⅓") == true || ingredQuantity[0].ToString().Contains("⅔") == true)
                     {
                         ingredQuantity = StringManipulationHelper.ConvertVulgarFaction(ingredQuantity);
+                        if (string.Compare(ingredQuantity, "-1") == 0)
+                            ingredQuantity = "";
                     }
+
                     else //The fraction is at the end of the number so we need to add them up after they fraction is converted to a float!
                     {
                         if (ingredQuantity[ingredQuantity.Length - 1].ToString().Contains("/") == true || ingredQuantity[ingredQuantity.Length - 1].ToString().Contains("½") == true || ingredQuantity[ingredQuantity.Length - 1].ToString().Contains("¼") == true || ingredQuantity[ingredQuantity.Length - 1].ToString().Contains("¾") == true || ingredQuantity[ingredQuantity.Length - 1].ToString().Contains("⅓") == true || ingredQuantity[ingredQuantity.Length - 1].ToString().Contains("⅔") == true)
@@ -375,44 +378,6 @@ namespace RecipeBuddy.ViewModels
             return "";
         }
 
-        /// <summary>
-        /// This manages changes that come in through the user manipulating the combobox on the Basket page
-        /// </summary>
-        /// <param name="e"></param>
-        //internal void ChangeRecipeFromComboBox(SelectionChangedEventArgs e)
-        //{
-        //    if (e.AddedItems != null && e.AddedItems.Count > 0)
-        //    {
-        //        RecipeDisplayModel recipeCardModelFromChangedEventArgs = e.AddedItems[0] as RecipeDisplayModel;
-
-        //        if (recipeCardModelFromChangedEventArgs != null)
-        //        {
-        //            if (listOfRecipeModel.SettingCurrentIndexByTitle(recipeCardModelFromChangedEventArgs.Title) != -1)
-        //            {
-        //                RecipeRecordModel recipeModel = listOfRecipeModel.GetCurrentEntry();
-        //                NumXRecipesIndex = "0";
-        //                UpdateRecipeEntry(recipeModel);
-        //            }
-        //        }
-        //    }
-        //    //need to make this a sub to the first if statment because adding a new item to the listbox
-        //    //removes the other which doesn't actually happen but the EventArgs still sends it as e.RemoveItems[0]
-        //    else
-        //    {
-        //        if (e.RemovedItems != null && e.RemovedItems.Count > 0)
-        //        {
-        //            RecipeRecordModel recipeModel = e.RemovedItems[0] as RecipeRecordModel;
-
-        //            if (recipeModel != null)
-        //            {
-        //                ChangeRecipe(recipeModel.Title);
-        //                //recipeModel.UpdateRecipeEntry(recipeModel);
-        //                NumXRecipesIndex = "0";
-        //                UpdateQuantityCalc();
-        //            }
-        //        }
-        //    }
-        //}
 
         /// <summary>
         /// Responds to the changes in the multiplier ComboBox by getting the value from the ingredient string

@@ -510,6 +510,7 @@ namespace RecipeBuddy.ViewModels
 
                 if(recipeTreeItem.RecipeModelTV.TypeAsInt != (int)Type_Of_Recipe.Header)
                 SelectedViewModel.Instance.UpdateRecipeEntry(recipeTreeItem.RecipeModelTV);
+                NavigationService.Navigate(typeof(SelectedView));
             }
         }
 
@@ -722,11 +723,11 @@ namespace RecipeBuddy.ViewModels
         /// <summary>
         /// Add the recipe to the Edit page
         /// </summary>
-        internal void AddRecipeToEdit(RecipeTreeItem recipeTreeView)
-        {
-            EditViewModel.Instance.UpdateRecipe(recipeTreeView.RecipeModelTV);
-            MainWindowViewModel.Instance.SelectedTabIndex = (int)MainWindowViewModel.Tabs.EditTab;
-        }
+        //internal void AddRecipeToEdit(RecipeTreeItem recipeTreeView)
+        //{
+        //    EditViewModel.Instance.UpdateRecipe(recipeTreeView.RecipeModelTV);
+        //    MainWindowViewModel.Instance.SelectedTabIndex = (int)MainWindowViewModel.Tabs.EditTab;
+        //}
 
         #region ICommand  and other Properties
 

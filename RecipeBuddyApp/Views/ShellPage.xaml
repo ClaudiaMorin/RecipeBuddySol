@@ -36,9 +36,7 @@
             <winui:NavigationViewItem x:Uid="Shell_Login" x:Name="UserView" helpers:NavHelper.NavigateTo ="views:UserView" Content="Login/out"  />
             <winui:NavigationViewItem x:Uid="Shell_Select" x:Name="SelectedView" helpers:NavHelper.NavigateTo ="views:SelectedView"  Content="Make It" />
             <winui:NavigationViewItem x:Uid="Shell_Search" x:Name="SearchView"  helpers:NavHelper.NavigateTo ="views:SearchView" Content="Search"  />
-            <winui:NavigationViewItem x:Uid="Shell_WebView" x:Name="WebView"  helpers:NavHelper.NavigateTo ="views:WebView" Content="Web"  />
-            <!--<winui:NavigationViewItem x:Uid="Shell_Edit" helpers:NavHelper.NavigateTo ="views:EditView" Content="Edit"  />
-            <winui:NavigationViewItem x:Uid="Shell_Upload" helpers:NavHelper.NavigateTo ="views:UploadView" Content="Upload"  />-->
+            <winui:NavigationViewItem x:Uid="Shell_WebView" x:Name="EditView"  helpers:NavHelper.NavigateTo ="views:WebView" Content="Edit"  />
         </winui:NavigationView.MenuItems>
 
         <i:Interaction.Behaviors>

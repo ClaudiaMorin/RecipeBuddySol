@@ -6,7 +6,6 @@ using System.Security;
 using System;
 using RecipeBuddy.Core.Helpers;
 using RecipeBuddy.Core.Scrapers;
-using System;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using RecipeBuddy.Core.Models;
@@ -129,8 +128,6 @@ namespace RecipeBuddy.ViewModels
             FoodAndWineCheckBoxEnabled = true;
 
             SearchViewModel.Instance.ResetViewModel();
-            //WebViewModel.Instance.ResetViewModel();
-            EditViewModel.Instance.ResetViewModel();
 
             PanelMap.Clear();
             loggedin = false;

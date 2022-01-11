@@ -38,7 +38,7 @@ namespace RecipeBuddy.ViewModels
             searchString = "";
             searchButtonTitle = "Search";
             searchEnabled = true;
-            webViewEnabled = false;
+            webViewEnabled = true;
             cursorType = CoreCursorType.Arrow;
             searchWait = false;
             listOfRecipeCards = new RecipeListModel();
@@ -174,7 +174,8 @@ namespace RecipeBuddy.ViewModels
         }
 
         /// <summary>
-        /// sets up the first entry in the dropdown list and the initial index.
+        /// sets up the first entry in the dropdown list and the initial index, updates the canSelectRecipeEntry button so that it is
+        /// click-enabled
         /// </summary>
         private void SetUpComboBox()
         {
@@ -192,18 +193,19 @@ namespace RecipeBuddy.ViewModels
             }
 
             listOfRecipeCards.Add(recipeCard);
-            WebViewEnabled = true;
+            WebViewModel.Instance.CanSelectOpenRecipeEntry = true;
 
             //If we have nothing in the list we will show the first entry
             if (listOfRecipeCards.ListCount == 1)
             {
                 listOfRecipeCards.CurrentCardIndex = 0;
-                EditViewModel.Instance.IndexOfComboBoxItem = 0;
+                //EditViewModel.Instance.IndexOfComboBoxItem = 0;
             }
             else
             {
                 listOfRecipeCards.CurrentCardIndex = listOfRecipeCards.ListCount - 1;
             }
+
             ShowSpecifiedEntry(listOfRecipeCards.CurrentCardIndex);
         }
 

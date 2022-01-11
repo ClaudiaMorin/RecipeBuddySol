@@ -49,12 +49,13 @@ namespace RecipeBuddy.ViewModels
             recipePanelForWebCopy = RecipePanelForWebCopy.Instance;
             //recipePanelForNewRecipe = new RecipeDetailsPanelForEmptyRecipe();
             //currentLink = MainRecipeCardModel.Link;
-            canSelectOpenEntry = true;
+            canSelectOpenEmptyEntry = true;
+            canSelectOpenRecipeEntry = false;
             canSelectCancel = true;
             
             CmdRemove = new ICommandViewModel<string>(actionWithString = s => SearchViewModel.Instance.RemoveRecipe(s), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
-            CmdOpenEntry = new ICommandViewModel<WebViewModel>(Action  => OpenKeepRecipePanel(), canCallActionFunc => CanSelectOpenEntry);
-            CmdOpenEmptyEntry = new ICommandViewModel<WebViewModel>(Action => OpenKeepEmptyRecipePanel(), canCallActionFunc => CanSelectOpenEntry);
+            CmdOpenEntry = new ICommandViewModel<WebViewModel>(Action  => OpenKeepRecipePanel(), canCallActionFunc => canSelectOpenRecipeEntry);
+            CmdOpenEmptyEntry = new ICommandViewModel<WebViewModel>(Action => OpenKeepEmptyRecipePanel(), canCallActionFunc => canSelectOpenEmptyEntry);
             CmdSelectedTypeChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
 
 
@@ -258,13 +259,22 @@ namespace RecipeBuddy.ViewModels
             set { SetProperty(ref canSelectSave, value); }
         }
 
-        private bool canSelectOpenEntry;
-        public bool CanSelectOpenEntry
+        private bool canSelectOpenEmptyEntry;
+        public bool CanSelectOpenEmptyEntry
         {
             get
-            { return canSelectOpenEntry; }
+            { return canSelectOpenEmptyEntry; }
 
-            set { SetProperty(ref canSelectOpenEntry, value); }
+            set { SetProperty(ref canSelectOpenEmptyEntry, value); }
+        }
+
+        private bool canSelectOpenRecipeEntry;
+        public bool CanSelectOpenRecipeEntry
+        {
+            get
+            { return canSelectOpenRecipeEntry; }
+
+            set { SetProperty(ref canSelectOpenRecipeEntry, value); }
         }
 
         /// <summary>

@@ -218,6 +218,11 @@ namespace RecipeBuddy.Core.Helpers
             return "-1";
         }
 
+        /// <summary>
+        /// Adds the correct abreveation for the measurement type
+        /// </summary>
+        /// <param name="measuretype"></param>
+        /// <returns></returns>
         public static string CheckMeasureString(string measuretype)
         {
             string typeToCheck = measuretype.Trim().ToLower();
@@ -226,21 +231,20 @@ namespace RecipeBuddy.Core.Helpers
             switch (typeToCheck)
             {
                 case "cup":
-                    toReturn = "C";
-                    break;
                 case "cups":
+                case "cup(s)":
                     toReturn = "C";
                     break;
+
                 case "teaspoon":
-                    toReturn = "tsp.";
-                    break;
                 case "teaspoons":
+                case "teaspoon(s)":
                     toReturn = "tsp.";
                     break;
+
                 case "tablespoon":
-                    toReturn = "Tbsp.";
-                    break;
                 case "tablespoons":
+                case "tablespoon(s)":
                     toReturn = "Tbsp.";
                     break;
             }
