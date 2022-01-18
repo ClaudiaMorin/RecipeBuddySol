@@ -17,7 +17,7 @@ namespace RecipeBuddy.Views
             InitializeComponent();
             //DetailsPanelForSelected.DataContext = SelectedViewModel.Instance.selectViewMainRecipeCardModel;
             DetailsPanelForSelected.DataContext = SelectedViewModel.Instance;
-            
+           
             TitleGrid.DataContext = SelectedViewModel.Instance;
             Title.DataContext = SelectedViewModel.Instance.selectViewMainRecipeCardModel;
 

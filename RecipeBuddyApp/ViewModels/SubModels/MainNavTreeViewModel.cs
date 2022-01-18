@@ -239,7 +239,19 @@ namespace RecipeBuddy.ViewModels
             return new RecipeTreeItem(titleOfRecipe);
         }
 
-        public void ChangedTreeItemTitle(string oldTitle, string newTitle, Type_Of_Recipe type_Of_Recipe)
+        /// <summary>
+        /// Wrapper around the FindRecipeInCollection that allows the user to send in a type instead of identifying the collection
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="titleOfRecipe"></param>
+        /// <returns></returns>
+        public RecipeTreeItem FindRecipeInCollection(Type_Of_Recipe type, string titleOfRecipe)
+        {
+            RecipeTreeItem recipeTreeNode = GetRecipeParentNodeFromType(type);
+            return FindRecipeInCollection(recipeTreeNode.Children, titleOfRecipe);
+        }
+
+            public void ChangedTreeItemTitle(string oldTitle, string newTitle, Type_Of_Recipe type_Of_Recipe)
         {
             RecipeTreeItem recipeTreeNode = GetRecipeTreeItem(oldTitle, type_Of_Recipe);
             if (recipeTreeNode != null)
@@ -256,7 +268,7 @@ namespace RecipeBuddy.ViewModels
         /// <param name="title">The title of the recipe we are looking for</param>
         /// <param name="type_Of_Recipe">The recipe type which gives us the "parent node type"</param>
         /// <returns>The recipe tree Item we are looking for</returns>
-        private RecipeTreeItem GetRecipeTreeItem(string title, Type_Of_Recipe type_Of_Recipe)
+        public RecipeTreeItem GetRecipeTreeItem(string title, Type_Of_Recipe type_Of_Recipe)
         {
             RecipeTreeItem recipeTreeNode = GetRecipeParentNodeFromType(type_Of_Recipe);
             RecipeTreeItem recipeTreeItem = null;
@@ -466,37 +478,37 @@ namespace RecipeBuddy.ViewModels
         /// <param name="ListToUse">The preselected list</param>
         /// <param name="recipeCardModel">The RecipeModel we are adding to the preselected list</param>
         /// <param name="action">The specific action keyed to the list</param>
-        private bool AddRecipeToSpecifiedTreeViewList(ObservableCollection<RecipeDisplayModel> ListToUse, RecipeDisplayModel recipeCardModel, Action<string, Type_Of_Recipe, Type_Of_Recipe_Action, bool> actionAddRemoveList, bool TreeViewItemsExpand)
-        {
-            for (int i = 0; i < ListToUse.Count; i++)
-            {
-                if (ListToUse[i].Title == recipeCardModel.Title && recipeCardModel.Title != "Search For Your Recipe")
-                {
-                    //MessageBoxResult results = MessageBox.Show("Saving this recipe will overwrite the one currently saved. \n\n  If you don't want to do this change the title before saving!", "Do you want to overwite saved recipe!", MessageBoxButton.OKCancel);
+        //private bool AddRecipeToSpecifiedTreeViewList(ObservableCollection<RecipeDisplayModel> ListToUse, RecipeDisplayModel recipeCardModel, Action<string, Type_Of_Recipe, Type_Of_Recipe_Action, bool> actionAddRemoveList, bool TreeViewItemsExpand)
+        //{
+        //    for (int i = 0; i < ListToUse.Count; i++)
+        //    {
+        //        if (ListToUse[i].Title == recipeCardModel.Title && recipeCardModel.Title != "Search For Your Recipe")
+        //        {
+        //            //MessageBoxResult results = MessageBox.Show("Saving this recipe will overwrite the one currently saved. \n\n  If you don't want to do this change the title before saving!", "Do you want to overwite saved recipe!", MessageBoxButton.OKCancel);
 
-                    /*if (results == MessageBoxResult.OK)
-                    {
-                        Overwrite the recipe
-                        ListToUse.Add(recipeCardModel);
-                        remove the old recipe and then add the new one
-                        actionAddRemoveList(recipeCardModel.Title,(Type_Of_Recipe)recipeCardModel.TypeAsInt, Type_Of_Recipe_Action.Remove, false);
-                        Now remove it from the DB
-                        DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(recipeCardModel.Title, recipeCardModel.TypeAsInt);
+        //            /*if (results == MessageBoxResult.OK)
+        //            {
+        //                Overwrite the recipe
+        //                ListToUse.Add(recipeCardModel);
+        //                remove the old recipe and then add the new one
+        //                actionAddRemoveList(recipeCardModel.Title,(Type_Of_Recipe)recipeCardModel.TypeAsInt, Type_Of_Recipe_Action.Remove, false);
+        //                Now remove it from the DB
+        //                DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(recipeCardModel.Title, recipeCardModel.TypeAsInt);
 
-                        actionAddRemoveList(recipeCardModel.Title, (Type_Of_Recipe)recipeCardModel.TypeAsInt, Type_Of_Recipe_Action.Add, TreeViewItemsExpand);
-                        return true;
-                    }
-                    user chose to not save
-                    return false;*/
-                }
-            }
+        //                actionAddRemoveList(recipeCardModel.Title, (Type_Of_Recipe)recipeCardModel.TypeAsInt, Type_Of_Recipe_Action.Add, TreeViewItemsExpand);
+        //                return true;
+        //            }
+        //            user chose to not save
+        //            return false;*/
+        //        }
+        //    }
 
-            ListToUse.Add(recipeCardModel);
-            //False will add the item to the list
-            actionAddRemoveList(recipeCardModel.Title, (Type_Of_Recipe)recipeCardModel.RecipeType, Type_Of_Recipe_Action.Add, TreeViewItemsExpand);
+        //    ListToUse.Add(recipeCardModel);
+        //    //False will add the item to the list
+        //    actionAddRemoveList(recipeCardModel.Title, (Type_Of_Recipe)recipeCardModel.RecipeType, Type_Of_Recipe_Action.Add, TreeViewItemsExpand);
 
-            return true;
-        }
+        //    return true;
+        //}
 
         /// <summary>
         /// Changes the Type of recipe which effects where the recipe is stored and retreved on the Tree View
@@ -511,6 +523,21 @@ namespace RecipeBuddy.ViewModels
                 if(recipeTreeItem.RecipeModelTV.TypeAsInt != (int)Type_Of_Recipe.Header)
                 SelectedViewModel.Instance.UpdateRecipeEntry(recipeTreeItem.RecipeModelTV);
                 NavigationService.Navigate(typeof(SelectedView));
+            }
+        }
+
+        public void MoveSelectedTreeViewItem(RecipeDisplayModel recipe, Type_Of_Recipe deleteTargetType)
+        {
+            AddRecipeToTreeView(recipe);
+            RecipeTreeItem parent = GetRecipeParentNodeFromType(deleteTargetType);
+
+            for (int i = 0; i < parent.Children.Count; i++)
+            {
+                if (parent.Children[i].RecipeModelTV.Title == recipe.Title && recipe.Title != "Search For Your Recipe")
+                {
+                    //Remove the recipe
+                    parent.Children.RemoveAt(i);
+                }
             }
         }
 
@@ -575,6 +602,12 @@ namespace RecipeBuddy.ViewModels
             }
 
             return false;
+        }
+
+        public void SaveUpdatesToRecipe(RecipeDisplayModel recipeDisplay)
+        {
+            RecipeTreeItem recipeTreeItem = FindRecipeInCollection(recipeDisplay.RecipeType, recipeDisplay.Title);
+            recipeTreeItem.UpdateRecipeEntry(recipeDisplay);
         }
 
         /// <summary>
@@ -646,8 +679,8 @@ namespace RecipeBuddy.ViewModels
             RecipeTreeItem recipeTreeItem = new RecipeTreeItem(recipeModel);
             RecipeTreeItem parentTreeNode = GetRecipeParentNodeFromType(recipeTreeItem.RecipeModelTV.TypeAsInt);
 
-            returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem, parentTreeNode.Children);
-            if (returnOverwriteCmd == 0)
+            //returnOverwriteCmd = CheckIfRecipeAlreadyPresent(recipeTreeItem.TreeItemTitle, recipeTreeItem.RecipeModelTV.TypeAsInt);
+            if (CheckIfRecipeAlreadyPresent(recipeTreeItem.TreeItemTitle, recipeTreeItem.RecipeModelTV.TypeAsInt) == true)
                 return returnOverwriteCmd;
             parentTreeNode.Children.Add(recipeTreeItem);
             parentTreeNode.ItemExpanded = expandTreeViewHeader;
@@ -683,21 +716,23 @@ namespace RecipeBuddy.ViewModels
         /// goes through the list looking for the same title that we are trying to add to the list
         /// if found it will return true
         /// </summary>
-        /// <param name="recipeCardTreeItem">the recipe we are attempting to add</param>
-        /// <param name="List">the treeviewlist we are attempting to add the recipe to</param>
+        /// <param name="title">the title of the recipe we are attempting to add</param>
+        /// <param name="type">the type of this recipe, we use this to fine the parent node and then access the collection through the children</param>
         /// <returns>true if an identical title if found, false otherwise</returns>
-        private int CheckIfRecipeAlreadyPresent(RecipeTreeItem recipeCardTreeItem, ObservableCollection<RecipeTreeItem> List)
+        public bool CheckIfRecipeAlreadyPresent(string title, int type)
         {
 
-            foreach (RecipeTreeItem recipe in List)
+            RecipeTreeItem parentNode = MainNavTreeViewModel.instance.GetRecipeParentNodeFromType(type);
+
+            foreach (RecipeTreeItem recipe in parentNode.Children)
             {
-                if (string.Compare(recipe.TreeItemTitle.ToLower(), recipeCardTreeItem.TreeItemTitle.ToLower()) == 0)
+                if (string.Compare(title.ToLower(), recipe.TreeItemTitle.ToLower()) == 0)
                 {
-                    return 1;
+                    return true;
                 }
             }
 
-            return 2; //recipe title doesn't already exists so don't worry about it!
+            return false; //recipe title doesn't already exists so don't worry about it!
         }
 
         

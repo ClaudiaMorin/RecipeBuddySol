@@ -96,7 +96,18 @@ namespace RecipeBuddy.Core.Models
             TypeAsInt = reSource.TypeAsInt;
             ListOfIngredientStrings = new List<string>(reSource.ListOfIngredientStrings);
             ListOfDirectionStrings = new List<string>();
-            ListOfDirectionStrings.Add("-Directions");
+        }
+
+        public void CopyRecipeModel(RecipeDisplayModel reSource)
+        {
+            Description = string.Copy(reSource.Description);
+            Title = string.Copy(reSource.Title);
+            Author = string.Copy(reSource.Author);
+            Website = reSource.Website;
+            Link = "";
+            TypeAsInt = (int)reSource.RecipeType;
+            ListOfIngredientStrings = new List<string>(reSource.listOfIngredientStringsForDisplay);
+            ListOfDirectionStrings = new List<string>(reSource.listOfDirectionStringsForDisplay);
         }
 
 
@@ -134,13 +145,6 @@ namespace RecipeBuddy.Core.Models
             get { return author; }
             set { author = value; }
         }
-
-        //private Type_of_Websource website;
-        //public Type_of_Websource Website
-        //{
-        //    get { return website; }
-        //    set { website = value; }
-        //}
 
         private string website;
         public string Website

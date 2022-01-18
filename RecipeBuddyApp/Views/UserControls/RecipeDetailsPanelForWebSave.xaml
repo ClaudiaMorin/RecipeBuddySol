@@ -24,7 +24,7 @@
             <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" >
                 <TextBlock Text="Save Category: " FontSize="14" VerticalAlignment="Center" FontWeight="Bold"/>
                 <Border BorderThickness="10"/>
-                <ComboBox x:Name="TypesInComboBox" VerticalAlignment="Center" SelectedIndex="{Binding RecipeTypeInt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ComboBox x:Name="TypesInComboBox" VerticalAlignment="Center">
                     <i:Interaction.Behaviors>
                         <ic:EventTriggerBehavior  EventName="SelectionChanged">
                             <ic:InvokeCommandAction x:Name="ICommandSelectTypeChanged" Command="{Binding CmdSelectedTypeChanged}" />

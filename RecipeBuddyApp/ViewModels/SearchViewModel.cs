@@ -166,7 +166,7 @@ namespace RecipeBuddy.ViewModels
             if (index <listOfRecipeCards.ListCount && index > -1)
             {
                 listOfRecipeCards.CurrentCardIndex = index;
-                WebViewModel.Instance.mainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(listOfRecipeCards.GetEntry(index));
+                WebViewModel.Instance.recipePanelForWebCopy.recipeCardModel.UpdateRecipeDisplayFromRecipeRecord(listOfRecipeCards.GetEntry(index));
                 ChangeRecipe(listOfRecipeCards.CurrentCardIndex);
                 NumXRecipesIndex = "0";
                 IndexOfComboBoxItem = index;

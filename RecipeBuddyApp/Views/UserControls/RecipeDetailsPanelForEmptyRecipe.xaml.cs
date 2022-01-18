@@ -11,9 +11,12 @@ namespace RecipeBuddy.Views
         public RecipeDetailsPanelForEmptyRecipe()
         {
             this.InitializeComponent();
+            //DataContext = WebViewModel.Instance.recipePanelForWebCopy.recipeCardModel; ;
+            //TitleTextBox.DataContext = WebViewModel.Instance.recipePanelForWebCopy.recipeCardModel;
             TypesInComboBox.ItemsSource = MainNavTreeViewModel.Instance.CatagoryTypes;
             ICommandSelectTypeChanged.Command = WebViewModel.Instance.CmdSelectedTypeChanged;
             TypesInComboBox.SelectedIndex = 18;
+            
 
             Ingredient1.DataContext = WebViewModel.Instance.recipePanelForWebCopy.recipeCardModel;
             IngredientGrid.DataContext = WebViewModel.Instance.recipePanelForWebCopy;

@@ -28,7 +28,6 @@ namespace RecipeBuddy.Core.Models
             listOfDirectionStringsForDisplay = new List<string>(directionDisplay);
             SetIngredientAndDirectionProperties();
             recipeType = Type_Of_Recipe.Unknown;
-            recipeTypeInt = (int)recipeType;
         }
 
         /// <summary>
@@ -43,10 +42,8 @@ namespace RecipeBuddy.Core.Models
             //Description = reSource.Description;
             //TotalTime = reSource.TotalTime;
             Author = reSource.Author;
-            //Website = reSource.Website;
             Link = reSource.Link;
             recipeType = reSource.recipeType;
-            recipeTypeInt = (int)reSource.recipeTypeInt;
             ID = reSource.ID;
 
             //Test for null which will throw and exception before creating the lists!
@@ -79,7 +76,7 @@ namespace RecipeBuddy.Core.Models
             Website = reSource.Website;
             Link = new Uri(reSource.Link);
             recipeType = (Type_Of_Recipe) reSource.TypeAsInt;
-            recipeTypeInt = reSource.TypeAsInt;
+            //recipeTypeInt = reSource.TypeAsInt;
             ID = -1;
 
             //Test for null which will throw and exception before creating the lists!
@@ -113,7 +110,7 @@ namespace RecipeBuddy.Core.Models
             //Website = Type_of_Websource.None;
             Link = null;
             recipeType = Type_Of_Recipe.Unknown;
-            recipeTypeInt = (int)recipeType;
+            //recipeTypeInt = (int)recipeType;
             ID = -1;
 
             listOfIngredientStringsForDisplay = new List<string>();
@@ -132,18 +129,17 @@ namespace RecipeBuddy.Core.Models
         /// Saves the edits to a recipe including a new title
         /// </summary>
         /// <param name="title">The changed title</param>
-        public void SaveEditsToARecipe(string title)
+        public void SaveEditsToARecipe()
         {
-            Title = title;
+            UpdateRecipeForDisplayAfterEdits();
         }
         /// <summary>
         /// Steps requires to update a recipe for saving to the TreeView and DB
         /// </summary>
         public void SaveEditsToARecipeModel()
         {
-            UpdateRecipeForDisplayAfterEdits();
             LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
-            SetIngredientAndDirectionProperties();
+            SetIngredientAndDirectionProperties(); 
         }
 
         /// <summary>
@@ -1451,13 +1447,6 @@ namespace RecipeBuddy.Core.Models
             set { SetProperty(ref recipeType, value); }
         }
 
-        private int recipeTypeInt;
-        public int RecipeTypeInt
-        {
-            get { return recipeTypeInt; }
-            set { SetProperty(ref recipeTypeInt, value); }
-        }
-
         private string title;
         public string Title
         {
@@ -1492,13 +1481,6 @@ namespace RecipeBuddy.Core.Models
             get { return website; }
             set { SetProperty(ref website, value); }
         }
-
-        //private Type_of_Websource website;
-        //public Type_of_Websource Website
-        //{
-        //    get { return website; }
-        //    set { SetProperty(ref website, value); }
-        //}
 
         #endregion
     }

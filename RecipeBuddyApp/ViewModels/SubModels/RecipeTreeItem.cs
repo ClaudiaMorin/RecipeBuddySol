@@ -46,6 +46,10 @@ namespace RecipeBuddy.ViewModels
             recipeModelTV.CopyRecipeModel(reSource.recipeModelTV); 
         }
 
+        public void UpdateRecipeEntry(RecipeDisplayModel reSource)
+        {
+            recipeModelTV.CopyRecipeModel(reSource);
+        }
 
         /// <summary>
         /// Add the recipe to the Borrow list and select that recipe in the combobox as well as 

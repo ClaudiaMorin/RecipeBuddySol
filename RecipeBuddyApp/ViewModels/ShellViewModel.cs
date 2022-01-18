@@ -50,7 +50,9 @@ namespace RecipeBuddy.ViewModels
 
         public ICommand LoadedCommand => _loadedCommand ?? (_loadedCommand = new RelayCommand(OnLoaded));
 
-        public ICommand ItemInvokedCommand => _itemInvokedCommand ?? (_itemInvokedCommand = new RelayCommand<WinUI.NavigationViewItemInvokedEventArgs>(OnItemInvoked));
+        public ICommand ItemInvokedCommand => _itemInvokedCommand ?? (_itemInvokedCommand = new RelayCommand<WinUI.NavigationViewItemInvokedEventArgs>(OnItemInvoked, IsUserLoggedIn));
+
+
 
         private ShellViewModel()
         {
@@ -85,6 +87,7 @@ namespace RecipeBuddy.ViewModels
 
         private void OnItemInvoked(WinUI.NavigationViewItemInvokedEventArgs args)
         {
+
             if (args.IsSettingsInvoked)
             {
                 // Navigate to the settings page - implement as appropriate if needed
@@ -162,6 +165,11 @@ namespace RecipeBuddy.ViewModels
         {
             var result = NavigationService.GoBack();
             args.Handled = result;
+        }
+
+        private bool IsUserLoggedIn(WinUI.NavigationViewItemInvokedEventArgs obj)
+        {
+            return UserViewModel.Instance.loggedin;
         }
     }
 }

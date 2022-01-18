@@ -43,11 +43,33 @@ namespace RecipeBuddy.ViewModels
                "---", "Cup(s)","Tablespoon(s)","Teaspoon(s)"
             };
             InitializeDefaultValuesForWebCopy();
-            CanSelectSave = false;
-            CanSelectCancel = true;
-            CmdSaveButton = new RBRelayCommand(action = () => SaveEntryToDB(), funcBool = () => CanSelectSave);
-            CmdCancelDialogButton = new RBRelayCommand(action = () => CancelEntry(), funcBool = () => CanSelectCancel);
+            CmdSaveButton = new RBRelayCommand(action = () => SaveEntry());
+            CmdCancelButton = new RBRelayCommand(action = () => CancelEntry());
+            //CmdCancelDialogButton = new RBRelayCommand(action = () => CancelEntry(), funcBool = () => CanSelectCancel);
             //CmdSelectedMeasurementChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeMeasurementTypeFromComboBox(e), canCallActionFunc => AlwaysTrue);
+        }
+
+        public void SaveEntry()
+        {
+            recipeCardModel.SaveEditsToARecipe();
+
+            if (recipeCardModel.Title.Length < 1 || string.Compare(recipeCardModel.Title.ToLower(), "recipe title here") == 0)
+            {
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a title to save a recipe.", "You can't save this recipe, yet.");
+                dialog.ShowAsync();
+                return;
+            }
+
+            if (MainNavTreeViewModel.Instance.CheckIfRecipeAlreadyPresent(recipeCardModel.Title, (int)recipeCardModel.RecipeType) == true)
+            {
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a unique title to save a recipe in the catagory: " + recipeCardModel.RecipeType, "You can't save this recipe, yet.");
+                dialog.ShowAsync();
+                return;
+            }
+
+
+            SaveEntryToDB();
+            WebViewModel.Instance.CloseKeepRecipePanel();
         }
 
         /// <summary>
@@ -82,28 +104,21 @@ namespace RecipeBuddy.ViewModels
         {
             //For Threading callbacks.  
             Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView();
-
             recipeCardModel.CopyRecipeDisplayModel(recipeModel);
             InitializeDefaultValuesForWebCopy();
-            CanSelectSave = true;
-            CanSelectCancel = true;
-            CmdSaveButton = new RBRelayCommand(action = () => SaveEntryToDB(), funcBool = () => CanSelectSave);
-            CmdCancelDialogButton = new RBRelayCommand(action = () => CancelEntry(), funcBool = () => CanSelectCancel);
         }
 
         public void ClearRecipeEntry()
         {
             LoadRecipeCardModel(new RecipeDisplayModel());
             WebViewModel.Instance.CloseKeepRecipePanel();
-            CanSelectSave= false;
-            CanSelectCancel = false;
             InitializeDefaultValuesForWebCopy();
         }
 
         public void CancelEntry()
         {
             ClearRecipeEntry();
-            //WebViewModel.Instance.CloseKeepRecipePanel();
+            WebViewModel.Instance.CloseKeepRecipePanel();
         }
 
         /// <summary>
@@ -336,28 +351,6 @@ namespace RecipeBuddy.ViewModels
         #region Properties and ICommand functions 
 
 
-        /// <summary>
-        /// Indicates whether or not we can click the recipe-related button, there needs to be a recipe in the CardView so the 
-        /// total list count has to be greater than 0.
-        /// </summary>
-        private bool canSelectSave;
-        public bool CanSelectSave
-        {
-            get { return canSelectSave; }
-            set { SetProperty(ref canSelectSave, value); }
-        }
-
-        /// <summary>
-        /// Always True
-        /// </summary>
-        private bool canSelectCancel;
-        public bool CanSelectCancel
-        {
-            get { return canSelectCancel; }
-            set { SetProperty(ref canSelectCancel, value); }
-        }
-
-
         private ObservableCollection<string> measureTypes;
         public ObservableCollection<string> MeasureTypes
         {
@@ -370,6 +363,13 @@ namespace RecipeBuddy.ViewModels
             get;
             private set;
         }
+
+        public RBRelayCommand CmdCancelButton
+        {
+            get;
+            private set;
+        }
+
 
         public RBRelayCommand CmdSaveNewEntryButton
         {

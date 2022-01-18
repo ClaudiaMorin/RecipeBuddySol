@@ -13,7 +13,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBox Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" HorizontalAlignment="Center" TextAlignment="Center" Height="26" Grid.Row="0" Width="400"/>
+            <TextBox x:Name="TitleTextBox" Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold" HorizontalAlignment="Center" TextAlignment="Center" Height="26" Grid.Row="0" Width="400"/>
         </Grid>
         <Grid>
             <Grid.ColumnDefinitions>

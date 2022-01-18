@@ -27,7 +27,7 @@
                     <TreeView.ItemTemplate >
                         <DataTemplate x:DataType="viewModel:RecipeTreeItem" >
                             <TreeViewItem ItemsSource="{x:Bind Children, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding TreeItemTitle, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                          IsExpanded="{Binding ItemExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                                          IsExpanded="{Binding ItemExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="{Binding TreeItemTitle}">
                                 <FlyoutBase.AttachedFlyout>
                                     <MenuFlyout>
                                         <MenuFlyoutItem x:Name="ContextMenuSelect" Text="+ Select List" Command="{Binding CmdAddToSelectList}"/>

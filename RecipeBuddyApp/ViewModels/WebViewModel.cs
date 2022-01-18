@@ -16,11 +16,8 @@ namespace RecipeBuddy.ViewModels
 
     public sealed class WebViewModel : ObservableObject
     {
-        private static readonly WebViewModel instance = new WebViewModel();
-        public RecipeDisplayModel mainRecipeCardModel;
-        
+        private static readonly WebViewModel instance = new WebViewModel(); 
         public RecipePanelForWebCopy recipePanelForWebCopy;
-        //public RecipeDetailsPanelForEmptyRecipe recipePanelForNewRecipe;
 
         public Action<SelectionChangedEventArgs> actionWithEventArgs;
         public Action<string> actionWithString;
@@ -45,22 +42,19 @@ namespace RecipeBuddy.ViewModels
             newRecipeEntryVisibility = "Collapsed";
             alwaysTrue = true;
             mainViewWidth = "3*";
-            mainRecipeCardModel = new RecipeDisplayModel();
             recipePanelForWebCopy = RecipePanelForWebCopy.Instance;
             //recipePanelForNewRecipe = new RecipeDetailsPanelForEmptyRecipe();
             //currentLink = MainRecipeCardModel.Link;
             canSelectOpenEmptyEntry = true;
             canSelectOpenRecipeEntry = false;
-            canSelectCancel = true;
-            
             CmdRemove = new ICommandViewModel<string>(actionWithString = s => SearchViewModel.Instance.RemoveRecipe(s), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
             CmdOpenEntry = new ICommandViewModel<WebViewModel>(Action  => OpenKeepRecipePanel(), canCallActionFunc => canSelectOpenRecipeEntry);
             CmdOpenEmptyEntry = new ICommandViewModel<WebViewModel>(Action => OpenKeepEmptyRecipePanel(), canCallActionFunc => canSelectOpenEmptyEntry);
             CmdSelectedTypeChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
 
 
-            CmdSaveButton = new RBRelayCommand(action = () => SaveEntry(), funcBool = () => CanSelectSave);
-            CmdCancelButton = new RBRelayCommand(action = () => CancelEntry(), funcBool = () => CanSelectCancel);
+            //CmdSaveButton = new RBRelayCommand(action = () => SaveEntry(), funcBool = () => CanSelectSave);
+            //CmdCancelButton = new RBRelayCommand(action = () => CancelEntry(), funcBool = () => CanSelectCancel);
             CmdSelectedItemChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeFromComboBox(e), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
         }
 
@@ -77,51 +71,34 @@ namespace RecipeBuddy.ViewModels
         //    MainRecipeCardModel.CopyRecipeBlurbModel(new RecipeBlurbModel());
         //}
 
-        public void CancelEntry()
-        {
-            recipePanelForWebCopy.CancelEntry();
-        }
-
-        public void SaveEntry()
-        {
-            //recipePanelForWebCopy.recipeCardModel.RecipeType = (Type_Of_Recipe) ComboBoxIndexForRecipeType;
-            if (mainRecipeCardModel.Title.Length < 1 || string.Compare(mainRecipeCardModel.Title, "Recipe Title Here") == 0)
-            {
-                //Launch dialog saying that the new recipe must have a title
-            }
-            recipePanelForWebCopy.SaveEntryToDB();
-            CloseKeepRecipePanel();
-        }
+       
 
         /// <summary>
-        /// Saves the recipe to the DB and the TreeView
+        /// Opens a recipe panel with the title and ingred list so the user can compelete the directions
         /// </summary>
         public void OpenKeepRecipePanel()
         {
-            mainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(SearchViewModel.Instance.listOfRecipeCards.GetCurrentEntry());
+            recipePanelForWebCopy.recipeCardModel.UpdateRecipeDisplayFromRecipeRecord(SearchViewModel.Instance.listOfRecipeCards.GetCurrentEntry());
             FirstColumnTreeViewVisibility = "Collapsed";
             RecipeEntryVisibility = "Visible";
             RecipeEntryFromWebVisibility = "Visible";
             MainViewWidth = "*";
-            recipePanelForWebCopy.LoadRecipeCardModel(mainRecipeCardModel);
-            //int mytype = (int)mainRecipeCardModel.RecipeType;
-            //ComboBoxIndexForRecipeType = mytype;
+            recipePanelForWebCopy.LoadRecipeCardModel(recipePanelForWebCopy.recipeCardModel);
         }
 
         /// <summary>
-        /// Saves the recipe to the DB and the TreeView
+        /// Opens and empty recipe panel
         /// </summary>
         public void OpenKeepEmptyRecipePanel()
         {
-            mainRecipeCardModel = new RecipeDisplayModel();
-            mainRecipeCardModel.Title = "Recipe Title Here";
+            RecipeDisplayModel recipeCardModel = new RecipeDisplayModel();
+            recipeCardModel.Title = "Recipe Title Here";
             FirstColumnTreeViewVisibility = "Collapsed";
             RecipeEntryVisibility = "Visible";
-            //RecipeEntryFromWebVisibility = "Collapsed";
             NewRecipeEntryVisibility = "Visible";
             MainViewWidth = "*";
-            recipePanelForWebCopy.LoadRecipeCardModel(mainRecipeCardModel);
-            ComboBoxIndexForRecipeType = (int)mainRecipeCardModel.RecipeType;
+            ComboBoxIndexForRecipeType = (int)recipeCardModel.RecipeType;
+            recipePanelForWebCopy.LoadRecipeCardModel(recipeCardModel);
         }
 
         public void CloseKeepRecipePanel()
@@ -140,7 +117,7 @@ namespace RecipeBuddy.ViewModels
         public void ChangeRecipeFromModel()
         {
             ComboBoxIndexForRecipeTitle = SearchViewModel.Instance.IndexOfComboBoxItem;
-            CurrentLink = mainRecipeCardModel.Link;
+            CurrentLink = recipePanelForWebCopy.recipeCardModel.Link;
         }
 
         /// <summary>
@@ -159,8 +136,8 @@ namespace RecipeBuddy.ViewModels
                     {
                         //RecipeCardModel recipeCardModel = new RecipeCardModel(listOfRecipeCards.GetCurrentEntry());
                         SearchViewModel.Instance.NumXRecipesIndex = "0";
-                        mainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(SearchViewModel.Instance.listOfRecipeCards.GetCurrentEntry());
-                        CurrentLink = mainRecipeCardModel.Link;
+                        recipePanelForWebCopy.recipeCardModel.UpdateRecipeDisplayFromRecipeRecord(SearchViewModel.Instance.listOfRecipeCards.GetCurrentEntry());
+                        CurrentLink = recipePanelForWebCopy.recipeCardModel.Link;
                         //recipePanelForWebCopy.LoadRecipeCardModel(mainRecipeCardModel);
                     }
                 }
@@ -176,9 +153,8 @@ namespace RecipeBuddy.ViewModels
                     if (recipeModel != null)
                     {
                         SearchViewModel.Instance.ChangeRecipe(recipeModel.Title);
-                        mainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(recipeModel);
+                        recipePanelForWebCopy.recipeCardModel.UpdateRecipeDisplayFromRecipeRecord(recipeModel);
                         SearchViewModel.Instance.NumXRecipesIndex = "0";
-                        //recipePanelForWebCopy.LoadRecipeCardModel(mainRecipeCardModel);
                     }
                 }
             }
@@ -216,7 +192,7 @@ namespace RecipeBuddy.ViewModels
         {
             get
             {
-                if (string.Compare(mainRecipeCardModel.Title.ToLower(), "search for your next recipe find!") == 0)
+                if (string.Compare(recipePanelForWebCopy.recipeCardModel.Title.ToLower(), "search for your next recipe find!") == 0)
                     return false;
                 else
                     return true;
@@ -240,30 +216,12 @@ namespace RecipeBuddy.ViewModels
             set { SetProperty(ref alwaysTrue, value); }
         }
 
-        /// <summary>
-        /// can't select save until the user is logged in
-        /// because there is no access to the DB
-        /// </summary>
-        ///
-        private bool canSelectSave;
-        public bool CanSelectSave
-        {
-            get
-            {
-                if (UserViewModel.Instance.CanSelectLogout == true && mainRecipeCardModel.Title.Length > 0 && mainRecipeCardModel.Title.Length > 0)
-                    return true;
-                else
-                    return false;
-            }
 
-            set { SetProperty(ref canSelectSave, value); }
-        }
 
         private bool canSelectOpenEmptyEntry;
         public bool CanSelectOpenEmptyEntry
         {
-            get
-            { return canSelectOpenEmptyEntry; }
+            get { return canSelectOpenEmptyEntry; }
 
             set { SetProperty(ref canSelectOpenEmptyEntry, value); }
         }
@@ -271,8 +229,7 @@ namespace RecipeBuddy.ViewModels
         private bool canSelectOpenRecipeEntry;
         public bool CanSelectOpenRecipeEntry
         {
-            get
-            { return canSelectOpenRecipeEntry; }
+            get { return canSelectOpenRecipeEntry; }
 
             set { SetProperty(ref canSelectOpenRecipeEntry, value); }
         }
@@ -283,10 +240,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public bool CanSelectNew
         {
-            get
-            {
-                return UserViewModel.Instance.CanSelectLogout;
-            }
+            get {return UserViewModel.Instance.CanSelectLogout;}
         }
 
         /// <summary>
@@ -314,28 +268,6 @@ namespace RecipeBuddy.ViewModels
         {
             get;
             private set;
-        }
-        public RBRelayCommand CmdSaveButton
-        {
-            get;
-            private set;
-        }
-
-        public RBRelayCommand CmdCancelButton
-        {
-            get;
-            private set;
-        }
-
-
-        /// <summary>
-        /// Always True
-        /// </summary>
-        private bool canSelectCancel;
-        public bool CanSelectCancel
-        {
-            get { return canSelectCancel; }
-            set { SetProperty(ref canSelectCancel, value); }
         }
 
         /// <summary>

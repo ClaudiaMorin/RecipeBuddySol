@@ -50,12 +50,15 @@ namespace RecipeBuddy.ViewModels
             QuantitySelectedAsInt = 1;
             currentType = 0;
             titleEditHeight = "0";
+            typeEditHeight = "0";
+            authorEditString = "";
             titleEditString = "";
             listOfIngredientQuantitySetters = new List<Action<string>>();
 
             //SetUpComboBox();
             LoadListSettersWithActionDelegatesForIngredientQuantities();
             selectViewMainRecipeCardModel = new RecipeDisplayModel();
+            selectViewMainRecipeCardModel.Title = "Select a Recipe to Start!";
             //listOfRecipeModel = new RecipeListModel();
             IngredientQuantityShift = new List<string>();
             typeComboBoxVisibility = "Collapsed";
@@ -63,9 +66,10 @@ namespace RecipeBuddy.ViewModels
             CmdSave = new RBRelayCommand(ActionNoParams = () => SaveRecipe(), FuncBool = () => CanSelectSave);
             //CmdNew = new RBRelayCommand(ActionNoParams = () => CreateNewRecipe(), FuncBool = () => CanSelectNew);
             //CmdEdit = new RBRelayCommand(ActionNoParams = () => EditRecipe(), FuncBool = () => CanSelect);
-            //CmdSelectedItemChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeFromComboBox(e), canCallActionFunc => CanSelect);
-            CmdSelectedQuantityChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeQuantityFromComboBox(e), canCallActionFunc => CanSelect);
 
+            CmdSelectedTypeChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => CanSelect);
+            CmdSelectedQuantityChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeQuantityFromComboBox(e), canCallActionFunc => CanSelect);
+            CmdCopy = new ICommandViewModel<string>(ActionNoParams => Copy(), canCallActionFunc => CanSelectAlwaysTrue);
             CmdUpdate = new ICommandViewModel<string>(actionWithObject = s => Update(s), canCallActionFunc => CanSelectAlwaysTrue);
             CmdCancel = new ICommandViewModel<string>(actionWithObject = s => Cancel(s), canCallActionFunc => CanSelectAlwaysTrue);
             CmdLineEdit = new ICommandViewModel<string>(actionWithObject = s => LineEdit(s), canCallActionFunc => CanSelectAlwaysTrue);
@@ -141,6 +145,26 @@ namespace RecipeBuddy.ViewModels
         }
 
         /// <summary>
+        /// This manages changes that come in through the user manipulating the combobox on the Basket page
+        /// </summary>
+        /// <param name="e"></param>
+        internal void ChangeRecipeTypeFromComboBox(SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems != null && e.AddedItems.Count > 0)
+            {
+                string type = e.AddedItems[0].ToString();
+
+                for (int index = 0; index < MainNavTreeViewModel.Instance.CatagoryTypes.Count; index++)
+                {
+                    if (string.Compare(MainNavTreeViewModel.Instance.CatagoryTypes[index].ToString().ToLower(), type.ToLower()) == 0)
+                    {
+                        selectViewMainRecipeCardModel.RecipeType = (Type_Of_Recipe)index;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// updates the display to the newly selected recipe and updates the list of Edit textboxes so that the 
         /// user can edit the ingredients and we can check it before it is submitted.
         /// </summary>
@@ -155,7 +179,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void SaveRecipe()
         {
-            selectViewMainRecipeCardModel.SaveEditsToARecipe(selectViewMainRecipeCardModel.Title);
+            selectViewMainRecipeCardModel.SaveEditsToARecipe();
             int result = MainWindowViewModel.Instance.mainTreeViewNav.AddRecipeToTreeView(selectViewMainRecipeCardModel, true);
 
             if (result == 1)
@@ -262,6 +286,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void UpdateEditTextBoxes()
         {
+            TitleEditString = selectViewMainRecipeCardModel.Title;
 
             for (int count = 0; count < selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay.Count; count++)
             {
@@ -335,12 +360,13 @@ namespace RecipeBuddy.ViewModels
                 {
                     //We know we have a fraction someplace, we just need to figure out where? It will either be at the beginging of the string or at the end
                     //Fraction is at the start of the string so there isn't anything else to worry about.
-                    if (ingredQuantity[1].ToString().Contains("/") == true || ingredQuantity[0].ToString().Contains("½") == true || ingredQuantity[0].ToString().Contains("¼") == true || ingredQuantity[0].ToString().Contains("¾") == true || ingredQuantity[0].ToString().Contains("⅓") == true || ingredQuantity[0].ToString().Contains("⅔") == true)
-                    {
-                        ingredQuantity = StringManipulationHelper.ConvertVulgarFaction(ingredQuantity);
-                        if (string.Compare(ingredQuantity, "-1") == 0)
+                    if ( ingredQuantity.Length > 1 && ingredQuantity[1].ToString().Contains("/") == true ||
+                        ingredQuantity[0].ToString().Contains("½") == true || ingredQuantity[0].ToString().Contains("¼") == true || ingredQuantity[0].ToString().Contains("¾") == true || ingredQuantity[0].ToString().Contains("⅓") == true || ingredQuantity[0].ToString().Contains("⅔") == true)
+                        {
+                            ingredQuantity = StringManipulationHelper.ConvertVulgarFaction(ingredQuantity);
+                            if (string.Compare(ingredQuantity, "-1") == 0)
                             ingredQuantity = "";
-                    }
+                        }
 
                     else //The fraction is at the end of the number so we need to add them up after they fraction is converted to a float!
                     {
@@ -467,6 +493,41 @@ namespace RecipeBuddy.ViewModels
 
                 TitleEditHeight = "Auto";
             }
+
+            if (string.Compare(parameters[1].ToString().ToLower().Trim(), "type") == 0)
+            {
+                int results;
+                bool success = Int32.TryParse(parameters[0], out results);
+                //messed up someplace
+                if (success == false)
+                { return; }
+
+                TypeEditHeight = "Auto";
+            }
+            if (string.Compare(parameters[1].ToString().ToLower().Trim(), "author") == 0)
+            {
+                int results;
+                bool success = Int32.TryParse(parameters[0], out results);
+                //messed up someplace
+                if (success == false)
+                { return; }
+
+                TypeEditHeight = "Auto";
+            }
+        }
+
+        /// <summary>
+        /// makes a copy of the current selectedViewMainRecipeCardModel, adds it to the tree, and
+        /// makes it the current selectedViewMainRecipecardModel.
+        /// </summary>
+        private void Copy()
+        {
+            RecipeRecordModel recipeRecordModel = new RecipeRecordModel(selectViewMainRecipeCardModel);
+            MainNavTreeViewModel.Instance.AddRecipeModelsToTreeView(recipeRecordModel);
+            MainNavTreeViewModel.Instance.ChangedTreeItemTitle(selectViewMainRecipeCardModel.Title, selectViewMainRecipeCardModel.Title + " Copy", selectViewMainRecipeCardModel.RecipeType);
+            selectViewMainRecipeCardModel.Title = selectViewMainRecipeCardModel.Title + " Copy";
+            selectViewMainRecipeCardModel.SaveEditsToARecipeModel();
+            MainNavTreeViewModel.Instance.AddRecipeToSelectList(MainNavTreeViewModel.Instance.GetRecipeTreeItem(selectViewMainRecipeCardModel.Title, selectViewMainRecipeCardModel.RecipeType));
         }
 
         /// <summary>
@@ -500,7 +561,10 @@ namespace RecipeBuddy.ViewModels
                 { return; }
 
                 DirectHeightList[results - 1].Invoke("0");
-                selectViewMainRecipeCardModel.listOfDirectionSetters[results - 1].Invoke(listOfDirectionEditStringsGetters[results - 1].Invoke());
+                string st1 = selectViewMainRecipeCardModel.listOfDirectionGetters[results - 1].Invoke();
+                selectViewMainRecipeCardModel.listOfDirectionSetters[results - 1].Invoke(st1);
+                string st2 = listOfDirectionEditStringsGetters[results - 1].Invoke();
+                selectViewMainRecipeCardModel.listOfDirectionSetters[results - 1].Invoke(st2);
                 selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[results - 1] = listOfDirectionEditStringsGetters[results - 1].Invoke();
             }
 
@@ -514,6 +578,28 @@ namespace RecipeBuddy.ViewModels
                 TitleEditHeight = "0";
                 MainNavTreeViewModel.Instance.ChangedTreeItemTitle(selectViewMainRecipeCardModel.Title, TitleEditString, selectViewMainRecipeCardModel.RecipeType);
                 selectViewMainRecipeCardModel.Title = TitleEditString;
+                selectViewMainRecipeCardModel.SaveEditsToARecipeModel();
+            }
+
+            if (string.Compare(parameters[1].ToString().ToLower().Trim(), "type") == 0)
+            {
+                success = Int32.TryParse(parameters[0], out results);
+                //messed up someplace
+                if (success == false)
+                { return; }
+
+                TypeEditHeight = "0";
+                MainNavTreeViewModel.Instance.MoveSelectedTreeViewItem(selectViewMainRecipeCardModel, (Type_Of_Recipe)CurrentType);
+                CurrentType = (int)selectViewMainRecipeCardModel.RecipeType;
+            }
+
+            if (string.Compare(parameters[1].ToString().ToLower().Trim(), "author") == 0)
+            {
+
+                TypeEditHeight = "0";
+                selectViewMainRecipeCardModel.Author = AuthorEditString;
+                selectViewMainRecipeCardModel.SaveEditsToARecipeModel();
+                MainNavTreeViewModel.Instance.SaveUpdatesToRecipe(selectViewMainRecipeCardModel);
             }
         }
 
@@ -548,6 +634,15 @@ namespace RecipeBuddy.ViewModels
                 if (success == false)
                 { return; }
                 TitleEditHeight = "0";
+            }
+
+            if (string.Compare(parameters[1].ToString().ToLower().Trim(), "type") == 0)
+            {
+                success = Int32.TryParse(parameters[0], out results);
+                //messed up someplace
+                if (success == false)
+                { return; }
+                TypeEditHeight = "0";
             }
         }
 
@@ -750,11 +845,25 @@ namespace RecipeBuddy.ViewModels
             private set;
         }
 
+        /// <summary>
+        /// Property for the Recipe combobox change command
+        /// </summary>
+        public ICommand CmdSelectedTypeChanged
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// property for the update button command
         /// </summary>
         public ICommand CmdUpdate
+        {
+            get;
+            private set;
+        }
+
+        public ICommand CmdCopy
         {
             get;
             private set;
@@ -805,6 +914,20 @@ namespace RecipeBuddy.ViewModels
         {
             get { return titleEditHeight; }
             set { SetProperty(ref titleEditHeight, value); }
+        }
+
+        private string typeEditHeight;
+        public string TypeEditHeight
+        {
+            get { return typeEditHeight; }
+            set { SetProperty(ref typeEditHeight, value); }
+        }
+
+        private string authorEditString;
+        public string AuthorEditString
+        {
+            get { return authorEditString; }
+            set { SetProperty(ref authorEditString, value); }
         }
 
         private string titleEditString;
@@ -2774,5 +2897,12 @@ namespace RecipeBuddy.ViewModels
             get { return selectViewMainRecipeCardModel; }
             set { SetProperty(ref selectViewMainRecipeCardModel, value); }
         }
+
+        //private int recipeTypeInt;
+        //public int RecipeTypeInt
+        //{
+        //    get { return recipeTypeInt; }
+        //    set { SetProperty(ref recipeTypeInt, value); }
+        //}
     }
 }

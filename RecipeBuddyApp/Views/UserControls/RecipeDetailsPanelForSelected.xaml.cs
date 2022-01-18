@@ -16,9 +16,10 @@ namespace RecipeBuddy.Views
         public RecipeDetailsPanelForSelected()
         {
             InitializeComponent();
-
+            TypesInComboBox.ItemsSource = MainNavTreeViewModel.Instance.CatagoryTypes;
             Author.DataContext = SelectedViewModel.Instance.SelectViewMainRecipeCardModel;
-            Type.DataContext = SelectedViewModel.Instance.SelectViewMainRecipeCardModel;
+            //EditRowType.DataContext = SelectedViewModel.Instance;
+            RecipeType.DataContext = SelectedViewModel.Instance.SelectViewMainRecipeCardModel;
 
             Ingred1.DataContext = SelectedViewModel.Instance.selectViewMainRecipeCardModel;
             Ingred2.DataContext = SelectedViewModel.Instance.selectViewMainRecipeCardModel;
