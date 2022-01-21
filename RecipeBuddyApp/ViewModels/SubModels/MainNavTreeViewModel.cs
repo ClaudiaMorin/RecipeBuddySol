@@ -14,6 +14,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using RecipeBuddy.Services;
 using RecipeBuddy.Views;
+using Microsoft.Toolkit.Mvvm.Input;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -21,8 +22,7 @@ namespace RecipeBuddy.ViewModels
 
     public class MainNavTreeViewModel : ObservableObject
     {
-        Action<Object> actionRecipeDisplayModel;
-        //public Action<TreeViewItemInvokedEventArgs> actionWithEventArgs;
+        Action<TreeViewItemInvokedEventArgs> actionTreeViewArg;
 
         private static readonly MainNavTreeViewModel instance = new MainNavTreeViewModel();
         public static MainNavTreeViewModel Instance
@@ -36,8 +36,9 @@ namespace RecipeBuddy.ViewModels
         private MainNavTreeViewModel()
         {
             RecipeTreeRootNodes = new ObservableCollection<RecipeTreeItem>();
-            CmdSaveDialog = new RBRelayCommandObj(actionRecipeDisplayModel = (RD) => AddRecipeToTreeView((RecipeDisplayModel)RD));
-            CmdAddTreeVeiwItemToSelectList = new RBRelayCommandObj(actionRecipeDisplayModel = (TreeViewArg) => AddSelectedTreeViewItem((TreeViewItemInvokedEventArgs)TreeViewArg));
+            //CmdSaveDialog = new RBRelayCommandObj(actionRecipeDisplayModel = (RD) => AddRecipeToTreeView((RecipeDisplayModel)RD));
+            //CmdAddTreeVeiwItemToSelectList = new RBRelayCommandObj(actionRecipeDisplayModel = (TreeViewArg) => AddSelectedTreeViewItem((TreeViewItemInvokedEventArgs)TreeViewArg));
+            CmdAddTreeVeiwItemToSelectList = new RelayCommand<TreeViewItemInvokedEventArgs>(actionTreeViewArg = (args) => AddSelectedTreeViewItem(args));
             //CmdAddTreeVeiwItemToSelectList = new ICommandViewModel<TreeViewItemInvokedEventArgs>(actionWithEventArgs = e => AddSelectedTreeViewItem(e), canCallActionFunc => CanSelectTrue);
             //CmdExpandTreeViewItem = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeFromComboBox(e), canCallActionFunc => CanSelectRemove);
 
@@ -558,18 +559,18 @@ namespace RecipeBuddy.ViewModels
         /// Dialog that pops up after the user attempts to save 
         /// </summary>
         /// <param name="recipeCard"></param>
-        private void ContentDialogOverWriteOrCancel(RecipeDisplayModel recipeCard)
-        {
-            ContentDialog overWriteOrCancel = new ContentDialog()
-            {
-                Title = "Overwrite Recipe ?",
-                Content = "A recipe with this title already exists, do you want to overwrite it?",
-                CloseButtonText = "Cancel",
-                PrimaryButtonText = "Overwrite",
-                PrimaryButtonCommand = CmdSaveDialog,
-                PrimaryButtonCommandParameter = recipeCard
-            };
-        }
+        //private void ContentDialogOverWriteOrCancel(RecipeDisplayModel recipeCard)
+        //{
+        //    ContentDialog overWriteOrCancel = new ContentDialog()
+        //    {
+        //        Title = "Overwrite Recipe ?",
+        //        Content = "A recipe with this title already exists, do you want to overwrite it?",
+        //        CloseButtonText = "Cancel",
+        //        PrimaryButtonText = "Overwrite",
+        //        PrimaryButtonCommand = CmdSaveDialog,
+        //        PrimaryButtonCommandParameter = recipeCard
+        //    };
+        //}
 
         /// <summary>
         /// A private function that actually does the removing from the specified list
@@ -613,23 +614,23 @@ namespace RecipeBuddy.ViewModels
         /// <summary>
         /// Checks the entry to be saved to see if that title exists in the catagory underwhich the recipe is going to be saved
         /// </summary>
-        public void SaveEntry(RecipeDisplayModel recipeDisplay)
-        {
-            recipeDisplay.SaveEditsToARecipeModel();
+        //public void SaveEntry(RecipeDisplayModel recipeDisplay)
+        //{
+        //    recipeDisplay.SaveEditsToARecipeModel();
 
-            int result = MainWindowViewModel.Instance.mainTreeViewNav.AddRecipeToTreeView(recipeDisplay);
+        //    int result = MainWindowViewModel.Instance.mainTreeViewNav.AddRecipeToTreeView(recipeDisplay);
 
-            if (result == 0)
-            {
-                MainWindowViewModel.Instance.mainTreeViewNav.ContentDialogOverWriteOrCancel(recipeDisplay);
-            }
+        //    if (result == 0)
+        //    {
+        //        MainWindowViewModel.Instance.mainTreeViewNav.ContentDialogOverWriteOrCancel(recipeDisplay);
+        //    }
 
-            //If the return is 0 we know that it was an overwrite and the dialogbox took care of it already
-            if (result == 1)
-            {
-                //didn't find any conflicts in the first attempt so it has already been saved.
-            }
-        }
+        //    //If the return is 0 we know that it was an overwrite and the dialogbox took care of it already
+        //    if (result == 1)
+        //    {
+        //        //didn't find any conflicts in the first attempt so it has already been saved.
+        //    }
+        //}
 
         /// <summary>
         /// Takes the RecipeCardModel, converts it to a recipeModel and then saves it to the treeview
@@ -776,11 +777,11 @@ namespace RecipeBuddy.ViewModels
             set;
         }
 
-        public RBRelayCommandObj CmdSaveDialog
-        {
-            get;
-            private set;
-        }
+        //public RBRelayCommandObj CmdSaveDialog
+        //{
+        //    get;
+        //    private set;
+        //}
 
         ///// <summary>
         ///// Property for the Recipe combobox change command
@@ -803,7 +804,12 @@ namespace RecipeBuddy.ViewModels
         /// <summary>
         /// property for the Quantity combobox change command
         /// </summary>
-        public RBRelayCommandObj CmdAddTreeVeiwItemToSelectList
+        //public RBRelayCommand CmdAddTreeVeiwItemToSelectList
+        //{
+        //    get;
+        //    private set;
+        //}
+        public RelayCommand<TreeViewItemInvokedEventArgs> CmdAddTreeVeiwItemToSelectList
         {
             get;
             private set;

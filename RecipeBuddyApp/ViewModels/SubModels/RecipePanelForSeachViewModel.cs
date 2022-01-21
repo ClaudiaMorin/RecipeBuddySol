@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using RecipeBuddy.Services;
 using RecipeBuddy.Views;
+using Microsoft.Toolkit.Mvvm.Input;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -45,9 +46,9 @@ namespace RecipeBuddy.ViewModels
             canSelectNext = false;
             canSelectSelect = false;
             Recipe_Type = Type_Of_Recipe.Unknown;
-            CmdNextButton = new RBRelayCommand(Action = () => ShowNextEntry(), FuncBool = () => CanSelectNext);
-            CmdBackButton = new RBRelayCommand(Action = () => ShowPreviousEntry(), FuncBool = () => CanSelectBack);
-            CmdSelectButton = new RBRelayCommand(Action = () => AddToSelectedList(), FuncBool = () => CanSelectSelect);
+            CmdNextButton = new RelayCommandRaiseCanExecute(Action = () => ShowNextEntry(), FuncBool = () => CanSelectNext);
+            CmdBackButton = new RelayCommandRaiseCanExecute(Action = () => ShowPreviousEntry(), FuncBool = () => CanSelectBack);
+            CmdSelectButton = new RelayCommandRaiseCanExecute(Action = () => AddToSelectedList(), FuncBool = () => CanSelectSelect);
         }
 
         /// <summary>
@@ -61,12 +62,9 @@ namespace RecipeBuddy.ViewModels
             CanSelectBack = false;
             CanSelectNext = false;
             CanSelectSelect = false;
-            CmdNextButton = new RBRelayCommand(Action = () => ShowNextEntry(), FuncBool = () => CanSelectNext);
-            CmdBackButton = new RBRelayCommand(Action = () => ShowPreviousEntry(), FuncBool = () => CanSelectBack);
-            CmdSelectButton = new RBRelayCommand(Action = () => AddToSelectedList(), FuncBool = () => CanSelectSelect);
-
-            //Action<RequestNavigateEventArgs> hyLink = (RequestNavigateEventArgs arg) => Hyperlink_Navigate(arg);
-            //CmdHyperlinkNav = new ICommandViewModel<RequestNavigateEventArgs>(hyLink, canCallActionFunc => CanSelect);
+            CmdNextButton = new RelayCommandRaiseCanExecute(Action = () => ShowNextEntry(), FuncBool = () => CanSelectNext);
+            CmdBackButton = new RelayCommandRaiseCanExecute(Action = () => ShowPreviousEntry(), FuncBool = () => CanSelectBack);
+            CmdSelectButton = new RelayCommandRaiseCanExecute(Action = () => AddToSelectedList(), FuncBool = () => CanSelectSelect);
         }
 
         /// <summary>
@@ -271,39 +269,24 @@ namespace RecipeBuddy.ViewModels
             get { return canSelectBack; }
             set { SetProperty(ref canSelectBack, value); }
         }
-        
-        public RBRelayCommand CmdRemoveButton
+
+        public RelayCommandRaiseCanExecute CmdSelectButton
         {
             get;
             private set;
         }
 
-        public ICommand CmdHyperlinkNav
+        public RelayCommandRaiseCanExecute CmdBackButton
         {
             get;
             private set;
         }
 
-        public RBRelayCommand CmdSelectButton
+        public RelayCommandRaiseCanExecute CmdNextButton
         {
             get;
             private set;
         }
-
-        public RBRelayCommand CmdBackButton
-        {
-            get;
-            private set;
-        }
-
-        public RBRelayCommand CmdNextButton
-        {
-            get;
-            private set;
-        }
-
-
-
 
 
         private Type_Of_Recipe type_of_Recipe;

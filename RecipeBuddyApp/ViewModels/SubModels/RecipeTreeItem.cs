@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Controls;
 using System.ComponentModel;
 using RecipeBuddy.Services;
 using RecipeBuddy.Views;
+using Microsoft.Toolkit.Mvvm.Input;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -18,20 +19,20 @@ namespace RecipeBuddy.ViewModels
         {
             recipeModelTV = new RecipeRecordModel();
             treeItemTitle = titleTreeItem;
-            CmdAddToSelectList = new ICommandViewModel<RecipeTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
+            CmdAddToSelectList = new RelayCommand<RecipeTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
             //CmdAddToEdit = new ICommandViewModel<RecipeTreeItem>(Action => AddRecipeToEdit(), canCallActionFunc => CanSelect);
-            CmdDelete = new ICommandViewModel<RecipeTreeItem>(Action => DeleteRecipe(), canCallActionFunc => CanSelect);
-            CmdMouseClick = new ICommandViewModel<RecipeTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
+            CmdDelete = new RelayCommand<RecipeTreeItem>(Action => DeleteRecipe(), canCallActionFunc => CanSelect);
+            CmdMouseClick = new RelayCommand<RecipeTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
             Children = new ObservableCollection<RecipeTreeItem>();
         }
         public RecipeTreeItem(RecipeRecordModel recipeModel)
         {
             recipeModelTV = new RecipeRecordModel(recipeModel);
             treeItemTitle = recipeModelTV.Title;
-            CmdAddToSelectList = new ICommandViewModel<RecipeTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
+            CmdAddToSelectList = new RelayCommand<RecipeTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
             //CmdAddToEdit = new ICommandViewModel<RecipeTreeItem>(Action => AddRecipeToEdit(), canCallActionFunc => CanSelect);
-            CmdDelete = new ICommandViewModel<RecipeTreeItem>(Action => DeleteRecipe(), canCallActionFunc => CanSelect);
-            CmdMouseClick = new ICommandViewModel<RecipeTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
+            CmdDelete = new RelayCommand<RecipeTreeItem>(Action => DeleteRecipe(), canCallActionFunc => CanSelect);
+            CmdMouseClick = new RelayCommand<RecipeTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
             Children = new ObservableCollection<RecipeTreeItem>();
         }
 
@@ -57,8 +58,11 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         internal void AddRecipeToSelectList()
         {
-            MainNavTreeViewModel.Instance.AddRecipeToSelectList(this);
-            NavigationService.Navigate(typeof(SelectedView));
+            if ((recipeModelTV.TypeAsInt != (int)Type_Of_Recipe.Header))
+            {
+                MainNavTreeViewModel.Instance.AddRecipeToSelectList(this);
+                NavigationService.Navigate((typeof(SelectedView)));
+            }
         }
 
 

@@ -34,9 +34,9 @@
             Edit String/en-US/Resources.resw: Add a menu item title for each page
             -->
             <winui:NavigationViewItem x:Uid="Shell_Login" x:Name="UserView" helpers:NavHelper.NavigateTo ="views:UserView" Content="Login/out"  />
-            <winui:NavigationViewItem x:Uid="Shell_Select" x:Name="SelectedView" helpers:NavHelper.NavigateTo ="views:SelectedView"  Content="Make It" />
+            <winui:NavigationViewItem x:Uid="Shell_Select" x:Name="SelectedView" helpers:NavHelper.NavigateTo ="views:SelectedView"  Content="Recipe" />
             <winui:NavigationViewItem x:Uid="Shell_Search" x:Name="SearchView"  helpers:NavHelper.NavigateTo ="views:SearchView" Content="Search"  />
-            <winui:NavigationViewItem x:Uid="Shell_WebView" x:Name="EditView"  helpers:NavHelper.NavigateTo ="views:WebView" Content="Edit"  />
+            <winui:NavigationViewItem x:Uid="Shell_WebView" x:Name="EditView"  helpers:NavHelper.NavigateTo ="views:WebView" Content="Create"  />
         </winui:NavigationView.MenuItems>
 
         <i:Interaction.Behaviors>
@@ -57,8 +57,8 @@
 
 
             <!--<StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="0"  Background="DarkGray">-->
-                <!--<Pivot x:Name="TabControl" SelectedIndex="{Binding Path=SelectedTabIndex}">-->
-                    <!--<PivotItem x:Name="SearchTab" Header="Search" FontWeight="Bold" FontSize="16">
+            <!--<Pivot x:Name="TabControl" SelectedIndex="{Binding Path=SelectedTabIndex}">-->
+            <!--<PivotItem x:Name="SearchTab" Header="Search" FontWeight="Bold" FontSize="16">
                                 <local:SearchView/>
                             </PivotItem>
                             <PivotItem x:Name="WebTab" FontWeight="Bold" FontSize="16">
@@ -78,10 +78,10 @@
                     <PivotItem x:Name="UploadTab" Header="Upload"  FontWeight="Bold" FontSize="16">
                         <local:UploadView/>
                     </PivotItem>-->
-                    <!--<PivotItem x:Name="UserTab" Header="Login\out"  FontWeight="Bold" FontSize="16">
+            <!--<PivotItem x:Name="UserTab" Header="Login\out"  FontWeight="Bold" FontSize="16">
                         <local:UserView/>
                     </PivotItem>-->
-                <!--</Pivot>-->
+            <!--</Pivot>-->
             <!--</StackPanel>-->
         </Grid>
     </winui:NavigationView>

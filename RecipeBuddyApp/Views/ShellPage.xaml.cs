@@ -24,15 +24,7 @@ namespace RecipeBuddy.Views
             }
             catch (Exception e)
             {
-                string foo = "var";
             }
-
-
-            //DataContext = MainWindowViewModel.Instance;
-            //SavedRecipesTreeRoot.DataContext = MainWindowViewModel.Instance.mainTreeViewNav;
-            //TabControl.DataContext = MainWindowViewModel.Instance;
-            //SelectedTab.DataContext = SelectedViewModel.Instance;
-            //Count.DataContext = WebViewModel.Instance.listOfRecipeCardsModel;
         }
     }
 }

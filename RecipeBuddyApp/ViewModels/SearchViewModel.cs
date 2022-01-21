@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using RecipeBuddy.Core.Models;
 using RecipeBuddy.Services;
+using Microsoft.Toolkit.Mvvm.Input;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -24,6 +25,7 @@ namespace RecipeBuddy.ViewModels
         public RecipePanelForSearchViewModel recipePanelForSearch3;
         Action ActionNoParams;
         Func<bool> FuncBool;
+        Action<string> actionWithString;
 
         private static readonly SearchViewModel instance = new SearchViewModel();
 
@@ -47,8 +49,9 @@ namespace RecipeBuddy.ViewModels
             recipePanelForSearch3 = new RecipePanelForSearchViewModel();
             UpdateSearchWebsources();
 
-            SearchButtonCmd = new RBRelayCommand(ActionNoParams = () => Search(), FuncBool = () => SearchEnabled);
-            WebButtonCmd = new RBRelayCommand(ActionNoParams = () => GoToWebView(), FuncBool = () => WebViewEnabled);
+            CmdRemove = new RelayCommand<string>(actionWithString = s => RemoveRecipe(s));
+            SearchButtonCmd = new RelayCommandRaiseCanExecute(ActionNoParams = () => Search(), FuncBool = () => SearchEnabled);
+            WebButtonCmd = new RelayCommandRaiseCanExecute(ActionNoParams = () => GoToWebView(), FuncBool = () => WebViewEnabled);
         }
 
         /// <summary>
@@ -141,19 +144,26 @@ namespace RecipeBuddy.ViewModels
         /// <param name="title">Title of the recipe to remove</param>
         public void RemoveRecipe(string title)
         {
-            if (listOfRecipeCards.ListCount > 0 && listOfRecipeCards.CurrentCardIndex != -1)
+            try
             {
-                int indexToRemove = listOfRecipeCards.GetEntryIndex(title);
-
-                if (indexToRemove == listOfRecipeCards.CurrentCardIndex)
+                if (listOfRecipeCards.ListCount > 0 && listOfRecipeCards.CurrentCardIndex != -1)
                 {
-                    if (listOfRecipeCards.CurrentCardIndex != listOfRecipeCards.ListCount - 1)
-                    { listOfRecipeCards.CurrentCardIndex++; }
-                    else
-                    { listOfRecipeCards.CurrentCardIndex = 0; }
-                }
+                    int indexToRemove = listOfRecipeCards.GetEntryIndex(title);
 
-                listOfRecipeCards.Remove(listOfRecipeCards.GetEntryIndex(title));
+                    if (indexToRemove == listOfRecipeCards.CurrentCardIndex)
+                    {
+                        if (listOfRecipeCards.CurrentCardIndex != listOfRecipeCards.ListCount - 1)
+                        { listOfRecipeCards.CurrentCardIndex++; }
+                        else
+                        { listOfRecipeCards.CurrentCardIndex = 0; }
+                    }
+
+                    listOfRecipeCards.Remove(listOfRecipeCards.GetEntryIndex(title));
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
         }
 
@@ -173,16 +183,6 @@ namespace RecipeBuddy.ViewModels
             }
         }
 
-        /// <summary>
-        /// sets up the first entry in the dropdown list and the initial index, updates the canSelectRecipeEntry button so that it is
-        /// click-enabled
-        /// </summary>
-        private void SetUpComboBox()
-        {
-            indexOfComboBoxItem = 0;
-            listOfRecipeCards = new RecipeListModel();
-        }
-
         public void AddToListOfRecipeCards(RecipeRecordModel recipeCard)
         {
             if (listOfRecipeCards.IsFoundInList(recipeCard) == true)
@@ -193,13 +193,12 @@ namespace RecipeBuddy.ViewModels
             }
 
             listOfRecipeCards.Add(recipeCard);
-            WebViewModel.Instance.CanSelectOpenRecipeEntry = true;
+            //WebViewModel.Instance.CanSelectOpenRecipeEntry = true;
 
             //If we have nothing in the list we will show the first entry
             if (listOfRecipeCards.ListCount == 1)
             {
                 listOfRecipeCards.CurrentCardIndex = 0;
-                //EditViewModel.Instance.IndexOfComboBoxItem = 0;
             }
             else
             {
@@ -209,14 +208,14 @@ namespace RecipeBuddy.ViewModels
             ShowSpecifiedEntry(listOfRecipeCards.CurrentCardIndex);
         }
 
-        /// <summary>
-        /// For use with the ComboBox navigation
-        /// </summary>
-        /// <param name="title">title of the recipe we are looking for</param>
-        public void ShowSpecifiedEntry(string title)
-        {
-            ShowSpecifiedEntry(listOfRecipeCards.GetEntryIndex(title));
-        }
+        ///// <summary>
+        ///// For use with the ComboBox navigation
+        ///// </summary>
+        ///// <param name="title">title of the recipe we are looking for</param>
+        //public void ShowSpecifiedEntry(string title)
+        //{
+        //    ShowSpecifiedEntry(listOfRecipeCards.GetEntryIndex(title));
+        //}
 
         /// <summary>
         /// Updates the current card display and updates the edit-textboxes for the ingredient and direction editing
@@ -309,13 +308,22 @@ namespace RecipeBuddy.ViewModels
             set { SetProperty(ref numXRecipesIndex, value); }
         }
 
-        public RBRelayCommand SearchButtonCmd
+        public RelayCommandRaiseCanExecute SearchButtonCmd
         {
             get;
             private set;
         }
 
-        public RBRelayCommand WebButtonCmd
+        public RelayCommandRaiseCanExecute WebButtonCmd
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// property for the Remove button command
+        /// </summary>
+        public RelayCommand<string> CmdRemove
         {
             get;
             private set;

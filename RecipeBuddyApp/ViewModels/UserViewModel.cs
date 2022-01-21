@@ -67,9 +67,9 @@ namespace RecipeBuddy.ViewModels
             loggedin = false;
             comboBoxIndexOfUserFromDB = 0;
 
-            CmdLogoutBtn = new RBRelayCommand(ActionNoParams = () => LogOut(), FuncBool = () => CanSelectLogout);
-            CmdLoginBtn = new RBRelayCommand(ActionNoParams = () => SetUpUser(), FuncBool = () => CanSelectLogin);
-            CmdCreateUserbtn = new RBRelayCommand(ActionNoParams = () => SetUpNewUser(), FuncBool = () => CanSelectCreateUser);
+            CmdLogoutBtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => LogOut(), FuncBool = () => CanSelectLogout);
+            CmdLoginBtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => SetUpUser(), FuncBool = () => CanSelectLogin);
+            CmdCreateUserbtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => SetUpNewUser(), FuncBool = () => CanSelectCreateUser);
         }
 
 
@@ -337,19 +337,19 @@ namespace RecipeBuddy.ViewModels
             }
         }
 
-        public RBRelayCommand CmdLoginBtn
+        public RelayCommandRaiseCanExecute CmdLoginBtn
         {
             get;
             private set;
         }
 
-        public RBRelayCommand CmdLogoutBtn
+        public RelayCommandRaiseCanExecute CmdLogoutBtn
         {
             get;
             private set;
         }
 
-        public RBRelayCommand CmdCreateUserbtn
+        public RelayCommandRaiseCanExecute CmdCreateUserbtn
         {
             get;
             private set;

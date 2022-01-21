@@ -38,6 +38,9 @@ namespace RecipeBuddy.Core.Models
         {
             LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
             LoadFuncListGettersWithFuncDelegatesForIngredientandDirectionProperties();
+            listOfIngredientStringsForDisplay = reSource.listOfIngredientStringsForDisplay;
+            listOfDirectionStringsForDisplay = reSource.listOfDirectionStringsForDisplay;
+            SetIngredientAndDirectionProperties();
             Title = reSource.Title;
             //Description = reSource.Description;
             //TotalTime = reSource.TotalTime;
@@ -45,19 +48,6 @@ namespace RecipeBuddy.Core.Models
             Link = reSource.Link;
             recipeType = reSource.recipeType;
             ID = reSource.ID;
-
-            //Test for null which will throw and exception before creating the lists!
-            if (reSource.listOfIngredientStringsForDisplay != null)
-                listOfIngredientStringsForDisplay = new List<string>(reSource.listOfIngredientStringsForDisplay);
-            else
-            { listOfIngredientStringsForDisplay = new List<string>(); }
-
-            //Test for null which will throw and exception before creating the lists!
-            if (reSource.listOfDirectionStringsForDisplay != null)
-                listOfDirectionStringsForDisplay = new List<string>(reSource.listOfDirectionStringsForDisplay);
-            else
-            { listOfDirectionStringsForDisplay = new List<string>(); }
-
         }
 
         /// <summary>
@@ -79,18 +69,7 @@ namespace RecipeBuddy.Core.Models
             //recipeTypeInt = reSource.TypeAsInt;
             ID = -1;
 
-            //Test for null which will throw and exception before creating the lists!
-            if (reSource.ListOfIngredientStrings != null)
-                listOfIngredientStringsForDisplay = new List<string>(reSource.ListOfIngredientStrings);
-            else
-            { listOfIngredientStringsForDisplay = new List<string>(); }
-
-            //Test for null which will throw and exception before creating the lists!
-            if (reSource.ListOfDirectionStrings != null)
-                listOfDirectionStringsForDisplay = new List<string>(reSource.ListOfDirectionStrings);
-            else
-            { listOfDirectionStringsForDisplay = new List<string>(); }
-
+            SetIngredientAndDirectionProperties();
         }
 
         /// <summary>
@@ -112,10 +91,6 @@ namespace RecipeBuddy.Core.Models
             recipeType = Type_Of_Recipe.Unknown;
             //recipeTypeInt = (int)recipeType;
             ID = -1;
-
-            listOfIngredientStringsForDisplay = new List<string>();
-            listOfDirectionStringsForDisplay = new List<string>();
-            SetIngredientAndDirectionProperties();
         }
 
         /// <summary>
@@ -1189,16 +1164,11 @@ namespace RecipeBuddy.Core.Models
             Link = reSource.Link;
             RecipeType = reSource.RecipeType;
             ID = -1;
+            reSource.UpdateRecipeForDisplayAfterEdits();
+            reSource.LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
 
-            if (reSource.listOfIngredientStringsForDisplay != null)
-                listOfIngredientStringsForDisplay = reSource.listOfIngredientStringsForDisplay;
-            else
-            { listOfIngredientStringsForDisplay = new List<string>(); }
-
-            if (reSource.listOfDirectionStringsForDisplay != null)
-                listOfDirectionStringsForDisplay = reSource.listOfDirectionStringsForDisplay;
-            else
-            { listOfDirectionStringsForDisplay = new List<string>(); }
+            listOfIngredientStringsForDisplay = reSource.listOfIngredientStringsForDisplay;
+            listOfDirectionStringsForDisplay = reSource.listOfDirectionStringsForDisplay;
 
             SetIngredientAndDirectionProperties();
         }
@@ -1215,6 +1185,8 @@ namespace RecipeBuddy.Core.Models
             Description = reSource.Description;
             Author = reSource.Author;
             RecipeType = (Type_Of_Recipe)reSource.TypeAsInt;
+            listOfIngredientStringsForDisplay = reSource.ListOfIngredientStrings;
+            listOfDirectionStringsForDisplay = reSource.ListOfDirectionStrings;
             //Website = reSource.Website;
 
             //Sometimes we have a good link, sometimes we don't
@@ -1226,19 +1198,9 @@ namespace RecipeBuddy.Core.Models
             {
                 Link = null;
             }
-            
+
             ID = -1;
-
-            if (reSource.ListOfIngredientStrings != null)
-                listOfIngredientStringsForDisplay = reSource.ListOfIngredientStrings;
-            else
-            { listOfIngredientStringsForDisplay = new List<string>(); }
-
-            if (reSource.ListOfDirectionStrings != null)
-                listOfDirectionStringsForDisplay = reSource.ListOfDirectionStrings;
-            else
-            { listOfDirectionStringsForDisplay = new List<string>(); }
-
+            LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
             SetIngredientAndDirectionProperties();
         }
 
@@ -1246,65 +1208,47 @@ namespace RecipeBuddy.Core.Models
         /// Users list.count to return the next index to the caller
         /// </summary>
         /// <returns>returns the lowest empty index entry to the caller - for use with the "add ingredients" editing</returns>
-        public int GetNextEmptyIngredientIndex()
-        {
-            if (listOfIngredientStringsForDisplay.Count < 50)
-                return listOfIngredientStringsForDisplay.Count;
-            else
-                return -1;
-        }
+        //public int GetNextEmptyIngredientIndex()
+        //{
+        //    if (listOfIngredientStringsForDisplay.Count < 50)
+        //        return listOfIngredientStringsForDisplay.Count;
+        //    else
+        //        return -1;
+        //}
 
         /// <summary>
         /// Users list.count to return the next index to the caller
         /// </summary>
         /// <returns>returns the lowest empty index entry to the caller - for use with the "add directions" editing</returns>
-        public int GetNextEmptyDirectionIndex()
-        {
-            if (listOfDirectionStringsForDisplay.Count < 30)
-                return listOfDirectionStringsForDisplay.Count;
-            else
-                return -1;
-        }
+        //public int GetNextEmptyDirectionIndex()
+        //{
+        //    if (listOfDirectionStringsForDisplay.Count < 30)
+        //        return listOfDirectionStringsForDisplay.Count;
+        //    else
+        //        return -1;
+        //}
 
-        /// <summary>
-        /// Updates the raw ingredients and listOfIngredientStringForDisplay with the new ingredient just added
-        /// </summary>
-        /// <param name="newIngredients"></param>
-        private void AddNewIgredientTextBox(string newIngredients)
-        {
-            listOfIngredientStringsForDisplay.Add(newIngredients);
-            int count = listOfIngredientStringsForDisplay.Count;
-            listOfIngredientSetters[count - 1].Invoke(newIngredients);
-        }
+        ///// <summary>
+        ///// Updates the raw ingredients and listOfIngredientStringForDisplay with the new ingredient just added
+        ///// </summary>
+        ///// <param name="newIngredients"></param>
+        //private void AddNewIgredientTextBox(string newIngredients)
+        //{
+        //    listOfIngredientStringsForDisplay.Add(newIngredients);
+        //    int count = listOfIngredientStringsForDisplay.Count;
+        //    listOfIngredientSetters[count - 1].Invoke(newIngredients);
+        //}
 
-        /// <summary>
-        /// Updates the raw directions and listOfDirectionStringsForDisplay with the new entry
-        /// </summary>
-        /// <param name="newIngredients"></param>
-        private void AddNewDirectionTextBox(string newDirections)
-        {
-            listOfDirectionStringsForDisplay.Add(newDirections);
-            int count = listOfIngredientStringsForDisplay.Count;
-            listOfDirectionSetters[count - 1].Invoke(newDirections);
-        }
-
-        /// <summary>
-        /// Removes the last ingredient added to both the raw ingredients and listOfIngredientStringForDisplay 
-        /// </summary>
-        private void RemoveLastIngredientInList()
-        {
-            if (listOfIngredientStringsForDisplay.Count > 1)
-                listOfIngredientStringsForDisplay.RemoveAt(listOfIngredientStringsForDisplay.Count - 1);
-        }
-
-        /// <summary>
-        /// Removes the last direction added to both the raw directions and listOfDirectionStringsforDisplay
-        /// </summary>
-        private void RemoveLastDirectionInList()
-        {
-            if (listOfDirectionStringsForDisplay.Count > 1)
-                listOfDirectionStringsForDisplay.RemoveAt(listOfDirectionStringsForDisplay.Count - 1);
-        }
+        ///// <summary>
+        ///// Updates the raw directions and listOfDirectionStringsForDisplay with the new entry
+        ///// </summary>
+        ///// <param name="newIngredients"></param>
+        //private void AddNewDirectionTextBox(string newDirections)
+        //{
+        //    listOfDirectionStringsForDisplay.Add(newDirections);
+        //    int count = listOfIngredientStringsForDisplay.Count;
+        //    listOfDirectionSetters[count - 1].Invoke(newDirections);
+        //}
 
         /// <summary>
         /// Loading the 50 ingredient and 30 direction properties with a list of action-setters.
@@ -1375,32 +1319,27 @@ namespace RecipeBuddy.Core.Models
             //clean out whatever might be leftover
             for (int count = 0; count < 50; count++)
             {
-                listOfIngredientSetters[count].Invoke("");
-                //LoadIngredList("0");
-                //LoadDirectList("0");
+                if (count < listOfIngredientStringsForDisplay.Count)
+                {
+                    listOfIngredientSetters[count].Invoke(listOfIngredientStringsForDisplay[count]);
+                }
+                else
+                { 
+                    listOfIngredientSetters[count].Invoke(""); 
+                }
             }
 
             for (int count = 0; count < 30; count++)
             {
-                listOfDirectionSetters[count].Invoke("");
-            }
-
-            //The first part of this function just set all of the ingredients and directions to empty strings
-            //so all the loops have to expect that all 50 strings exist.  Now we need to test to see if they are blank or not?
-            for (int IngredientCount = 0; listOfIngredientStringsForDisplay.Count > IngredientCount; IngredientCount++)
-            {
-                if (listOfIngredientStringsForDisplay[IngredientCount].Length > 0 && IngredientCount < 50)
+                if (count < listOfDirectionStringsForDisplay.Count)
                 {
-                    listOfIngredientSetters[IngredientCount].Invoke(listOfIngredientStringsForDisplay[IngredientCount]);
+                    listOfDirectionSetters[count].Invoke(listOfDirectionStringsForDisplay[count]);
                 }
-            }
-
-            for (int directionCount = 0; listOfDirectionStringsForDisplay.Count > directionCount; directionCount++)
-            {
-                if (listOfDirectionStringsForDisplay[directionCount].Length > 0 && directionCount < 30)
-                {
-                    listOfDirectionSetters[directionCount].Invoke(listOfDirectionStringsForDisplay[directionCount]);
+                else
+                { 
+                    listOfDirectionSetters[count].Invoke(""); 
                 }
+                
             }
         }
 

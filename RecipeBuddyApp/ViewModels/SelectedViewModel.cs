@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Controls;
 using RecipeBuddy.Core.Helpers;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.Input;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -63,16 +64,14 @@ namespace RecipeBuddy.ViewModels
             IngredientQuantityShift = new List<string>();
             typeComboBoxVisibility = "Collapsed";
             //CmdRemove = new RBRelayCommand(ActionNoParams = () => RemoveRecipe(), FuncBool = () => CanSelect);
-            CmdSave = new RBRelayCommand(ActionNoParams = () => SaveRecipe(), FuncBool = () => CanSelectSave);
-            //CmdNew = new RBRelayCommand(ActionNoParams = () => CreateNewRecipe(), FuncBool = () => CanSelectNew);
-            //CmdEdit = new RBRelayCommand(ActionNoParams = () => EditRecipe(), FuncBool = () => CanSelect);
+            CmdSave = new RelayCommandRaiseCanExecute(ActionNoParams = () => SaveRecipe(), FuncBool = () => CanSelectSave);
 
-            CmdSelectedTypeChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => CanSelect);
-            CmdSelectedQuantityChanged = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeQuantityFromComboBox(e), canCallActionFunc => CanSelect);
-            CmdCopy = new ICommandViewModel<string>(ActionNoParams => Copy(), canCallActionFunc => CanSelectAlwaysTrue);
-            CmdUpdate = new ICommandViewModel<string>(actionWithObject = s => Update(s), canCallActionFunc => CanSelectAlwaysTrue);
-            CmdCancel = new ICommandViewModel<string>(actionWithObject = s => Cancel(s), canCallActionFunc => CanSelectAlwaysTrue);
-            CmdLineEdit = new ICommandViewModel<string>(actionWithObject = s => LineEdit(s), canCallActionFunc => CanSelectAlwaysTrue);
+            CmdSelectedTypeChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => CanSelect);
+            CmdSelectedQuantityChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeQuantityFromComboBox(e), canCallActionFunc => CanSelect);
+            CmdCopy = new RelayCommand<string>(ActionNoParams => Copy(), canCallActionFunc => CanSelectAlwaysTrue);
+            CmdUpdate = new RelayCommand<string>(actionWithObject = s => Update(s), canCallActionFunc => CanSelectAlwaysTrue);
+            CmdCancel = new RelayCommand<string>(actionWithObject = s => Cancel(s), canCallActionFunc => CanSelectAlwaysTrue);
+            CmdLineEdit = new RelayCommand<string>(actionWithObject = s => LineEdit(s), canCallActionFunc => CanSelectAlwaysTrue);
 
         }
 
@@ -798,7 +797,7 @@ namespace RecipeBuddy.ViewModels
         /// <summary>
         /// property for the Save button command
         /// </summary>
-        public RBRelayCommand CmdSave
+        public RelayCommandRaiseCanExecute CmdSave
         {
             get;
             private set;
@@ -806,7 +805,7 @@ namespace RecipeBuddy.ViewModels
         /// <summary>
         /// property for the Edit button command
         /// </summary>
-        public RBRelayCommand CmdEdit
+        public RelayCommand CmdEdit
         {
             get;
             private set;
@@ -814,7 +813,7 @@ namespace RecipeBuddy.ViewModels
         /// <summary>
         /// property for the Edit button command
         /// </summary>
-        public RBRelayCommand CmdNew
+        public RelayCommand CmdNew
         {
             get;
             private set;
@@ -822,7 +821,7 @@ namespace RecipeBuddy.ViewModels
         /// <summary>
         /// property for the Remove button command
         /// </summary>
-        public RBRelayCommand CmdRemove
+        public RelayCommand CmdRemove
         {
             get;
             private set;
