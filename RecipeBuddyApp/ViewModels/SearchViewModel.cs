@@ -38,6 +38,7 @@ namespace RecipeBuddy.ViewModels
         private SearchViewModel()
         {
             searchString = "";
+            dropDownOpen = false;
             searchButtonTitle = "Search";
             searchEnabled = true;
             webViewEnabled = true;
@@ -144,6 +145,12 @@ namespace RecipeBuddy.ViewModels
         /// <param name="title">Title of the recipe to remove</param>
         public void RemoveRecipe(string title)
         {
+            RemoveRecipeFromComboBoxWork(title);
+            DropDownOpen = false;
+        }
+
+        public void RemoveRecipeFromComboBoxWork(string title)
+        {
             try
             {
                 if (listOfRecipeCards.ListCount > 0 && listOfRecipeCards.CurrentCardIndex != -1)
@@ -157,8 +164,8 @@ namespace RecipeBuddy.ViewModels
                         else
                         { listOfRecipeCards.CurrentCardIndex = 0; }
                     }
-
                     listOfRecipeCards.Remove(listOfRecipeCards.GetEntryIndex(title));
+
                 }
             }
             catch (Exception e)
@@ -342,19 +349,14 @@ namespace RecipeBuddy.ViewModels
             set { SetProperty(ref canSelectSearch, value); }
         }
 
-        /// <summary>
-        /// Indicates whether or not we can click the recipe-related button, there needs to be a recipe in the CardView so the 
-        /// total list count has to be greater than 0.
-        /// </summary>
-        public bool CanSelect
+        private bool dropDownOpen;
+        public bool DropDownOpen
         {
             get
             {
-                if (searchString.Length == 0)
-                    return false;
-                else
-                    return true;
+                return dropDownOpen;
             }
+            set { SetProperty(ref dropDownOpen, value); }
         }
 
         #endregion

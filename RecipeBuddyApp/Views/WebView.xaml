@@ -39,13 +39,14 @@
                 <Border BorderBrush="Gray" BorderThickness="2"/>
                 <StackPanel Grid.Column="0" Orientation="Vertical" Background="White" Margin ="0,0,0,0" Width="1108">
                     <StackPanel Orientation="Horizontal" Background="Gray">
-                        <ComboBox x:Name="RecipesInComboBox" Grid.Column="0" Width="250" Height="30" SelectedIndex="{Binding ComboBoxIndexForRecipeTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="List of selected Recipes" >
+                        <ComboBox x:Name="RecipesInComboBox" Grid.Column="0" Width="250" Height="30" SelectedIndex="{Binding ComboBoxIndexForRecipeTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsDropDownOpen="{Binding DropDownOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ToolTipService.ToolTip="List of selected Recipes" >
                                 <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock x:Name="Title" Text="{Binding Title}" VerticalAlignment="Center"/>
                                         <Border BorderThickness="10" />
-                                        <Button x:Name="RemoveRecipeFromComboBox" DataContext="{Binding ElementName=RecipesInComboBox, Path=DataContext}" Content="X"  Foreground="Red" Command="{Binding CmdRemove}" CommandParameter="{Binding ElementName=Title, Path=Text}" Padding="0,0,0,0" HorizontalAlignment="Right" FontSize="14" Background='Transparent'/>
+                                        <Button x:Name="RemoveRecipeFromComboBox" DataContext="{Binding ElementName=RecipesInComboBox, Path=DataContext}" Content="X"  Foreground="Red"
+                                                Command="{Binding CmdRemove}" CommandParameter="{Binding ElementName=Title, Path=Text}" Padding="0,0,0,0" HorizontalAlignment="Right" FontSize="14" Background='Transparent'/>
                                     </StackPanel>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>

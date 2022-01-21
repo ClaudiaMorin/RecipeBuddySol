@@ -14,13 +14,13 @@ using Microsoft.Toolkit.Mvvm.Input;
 namespace RecipeBuddy.ViewModels
 {
 
-
     public sealed class WebViewModel : ObservableObject
     {
         private static readonly WebViewModel instance = new WebViewModel(); 
         public RecipePanelForWebCopy recipePanelForWebCopy;
 
         public Action<SelectionChangedEventArgs> actionWithEventArgs;
+        Action<string> actionWithString;
 
 
         Action action;
@@ -36,19 +36,20 @@ namespace RecipeBuddy.ViewModels
 
         private WebViewModel()
         {
+            dropDownOpen = false;
             firstColumnTreeViewVisibility = "Visible";
             recipeEntryVisibility = "Collapsed";
             recipeEntryFromWebVisibility = "Collapsed";
             newRecipeEntryVisibility = "Collapsed";
             mainViewWidth = "3*";
             recipePanelForWebCopy = RecipePanelForWebCopy.Instance;
-            
+
+            CmdRemove = new RelayCommand<string>(actionWithString = s => RemoveRecipe(s));
             CmdOpenEntry = new RelayCommand(action = () => OpenRecipePanel(), funcBool = () => CanSelectTrueIfThereIsARecipe);
             CmdOpenEmptyEntry = new RelayCommand(action = () => OpenEmptyRecipePanel());
             CmdSelectedTypeChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
             CmdSelectedItemChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeFromComboBox(e), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
         }
-
 
         /// <summary>
         /// Opens a recipe panel with the title and ingred list so the user can compelete the directions
@@ -112,31 +113,23 @@ namespace RecipeBuddy.ViewModels
                 {
                     if (SearchViewModel.Instance.listOfRecipeCards.SettingCurrentIndexByTitle(recipeRecordModelFromChangedEventArgs.Title) != -1)
                     {
-                        //RecipeCardModel recipeCardModel = new RecipeCardModel(listOfRecipeCards.GetCurrentEntry());
                         SearchViewModel.Instance.NumXRecipesIndex = "0";
                         recipePanelForWebCopy.recipeCardModel.UpdateRecipeDisplayFromRecipeRecord(SearchViewModel.Instance.listOfRecipeCards.GetCurrentEntry());
                         CurrentLink = recipePanelForWebCopy.recipeCardModel.Link;
                     }
                 }
             }
-            //need to make this a sub to the first if statment because adding a new item to the listbox
-            //removes the other which doesn't actually happen but the EventArgs still sends it as e.RemoveItems[0]
-            else
-            {
-                if (e.RemovedItems != null && e.RemovedItems.Count > 0)
-                {
-                    RecipeRecordModel recipeModel = e.RemovedItems[0] as RecipeRecordModel;
-
-                    if (recipeModel != null)
-                    {
-                        SearchViewModel.Instance.ChangeRecipe(recipeModel.Title);
-                        recipePanelForWebCopy.recipeCardModel.UpdateRecipeDisplayFromRecipeRecord(recipeModel);
-                        SearchViewModel.Instance.NumXRecipesIndex = "0";
-                    }
-                }
-            }
         }
 
+        /// <summary>
+        /// Linked to the command behind the button to remove a recipe from the combobox
+        /// </summary>
+        /// <param name="title">Title of the recipe to remove</param>
+        public void RemoveRecipe(string title)
+        {
+            SearchViewModel.Instance.RemoveRecipeFromComboBoxWork(title);
+            DropDownOpen = false;
+        }
 
         /// <summary>
         /// This manages changes that come in through the user manipulating the combobox on the Create/WebView page
@@ -201,8 +194,6 @@ namespace RecipeBuddy.ViewModels
             private set;
         }
 
-
-
         /// <summary>
         /// Property for the Recipe combobox change command
         /// </summary>
@@ -221,14 +212,14 @@ namespace RecipeBuddy.ViewModels
             private set;
         }
 
-        /// <summary>
-        /// property for the Quantity combobox change command
-        /// </summary>
-        public RelayCommand<SelectionChangedEventArgs> CmdSelectedQuantityChanged
-        {
-            get;
-            private set;
-        }
+        ///// <summary>
+        ///// property for the Quantity combobox change command
+        ///// </summary>
+        //public RelayCommand<SelectionChangedEventArgs> CmdSelectedQuantityChanged
+        //{
+        //    get;
+        //    private set;
+        //}
 
         private int comboBoxIndexForRecipeType;
         public int ComboBoxIndexForRecipeType
@@ -293,11 +284,27 @@ namespace RecipeBuddy.ViewModels
             set { SetProperty(ref mainViewWidth, value); }
         }
 
-        private string mainViewNewRecipeWidth;
-        public string MainViewNewRecipeWidth
+        //private string mainViewNewRecipeWidth;
+        //public string MainViewNewRecipeWidth
+        //{
+        //    get { return mainViewNewRecipeWidth; }
+        //    set { SetProperty(ref mainViewNewRecipeWidth, value); }
+        //}
+
+        /// <summary>
+        /// property for the Remove button command
+        /// </summary>
+        public RelayCommand<string> CmdRemove
         {
-            get { return mainViewNewRecipeWidth; }
-            set { SetProperty(ref mainViewNewRecipeWidth, value); }
+            get;
+            private set;
+        }
+
+        private bool dropDownOpen;
+        public bool DropDownOpen
+        {
+            get { return dropDownOpen; }
+            set { SetProperty(ref dropDownOpen, value); }
         }
 
         #endregion
