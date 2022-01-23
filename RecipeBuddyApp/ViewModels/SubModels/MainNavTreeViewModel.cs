@@ -39,6 +39,7 @@ namespace RecipeBuddy.ViewModels
             //CmdSaveDialog = new RBRelayCommandObj(actionRecipeDisplayModel = (RD) => AddRecipeToTreeView((RecipeDisplayModel)RD));
             //CmdAddTreeVeiwItemToSelectList = new RBRelayCommandObj(actionRecipeDisplayModel = (TreeViewArg) => AddSelectedTreeViewItem((TreeViewItemInvokedEventArgs)TreeViewArg));
             CmdAddTreeVeiwItemToSelectList = new RelayCommand<TreeViewItemInvokedEventArgs>(actionTreeViewArg = (args) => AddSelectedTreeViewItem(args));
+
             //CmdAddTreeVeiwItemToSelectList = new ICommandViewModel<TreeViewItemInvokedEventArgs>(actionWithEventArgs = e => AddSelectedTreeViewItem(e), canCallActionFunc => CanSelectTrue);
             //CmdExpandTreeViewItem = new ICommandViewModel<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeFromComboBox(e), canCallActionFunc => CanSelectRemove);
 
@@ -252,7 +253,7 @@ namespace RecipeBuddy.ViewModels
             return FindRecipeInCollection(recipeTreeNode.Children, titleOfRecipe);
         }
 
-            public void ChangedTreeItemTitle(string oldTitle, string newTitle, Type_Of_Recipe type_Of_Recipe)
+        public void ChangedTreeItemTitle(string oldTitle, string newTitle, Type_Of_Recipe type_Of_Recipe)
         {
             RecipeTreeItem recipeTreeNode = GetRecipeTreeItem(oldTitle, type_Of_Recipe);
             if (recipeTreeNode != null)
@@ -814,6 +815,7 @@ namespace RecipeBuddy.ViewModels
             get;
             private set;
         }
+
 
         /// <summary>
         /// Alwasy returns true

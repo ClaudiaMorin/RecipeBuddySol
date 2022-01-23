@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using System;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -27,6 +28,18 @@ namespace RecipeBuddy.Views
         {
             this.InitializeComponent();
             SavedRecipesTreeRoot.DataContext = MainNavTreeViewModel.Instance;
+        }
+
+        private void TreeViewItem_ContextRequested(UIElement sender, ContextRequestedEventArgs args)
+        {
+            TreeViewItem treeViewItem = sender as TreeViewItem;
+            RecipeTreeItem recipeTreeItem = (RecipeTreeItem)treeViewItem.DataContext;
+
+            if (treeViewItem.ContextFlyout == null && recipeTreeItem.RecipeModelTV.TypeAsInt != 19)
+            {
+                treeViewItem.ContextFlyout = TreeViewItemMenu;
+                treeViewItem.ContextFlyout.ShowAt((FrameworkElement)sender);
+            }
         }
     }
 }

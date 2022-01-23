@@ -14,6 +14,14 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
+    <UserControl.Resources>
+        <MenuFlyout x:Name="TreeViewItemMenu">
+            <MenuFlyoutItem x:Name="ContextMenuSelect" Text="+ Select List" Command="{Binding CmdAddToSelectList}"/>
+            <MenuFlyoutItem x:Name="ContextMenuEdit" Text="+ Edit!" Command="{Binding CmdAddToEdit}"/>
+            <MenuFlyoutItem x:Name="ContextMenuDelete" Text="- Delete!" Command="{Binding CmdDelete}"/>
+        </MenuFlyout>
+    </UserControl.Resources>
+
     <StackPanel x:Name="NavPanel" Orientation="Vertical" Grid.Column="0" Grid.Row="0" Background="LightSteelBlue" Margin ="0,0,0,0">
         <ScrollViewer VerticalScrollBarVisibility="Visible" >
             <StackPanel>
@@ -27,15 +35,10 @@
                     <TreeView.ItemTemplate >
                         <DataTemplate x:DataType="viewModel:RecipeTreeItem" >
                             <TreeViewItem ItemsSource="{x:Bind Children, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding TreeItemTitle, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                          IsExpanded="{Binding ItemExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="{Binding TreeItemTitle}">
-                                <FlyoutBase.AttachedFlyout>
-                                    <MenuFlyout>
-                                        <MenuFlyoutItem x:Name="ContextMenuSelect" Text="+ Select List" Command="{Binding CmdAddToSelectList}"/>
-                                        <MenuFlyoutItem x:Name="ContextMenuEdit" Text="+ Edit!" Command="{Binding CmdAddToEdit}"/>
-                                        <MenuFlyoutItem x:Name="ContextMenuDelete" Text="- Delete!" Command="{Binding CmdDelete}"/>
-                                    </MenuFlyout>
-                                </FlyoutBase.AttachedFlyout>
-                            </TreeViewItem>
+                                          IsExpanded="{Binding ItemExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="{Binding TreeItemTitle}" ContextRequested="TreeViewItem_ContextRequested" />
+                            <!--<TreeViewItem ItemsSource="{x:Bind Children, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding TreeItemTitle, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                          IsExpanded="{Binding ItemExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="{Binding TreeItemTitle}" ContextFlyout="{StaticResource FlyoutMenuConverter}"/>-->
+
                         </DataTemplate>
                     </TreeView.ItemTemplate>
                 </TreeView>

@@ -89,8 +89,8 @@
                 <Grid x:Name="IngredientGrid">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="4*" />
-                        <ColumnDefinition Width="20*" />
-                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="22*" />
+                        <ColumnDefinition Width="2*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="{Binding ElementName=Ingred1, Path=Text, Converter={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
@@ -706,8 +706,8 @@
 
                 <Grid x:Name="DirectionGrid" Background="#eee" >
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="24*" />
-                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="26*" />
+                        <ColumnDefinition Width="2*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="{Binding ElementName=Dir1, Path=Text, Converter={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>

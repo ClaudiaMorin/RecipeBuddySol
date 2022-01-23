@@ -9,19 +9,20 @@ using System.ComponentModel;
 using RecipeBuddy.Services;
 using RecipeBuddy.Views;
 using Microsoft.Toolkit.Mvvm.Input;
+using System;
 
 namespace RecipeBuddy.ViewModels
 {
     public class RecipeTreeItem : ObservableObject
     {
-
+        Action<TreeViewItemInvokedEventArgs> actionTreeViewArg;
         public RecipeTreeItem(string titleTreeItem)
         {
             recipeModelTV = new RecipeRecordModel();
             treeItemTitle = titleTreeItem;
             CmdAddToSelectList = new RelayCommand<RecipeTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
-            //CmdAddToEdit = new ICommandViewModel<RecipeTreeItem>(Action => AddRecipeToEdit(), canCallActionFunc => CanSelect);
             CmdDelete = new RelayCommand<RecipeTreeItem>(Action => DeleteRecipe(), canCallActionFunc => CanSelect);
+            CmdContextMenuRequest = new RelayCommand<TreeViewItemInvokedEventArgs>(actionTreeViewArg = (args) => ContextMenuOrNot(args));
             CmdMouseClick = new RelayCommand<RecipeTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
             Children = new ObservableCollection<RecipeTreeItem>();
         }
@@ -30,9 +31,9 @@ namespace RecipeBuddy.ViewModels
             recipeModelTV = new RecipeRecordModel(recipeModel);
             treeItemTitle = recipeModelTV.Title;
             CmdAddToSelectList = new RelayCommand<RecipeTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
-            //CmdAddToEdit = new ICommandViewModel<RecipeTreeItem>(Action => AddRecipeToEdit(), canCallActionFunc => CanSelect);
             CmdDelete = new RelayCommand<RecipeTreeItem>(Action => DeleteRecipe(), canCallActionFunc => CanSelect);
             CmdMouseClick = new RelayCommand<RecipeTreeItem>(Action => AddRecipeToSelectList(), canCallActionFunc => CanSelect);
+            CmdContextMenuRequest = new RelayCommand<TreeViewItemInvokedEventArgs>(actionTreeViewArg = (args) => ContextMenuOrNot(args));
             Children = new ObservableCollection<RecipeTreeItem>();
         }
 
@@ -65,15 +66,6 @@ namespace RecipeBuddy.ViewModels
             }
         }
 
-
-        /// <summary>
-        /// Add the recipe to the Edit page
-        /// </summary>
-        //internal void AddRecipeToEdit()
-        //{
-        //    MainNavTreeViewModel.Instance.AddRecipeToEdit(this);
-        //}
-
         /// <summary>
         /// Removes this recipe from treeview 
         /// </summary>
@@ -85,6 +77,20 @@ namespace RecipeBuddy.ViewModels
             DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(this.treeItemTitle, recipeModelTV.TypeAsInt, UserViewModel.Instance.UsersIDInDB);
         }
 
+        internal void ContextMenuOrNot(TreeViewItemInvokedEventArgs arg)
+        {
+            if (arg.InvokedItem != null && arg.InvokedItem.GetType() == typeof(RecipeTreeItem))
+            {
+                RecipeTreeItem recipeTreeItem = arg.InvokedItem as RecipeTreeItem;
+
+                if (recipeTreeItem.RecipeModelTV.TypeAsInt == (int)Type_Of_Recipe.Header)
+                    return;
+                else
+                {
+
+                }
+            }
+        }
 
         /// <summary>
         /// Indicates whether or not we can click the recipe-related button
@@ -105,17 +111,14 @@ namespace RecipeBuddy.ViewModels
         private RecipeRecordModel recipeModelTV;
         public RecipeRecordModel RecipeModelTV
         {
-            get
-            { return recipeModelTV; }
-            //set { recipeModelTV = value; }
+            get { return recipeModelTV; }
             set { SetProperty(ref recipeModelTV, value); }
         }
 
         private string treeItemTitle;
         public string TreeItemTitle
         {
-            get
-            { return treeItemTitle; }
+            get { return treeItemTitle; }
             set { SetProperty(ref treeItemTitle, value); }
         }
 
@@ -123,11 +126,14 @@ namespace RecipeBuddy.ViewModels
         public bool ItemExpanded
         {
             get { return itemExpanded; }
-            //set { itemExpanded = value; }
             set { SetProperty(ref itemExpanded, value); }
         }
 
-
+        public RelayCommand<TreeViewItemInvokedEventArgs> CmdContextMenuRequest
+        {
+            get;
+            set;
+        }
 
         public ICommand CmdAddToSelectList
         {
