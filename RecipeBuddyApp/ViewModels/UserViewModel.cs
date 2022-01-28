@@ -127,7 +127,10 @@ namespace RecipeBuddy.ViewModels
             FoodAndWineCheckBoxChecked = false;
             FoodAndWineCheckBoxEnabled = true;
 
+            checkBoxEnabledCount = 0;
             SearchViewModel.Instance.ResetViewModel();
+            SelectedViewModel.Instance.ResetViewModel();
+            WebViewModel.Instance.ResetViewModel();
 
             PanelMap.Clear();
             loggedin = false;

@@ -85,7 +85,6 @@ namespace RecipeBuddy.Core.Scrapers
                 return null;
             char[] splitter = { '.', '?', '!', '\n' };
 
-
             try
             {
                 HtmlWeb web = new HtmlWeb();
@@ -103,7 +102,6 @@ namespace RecipeBuddy.Core.Scrapers
                 {
                     RecipeRecordModel dataBlurbAllRecipes = ScraperAllRecipes.ProcessAllRecipesRecipeType(doc, splitter, uri);
                     if (dataBlurbAllRecipes != null)
-
                         return dataBlurbAllRecipes;
                 }
 
@@ -276,39 +274,39 @@ namespace RecipeBuddy.Core.Scrapers
         
         }
 
-        /// <summary>
-        /// Generic Recipe Processing 
-        /// </summary>
-        /// <param name="UploadedText">The textfile uploaded by the user</param>
-        /// <returns>A filled in object of type RecipeCardModel</returns>
-        public static RecipeDisplayModel ProcessUploatedRecipe(string uploadedText)
-        {
-            string title = uploadedText.Substring(0, uploadedText.IndexOf("\r\n"));
-            string recipeStr = uploadedText.Substring(title.Length);
+        ///// <summary>
+        ///// Generic Recipe Processing 
+        ///// </summary>
+        ///// <param name="UploadedText">The textfile uploaded by the user</param>
+        ///// <returns>A filled in object of type RecipeCardModel</returns>
+        //public static RecipeDisplayModel ProcessUploatedRecipe(string uploadedText)
+        //{
+        //    string title = uploadedText.Substring(0, uploadedText.IndexOf("\r\n"));
+        //    string recipeStr = uploadedText.Substring(title.Length);
 
-            int indexIngred = uploadedText.IndexOf("Ingredients");
-            if (indexIngred == -1)
-            {
-                return new RecipeDisplayModel();
-            }
+        //    int indexIngred = uploadedText.IndexOf("Ingredients");
+        //    if (indexIngred == -1)
+        //    {
+        //        return new RecipeDisplayModel();
+        //    }
 
-            List<string> ingredList = new List<string>();
-            ingredList.Add("-Ingredients");
+        //    List<string> ingredList = new List<string>();
+        //    ingredList.Add("-Ingredients");
 
-            string ingredStr = uploadedText.Substring(indexIngred).Trim();
-            ingredStr = ingredStr.Substring(ingredStr.IndexOf("\r\n")).Trim();
-            string directStr = ingredStr.Substring(ProcessUploatedRecipeIngredients(ingredStr, ingredList)).Trim();
+        //    string ingredStr = uploadedText.Substring(indexIngred).Trim();
+        //    ingredStr = ingredStr.Substring(ingredStr.IndexOf("\r\n")).Trim();
+        //    string directStr = ingredStr.Substring(ProcessUploatedRecipeIngredients(ingredStr, ingredList)).Trim();
 
-            List<string> directList = new List<string>();
-            directList.Add("-Directions");
+        //    List<string> directList = new List<string>();
+        //    directList.Add("-Directions");
 
-            ProcessUploatedRecipeDirections(directStr, directList);
+        //    ProcessUploatedRecipeDirections(directStr, directList);
 
-            RecipeDisplayModel recipeCardModel = new RecipeDisplayModel(ingredList, directList);
-            recipeCardModel.Title = title;
+        //    RecipeDisplayModel recipeCardModel = new RecipeDisplayModel(ingredList, directList);
+        //    recipeCardModel.Title = title;
 
-            return recipeCardModel;
-        }
+        //    return recipeCardModel;
+        //}
 
         /// <summary>
         /// Processes all of the ingredients found in a recipe and adds them to the list passed to the recipecardmodel's constructor

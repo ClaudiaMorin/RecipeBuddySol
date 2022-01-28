@@ -30,8 +30,6 @@ namespace RecipeBuddy.Core.Models
             ListCount = 0;
         }
 
-
-
         //Clears the RecipeEntries list if a new search term is used
         public void ClearList()
         {
@@ -40,12 +38,6 @@ namespace RecipeBuddy.Core.Models
             ListCount = 0;
         }
 
-        /// <summary>
-        /// Adds a new entry to the specified list
-        /// </summary>
-        /// <param name="RE">New Entry to our list</param>
-        //public void Add(RecipeCardModel RE, Action<RecipePanelForSearchViewModel> action, RecipePanelForSearchViewModel recipeCardViewModel)
-        //{
         public void Add(RecipeRecordModel RE)
         {
             if (RE == null)
@@ -56,8 +48,6 @@ namespace RecipeBuddy.Core.Models
             {
                 RecipesList.Add(RE);
                 ListCount = ListCount + 1;
-                //action.Invoke(recipeCardViewModel);
-                //showEntry();
                 return;
             }
             else
@@ -71,16 +61,6 @@ namespace RecipeBuddy.Core.Models
             RecipesList.Add(RE);
             ListCount = ListCount + 1;
         }
-
-        /// <summary>
-        /// Adds a new entry to the specified list
-        /// </summary>
-        /// <param name="RE"></param>
-        //public void Add(RecipeCardModel RE)
-        //{
-        //    RecipesList.Add(RE);
-        //    ListCount = ListCount + 1;
-        //}
 
         /// <summary>
         /// Removes an entry to the specified list
@@ -114,7 +94,6 @@ namespace RecipeBuddy.Core.Models
                 CurrentCardTitle = title;
                 return entryIndex;
             }
-
             return -1;
         }
 
@@ -150,12 +129,10 @@ namespace RecipeBuddy.Core.Models
         {
             if (index > RecipesList.Count)
             {
-                //CurrentCardIndex = ListCount - 1;
                 return RecipesList[ListCount-1];
             }
             else
             {
-                //CurrentCardIndex = index + 1;
                 return RecipesList[index];
             }
         }
@@ -178,7 +155,6 @@ namespace RecipeBuddy.Core.Models
                         return count;
                 }
             }
-
             return -1;
         }
 

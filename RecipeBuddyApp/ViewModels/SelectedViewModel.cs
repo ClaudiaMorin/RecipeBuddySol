@@ -61,7 +61,6 @@ namespace RecipeBuddy.ViewModels
             IngredientQuantityShift = new List<string>();
             typeComboBoxVisibility = "Collapsed";
 
-            
             CmdSelectedTypeChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => CanSelect);
             CmdSelectedQuantityChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeQuantityFromComboBox(e), canCallActionFunc => CanSelect);
             CmdCopy = new RelayCommand<string>(ActionNoParams => Copy(), canCallActionFunc => CanSelectAlwaysTrue);
@@ -86,14 +85,14 @@ namespace RecipeBuddy.ViewModels
         #endregion
 
 
-        ///// <summary>
-        ///// For use when a user logs out of his/her account
-        ///// </summary>
-        //public void ResetViewModel()
-        //{
-        //    selectViewMainRecipeCardModel.CopyRecipeDisplayModel(new RecipeDisplayModel());
-        //    EmptyIngredientQuanityRow();
-        //}
+        /// <summary>
+        /// For use when a user logs out of his/her account
+        /// </summary>
+        public void ResetViewModel()
+        {
+            selectViewMainRecipeCardModel.CopyRecipeDisplayModel(new RecipeDisplayModel());
+            EmptyIngredientQuanityRow();
+        }
 
         /// <summary>
         /// updates the display to the newly selected recipe and updates the list of Edit textboxes so that the 

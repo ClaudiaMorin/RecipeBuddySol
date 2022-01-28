@@ -76,6 +76,7 @@ namespace RecipeBuddy.ViewModels
             recipePanelForSearch2.ClearRecipeBlurbModelList();
             recipePanelForSearch3.ClearRecipeEntry();
             recipePanelForSearch3.ClearRecipeBlurbModelList();
+            listOfRecipeCards.ClearList();
             SearchString = "";
         }
 
@@ -86,7 +87,6 @@ namespace RecipeBuddy.ViewModels
         public async Task Search()
         {
             SearchingChangeToUIAndLists();
-
             //For Threading callbacks.  
             Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView();
 

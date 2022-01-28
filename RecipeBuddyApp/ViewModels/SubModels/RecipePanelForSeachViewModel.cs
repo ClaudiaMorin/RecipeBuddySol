@@ -180,12 +180,13 @@ namespace RecipeBuddy.ViewModels
 
         public void ClearRecipeEntry()
         {
-            Description = "";
-            Title = ""; 
-            Author = ""; 
-            Website = Type_of_Websource.None; 
-            Link = null; 
-            Recipe_Type = Type_Of_Recipe.Unknown;
+            //Description = "";
+            //Title = ""; 
+            //Author = ""; 
+            //Website = Type_of_Websource.None; 
+            //Link = null; 
+            //Recipe_Type = Type_Of_Recipe.Unknown;
+            UpdateRecipeEntry(new RecipeRecordModel());
             CanSelectBack = false;
             CanSelectNext = false;
             CanSelectSelect = false;

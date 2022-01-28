@@ -52,7 +52,7 @@ namespace RecipeBuddy.Core.Scrapers
 
                 string str1 = null;
                 string str2 = "";
-                HtmlNodeCollection list1 = doc.DocumentNode.SelectNodes("//a[@class='card__titleLink manual-link-behavior']");
+                HtmlNodeCollection list1 = doc.DocumentNode.SelectNodes("//a[@class='card__titleLink manual-link-behavior elementFont__titleLink--textDecoration margin-8-bottom']");
                 List<HtmlNode> list2 = new List<HtmlNode>();
 
                 //Search didn't find anything!
@@ -100,20 +100,16 @@ namespace RecipeBuddy.Core.Scrapers
 
             List<string> ingredients = FillIngredientListAllRecipesForRecipeEntry(doc, 50);
             List<string> directions = new List<string>();
-            //directions.Add("-Direction");
+
             //no ingredients it isn't a real recipe so we bail
             if (ingredients.Count == 0)
                 return null;
 
-            //List<string> directions = FillDirectionListAllRecipiesForRecipeEntry(doc, 30);
-
             RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
             recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//h1[@class='headline heading-content elementFont__display']", doc));
             recipeModel.Website = "AllRecipes";
-            recipeModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//div[@class='recipe-summary']").InnerText);
+            recipeModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//div[@class='recipe-summary elementFont__dek--paragraphWithin elementFont__dek--linkWithin']").InnerText);
 
-
-            //recipeCardModel.TotalTime = GetTotalTime(doc.DocumentNode.SelectSingleNode("//div[@class='recipe-info-section']"));
             recipeModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//span[@class='author-name authorName linkHoverStyle']", doc));
             recipeModel.Link = uri.ToString();
             recipeModel.TypeAsInt = (int)Scraper.FillTypeForRecipeEntry(recipeModel.Title);
@@ -153,15 +149,12 @@ namespace RecipeBuddy.Core.Scrapers
         private static List<string> FillIngredientListAllRecipesForRecipeEntry(HtmlDocument doc, int countList)
         {
             List<string> ingredients = new List<string>();
-            string headerTag = "-";
 
             HtmlNode ingred_node = doc.DocumentNode.SelectSingleNode("//ul[@class='ingredients-section']");
 
             try
             {
-                //string section_header = "Ingredients";
-                //ingredients.Add(headerTag + section_header);
-                HtmlNodeCollection htmlNodes = ingred_node.SelectNodes("//*[@class='ingredients-item-name']");
+                HtmlNodeCollection htmlNodes = ingred_node.SelectNodes("//*[@class='ingredients-item-name elementFont__body']");
 
                 for (int i = 0; i < countList; i++)
                 {
@@ -185,7 +178,6 @@ namespace RecipeBuddy.Core.Scrapers
             {
                 try
                 {
-                    //directions.Add(headerTag + "Directions");
                     List<HtmlNode> groupslist = directions_top_level.SelectNodes("//div[@class='paragraph']").ToList<HtmlNode>();
 
                     foreach (HtmlNode section_node in groupslist)

@@ -132,6 +132,15 @@ namespace RecipeBuddy.ViewModels
         }
 
         /// <summary>
+        /// For use when a user logs out
+        /// </summary>
+        public void ResetViewModel()
+        {
+            recipePanelForWebCopy.ClearRecipeEntry();
+            CurrentLink = null;
+        }
+
+        /// <summary>
         /// This manages changes that come in through the user manipulating the combobox on the Create/WebView page
         /// This is one list that is shared by both the SearchView and the CreateView
         /// </summary>

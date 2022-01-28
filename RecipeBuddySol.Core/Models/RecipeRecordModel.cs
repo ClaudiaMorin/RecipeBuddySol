@@ -63,10 +63,8 @@ namespace RecipeBuddy.Core.Models
             Website = "";
             Link = null ;
             TypeAsInt = (int)Type_Of_Recipe.Unknown;
-
             ListOfIngredientStrings = new List<string>();
             ListOfDirectionStrings = new List<string>();
-            ListOfDirectionStrings.Add("-Directions");
         }
 
         /// <summary>
