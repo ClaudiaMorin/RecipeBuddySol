@@ -28,12 +28,25 @@ namespace RecipeBuddy.Core.Models
 
         public RecipeRecordModel(RecipeDisplayModel reSource)
         {
-            Description = reSource.Description;
-            Title = reSource.Title;
-            Author = reSource.Author;
+            Description = String.Copy(reSource.Description);
+            Title = String.Copy(reSource.Title);
+            Author = String.Copy(reSource.Author);
+            Website = "";
+            if (reSource.Link != null)
+                Link = String.Copy(reSource.Link.ToString());
+            TypeAsInt = (int)reSource.RecipeType;
+            ListOfIngredientStrings = new List<string>(reSource.listOfIngredientStringsForDisplay);
+            ListOfDirectionStrings = new List<string>(reSource.listOfDirectionStringsForDisplay);
+        }
+
+        public RecipeRecordModel(string title, RecipeDisplayModel reSource)
+        {
+            Description = String.Copy(reSource.Description);
+            Title = title;
+            Author = String.Copy(reSource.Author);
             Website = "";
             if(reSource.Link != null)
-            Link = reSource.Link.ToString();
+            Link = String.Copy(reSource.Link.ToString());
             TypeAsInt = (int)reSource.RecipeType;
             ListOfIngredientStrings = new List<string> (reSource.listOfIngredientStringsForDisplay);
             ListOfDirectionStrings = new List<string> (reSource.listOfDirectionStringsForDisplay);
@@ -67,7 +80,6 @@ namespace RecipeBuddy.Core.Models
             Website = "";
             Link = null;
             TypeAsInt = (int)Type_Of_Recipe.Unknown;
-
             ListOfIngredientStrings = new List<string>(StringManipulationHelper.TurnStringintoListFromDB(ingredString));
             ListOfDirectionStrings = new List<string>(StringManipulationHelper.TurnStringintoListFromDB(descripString));
         }
@@ -80,7 +92,6 @@ namespace RecipeBuddy.Core.Models
             Website = "";
             Link = null;
             TypeAsInt = (int)Type_Of_Recipe.Unknown;
-
             ListOfIngredientStrings = new List<string>(ingredString);
             ListOfDirectionStrings = new List<string>(descripString);
         }

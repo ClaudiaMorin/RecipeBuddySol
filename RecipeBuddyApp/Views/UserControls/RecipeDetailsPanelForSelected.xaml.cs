@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Windows;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Input;
 
 namespace RecipeBuddy.Views
 {
@@ -103,5 +105,6 @@ namespace RecipeBuddy.Views
             Dir29.DataContext = SelectedViewModel.Instance.selectViewMainRecipeCardModel;
             Dir30.DataContext = SelectedViewModel.Instance.selectViewMainRecipeCardModel;
         }
+
     }
 }

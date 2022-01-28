@@ -16,9 +16,8 @@
 
     <UserControl.Resources>
         <MenuFlyout x:Name="TreeViewItemMenu">
-            <MenuFlyoutItem x:Name="ContextMenuSelect" Text="+ Select List" Command="{Binding CmdAddToSelectList}"/>
-            <MenuFlyoutItem x:Name="ContextMenuEdit" Text="+ Edit!" Command="{Binding CmdAddToEdit}"/>
-            <MenuFlyoutItem x:Name="ContextMenuDelete" Text="- Delete!" Command="{Binding CmdDelete}"/>
+            <MenuFlyoutItem x:Name="ContextMenuSelect" Text="View" Command="{Binding CmdAddToSelectList}"/>
+            <MenuFlyoutItem x:Name="ContextMenuDelete" Text="Delete!" Command="{Binding CmdDelete}"/>
         </MenuFlyout>
     </UserControl.Resources>
 
@@ -36,9 +35,6 @@
                         <DataTemplate x:DataType="viewModel:RecipeTreeItem" >
                             <TreeViewItem ItemsSource="{x:Bind Children, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding TreeItemTitle, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                           IsExpanded="{Binding ItemExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="{Binding TreeItemTitle}" ContextRequested="TreeViewItem_ContextRequested" />
-                            <!--<TreeViewItem ItemsSource="{x:Bind Children, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding TreeItemTitle, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                          IsExpanded="{Binding ItemExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="{Binding TreeItemTitle}" ContextFlyout="{StaticResource FlyoutMenuConverter}"/>-->
-
                         </DataTemplate>
                     </TreeView.ItemTemplate>
                 </TreeView>

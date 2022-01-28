@@ -85,10 +85,6 @@ namespace RecipeBuddy.ViewModels
 
                 if (recipeTreeItem.RecipeModelTV.TypeAsInt == (int)Type_Of_Recipe.Header)
                     return;
-                else
-                {
-
-                }
             }
         }
 

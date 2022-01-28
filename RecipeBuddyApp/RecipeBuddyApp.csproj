@@ -196,9 +196,6 @@
     <Compile Include="Views\UserControls\RecipeDetailsPanelForSearch.xaml.cs">
       <DependentUpon>RecipeDetailsPanelForSearch.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\UserControls\RecipeDetailsPanelForEdit.xaml.cs">
-      <DependentUpon>RecipeDetailsPanelForEdit.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\UserControls\RecipeDetailsPanelForSelected.xaml.cs">
       <DependentUpon>RecipeDetailsPanelForSelected.xaml</DependentUpon>
     </Compile>
@@ -298,10 +295,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\UserControls\RecipeDetailsPanelForSearch.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\UserControls\RecipeDetailsPanelForEdit.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
