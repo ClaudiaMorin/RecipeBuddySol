@@ -1205,52 +1205,6 @@ namespace RecipeBuddy.Core.Models
         }
 
         /// <summary>
-        /// Users list.count to return the next index to the caller
-        /// </summary>
-        /// <returns>returns the lowest empty index entry to the caller - for use with the "add ingredients" editing</returns>
-        //public int GetNextEmptyIngredientIndex()
-        //{
-        //    if (listOfIngredientStringsForDisplay.Count < 50)
-        //        return listOfIngredientStringsForDisplay.Count;
-        //    else
-        //        return -1;
-        //}
-
-        /// <summary>
-        /// Users list.count to return the next index to the caller
-        /// </summary>
-        /// <returns>returns the lowest empty index entry to the caller - for use with the "add directions" editing</returns>
-        //public int GetNextEmptyDirectionIndex()
-        //{
-        //    if (listOfDirectionStringsForDisplay.Count < 30)
-        //        return listOfDirectionStringsForDisplay.Count;
-        //    else
-        //        return -1;
-        //}
-
-        ///// <summary>
-        ///// Updates the raw ingredients and listOfIngredientStringForDisplay with the new ingredient just added
-        ///// </summary>
-        ///// <param name="newIngredients"></param>
-        //private void AddNewIgredientTextBox(string newIngredients)
-        //{
-        //    listOfIngredientStringsForDisplay.Add(newIngredients);
-        //    int count = listOfIngredientStringsForDisplay.Count;
-        //    listOfIngredientSetters[count - 1].Invoke(newIngredients);
-        //}
-
-        ///// <summary>
-        ///// Updates the raw directions and listOfDirectionStringsForDisplay with the new entry
-        ///// </summary>
-        ///// <param name="newIngredients"></param>
-        //private void AddNewDirectionTextBox(string newDirections)
-        //{
-        //    listOfDirectionStringsForDisplay.Add(newDirections);
-        //    int count = listOfIngredientStringsForDisplay.Count;
-        //    listOfDirectionSetters[count - 1].Invoke(newDirections);
-        //}
-
-        /// <summary>
         /// Loading the 50 ingredient and 30 direction properties with a list of action-setters.
         /// </summary>
         private void LoadListSettersWithActionDelegatesForIngredientandDirectionProperties()

@@ -21,8 +21,8 @@
         </MenuFlyout>
     </UserControl.Resources>
 
-    <StackPanel x:Name="NavPanel" Orientation="Vertical" Grid.Column="0" Grid.Row="0" Background="LightSteelBlue" Margin ="0,0,0,0">
-        <ScrollViewer VerticalScrollBarVisibility="Visible" >
+    <StackPanel x:Name="NavPanel" Orientation="Vertical" Grid.Column="0" Grid.Row="0" Background="LightSteelBlue" Margin ="0,0,0,0" >
+        <ScrollViewer VerticalScrollBarVisibility="Visible" Height="650" >
             <StackPanel>
                 <TextBlock Text=" Saved Recipes " Style="{StaticResource TitleTbkStyle}"  FontSize="25" TextAlignment="Center" VerticalAlignment="Bottom"/>
                 <TreeView x:Name="SavedRecipesTreeRoot" ItemsSource="{Binding RecipeTreeRootNodes}" SelectionMode="Single">

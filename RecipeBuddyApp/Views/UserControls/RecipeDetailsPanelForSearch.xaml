@@ -74,39 +74,6 @@
                 <TextBlock x:Name="Ingredient48" Style ="{Binding Path=Ingredient48, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient48}"/>
                 <TextBlock x:Name="Ingredient49" Style ="{Binding Path=Ingredient49, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Ingredient49}"/>
                 <TextBlock x:Name="Ingredient50" Style ="{Binding Path=Ingredient50, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient50}"/>
-                <StackPanel Background="LightSteelBlue">
-                    <TextBlock Text="Directions:" HorizontalAlignment="Center" FontSize="20" FontWeight="ExtraBold" />
-                </StackPanel>
-                <TextBlock x:Name="Direction1" Style ="{Binding Path=Direction1, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction1}"/>
-                <TextBlock x:Name="Direction2" Style ="{Binding Path=Direction2, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction2}"/>
-                <TextBlock x:Name="Direction3" Style ="{Binding Path=Direction3, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction3}"/>
-                <TextBlock x:Name="Direction4" Style ="{Binding Path=Direction4, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction4}"/>
-                <TextBlock x:Name="Direction5" Style ="{Binding Path=Direction5, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction5}"/>
-                <TextBlock x:Name="Direction6" Style ="{Binding Path=Direction6, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction6}"/>
-                <TextBlock x:Name="Direction7" Style ="{Binding Path=Direction7, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction7}"/>
-                <TextBlock x:Name="Direction8" Style ="{Binding Path=Direction8, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction8}"/>
-                <TextBlock x:Name="Direction9" Style ="{Binding Path=Direction9, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction9}"/>
-                <TextBlock x:Name="Direction10" Style ="{Binding Path=Direction10, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction10}"/>
-                <TextBlock x:Name="Direction11" Style ="{Binding Path=Direction11, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction11}"/>
-                <TextBlock x:Name="Direction12" Style ="{Binding Path=Direction12, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction12}"/>
-                <TextBlock x:Name="Direction13" Style ="{Binding Path=Direction13, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction13}"/>
-                <TextBlock x:Name="Direction14" Style ="{Binding Path=Direction14, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction14}"/>
-                <TextBlock x:Name="Direction15" Style ="{Binding Path=Direction15, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction15}"/>
-                <TextBlock x:Name="Direction16" Style ="{Binding Path=Direction16, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction16}"/>
-                <TextBlock x:Name="Direction17" Style ="{Binding Path=Direction17, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction17}"/>
-                <TextBlock x:Name="Direction18" Style ="{Binding Path=Direction18, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction18}"/>
-                <TextBlock x:Name="Direction19" Style ="{Binding Path=Direction19, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction19}"/>
-                <TextBlock x:Name="Direction20" Style ="{Binding Path=Direction20, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction20}"/>
-                <TextBlock x:Name="Direction21" Style ="{Binding Path=Direction21, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction21}"/>
-                <TextBlock x:Name="Direction22" Style ="{Binding Path=Direction22, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction22}"/>
-                <TextBlock x:Name="Direction23" Style ="{Binding Path=Direction23, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction23}"/>
-                <TextBlock x:Name="Direction24" Style ="{Binding Path=Direction24, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction24}"/>
-                <TextBlock x:Name="Direction25" Style ="{Binding Path=Direction25, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction25}"/>
-                <TextBlock x:Name="Direction26" Style ="{Binding Path=Direction26, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction26}"/>
-                <TextBlock x:Name="Direction27" Style ="{Binding Path=Direction27, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction27}"/>
-                <TextBlock x:Name="Direction28" Style ="{Binding Path=Direction28, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction28}"/>
-                <TextBlock x:Name="Direction29" Style ="{Binding Path=Direction29, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text ="{Binding Path=Direction29}"/>
-                <TextBlock x:Name="Direction30" Style ="{Binding Path=Direction30, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text ="{Binding Path=Direction30}"/>
             </StackPanel>
         </ScrollViewer>
     </StackPanel>

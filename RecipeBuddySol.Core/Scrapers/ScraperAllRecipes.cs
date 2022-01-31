@@ -74,17 +74,7 @@ namespace RecipeBuddy.Core.Scrapers
 
                     str2 = str1;
                 }
-                //foreach (var item in list1)
-                //{
-                //    str1 = item.OuterHtml.Substring(item.OuterHtml.IndexOf("href=")).Split('\"')[1];
-                //    if (str1 != str2)
-                //        if (listModel.URLLists.Add(str1) == -1)
-                //        {
-                //            return 0;
-                //        }
 
-                //    str2 = str1;
-                //}
                 return 0;
         }
 
@@ -171,7 +161,6 @@ namespace RecipeBuddy.Core.Scrapers
         private static List<string> FillDirectionListAllRecipiesForRecipeEntry(HtmlDocument doc, int countList)
         {
             List<string> directions = new List<string>();
-            string headerTag = "-";
 
             HtmlNode directions_top_level = doc.DocumentNode.SelectSingleNode("//ul[@class='instructions-section']");
             if (directions_top_level != null)

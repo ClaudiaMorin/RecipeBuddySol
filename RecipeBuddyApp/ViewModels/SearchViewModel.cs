@@ -215,15 +215,6 @@ namespace RecipeBuddy.ViewModels
             ShowSpecifiedEntry(listOfRecipeCards.CurrentCardIndex);
         }
 
-        ///// <summary>
-        ///// For use with the ComboBox navigation
-        ///// </summary>
-        ///// <param name="title">title of the recipe we are looking for</param>
-        //public void ShowSpecifiedEntry(string title)
-        //{
-        //    ShowSpecifiedEntry(listOfRecipeCards.GetEntryIndex(title));
-        //}
-
         /// <summary>
         /// Updates the current card display and updates the edit-textboxes for the ingredient and direction editing
         /// </summary>

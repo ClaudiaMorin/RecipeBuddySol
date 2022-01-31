@@ -256,10 +256,10 @@ namespace RecipeBuddy.Core.Helpers
         {
             string stringForCompare = measureType.ToLower().Trim();
 
-            if (string.Compare(stringForCompare, "cup") == 0 || (string.Compare(stringForCompare, "cups") == 0))
+            if (string.Compare(stringForCompare, "cup") == 0 || (string.Compare(stringForCompare, "cups") == 0) || (string.Compare(stringForCompare, "cup(s)") == 0))
                 return quantity.ToString() + " C";
 
-            if (string.Compare(stringForCompare, "teaspoon") == 0 || string.Compare(stringForCompare, "teaspoons") == 0 || string.Compare(stringForCompare, "tsp.") == 0 )
+            if (string.Compare(stringForCompare, "teaspoon") == 0 || string.Compare(stringForCompare, "teaspoons") == 0 || string.Compare(stringForCompare, "teaspoon(s)") == 0 ||  string.Compare(stringForCompare, "tsp.") == 0 )
             {
                 if (quantity < 3 && quantity > 0)
                 {
@@ -278,7 +278,7 @@ namespace RecipeBuddy.Core.Helpers
                 }
             }
 
-            if (string.Compare(stringForCompare, "tablespoon") == 0 || string.Compare(stringForCompare, "tablespoons") == 0 || string.Compare(stringForCompare, "Tbsp.") == 0)
+            if (string.Compare(stringForCompare, "tablespoon") == 0 || string.Compare(stringForCompare, "tablespoons") == 0 || string.Compare(stringForCompare, "tablespoon(s)") == 0 || string.Compare(stringForCompare, "Tbsp.") == 0)
             {
                 double quantityAsDouble = (double)(quantity);
 

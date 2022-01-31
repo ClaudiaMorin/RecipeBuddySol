@@ -36,7 +36,7 @@
             <winui:NavigationViewItem x:Uid="Shell_Login" x:Name="UserView" helpers:NavHelper.NavigateTo ="views:UserView" Content="Login/out"  />
             <winui:NavigationViewItem x:Uid="Shell_Select" x:Name="SelectedView" helpers:NavHelper.NavigateTo ="views:SelectedView"  Content="Recipe" />
             <winui:NavigationViewItem x:Uid="Shell_Search" x:Name="SearchView"  helpers:NavHelper.NavigateTo ="views:SearchView" Content="Search"  />
-            <winui:NavigationViewItem x:Uid="Shell_WebView" x:Name="EditView"  helpers:NavHelper.NavigateTo ="views:WebView" Content="Create"  />
+            <winui:NavigationViewItem x:Uid="Shell_WebView" x:Name="EditView"  helpers:NavHelper.NavigateTo ="views:WebView" Content="Web"  />
         </winui:NavigationView.MenuItems>
 
         <i:Interaction.Behaviors>
@@ -47,42 +47,6 @@
 
         <Grid>
             <Frame x:Name="shellFrame"/>
-            <!--<Grid.RowDefinitions>
-                <RowDefinition Height="670"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="4*"/>
-            </Grid.ColumnDefinitions>-->
-
-
-            <!--<StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="0"  Background="DarkGray">-->
-            <!--<Pivot x:Name="TabControl" SelectedIndex="{Binding Path=SelectedTabIndex}">-->
-            <!--<PivotItem x:Name="SearchTab" Header="Search" FontWeight="Bold" FontSize="16">
-                                <local:SearchView/>
-                            </PivotItem>
-                            <PivotItem x:Name="WebTab" FontWeight="Bold" FontSize="16">
-                                <PivotItem.Header>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="View:  "/>
-                                        <TextBlock x:Name="Count" Text="{Binding ListCount}" Foreground="Red"/>
-                                    </StackPanel>
-                                </PivotItem.Header>
-                            </PivotItem>
-                            <PivotItem x:Name="SelectedTab" Header="Make It!" FontWeight="Bold" FontSize="16">
-                                <local:SelectedView/>
-                            </PivotItem>
-                            <PivotItem x:Name="EditTab" Header="Edit"  FontWeight="Bold" FontSize="16">
-                                <local:EditView/>
-                            </PivotItem>
-                    <PivotItem x:Name="UploadTab" Header="Upload"  FontWeight="Bold" FontSize="16">
-                        <local:UploadView/>
-                    </PivotItem>-->
-            <!--<PivotItem x:Name="UserTab" Header="Login\out"  FontWeight="Bold" FontSize="16">
-                        <local:UserView/>
-                    </PivotItem>-->
-            <!--</Pivot>-->
-            <!--</StackPanel>-->
         </Grid>
     </winui:NavigationView>
 </Page>
