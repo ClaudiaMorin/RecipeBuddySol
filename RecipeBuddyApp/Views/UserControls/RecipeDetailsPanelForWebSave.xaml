@@ -22,9 +22,9 @@
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" >
-                <TextBlock Text="Save Category: " FontSize="14" VerticalAlignment="Center" FontWeight="Bold"/>
+                <TextBlock Text="Category: " FontSize="14" VerticalAlignment="Center" FontWeight="Bold"/>
                 <Border BorderThickness="10"/>
-                <ComboBox x:Name="TypesInComboBox" VerticalAlignment="Center">
+                <ComboBox x:Name="TypesInComboBox" VerticalAlignment="Center" SelectedIndex="{Binding RecipeTypeInt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <i:Interaction.Behaviors>
                         <ic:EventTriggerBehavior  EventName="SelectionChanged">
                             <ic:InvokeCommandAction x:Name="ICommandSelectTypeChanged" Command="{Binding CmdSelectedTypeChanged}" />
@@ -34,14 +34,13 @@
             </StackPanel>
             <TextBox x:Name="Author" TextAlignment="Left" Grid.Row="0"  Grid.Column= "1" FontSize="14" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Path=Author, Mode=OneWay}" />
 
-            <!--<HyperlinkButton x:Name="Link" VerticalAlignment="Top" Grid.Row="0" Grid.Column= "1" FontSize="14" Content="{Binding Path=Website, Mode=OneWay}" NavigateUri="{Binding Path=Link, Mode=OneWay}" />-->
         </Grid>
         <Border x:Name="IngredientDirections" BorderThickness="2" Background="LightSteelBlue" BorderBrush="DarkGray">
             <StackPanel Background="LightSteelBlue" Grid.Column="1" Grid.Row="0">
                 <TextBlock Text="Ingredients:" HorizontalAlignment="Center" FontSize="20" FontWeight="ExtraBold" />
             </StackPanel>
         </Border>
-        <ScrollViewer Visibility="Visible" Height="300">
+        <ScrollViewer Visibility="Visible" Height="270">
             <StackPanel x:Name="ScrollingIngred">
                 <TextBox x:Name="Ingredient1" Style ="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text, Converter={StaticResource StyleTextBoxSlim}, ConverterParameter = 0}" Text ="{Binding Path=Ingredient1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBox x:Name="Ingredient2" Style ="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text, Converter={StaticResource StyleTextBoxSlim}, ConverterParameter = 1}" Text ="{Binding Path=Ingredient2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>

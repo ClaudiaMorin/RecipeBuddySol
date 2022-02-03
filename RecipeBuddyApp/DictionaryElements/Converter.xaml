@@ -3,29 +3,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="using:RecipeBuddy.ValueConverters">
 
+    <converters:StyleConverterTextBoxSlim x:Key="StyleTextBoxSlim"/>
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
-    <converters:ButtonHeightInverseConverter x:Key="ButtonHeightInverseConverter"/>
-    <converters:ButtonIsEnabledConverter x:Key="ButtonEnabledConverter"/>
-    <converters:ButtonStyleConverter x:Key="ButtonStyleConverter"/>
-    <converters:ButtonIsVisibleRedFontConverter x:Key="ButtonVisibleRedFontConverter"/>
-    <converters:CheckBoxEnabledConverter x:Key="CheckBoxEnableConvert"/>
-    <converters:ButtonHeightConverter x:Key="ButtonHeightConverter"/>
-    <converters:IntToVisibilityConverter x:Key="IntToVisibility"/>
-    <converters:IntToEnabledConverter x:Key="IntToEnableConvert"/>
-    <converters:IntToVisibilityWithParamsMaxConverter x:Key="IntToVisibilityWithParamsMaxConverter"/>
-    <converters:IntToVisibilityWithParamsMinConverter x:Key="IntToVisibilityWithParamsMinConverter"/>
-    <converters:RecipeCardToTitleConverter x:Key="RecipeCardToTitle"/>
-    <converters:ReverseVisibilityConverter x:Key="ReverseVisibility"/>
-    <converters:RowHeightConverter x:Key="RowVisibleConverter"/>
-    <converters:SearchButtonEnabledToTitleConverter x:Key="SearchTitleChangeConverter"/>
     <converters:StyleConverterTextBlock x:Key="StyleConverterTextBlock"/>
-    <converters:StyleConverterTextBlockRedFont x:Key="StyleConverterTextBlockRedFont"/>
-    <converters:StyleConverterTextBlockRedFontCenterJustified x:Key="StyleConverterTextBlockRedFontCenterJustified"/>
+    <converters:IntToVisibilityConverter x:Key="IntToVisibility"/>
+    <converters:RowHeightConverter x:Key="RowVisibleConverter"/>
     <converters:StyleConverterTextBox x:Key="StyleConverterTextBox"/>
     <converters:StyleConverterTextBoxRedFont x:Key="StyleConverterTextBoxRedFont"/>
-    <converters:StyleConverterUnhideFirstEmptyTextBox x:Key="StyleConverterUnhideFirstEmptyTextBox"/>
-    <converters:TargetCoverterContextMenu x:Key="TargetContextMenuConvert"/>
-    <converters:TextToVisibilityConverter x:Key="TextToVisibility"/>
-    <converters:StyleConverterTextBoxSlim x:Key="StyleTextBoxSlim"/>
 
 </ResourceDictionary>

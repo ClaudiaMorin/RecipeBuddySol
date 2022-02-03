@@ -26,6 +26,7 @@ namespace RecipeBuddy.Views
 
             SearchViewItems.DataContext = SearchViewModel.Instance;
             RecipesInComboBox.ItemsSource = SearchViewModel.Instance.listOfRecipeCards.RecipesList;
+            //RecipeStackPanelCollection.DataContext = SearchViewModel.Instance;
 
             ///Search1Panel Panel Setup
             Title1.DataContext = SearchViewModel.Instance.recipePanelForSearch1.RecipeCard;

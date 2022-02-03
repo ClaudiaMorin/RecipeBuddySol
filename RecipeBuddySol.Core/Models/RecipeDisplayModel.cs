@@ -28,6 +28,7 @@ namespace RecipeBuddy.Core.Models
             listOfDirectionStringsForDisplay = new List<string>(directionDisplay);
             SetIngredientAndDirectionProperties();
             recipeType = Type_Of_Recipe.Unknown;
+            recipeTypeInt = (int)Type_Of_Recipe.Unknown;
         }
 
         /// <summary>
@@ -47,6 +48,7 @@ namespace RecipeBuddy.Core.Models
             Author = reSource.Author;
             Link = reSource.Link;
             recipeType = reSource.recipeType;
+            recipeTypeInt = (int)reSource.recipeType;
             ID = reSource.ID;
         }
 
@@ -66,7 +68,7 @@ namespace RecipeBuddy.Core.Models
             Website = reSource.Website;
             Link = new Uri(reSource.Link);
             recipeType = (Type_Of_Recipe) reSource.TypeAsInt;
-            //recipeTypeInt = reSource.TypeAsInt;
+            recipeTypeInt = reSource.TypeAsInt;
             ID = -1;
 
             SetIngredientAndDirectionProperties();
@@ -89,7 +91,7 @@ namespace RecipeBuddy.Core.Models
             //Website = Type_of_Websource.None;
             Link = null;
             recipeType = Type_Of_Recipe.Unknown;
-            //recipeTypeInt = (int)recipeType;
+            recipeTypeInt = (int)recipeType;
             ID = -1;
         }
 
@@ -1187,8 +1189,6 @@ namespace RecipeBuddy.Core.Models
             RecipeType = (Type_Of_Recipe)reSource.TypeAsInt;
             listOfIngredientStringsForDisplay = reSource.ListOfIngredientStrings;
             listOfDirectionStringsForDisplay = reSource.ListOfDirectionStrings;
-            //Website = reSource.Website;
-
             //Sometimes we have a good link, sometimes we don't
             try
             {
@@ -1337,7 +1337,18 @@ namespace RecipeBuddy.Core.Models
         public Type_Of_Recipe RecipeType
         {
             get { return recipeType; }
-            set { SetProperty(ref recipeType, value); }
+            set 
+            { 
+                SetProperty(ref recipeType, value);
+                RecipeTypeInt = (int)recipeType;
+            }
+        }
+
+        private int recipeTypeInt;
+        public int RecipeTypeInt
+        {
+            get { return recipeTypeInt; }
+            set { SetProperty(ref recipeTypeInt, value); }
         }
 
         private string title;

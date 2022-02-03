@@ -21,8 +21,6 @@ namespace RecipeBuddy.ViewModels
 
         public Action<SelectionChangedEventArgs> actionWithEventArgs;
         Action<string> actionWithString;
-
-
         Action action;
         Func<bool> funcBool;
 
@@ -57,10 +55,11 @@ namespace RecipeBuddy.ViewModels
         public void OpenRecipePanel()
         {
             recipePanelForWebCopy.recipeCardModel.UpdateRecipeDisplayFromRecipeRecord(SearchViewModel.Instance.listOfRecipeCards.GetCurrentEntry());
-            FirstColumnTreeViewVisibility = "Collapsed";
+            MainViewWidth = "*";
             RecipeEntryVisibility = "Visible";
             RecipeEntryFromWebVisibility = "Visible";
-            MainViewWidth = "*";
+            FirstColumnTreeViewVisibility = "Collapsed";
+            NewRecipeEntryVisibility = "Collapsed";
             recipePanelForWebCopy.LoadRecipeCardModel(recipePanelForWebCopy.recipeCardModel);
         }
 
@@ -70,22 +69,23 @@ namespace RecipeBuddy.ViewModels
         public void OpenEmptyRecipePanel()
         {
             RecipeDisplayModel emptyRecipeCardModel = new RecipeDisplayModel();
+            MainViewWidth = "*";
             emptyRecipeCardModel.Title = "Recipe Title Here";
-            FirstColumnTreeViewVisibility = "Collapsed";
             RecipeEntryVisibility = "Visible";
             NewRecipeEntryVisibility = "Visible";
-            MainViewWidth = "*";
-            ComboBoxIndexForRecipeType = (int)emptyRecipeCardModel.RecipeType;
+            FirstColumnTreeViewVisibility = "Collapsed";
+            RecipeEntryFromWebVisibility = "Collapsed";
             recipePanelForWebCopy.LoadRecipeCardModel(emptyRecipeCardModel);
         }
 
         public void CloseKeepRecipePanel()
         {
+            RecipeEntryVisibility = "Collapsed";
+            RecipeEntryFromWebVisibility = "Collapsed";
+            NewRecipeEntryVisibility = "Collapsed";
             MainViewWidth = "3*";
             FirstColumnTreeViewVisibility = "Visible";
-            NewRecipeEntryVisibility = "Collapsed";
-            RecipeEntryFromWebVisibility = "Collapsed";
-            RecipeEntryVisibility = "Collapsed";
+            ChangeRecipeFromModel();
         }
 
         /// <summary>
@@ -95,7 +95,6 @@ namespace RecipeBuddy.ViewModels
         public void ChangeRecipeFromModel()
         {
             ComboBoxIndexForRecipeTitle = SearchViewModel.Instance.IndexOfComboBoxItem;
-            CurrentLink = recipePanelForWebCopy.recipeCardModel.Link;
         }
 
         /// <summary>
@@ -113,9 +112,11 @@ namespace RecipeBuddy.ViewModels
                 {
                     if (SearchViewModel.Instance.listOfRecipeCards.SettingCurrentIndexByTitle(recipeRecordModelFromChangedEventArgs.Title) != -1)
                     {
-                        SearchViewModel.Instance.NumXRecipesIndex = "0";
+                        //we don't update an empty recipe!
+                        if(NewRecipeEntryVisibility != "Visible")
                         recipePanelForWebCopy.recipeCardModel.UpdateRecipeDisplayFromRecipeRecord(SearchViewModel.Instance.listOfRecipeCards.GetCurrentEntry());
-                        CurrentLink = recipePanelForWebCopy.recipeCardModel.Link;
+
+                        CurrentLink = new Uri(SearchViewModel.Instance.listOfRecipeCards.GetCurrentEntry().Link);
                     }
                 }
             }
@@ -128,6 +129,8 @@ namespace RecipeBuddy.ViewModels
         public void RemoveRecipe(string title)
         {
             SearchViewModel.Instance.RemoveRecipeFromComboBoxWork(title);
+            ComboBoxIndexForRecipeTitle = SearchViewModel.Instance.IndexOfComboBoxItem;
+            CurrentLink = new Uri(SearchViewModel.Instance.listOfRecipeCards.GetCurrentEntry().Link);
             DropDownOpen = false;
         }
 
@@ -221,22 +224,6 @@ namespace RecipeBuddy.ViewModels
             private set;
         }
 
-        ///// <summary>
-        ///// property for the Quantity combobox change command
-        ///// </summary>
-        //public RelayCommand<SelectionChangedEventArgs> CmdSelectedQuantityChanged
-        //{
-        //    get;
-        //    private set;
-        //}
-
-        private int comboBoxIndexForRecipeType;
-        public int ComboBoxIndexForRecipeType
-        {
-            get { return comboBoxIndexForRecipeType; }
-            set { SetProperty(ref comboBoxIndexForRecipeType, value); }
-        }
-
         private int comboBoxIndexForRecipeTitle;
         public int ComboBoxIndexForRecipeTitle
         {
@@ -292,13 +279,6 @@ namespace RecipeBuddy.ViewModels
             get { return mainViewWidth; }
             set { SetProperty(ref mainViewWidth, value); }
         }
-
-        //private string mainViewNewRecipeWidth;
-        //public string MainViewNewRecipeWidth
-        //{
-        //    get { return mainViewNewRecipeWidth; }
-        //    set { SetProperty(ref mainViewNewRecipeWidth, value); }
-        //}
 
         /// <summary>
         /// property for the Remove button command

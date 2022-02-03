@@ -39,7 +39,7 @@
                 <Border BorderBrush="Gray" BorderThickness="2"/>
                 <StackPanel Grid.Column="0" Orientation="Vertical" Background="White" Margin ="0,0,0,0" Width="1108">
                     <StackPanel Orientation="Horizontal" Background="Gray">
-                        <ComboBox x:Name="RecipesInComboBox" Grid.Column="0" Width="250" Height="30" SelectedIndex="{Binding ComboBoxIndexForRecipeTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsDropDownOpen="{Binding DropDownOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ToolTipService.ToolTip="List of selected Recipes" >
+                        <ComboBox x:Name="RecipesInComboBox" Grid.Column="0" Width="300" Height="30" SelectedIndex="{Binding ComboBoxIndexForRecipeTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsDropDownOpen="{Binding DropDownOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ToolTipService.ToolTip="List of selected Recipes" >
                                 <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
@@ -57,11 +57,9 @@
                             </i:Interaction.Behaviors>
                         </ComboBox>
                         <Border BorderThickness="5"/>
-                            <Button x:Name="btnOpenEntry" Width="150" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Entry for web recipe" Command="{Binding CmdOpenEntry}" ToolTipService.ToolTip="Click to save recipe under the selected Catagory." />
+                            <Button x:Name="btnOpenEntry" Width="100" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Get recipe" Command="{Binding CmdOpenEntry}" ToolTipService.ToolTip="Click to save recipe under the selected Catagory." />
                         <Border BorderThickness="5"/>
-                            <!--<Button x:Name="btnRemove" Width="150" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}"  Content="Remove from List"  ToolTipService.ToolTip="Click to remove recipe from list."  />
-                        <Border BorderThickness="5"/>-->
-                            <Button x:Name="btnOpenEmptyEntry" Width="150" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}"  Content="Create empty entry" Command="{Binding CmdOpenEmptyEntry}" ToolTipService.ToolTip="Click create an blank entry."  />
+                        <Button x:Name="btnOpenEmptyEntry" Width="100" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}"  Content="Empty entry" Command="{Binding CmdOpenEmptyEntry}" ToolTipService.ToolTip="Click create an blank entry."  />
                     </StackPanel>
                     <TextBlock x:Name="currentURI" Text="{Binding CurrentLink}" SelectionHighlightColor="LightSteelBlue"/>
                     <Border BorderThickness="2" BorderBrush="DarkGray"/>

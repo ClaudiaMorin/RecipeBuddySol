@@ -43,7 +43,7 @@
                 <TextBlock Text="Ingredients:" HorizontalAlignment="Center" FontSize="20" FontWeight="ExtraBold" />
             </StackPanel>
         </Border>
-        <ScrollViewer Visibility="Visible" Height="300">
+        <ScrollViewer Visibility="Visible" Height="270">
             <Grid x:Name="IngredientGrid">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3*" />

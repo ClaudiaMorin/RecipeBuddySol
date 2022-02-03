@@ -30,8 +30,8 @@
             <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="1" >
                 <TextBlock Text="Category :" TextAlignment="Left" FontSize="14"/>
                 <Border Width="6"/>
-                <!--<ComboBox x:Name="TypesInComboBox" VerticalAlignment="Top" SelectedIndex="{Binding RecipeTypeInt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">-->
-                <ComboBox x:Name="TypesInComboBox" VerticalAlignment="Top" SelectedIndex="{Binding CurrentType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ComboBox x:Name="TypesInComboBox" VerticalAlignment="Top" SelectedIndex="{Binding RecipeTypeInt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <!--<ComboBox x:Name="TypesInComboBox" VerticalAlignment="Top" SelectedIndex="{Binding CurrentType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">-->
                     <i:Interaction.Behaviors>
                         <icore:EventTriggerBehavior  EventName="SelectionChanged">
                             <icore:InvokeCommandAction x:Name="ICommandSelectTypeChanged" Command="{Binding CmdSelectedTypeChanged}" />
@@ -83,9 +83,10 @@
                 </StackPanel>
         </Grid>
 
-        <ScrollViewer Visibility="Visible" Height="540">
-            <StackPanel x:Name="IngredientDirections">
-             <!--This is where all of the ingredients are set, it is  big!! -->
+        <!--<ScrollViewer Visibility="Visible" Height="540">-->
+        <StackPanel x:Name="IngredientDirections">
+            <!--This is where all of the ingredients are set, it is  big!! -->
+            <ScrollViewer Visibility="Visible" Height="270">
                 <Grid x:Name="IngredientGrid">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="4*" />
@@ -93,105 +94,105 @@
                         <ColumnDefinition Width="2*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="{Binding ElementName=Ingred1, Path=Text, Converter={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow1" Height="{Binding Ingred1Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred2, Path=Text, Converter={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow2" Height="{Binding Ingred2Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred3, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow3" Height="{Binding Ingred3Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred4, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow4" Height="{Binding Ingred4Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred5, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow5" Height="{Binding Ingred5Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred6, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow6" Height="{Binding Ingred6Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred7, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow7" Height="{Binding Ingred7Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred8, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow8" Height="{Binding Ingred8Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred9, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow9" Height="{Binding Ingred9Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred10, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow10" Height="{Binding Ingred10Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred11, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow11" Height="{Binding Ingred11Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred12, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow12" Height="{Binding Ingred12Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred13, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow13" Height="{Binding Ingred13Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred14, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow14" Height="{Binding Ingred14Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred15, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow15" Height="{Binding Ingred15Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred16, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow16" Height="{Binding Ingred16Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred17, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow17" Height="{Binding Ingred17Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred18, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow18" Height="{Binding Ingred18Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred19, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow19" Height="{Binding Ingred19Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred20, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow20" Height="{Binding Ingred20Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred21, Path=Text, Converter={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow21" Height="{Binding Ingred21Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred22, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow22" Height="{Binding Ingred22Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred23, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow23" Height="{Binding Ingred23Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred24, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow24" Height="{Binding Ingred24Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred25, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow25" Height="{Binding Ingred25Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred26, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow26" Height="{Binding Ingred26Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred27, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow27" Height="{Binding Ingred27Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred28, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow28" Height="{Binding Ingred28Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred29, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow29" Height="{Binding Ingred29Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred30, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow30" Height="{Binding Ingred30Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred31, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow31" Height="{Binding Ingred31Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred32, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow32" Height="{Binding Ingred32Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred33, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow33" Height="{Binding Ingred33Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred34, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow34" Height="{Binding Ingred34Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred35, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow35" Height="{Binding Ingred35Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred36, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow36" Height="{Binding Ingred36Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred37, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow37" Height="{Binding Ingred37Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred38, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow38" Height="{Binding Ingred38Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred39, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow39" Height="{Binding Ingred39Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred40, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow40" Height="{Binding Ingred40Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred41, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow41" Height="{Binding Ingred41Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred42, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow42" Height="{Binding Ingred42Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred43, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow43" Height="{Binding Ingred43Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred44, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow44" Height="{Binding Ingred44Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred45, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow45" Height="{Binding Ingred45Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred46, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow46" Height="{Binding Ingred46Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred47, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow47" Height="{Binding Ingred47Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred48, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow48" Height="{Binding Ingred48Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred49, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow49" Height="{Binding Ingred49Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Ingred50, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow50" Height="{Binding Ingred50Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid.RowDefinitions>
 
@@ -322,7 +323,7 @@
                     <Button x:Name="EditBtnIngrd16" Style="{StaticResource BtnStyleEditRecipeItemBlue}" Command="{Binding CmdLineEdit}" CommandParameter="16, Ingredient"  Grid.Row="30"  Grid.Column="2" />
                     <Button x:Name="UpdateBtnIngrd16" Style="{StaticResource BtnStyleUpdateEditRecipeItem}" Command="{Binding CmdUpdate}" CommandParameter="16, Ingredient" Grid.Row="31"  Grid.Column="1" HorizontalAlignment="Right"/>
                     <Button x:Name="CancelBtnIngrd16" Style="{StaticResource BtnStyleCancelEditRecipeItem}" Command="{Binding CmdCancel}" CommandParameter="16, Ingredient" Grid.Row="31"  Grid.Column="2"/>
-                    
+
                     <TextBlock x:Name="IngredQuant17BLK" Style="{Binding Path=IngredientQuantity17, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text="{Binding Path=IngredientQuantity17, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Grid.Row="32"/>
                     <TextBlock Style="{Binding ElementName=IngredQuant17BLK, Path=Style}" Grid.Column="0" Grid.Row="33" />
                     <TextBlock x:Name="Ingred17" Style="{Binding Path=Ingredient17, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text="{Binding Path=Ingredient17, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="32" Grid.Column="1" />
@@ -595,79 +596,80 @@
                     <Button x:Name="UpdateBtnIngrd50" Style="{StaticResource BtnStyleUpdateEditRecipeItem}" Command="{Binding CmdUpdate}" CommandParameter="50, Ingredient" Grid.Row="99"  Grid.Column="1" HorizontalAlignment="Right"/>
                     <Button x:Name="CancelBtnIngrd50" Style="{StaticResource BtnStyleCancelEditRecipeItem}" Command="{Binding CmdCancel}" CommandParameter="50, Ingredient" Grid.Row="99"  Grid.Column="2"/>
                 </Grid>
-                <Border BorderThickness="2" BorderBrush="DarkGray"/>
-            
-                <!-- This is where all of the directions are set -->
+            </ScrollViewer>
+            <Border BorderThickness="2" BorderBrush="DarkGray"/>
+
+            <!-- This is where all of the directions are set -->
             <StackPanel Background="LightSteelBlue" Grid.Column="1" Grid.Row="0">
                 <TextBlock Text="Directions:" HorizontalAlignment="Center" FontSize="20" FontWeight="ExtraBold"  />
             </StackPanel>
             <Border BorderThickness="2" BorderBrush="DarkGray"/>
-
+            <ScrollViewer Visibility="Visible" Height="270">
                 <Grid x:Name="DirectionGrid" Background="#eee" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="36*" />
                         <ColumnDefinition Width="2*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="{Binding ElementName=Dir1, Path=Text, Converter={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow1Direct" Height="{Binding Direct1Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir2, Path=Text, Converter={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow2Direct" Height="{Binding Direct2Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir3, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow3Direct" Height="{Binding Direct3Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir4, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow4Direct" Height="{Binding Direct4Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir5, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow5Direct" Height="{Binding Direct5Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir6, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow6Direct" Height="{Binding Direct6Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir7, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow7Direct" Height="{Binding Direct7Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir8, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow8Direct" Height="{Binding Direct8Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir9, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow9Direct" Height="{Binding Direct9Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir10, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow10Direct" Height="{Binding Direct10Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir11, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow11Direct" Height="{Binding Direct11Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir12, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow12Direct" Height="{Binding Direct12Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir13, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow13Direct" Height="{Binding Direct13Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir14, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow14Direct" Height="{Binding Direct14Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir15, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow15Direct" Height="{Binding Direct15Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir16, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow16Direct" Height="{Binding Direct16Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir17, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow17Direct" Height="{Binding Direct17Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir18, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow18Direct" Height="{Binding Direct18Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir19, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow19Direct" Height="{Binding Direct19Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir20, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow20Direct" Height="{Binding Direct20Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir21, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow21Direct" Height="{Binding Direct21Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir22, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow22Direct" Height="{Binding Direct22Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir23, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow23Direct" Height="{Binding Direct23Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir24, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow24Direct" Height="{Binding Direct24Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir25, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow25Direct" Height="{Binding Direct25Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir26, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow26Direct" Height="{Binding Direct26Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir27, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow27Direct" Height="{Binding Direct27Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir28, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow28Direct" Height="{Binding Direct28Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir29, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow29Direct" Height="{Binding Direct29Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RowDefinition Height="{Binding ElementName=Dir30, Path=Text, Converter ={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition x:Name="EditRow30Direct" Height="{Binding Direct30Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid.RowDefinitions>
 
@@ -712,7 +714,7 @@
                     <TextBox x:Name="TextBoxDir7" Style="{Binding Path=Direction7Edits, Converter={StaticResource StyleConverterTextBox}, ConverterParameter = 0}" Text="{Binding Path=Direction7Edits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="13" Grid.Column="0" />
                     <Button x:Name="UpdateBtnDirect7" Style="{StaticResource BtnStyleUpdateEditRecipeItem}" Command="{Binding CmdUpdate}" CommandParameter="7, Direction" Grid.Row="13"  Grid.Column="0" HorizontalAlignment="Right"/>
                     <Button x:Name="CancelBtnDirect7" Style="{StaticResource BtnStyleCancelEditRecipeItem}" Command="{Binding CmdCancel}" CommandParameter="7, Direction" Grid.Row="13"  Grid.Column="1"/>
-                    
+
                     <TextBlock x:Name="Dir8" Style="{Binding Path=Direction8, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 1}" Text="{Binding Path=Direction8, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="14" Grid.Column="0" />
                     <Button x:Name="EditBtnDirect8" Style="{StaticResource BtnStyleEditRecipeItemBlue}" Command="{Binding CmdLineEdit}" CommandParameter="8, Direction"  Grid.Row="14"  Grid.Column="1" />
                     <TextBox x:Name="TextBoxDir8" Style="{Binding Path=Direction8Edits, Converter={StaticResource StyleConverterTextBox}, ConverterParameter = 1}" Text="{Binding Path=Direction8Edits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="15" Grid.Column="0" />
@@ -765,7 +767,7 @@
                     <Button x:Name="EditBtnDirect16" Style="{StaticResource BtnStyleEditRecipeItemBlue}" Command="{Binding CmdLineEdit}" CommandParameter="16, Direction"  Grid.Row="30"  Grid.Column="1" />
                     <TextBox x:Name="TextBoxDir16" Style="{Binding Path=Direction16Edits, Converter={StaticResource StyleConverterTextBox}, ConverterParameter = 1}" Text="{Binding Path=Direction16Edits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="31" Grid.Column="0" />
                     <Button x:Name="UpdateBtnDirect16" Style="{StaticResource BtnStyleUpdateEditRecipeItem}" Command="{Binding CmdUpdate}" CommandParameter="16, Direction" Grid.Row="31"  Grid.Column="0" HorizontalAlignment="Right"/>
-                    <Button x:Name="CancelBtnDirect16" Style="{StaticResource BtnStyleCancelEditRecipeItem}" Command="{Binding CmdCancel}" CommandParameter="16, Direction" Grid.Row="1"  Grid.Column="1"/>
+                    <Button x:Name="CancelBtnDirect16" Style="{StaticResource BtnStyleCancelEditRecipeItem}" Command="{Binding CmdCancel}" CommandParameter="16, Direction" Grid.Row="31"  Grid.Column="1"/>
 
                     <TextBlock x:Name="Dir17" Style="{Binding Path=Direction17, Converter={StaticResource StyleConverterTextBlock}, ConverterParameter = 0}" Text="{Binding Path=Direction17, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="32" Grid.Column="0" />
                     <Button x:Name="EditBtnDirect17" Style="{StaticResource BtnStyleEditRecipeItem}" Command="{Binding CmdLineEdit}" CommandParameter="17, Direction"  Grid.Row="32"  Grid.Column="1" />
@@ -851,8 +853,7 @@
                     <Button x:Name="UpdateBtnDirect30" Style="{StaticResource BtnStyleUpdateEditRecipeItem}" Command="{Binding CmdUpdate}" CommandParameter="30, Direction" Grid.Row="59"  Grid.Column="0" HorizontalAlignment="Right"/>
                     <Button x:Name="CancelBtnDirect30" Style="{StaticResource BtnStyleCancelEditRecipeItem}" Command="{Binding CmdCancel}" CommandParameter="30, Direction" Grid.Row="59"  Grid.Column="1"/>
                 </Grid>
-            
+            </ScrollViewer>
         </StackPanel>
-        </ScrollViewer>
     </StackPanel>
 </UserControl>

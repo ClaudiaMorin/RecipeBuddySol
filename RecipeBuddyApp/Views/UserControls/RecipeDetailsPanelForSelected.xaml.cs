@@ -19,6 +19,7 @@ namespace RecipeBuddy.Views
         {
             InitializeComponent();
             TypesInComboBox.ItemsSource = MainNavTreeViewModel.Instance.CatagoryTypes;
+            TypesInComboBox.DataContext = SelectedViewModel.Instance;
             Author.DataContext = SelectedViewModel.Instance.SelectViewMainRecipeCardModel;
             //EditRowType.DataContext = SelectedViewModel.Instance;
             RecipeType.DataContext = SelectedViewModel.Instance.SelectViewMainRecipeCardModel;

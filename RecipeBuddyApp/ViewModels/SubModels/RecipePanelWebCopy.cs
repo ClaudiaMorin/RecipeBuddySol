@@ -75,15 +75,12 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void LoadRecipeCardModel(RecipeDisplayModel recipeModel)
         {
-            //For Threading callbacks.  
-            Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView();
             recipeCardModel.CopyRecipeDisplayModel(recipeModel);
             ClearValuesForWebCopyQuantityMeasurementType();
         }
 
         public void ClearRecipeEntry()
         {
-            LoadRecipeCardModel(new RecipeDisplayModel());
             WebViewModel.Instance.CloseKeepRecipePanel();
             ClearValuesForWebCopyQuantityMeasurementType();
         }

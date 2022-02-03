@@ -213,7 +213,7 @@ namespace RecipeBuddy.ViewModels
         {
             foreach (RecipeRecordModel recipeCard in models)
             {
-                AddRecipeToTreeViewNoExpand(recipeCard);
+                AddRecipeToTreeView(recipeCard, false);
             }
         }
 
@@ -255,11 +255,21 @@ namespace RecipeBuddy.ViewModels
 
         public void ChangedTreeItemTitle(string oldTitle, string newTitle, Type_Of_Recipe type_Of_Recipe)
         {
-            RecipeTreeItem recipeTreeNode = GetRecipeTreeItem(oldTitle, type_Of_Recipe);
-            if (recipeTreeNode != null)
+            if (GetRecipeTreeItem(newTitle, type_Of_Recipe) == null)
             {
-                recipeTreeNode.RecipeModelTV.Title = newTitle;
-                recipeTreeNode.TreeItemTitle = newTitle;
+                RecipeTreeItem recipeTreeNode = GetRecipeTreeItem(oldTitle, type_Of_Recipe);
+
+                if (recipeTreeNode != null)
+                {
+                    recipeTreeNode.RecipeModelTV.Title = newTitle;
+                    recipeTreeNode.TreeItemTitle = newTitle;
+                }
+            }
+            else
+            {
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a unique title within this catagory to move a recipe", "Please rename the recipe you are moving!");
+                dialog.ShowAsync();
+                return;
             }
         }
 
@@ -380,7 +390,7 @@ namespace RecipeBuddy.ViewModels
                     break;
 
                 case Type_Of_Recipe.Beef:
-                    recipeTreeItem = SavedPorkRecipes;
+                    recipeTreeItem = SavedBeefRecipes;
                     break;
 
                 case Type_Of_Recipe.Lamb:
@@ -441,7 +451,13 @@ namespace RecipeBuddy.ViewModels
 
         public void MoveSelectedTreeViewItem(RecipeDisplayModel recipe, Type_Of_Recipe deleteTargetType)
         {
-            AddRecipeToTreeView(recipe, true);
+            if (AddRecipeToTreeView(recipe, true) == 0)
+            {
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a unique title within this catagory to move a recipe",  "Please rename the recipe you are moving!");
+                dialog.ShowAsync();
+                return;
+            }
+
             RecipeTreeItem parent = GetRecipeParentNodeFromType(deleteTargetType);
 
             for (int i = 0; i < parent.Children.Count; i++)
@@ -513,21 +529,11 @@ namespace RecipeBuddy.ViewModels
         /// <param name="expandTreeViewHeader">are we expanding the tree header when we add the item?</param>
         /// <param name="view"></param>
         /// <returns>0 if we have to overwrite an existing recipe</returns>
-        public int AddRecipeToTreeView(RecipeRecordModel recipeRecordModel, bool expandTreeViewHeader = true)
+        public int  AddRecipeToTreeView(RecipeRecordModel recipeRecordModel, bool expandTreeViewHeader = true)
         {
-            return AddRecipeToTreeViewWork(recipeRecordModel, expandTreeViewHeader);
+             return AddRecipeToTreeViewWork(recipeRecordModel, expandTreeViewHeader);
         }
 
-        /// <summary>
-        /// Takes a RecipeRecordModel and saves it
-        /// </summary>
-        /// <param name="recipeRecordModel"></param>
-        /// <param name="expandTreeViewHeader"></param>
-        /// <returns></returns>
-        public int AddRecipeToTreeViewNoExpand(RecipeRecordModel recipeRecordModel)
-        {
-            return  AddRecipeToTreeViewWork(recipeRecordModel);
-        }
 
         /// <summary>
         /// Does the work of adding a recipe to the treeview
@@ -535,33 +541,21 @@ namespace RecipeBuddy.ViewModels
         /// <param name="recipeModel">the recipeModel record we are adding/param>
         /// <param name="expandTreeViewHeader">default is true, should the node be expanded when the addition happens</param>
         /// <returns></returns>
-        private int AddRecipeToTreeViewWork(RecipeRecordModel recipeModel, bool expandTreeViewHeader = false)
+        private int AddRecipeToTreeViewWork(RecipeRecordModel recipeModel, bool expandTreeViewHeader)
         {
-            int returnOverwriteCmd = 0;
             //Create a new RecipeCardTreeItem
             RecipeTreeItem recipeTreeItem = new RecipeTreeItem(recipeModel);
             RecipeTreeItem parentTreeNode = GetRecipeParentNodeFromType(recipeTreeItem.RecipeModelTV.TypeAsInt);
 
             if (CheckIfRecipeAlreadyPresent(recipeTreeItem.TreeItemTitle, recipeTreeItem.RecipeModelTV.TypeAsInt) == true)
-                return returnOverwriteCmd;
+            {
+                return 0;
+            }
+
             parentTreeNode.Children.Add(recipeTreeItem);
             parentTreeNode.ItemExpanded = expandTreeViewHeader;
 
-            if (string.Compare(parentTreeNode.TreeItemTitle.ToLower(), "lamb") == 0 || string.Compare(parentTreeNode.TreeItemTitle.ToLower(), "beef") == 0 || string.Compare(parentTreeNode.TreeItemTitle.ToLower(), "pork") == 0 ||
-                string.Compare(parentTreeNode.TreeItemTitle.ToLower(), "poultry") == 0 || string.Compare(parentTreeNode.TreeItemTitle.ToLower(), "eggs") == 0 || string.Compare(parentTreeNode.TreeItemTitle.ToLower(), "dairy") == 0 ||
-                string.Compare(parentTreeNode.TreeItemTitle.ToLower(), "tofu") == 0 || string.Compare(parentTreeNode.TreeItemTitle.ToLower(), "seafood") == 0) 
-            {
-               MainNavTreeViewModel.instance.MainCourseRecipes.ItemExpanded = expandTreeViewHeader;
-            }
-            if (string.Compare(parentTreeNode.TreeItemTitle.ToLower(), "cake") == 0 || string.Compare(parentTreeNode.TreeItemTitle.ToLower(), "candy") == 0 || string.Compare(parentTreeNode.TreeItemTitle.ToLower(), "cookie") == 0 ||
-                string.Compare(parentTreeNode.TreeItemTitle.ToLower(), "custard") == 0 || string.Compare(parentTreeNode.TreeItemTitle.ToLower(), "pastry") == 0)
-            {
-                MainNavTreeViewModel.instance.DessertRecipes.ItemExpanded = expandTreeViewHeader;
-            }
-
-            returnOverwriteCmd = 1;
-
-            switch ((Type_Of_Recipe)parentTreeNode.RecipeModelTV.TypeAsInt)
+            switch ((Type_Of_Recipe)recipeModel.TypeAsInt)
             {
                 case Type_Of_Recipe.Cake:
                 case Type_Of_Recipe.Cookie:
@@ -582,7 +576,7 @@ namespace RecipeBuddy.ViewModels
                     break;
             }
 
-            return returnOverwriteCmd;
+            return 1;
         }
 
 

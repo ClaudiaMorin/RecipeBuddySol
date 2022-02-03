@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Controls;
 using RecipeBuddy.Core.Models;
 using RecipeBuddy.Services;
 using Microsoft.Toolkit.Mvvm.Input;
+using Windows.UI.Xaml;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -38,6 +39,7 @@ namespace RecipeBuddy.ViewModels
         private SearchViewModel()
         {
             searchString = "";
+            //searchActive = "Colapsed";
             dropDownOpen = false;
             searchButtonTitle = "Search";
             searchEnabled = true;
@@ -96,6 +98,7 @@ namespace RecipeBuddy.ViewModels
             TaskListOfSearches.Add(Task.Run(() => SearchBackground(recipePanelForSearch3, searchString, coreApplicationView)));
             Task t = Task.WhenAll(TaskListOfSearches);
 
+            //SearchActive = "Visible";
             CursorType = CoreCursorType.Arrow;
             SearchButtonTitle = "Search";
             SearchEnabled = true;
@@ -117,6 +120,7 @@ namespace RecipeBuddy.ViewModels
             cursorType = CoreCursorType.Wait;
             SearchButtonTitle = "Searching...";
             SearchEnabled = false;
+            //SearchActive = "Visible";
             SearchButtonCmd.RaiseCanExecuteChanged();
 
             recipePanelForSearch1.ClearRecipeEntry();
@@ -149,6 +153,12 @@ namespace RecipeBuddy.ViewModels
             DropDownOpen = false;
         }
 
+
+        /// <summary>
+        /// The code behind removing an item listed in the Combobox - Removes the title and increments the link if this is the current one the user
+        /// is looking at to the next one in the list.
+        /// </summary>
+        /// <param name="title">The title of the recipe item to remove</param>
         public void RemoveRecipeFromComboBoxWork(string title)
         {
             try
@@ -165,7 +175,6 @@ namespace RecipeBuddy.ViewModels
                         { listOfRecipeCards.CurrentCardIndex = 0; }
                     }
                     listOfRecipeCards.Remove(listOfRecipeCards.GetEntryIndex(title));
-
                 }
             }
             catch (Exception e)
@@ -246,6 +255,13 @@ namespace RecipeBuddy.ViewModels
             get { return searchEnabled; }
             set { SetProperty(ref searchEnabled, value); }
         }
+
+        //private UIElement.VisibilityProperty searchActive;
+        //public string SearchActive
+        //{
+        //    get { return searchActive; }
+        //    set { SetProperty(ref searchActive, value); }
+        //}
 
         private bool webViewEnabled;
         public bool WebViewEnabled

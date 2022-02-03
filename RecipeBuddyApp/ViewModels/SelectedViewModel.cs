@@ -48,6 +48,7 @@ namespace RecipeBuddy.ViewModels
             LoadDirectList("0");
             QuantitySelectedAsString = "1";
             QuantitySelectedAsInt = 1;
+            recipeLoaded = "Collapsed";
             currentType = 0;
             titleEditHeight = "0";
             typeEditHeight = "0";
@@ -105,6 +106,7 @@ namespace RecipeBuddy.ViewModels
             UpdateEditTextBoxes();
             CurrentType = (int)selectViewMainRecipeCardModel.RecipeType;
             UpdateQuantityCalc();
+            RecipeLoaded = "Visible";
         }
 
         /// <summary>
@@ -608,6 +610,7 @@ namespace RecipeBuddy.ViewModels
             }
         }
 
+
         /// <summary>
         /// can't select save until the user is logged in
         /// because there is no access to the DB
@@ -764,6 +767,13 @@ namespace RecipeBuddy.ViewModels
         {
             get { return titleEditHeight; }
             set { SetProperty(ref titleEditHeight, value); }
+        }
+
+        private string recipeLoaded;
+        public string RecipeLoaded
+        {
+            get { return recipeLoaded; }
+            set { SetProperty(ref recipeLoaded, value); }
         }
 
         private string typeEditHeight;
