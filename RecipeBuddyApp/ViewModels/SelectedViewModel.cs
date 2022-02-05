@@ -58,7 +58,7 @@ namespace RecipeBuddy.ViewModels
 
             LoadListSettersWithActionDelegatesForIngredientQuantities();
             selectViewMainRecipeCardModel = new RecipeDisplayModel();
-            selectViewMainRecipeCardModel.Title = "Select a Recipe to Start!";
+            selectViewMainRecipeCardModel.Title = "Select a saved recipe from the treeview!";
             IngredientQuantityShift = new List<string>();
             typeComboBoxVisibility = "Collapsed";
 

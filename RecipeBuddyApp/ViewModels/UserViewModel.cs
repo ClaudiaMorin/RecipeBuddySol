@@ -82,7 +82,7 @@ namespace RecipeBuddy.ViewModels
             string AccountName = ListOfUserAccountsInDB[ComboBoxIndexOfUserFromDB];
 
             UsersIDInDB = DataBaseAccessorsForRecipeManager.LoadUserFromDatabase(PasswordString, ListOfUserAccountsInDB[ComboBoxIndexOfUserFromDB]);
-            if (AccountName.Length > 0)
+            if (AccountName.Length > 0 && UsersIDInDB != -1)
             {
                 SetUpSearchWebsources(false);
                 loggedin = true;
@@ -96,8 +96,10 @@ namespace RecipeBuddy.ViewModels
             }
             else //user password didm't match
             {
-                //PasswordSecureString = null;
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("Password Incorrect!");
+                dialog.ShowAsync();
             }
+
             PasswordString = "";
         }
 
@@ -491,6 +493,8 @@ namespace RecipeBuddy.ViewModels
 
                 if (foodAndWineCheckBoxChecked == true)
                     PanelMap.Add(Type_of_Websource.FoodAndWine);
+
+                SearchViewModel.Instance.UpdateSearchWebsources();
             }
         }
 

@@ -601,7 +601,7 @@
 
             <!-- This is where all of the directions are set -->
             <StackPanel Background="LightSteelBlue" Grid.Column="1" Grid.Row="0">
-                <TextBlock Text="Directions:" HorizontalAlignment="Center" FontSize="20" FontWeight="ExtraBold"  />
+                <TextBlock Text="Directions/Notes:" HorizontalAlignment="Center" FontSize="20" FontWeight="ExtraBold"  />
             </StackPanel>
             <Border BorderThickness="2" BorderBrush="DarkGray"/>
             <ScrollViewer Visibility="Visible" Height="270">

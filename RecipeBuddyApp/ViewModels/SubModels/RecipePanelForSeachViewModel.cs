@@ -186,6 +186,7 @@ namespace RecipeBuddy.ViewModels
             //Website = Type_of_Websource.None; 
             //Link = null; 
             //Recipe_Type = Type_Of_Recipe.Unknown;
+            //type_Of_Source = Type_of_Websource.None;
             UpdateRecipeEntry(new RecipeRecordModel());
             CanSelectBack = false;
             CanSelectNext = false;

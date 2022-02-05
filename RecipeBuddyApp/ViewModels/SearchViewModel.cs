@@ -39,7 +39,6 @@ namespace RecipeBuddy.ViewModels
         private SearchViewModel()
         {
             searchString = "";
-            //searchActive = "Colapsed";
             dropDownOpen = false;
             searchButtonTitle = "Search";
             searchEnabled = true;
@@ -50,7 +49,6 @@ namespace RecipeBuddy.ViewModels
             recipePanelForSearch1 = new RecipePanelForSearchViewModel();
             recipePanelForSearch2 = new RecipePanelForSearchViewModel();
             recipePanelForSearch3 = new RecipePanelForSearchViewModel();
-            UpdateSearchWebsources();
 
             CmdRemove = new RelayCommand<string>(actionWithString = s => RemoveRecipe(s));
             SearchButtonCmd = new RelayCommandRaiseCanExecute(ActionNoParams = () => Search(), FuncBool = () => SearchEnabled);
@@ -59,6 +57,7 @@ namespace RecipeBuddy.ViewModels
 
         /// <summary>
         /// Updates the panel and the Panel map with the new websource
+        /// Called when the user logs in.
         /// </summary>
         public void UpdateSearchWebsources()
         {   

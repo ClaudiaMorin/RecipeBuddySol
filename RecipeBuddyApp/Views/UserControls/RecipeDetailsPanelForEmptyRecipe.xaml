@@ -611,7 +611,7 @@
         </ScrollViewer>
         <Border BorderThickness="2" BorderBrush="DarkGray" Background="LightSteelBlue">
             <StackPanel Background="LightSteelBlue" >
-                <TextBlock Text="Directions:" HorizontalAlignment="Center" FontSize="20" FontWeight="ExtraBold" ToolTipService.ToolTip="Add the directions that you need! Remember to check the reviews for modifications and substitutions to try!" />
+                <TextBlock Text="Directions/Notes:" HorizontalAlignment="Center" FontSize="20" FontWeight="ExtraBold" ToolTipService.ToolTip="Add the directions that you need! Remember to check the reviews for modifications and substitutions to try!" />
             </StackPanel>
         </Border>
         <ScrollViewer Visibility="Visible" Height="270">
