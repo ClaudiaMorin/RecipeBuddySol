@@ -59,7 +59,7 @@ namespace RecipeBuddy.Core.Scrapers
                 }
 
                 //we need to zero out all our lists.
-                listModel.URLLists.ClearLists();
+                listModel.URLLists = new RecipeURLLists();
 
                 string firstStr;
                 string secondStr;
@@ -128,43 +128,6 @@ namespace RecipeBuddy.Core.Scrapers
 
             return Scraper.TrimListToSpecifiedEntries(50, ingredients);
         }
-
-
-        //private static List<string> FillDirectionListSouthernLivingForRecipeEntry(HtmlDocument doc, int countList)
-        //{
-        //    List<string> directions = new List<string>();
-        //    string headerTag = "-";
-        //    try
-        //    {
-        //        HtmlNode directions_sub_level = doc.DocumentNode.SelectSingleNode("//ul[@class='instructions-section']");
-        //        string innerText = directions_sub_level.InnerText.Replace('\n', ' ').Replace("Advertisement", "");
-        //        List<string> preDirectionsList = new List<string>();
-        //        string subString;
-
-        //        directions.Add(headerTag + "Directions");
-
-        //        while (innerText.TrimStart().Length > 1)
-        //        {
-        //            innerText = innerText.TrimStart();
-        //            subString = innerText.Substring(0, innerText.IndexOf("  "));
-        //            preDirectionsList.Add(StringManipulationHelper.CleanHTMLTags(subString));
-        //            innerText = innerText.Remove(0, subString.Length);
-        //        }
-
-        //        for (int count = 0; count < preDirectionsList.Count;)
-        //        {
-        //            directions.Add(preDirectionsList[count] + ":  " + preDirectionsList[count + 1]);
-        //            count = count + 2;
-        //        }
-        //    }
-
-        //    catch (Exception e)
-        //    {
-        //        return null;
-        //    }
-
-        //    return Scraper.TrimListToSpecifiedEntries(30, directions);
-        //}
 
         /// <summary>
         /// Processes the xml following the SouthernLiving website's specific tweeks that are nessesary to pull data

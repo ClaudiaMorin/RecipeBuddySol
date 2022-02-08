@@ -27,8 +27,14 @@
                     <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.Column="0">
-                    <TextBox x:Name="SearchTB" Width="300" Text="{Binding SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="30" Background="White" TextAlignment="left" FontSize="14"/>
-                    <Button x:Name="SearchButton" Width="100" Height="30" Style="{StaticResource BtnStyleSearch}" IsEnabled="{Binding SearchTitleChangeConverter}" Command="{Binding SearchButtonCmd}" Content="{Binding SearchButtonTitle, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="SearchTB" Width="300" Text="{Binding SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="30" Background="White" TextAlignment="left" FontSize="14">
+                        <i:Interaction.Behaviors>
+                            <ic:EventTriggerBehavior EventName="KeyDown">
+                                <ic:InvokeCommandAction x:Name="EnterKeyDown" Command="{Binding CmdEnterKeyDown}" />
+                            </ic:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                    <Button x:Name="SearchButton" Width="100" Height="30" Style="{StaticResource BtnStyleSearch}" IsEnabled="{Binding SearchEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding SearchButtonCmd}" Content="Search" />
                     <Border BorderThickness="50" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Column="1" >

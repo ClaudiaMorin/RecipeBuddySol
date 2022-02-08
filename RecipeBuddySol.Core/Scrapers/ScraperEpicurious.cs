@@ -56,7 +56,7 @@ namespace RecipeBuddy.Core.Scrapers
                     return -1;
                 }
                 //we need to zero out all our lists.
-                listModel.URLLists.ClearLists();
+                listModel.URLLists = new RecipeURLLists();
 
                 foreach (var item in list)
                 {
@@ -74,9 +74,6 @@ namespace RecipeBuddy.Core.Scrapers
                 return -1;
             }
         }
-
-
-
 
         /// <summary>
         /// Processes the xml following the Epicurious website's specific tweeks that are nessesary to pull data
@@ -161,63 +158,6 @@ namespace RecipeBuddy.Core.Scrapers
                 ingredients.Add(amount + " " + ingred);
                 count++;
             }
-        }
-
-        private static List<string> FillDirectionListEpicuriousForRecipeEntry(HtmlDocument doc, int countList)
-        {
-            List<string> directions = new List<string>();
-            string headerTag = "-";
-            string s1;
-            string s2;
-            string s3;
-
-            HtmlNodeCollection groupslist = doc.DocumentNode.SelectSingleNode("//div[@class='BaseWrap-sc-TURhJ InstructionGroupWrapper-hlSqax fNfucB']").ChildNodes;
-
-            if (groupslist != null)
-            {
-                //string section_header = "Directions";
-                //directions.Add(headerTag + section_header);
-
-                try
-                {
-                    for (int i = 0; i < groupslist.Count; i++)
-                    {
-                        if (i == countList - 1)
-                        {
-                            directions.Add("! List Contains Too Many items, see website !");
-                            return directions;
-                        }
-
-                        HtmlNode section_node = groupslist[i];
-                        if (section_node.FirstChild.NextSibling != null)
-                        {
-                            s1 = section_node.FirstChild.NextSibling.OuterHtml;
-                            int index = s1.IndexOf("<p>") + 3;
-                            s2 = s1.Substring(index);
-                            s3 = StringManipulationHelper.CleanHTMLTags(s2.Substring(0, s2.IndexOf("</p>")));
-                            //sometimes we have a second header burried then we need to dig it out and make another entry
-                            if (s3.Contains("<strong>") == true)
-                            {
-                                s2 = s3.Substring(0, s3.IndexOf("<strong>")).Trim();
-                                s1 = s3.Substring(s3.IndexOf("<strong>" + 8), s3.IndexOf("</strong>")).Trim();
-                                directions.Add(s2);
-                                directions.Add(s1);
-                                s2 = s3.Substring(s3.IndexOf("</strong>" + 9)).Trim();
-                                directions.Add(s2);
-                                i = i + 2;
-                            }
-                            else
-                            {
-                                directions.Add(s3);
-                            }
-                        }
-                    }
-                }
-                catch (Exception e)
-                { }
-            }
-
-            return Scraper.TrimListToSpecifiedEntries(30, directions);
         }
     }
 }

@@ -114,8 +114,7 @@ namespace RecipeBuddy.Core.Models
 
             if (recipeListModel != null)
             {
-                FillBlurbList(recipeListModel, showCurrentEntry, view);
-                return 0;
+                return FillBlurbList(recipeListModel, showCurrentEntry, view);
             }
 
             return -1;
@@ -127,17 +126,20 @@ namespace RecipeBuddy.Core.Models
         /// converting it into something we can store in our RecipeEntriesList while the main thread 
         /// goes back to the UI
         /// </summary>
-        private static void FillBlurbList(RecipeListModel recipeCardList, Action showCurrentEntry, Windows.ApplicationModel.Core.CoreApplicationView view)
+        private static int FillBlurbList(RecipeListModel recipeCardList, Action showCurrentEntry, Windows.ApplicationModel.Core.CoreApplicationView view)
         {
             Uri url;
-            int intRet = 0;
             int UrlNum = recipeCardList.URLLists.URLListCount;
-
+            
             RecipeRecordModel re = Scraper.ScrapeDataForRecipeEntry(recipeCardList.URLLists.RecipeURLsList[0]);
+            
+            //Gives us the first recipe to fill the blank panel and then the rest can happen async
             view.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => recipeCardList.Add(re));
             view.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => showCurrentEntry());
 
-            for (int count = 1; count < UrlNum; count++)
+            List<Task> TaskList = new List<Task>();
+
+            for (int count = 1; count < RecipeURLLists.MaxEntries-1; count++)    
             {
                 url = recipeCardList.URLLists.RecipeURLsList[count];
                 if (url != null)
@@ -156,15 +158,22 @@ namespace RecipeBuddy.Core.Models
                             //CoreApplication.GetCurrentView().CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => recipeBlurbsList.AddToBlurbList(re));
 
                             //Trying to send the correct view since I can't seem to find it?
-                            view.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => recipeCardList.Add(re));
+                            //view.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => recipeCardList.Add(re));
+
+                            TaskList.Add(Task.Run(() => view.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => recipeCardList.Add(re))));
+                            
                         }
                         catch (Exception e)
                         {
                             Console.WriteLine(e.Message);
+                            return -1;
                         }
                     }
                 }
             }
+
+            Task t = Task.WhenAll(TaskList);
+            return UrlNum;
         }
 
 

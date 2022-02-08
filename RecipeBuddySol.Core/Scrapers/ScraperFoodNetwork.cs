@@ -57,8 +57,8 @@ namespace RecipeBuddy.Core.Scrapers
                 }
 
                 //we need to zero out all our lists.
-                listModel.URLLists.ClearLists();
-               
+                listModel.URLLists = new RecipeURLLists();
+
 
                 string firstStr;
                 string secondStr;
@@ -81,39 +81,6 @@ namespace RecipeBuddy.Core.Scrapers
             {
                 return -1;
             }
-        }
-
-        private static List<string> FillDirectionListFoodNetworkForRecipeEntry(HtmlDocument doc, int countList)
-        {
-            List<string> directions = new List<string>();
-            string headerTag = "-";
-            try 
-            {
-                HtmlNode mainNode = doc.DocumentNode.SelectSingleNode("//section[@class='o-Method']");
-                HtmlNode directions_top_level = mainNode.SelectSingleNode("//div[@class='o-Method__m-Body']");
-                if (directions_top_level == null)
-                    return null;
-                HtmlNodeCollection directions_sub_level = directions_top_level.SelectNodes("//li[@class='o-Method__m-Step']");
-                if (directions_sub_level != null)
-                {
-                    //string section_header = "Directions";
-                    //directions.Add(headerTag + section_header);
-
-                    List<HtmlNode> groupslist = directions_sub_level.ToList<HtmlNode>();
-                    string innerText1;
-
-                    //get rid of the nodes that aren't useful.
-                    foreach (HtmlNode node in groupslist)
-                    {
-                        innerText1 = node.InnerText.Replace('\n', ' ').Trim();
-                        directions.Add(StringManipulationHelper.CleanHTMLTags(innerText1));
-                    }
-                }
-            }
-            catch (Exception e)
-            { }
-
-            return Scraper.TrimListToSpecifiedEntries(30, directions);
         }
 
         private static List<string> FillIngredientListFoodNetworkForRecipeEntry(HtmlDocument doc, int countList)

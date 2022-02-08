@@ -1,25 +1,16 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Windows.Input;
-using Windows.UI.Xaml.Navigation;
 using RecipeBuddy.ViewModels.Commands;
-using RecipeBuddy;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using RecipeBuddy.Core.Scrapers;
 using RecipeBuddy.Core.Models;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using RecipeBuddy.Services;
-using RecipeBuddy.Views;
-using Microsoft.Toolkit.Mvvm.Input;
+
 
 namespace RecipeBuddy.ViewModels
 {
     public class RecipePanelForSearchViewModel : ObservableObject
     {
         public Type_of_Websource type_Of_Source;
-        //public RecipeListModel listOfRecipeModel;
-        //public RecipeDisplayModel recipeCard;
 
         Action ActionShowCurrentEntry;
         Func<bool> FuncBool;
@@ -76,17 +67,6 @@ namespace RecipeBuddy.ViewModels
         }
 
         /// <summary>
-        /// This is where the current recipecard is added to a new list of cards held in the BasketViewModel
-        /// </summary>
-        //internal void AddToSelectedList()
-        //{
-        //    RequestNavigateEventArgs args = new RequestNavigateEventArgs(new System.Uri(recipeCardViewModel.Link), )
-        //    System.Windows.Navigation.
-        //    Hyperlink_Navigate(recipeCardViewModel.Link)
-        //    recipeCardViewModel.Link
-        //}
-
-        /// <summary>
         /// New Search Clears the list on the Search page
         /// </summary>
         public void ClearRecipeBlurbModelList()
@@ -138,32 +118,15 @@ namespace RecipeBuddy.ViewModels
         /// <returns></returns>
         public async Task SearchAndFillList(string searchTerms, Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView)
         {
-
+            //Creating a new list dumps any leftover search results that might be coming in.
             ActionShowCurrentEntry = () => ShowCurrentEntryAndActivateButtons();
             int results = await GenerateSearchResultsLists.SearchSitesAndGenerateEntryList(searchTerms, listOfRecipeModels, type_Of_Source, ActionShowCurrentEntry, coreApplicationView);
 
             if (results == -1)
             {
                 Title = "No Results For: " + searchTerms + " on " + type_Of_Source.ToString();
-                return;
             }
-
         }
-
-        //public int SearchAndFillList(string searchTerms)
-        //{
-        //    ClearRecipeEntry();
-        //    ClearRecipeBlurbModelList();
-        //    ActionShowCurrentEntryEnableButtons = () => ShowCurrentEntryAndEnableButtons();
-
-        //    int results = GenerateSearchResultsLists.SearchSitesAndGenerateEntryList(searchTerms, listOfRecipeBlurbModel, type_Of_Source, ActionShowCurrentEntryEnableButtons);
-
-        //    CanSelectBack = true;
-        //    CmdBackButton.RaiseCanExecuteChanged();
-        //    CanSelectNext = true;
-        //    CmdNextButton.RaiseCanExecuteChanged();
-        //    return results;
-        //}
 
         /// <summary>
         /// Updates the various elements of the RecipeEntry from the next entry in the RecipeEntriesList, triggering the OnPropertyChanged event that is "contextbound" to the UI
@@ -180,26 +143,11 @@ namespace RecipeBuddy.ViewModels
 
         public void ClearRecipeEntry()
         {
-            //Description = "";
-            //Title = ""; 
-            //Author = ""; 
-            //Website = Type_of_Websource.None; 
-            //Link = null; 
-            //Recipe_Type = Type_Of_Recipe.Unknown;
-            //type_Of_Source = Type_of_Websource.None;
             UpdateRecipeEntry(new RecipeRecordModel());
             CanSelectBack = false;
             CanSelectNext = false;
             CanSelectSelect = false;
-            //listOfIngredientStringsForDisplay.Clear();
         }
-
-        //private void Hyperlink_Navigate( RequestNavigateEventArgs arg)
-        //{
-        //    Process.Start(new ProcessStartInfo(arg.Uri.AbsoluteUri));
-        //    arg.Handled = true;
-        //}
-
 
         #region Delegate functions and ICommand functions 
 

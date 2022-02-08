@@ -25,7 +25,6 @@ namespace RecipeBuddy.Core.Models
         public RecipeListModel()
         {
             RecipesList = new ObservableCollection<RecipeRecordModel>();
-            URLLists = new RecipeURLLists();
             CurrentCardIndex = 0;
             ListCount = 0;
         }
@@ -33,7 +32,7 @@ namespace RecipeBuddy.Core.Models
         //Clears the RecipeEntries list if a new search term is used
         public void ClearList()
         {
-            RecipesList.Clear();
+            RecipesList = new ObservableCollection<RecipeRecordModel>();
             CurrentCardIndex = 0;
             ListCount = 0;
         }

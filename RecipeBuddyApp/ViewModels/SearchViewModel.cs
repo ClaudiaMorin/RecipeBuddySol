@@ -14,6 +14,7 @@ using RecipeBuddy.Core.Models;
 using RecipeBuddy.Services;
 using Microsoft.Toolkit.Mvvm.Input;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Input;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -27,9 +28,9 @@ namespace RecipeBuddy.ViewModels
         Action ActionNoParams;
         Func<bool> FuncBool;
         Action<string> actionWithString;
+        Action<KeyRoutedEventArgs> actionWithKeyEventArgs;
 
         private static readonly SearchViewModel instance = new SearchViewModel();
-
 
         public static SearchViewModel Instance
         {
@@ -40,16 +41,14 @@ namespace RecipeBuddy.ViewModels
         {
             searchString = "";
             dropDownOpen = false;
-            searchButtonTitle = "Search";
             searchEnabled = true;
             webViewEnabled = true;
-            cursorType = CoreCursorType.Arrow;
-            searchWait = false;
             listOfRecipeCards = new RecipeListModel();
             recipePanelForSearch1 = new RecipePanelForSearchViewModel();
             recipePanelForSearch2 = new RecipePanelForSearchViewModel();
             recipePanelForSearch3 = new RecipePanelForSearchViewModel();
 
+            CmdEnterKeyDown = new RelayCommand<KeyRoutedEventArgs>(actionWithKeyEventArgs = e => EnterKeyDown(e));
             CmdRemove = new RelayCommand<string>(actionWithString = s => RemoveRecipe(s));
             SearchButtonCmd = new RelayCommandRaiseCanExecute(ActionNoParams = () => Search(), FuncBool = () => SearchEnabled);
             WebButtonCmd = new RelayCommandRaiseCanExecute(ActionNoParams = () => GoToWebView(), FuncBool = () => WebViewEnabled);
@@ -60,10 +59,10 @@ namespace RecipeBuddy.ViewModels
         /// Called when the user logs in.
         /// </summary>
         public void UpdateSearchWebsources()
-        {   
-           recipePanelForSearch1.type_Of_Source = UserViewModel.Instance.PanelMap[0];
-           recipePanelForSearch2.type_Of_Source = UserViewModel.Instance.PanelMap[1];
-           recipePanelForSearch3.type_Of_Source = UserViewModel.Instance.PanelMap[2];
+        {
+            recipePanelForSearch1.type_Of_Source = UserViewModel.Instance.PanelMap[0];
+            recipePanelForSearch2.type_Of_Source = UserViewModel.Instance.PanelMap[1];
+            recipePanelForSearch3.type_Of_Source = UserViewModel.Instance.PanelMap[2];
         }
 
         /// <summary>
@@ -87,21 +86,19 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public async Task Search()
         {
-            SearchingChangeToUIAndLists();
-            //For Threading callbacks.  
+            //Need main UI thread to execute UI changes
             Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView();
-
+            await coreApplicationView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => UIChangesBeginSearch());
+  
             List<Task> TaskListOfSearches = new List<Task>();
             TaskListOfSearches.Add(Task.Run(() => SearchBackground(recipePanelForSearch1, searchString, coreApplicationView)));
             TaskListOfSearches.Add(Task.Run(() => SearchBackground(recipePanelForSearch2, searchString, coreApplicationView)));
             TaskListOfSearches.Add(Task.Run(() => SearchBackground(recipePanelForSearch3, searchString, coreApplicationView)));
             Task t = Task.WhenAll(TaskListOfSearches);
+            t.Wait(5000);
 
-            //SearchActive = "Visible";
-            CursorType = CoreCursorType.Arrow;
-            SearchButtonTitle = "Search";
-            SearchEnabled = true;
-            SearchButtonCmd.RaiseCanExecuteChanged();      
+            await coreApplicationView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => UIChangesEndSearch());
+
         }
 
         public void GoToWebView()
@@ -114,20 +111,20 @@ namespace RecipeBuddy.ViewModels
         /// Changes to the UI button to indicate that a search is happening
         /// Clears out lists so that the new search will have a place for the results.
         /// </summary>
-        private void SearchingChangeToUIAndLists()
+        private void UIChangesBeginSearch()
         {
-            cursorType = CoreCursorType.Wait;
-            SearchButtonTitle = "Searching...";
             SearchEnabled = false;
-            //SearchActive = "Visible";
-            SearchButtonCmd.RaiseCanExecuteChanged();
-
             recipePanelForSearch1.ClearRecipeEntry();
             recipePanelForSearch1.ClearRecipeBlurbModelList();
             recipePanelForSearch2.ClearRecipeEntry();
             recipePanelForSearch2.ClearRecipeBlurbModelList();
             recipePanelForSearch3.ClearRecipeEntry();
             recipePanelForSearch3.ClearRecipeBlurbModelList();
+        }
+
+        private void UIChangesEndSearch()
+        {
+            SearchEnabled = true;
         }
 
         /// <summary>
@@ -179,6 +176,22 @@ namespace RecipeBuddy.ViewModels
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Allows the enter key to automatically target the search function
+        /// </summary>
+        /// <param name="args"></param>
+        internal void EnterKeyDown(KeyRoutedEventArgs args)
+        {
+            switch (args.Key)
+            {
+                case Windows.System.VirtualKey.Enter:
+                    Search();
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -255,13 +268,6 @@ namespace RecipeBuddy.ViewModels
             set { SetProperty(ref searchEnabled, value); }
         }
 
-        //private UIElement.VisibilityProperty searchActive;
-        //public string SearchActive
-        //{
-        //    get { return searchActive; }
-        //    set { SetProperty(ref searchActive, value); }
-        //}
-
         private bool webViewEnabled;
         public bool WebViewEnabled
         {
@@ -270,29 +276,6 @@ namespace RecipeBuddy.ViewModels
             {   SetProperty(ref webViewEnabled, value);
                 WebButtonCmd.RaiseCanExecuteChanged();
             }
-        }
-
-
-        private CoreCursorType cursorType;
-        public CoreCursorType CursorType
-        {
-            get { return cursorType; }
-            set { SetProperty(ref cursorType, value); }
-        }
-
-
-        private bool searchWait;
-        public bool SearchWait
-        {
-            get { return searchWait; }
-            set { SetProperty(ref searchWait, value); }
-        }
-
-        private string searchButtonTitle;
-        public string SearchButtonTitle
-        {
-            get { return searchButtonTitle; }
-            set { SetProperty(ref searchButtonTitle, value); }
         }
 
         public string searchString;
@@ -337,6 +320,12 @@ namespace RecipeBuddy.ViewModels
         /// property for the Remove button command
         /// </summary>
         public RelayCommand<string> CmdRemove
+        {
+            get;
+            private set;
+        }
+
+        public RelayCommand<KeyRoutedEventArgs> CmdEnterKeyDown
         {
             get;
             private set;

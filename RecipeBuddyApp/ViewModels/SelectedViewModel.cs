@@ -92,6 +92,7 @@ namespace RecipeBuddy.ViewModels
         public void ResetViewModel()
         {
             selectViewMainRecipeCardModel.CopyRecipeDisplayModel(new RecipeDisplayModel());
+            selectViewMainRecipeCardModel.Title = "Select a saved recipe from the treeview!";
             EmptyIngredientQuanityRow();
         }
 

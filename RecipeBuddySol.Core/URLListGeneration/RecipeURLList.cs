@@ -10,7 +10,7 @@ namespace RecipeBuddy.Core.Models
     public class RecipeURLLists : ObservableObject
     {
         //MaxEntries are the limit we can place on how many URL recipe links the list is allow to contain
-        static readonly int MaxEntries = 20;
+        public static readonly int MaxEntries = 20;
 
         //List of the Recipe links generated from the user's search terms
         public List<Uri> RecipeURLsList;

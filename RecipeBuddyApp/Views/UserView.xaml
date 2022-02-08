@@ -78,15 +78,13 @@
                 </Grid>
                 
                 <TextBlock Text="About" FontSize="20" TextAlignment="Center" Margin=" 0, 0, 0, 20"/>
-                <TextBlock Margin="6" Text="RecipeBuddy a private, digital repository of recipes that have been searched, selected, altered, or newly created and then saved to a database on the users computer" TextWrapping="Wrap" />
-                <Border BorderThickness="10"/>
-                <TextBlock Margin="6"  Text="RecipeBuddy is the sole creation of Claudia Morin and is distributed free of charge, all rights reserved." />
-                <Border BorderThickness="10"/>
+                <TextBlock Margin="6" Text="RecipeBuddy a private, digital repository of recipes that have been selected, altered, or created and then saved to a database on the users computer.  It is the sole creation of Claudia Morin and is distributed free of charge, all rights reserved." TextWrapping="Wrap" />
                 <StackPanel Orientation="Horizontal">
                     <TextBlock x:Name="HyperlinkPublicDomain" Margin="6"  Text="All images sorced from:  "/>
                     <HyperlinkButton NavigateUri="https://publicdomainvectors.org/en" >
                         <TextBlock Text=" PublicDomainVectors.org"/>
                     </HyperlinkButton>
+                    <Border Height="20"/>
                 </StackPanel>
             </StackPanel>
         </Grid>

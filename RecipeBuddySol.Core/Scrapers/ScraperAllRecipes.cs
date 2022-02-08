@@ -50,22 +50,27 @@ namespace RecipeBuddy.Core.Scrapers
                 doc = web.Load(strQuery);
             }
 
-                string str1 = null;
-                string str2 = "";
-                HtmlNodeCollection list1 = doc.DocumentNode.SelectNodes("//a[@class='card__titleLink manual-link-behavior elementFont__titleLink--textDecoration margin-8-bottom']");
-                List<HtmlNode> list2 = new List<HtmlNode>();
+            string str1 = null;
+            string str2 = "";
+            string str3 = "";
+            HtmlNode Node1 = doc.DocumentNode.SelectSingleNode("//div[@class='search-results-content']");
+            HtmlNodeCollection list1 = Node1.SelectNodes("//div[@class='component card card__recipe card__facetedSearchResult']");
+            List<HtmlNode> list2 = new List<HtmlNode>();
 
                 //Search didn't find anything!
                 if (list1 == null || list1.Count == 0)
                 {
                     return -1;
                 }
-                //we need to zero out all our lists.
-                listModel.URLLists.ClearLists();
 
-            for (int count = 1; count < list1.Count; count++)
+            //we need to zero out all our lists.
+            listModel.URLLists = new RecipeURLLists();
+
+            for (int count = 0; count < list1.Count; count++)
                 {
-                    str1 = list1[count].OuterHtml.Substring(list1[count].OuterHtml.IndexOf("href=")).Split('\"')[1];
+                str3 = list1[count].InnerHtml;
+
+                str1 = str3.Substring(str3.IndexOf("href=")).Split('\"')[1];
                     if (str1 != str2)
                         if (listModel.URLLists.Add(new Uri(str1)) == -1)
                         {
@@ -157,31 +162,6 @@ namespace RecipeBuddy.Core.Scrapers
 
             return Scraper.TrimListToSpecifiedEntries(50, ingredients);
         }
-
-        private static List<string> FillDirectionListAllRecipiesForRecipeEntry(HtmlDocument doc, int countList)
-        {
-            List<string> directions = new List<string>();
-
-            HtmlNode directions_top_level = doc.DocumentNode.SelectSingleNode("//ul[@class='instructions-section']");
-            if (directions_top_level != null)
-            {
-                try
-                {
-                    List<HtmlNode> groupslist = directions_top_level.SelectNodes("//div[@class='paragraph']").ToList<HtmlNode>();
-
-                    foreach (HtmlNode section_node in groupslist)
-                    {
-                        directions.Add(StringManipulationHelper.CleanHTMLTags(section_node.InnerText));
-                    }
-                }
-
-                catch (Exception e)
-                { }
-            }
-
-            return Scraper.TrimListToSpecifiedEntries(30, directions);
-        }
-
         
     }
 }

@@ -57,7 +57,7 @@ namespace RecipeBuddy.Core.Scrapers
                     return -1;
                 }
 
-                listModel.URLLists.ClearLists();
+                listModel.URLLists = new RecipeURLLists();
 
                 string firstStr;
                 string secondStr;
@@ -145,33 +145,6 @@ namespace RecipeBuddy.Core.Scrapers
             { }
 
             return Scraper.TrimListToSpecifiedEntries(50, ingredients);
-        }
-
-        private static List<string> FillDirectionListFoodAndWineForRecipeEntry(HtmlDocument doc, int countList)
-        {
-            List<string> directions = new List<string>();
-            HtmlNode directions_top_level = doc.DocumentNode.SelectSingleNode("//ul[@class='instructions-section']");
-            
-            if (directions_top_level != null )
-            {
-                try
-                {
-                    HtmlNodeCollection htmlNodes = directions_top_level.SelectNodes("//li[@class='subcontainer instructions-section-item']");
-                    //directions.Add("-Directions");
-                    foreach (HtmlNode section_node in htmlNodes)
-                    {
-                        string str1 = section_node.OuterHtml;
-                        string str2 = str1.Substring(str1.IndexOf("<p>") + 3);
-                        str1 = str2.Substring(0, str2.IndexOf("</p>"));
-                        directions.Add(StringManipulationHelper.CleanHTMLTags(str1));
-                    }
-                }
-
-                catch (Exception e)
-                { }
-            }
-
-            return Scraper.TrimListToSpecifiedEntries(30, directions);
         }
 
     }

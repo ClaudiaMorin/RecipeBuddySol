@@ -96,7 +96,7 @@ namespace RecipeBuddy.ViewModels
             }
             else //user password didm't match
             {
-                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("Password Incorrect!");
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("Password Incorrect!  Casing counts!");
                 dialog.ShowAsync();
             }
 

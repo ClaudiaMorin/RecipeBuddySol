@@ -48,7 +48,7 @@ namespace RecipeBuddy.Core.Scrapers
 
                 var doc = web.Load(strQuery);
                 HtmlNode searchResultsNode = doc.DocumentNode.SelectSingleNode("//div[@class='feed__container']");
-                
+
                 //Search didn't find anything!
                 if (searchResultsNode == null)
                 {
@@ -65,7 +65,7 @@ namespace RecipeBuddy.Core.Scrapers
                 }
 
                 //we need to zero out all our lists.
-                listModel.URLLists.ClearLists();
+                listModel.URLLists = new RecipeURLLists();
 
                 string firstStr;
                 string secondStr;
@@ -108,7 +108,6 @@ namespace RecipeBuddy.Core.Scrapers
             if (ingredients.Count == 0)
                 return null;
             List<string> directions = new List<string>();
-            //directions.Add("-Direction");
 
             RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
@@ -134,11 +133,10 @@ namespace RecipeBuddy.Core.Scrapers
 
             try
             {
-                //string section_header = "Ingredients";
-                //ingredients.Add(headerTag + section_header);
                 HtmlNodeCollection htmlNodes = ingred_node.SelectNodes("//li[@class='ingredient xs-mb1 xs-mt0']");
+                int stop = htmlNodes.Count / 2;
 
-                for (int i = 0; i < countList; i++)
+                for (int i = 0; i < stop; i++)
                 {
                     HtmlNode sectionHeader_node = htmlNodes[i];
                     ingredients.Add(StringManipulationHelper.CleanHTMLTags(sectionHeader_node.InnerText));
@@ -148,32 +146,6 @@ namespace RecipeBuddy.Core.Scrapers
             { }
 
             return Scraper.TrimListToSpecifiedEntries(50, ingredients);
-        }
-
-        private static List<string> FillDirectionListTastyForRecipeEntry(HtmlDocument doc, int countList)
-        {
-            List<string> directions = new List<string>();
-            string headerTag = "-";
-
-            HtmlNode directions_top_level = doc.DocumentNode.SelectSingleNode("//ol[@class='prep-steps list-unstyled xs-text-3']");
-            if (directions_top_level != null)
-            {
-                try
-                {
-                    //directions.Add(headerTag + "Directions");
-                    List<HtmlNode> groupslist = directions_top_level.SelectNodes("//li[@class='xs-mb2']").ToList<HtmlNode>();
-
-                    foreach (HtmlNode section_node in groupslist)
-                    {
-                        directions.Add(StringManipulationHelper.CleanHTMLTags(section_node.InnerText));
-                    }
-                }
-
-                catch (Exception e)
-                { }
-            }
-
-            return Scraper.TrimListToSpecifiedEntries(30, directions);
         }
     }
 }
