@@ -20,10 +20,6 @@ namespace RecipeBuddy.ViewModels
 
     public sealed class ShellViewModel : ObservableObject
     {
-        //public WinUI.NavigationViewItem searchNavItem;
-        
-            
-        //public ObservableObject<WinUI.NavigationViewItem> = new ObservableObject<WinUI.NavigationViewItem>{searchNavItem}
         
         private static readonly ShellViewModel instance = new ShellViewModel();
         private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);

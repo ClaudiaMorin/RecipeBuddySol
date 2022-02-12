@@ -49,6 +49,7 @@ namespace RecipeBuddy.ViewModels
             QuantitySelectedAsString = "1";
             QuantitySelectedAsInt = 1;
             recipeLoaded = "Collapsed";
+            canSelectSave = false;
             currentType = 0;
             titleEditHeight = "0";
             typeEditHeight = "0";
@@ -65,7 +66,8 @@ namespace RecipeBuddy.ViewModels
             CmdSelectedTypeChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => CanSelect);
             CmdSelectedQuantityChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeQuantityFromComboBox(e), canCallActionFunc => CanSelect);
             CmdCopy = new RelayCommand<string>(ActionNoParams => Copy(), canCallActionFunc => CanSelectAlwaysTrue);
-            CmdSave = new RelayCommandRaiseCanExecute(ActionNoParams = () => SaveRecipe(), FuncBool = () => CanSelectSave);
+            //CmdSave = new RelayCommandRaiseCanExecute(ActionNoParams = () => SaveRecipe(), FuncBool = () => CanSelectSave);
+            CmdSave = new RelayCommandRaiseCanExecute(ActionNoParams = () => SaveRecipeEdits(), FuncBool = () => CanSelectSave);
             CmdUpdate = new RelayCommand<string>(actionWithObject = s => Update(s), canCallActionFunc => CanSelectAlwaysTrue);
             CmdCancel = new RelayCommand<string>(actionWithObject = s => Cancel(s), canCallActionFunc => CanSelectAlwaysTrue);
             CmdLineEdit = new RelayCommand<string>(actionWithObject = s => LineEdit(s), canCallActionFunc => CanSelectAlwaysTrue);
@@ -103,6 +105,7 @@ namespace RecipeBuddy.ViewModels
         /// <param name="recipeCardModel">RecipeCardModel</param>
         public void UpdateRecipeEntry(RecipeRecordModel recipeModel)
         {
+            CanSelectSave = false;
             selectViewMainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(recipeModel);
             UpdateEditTextBoxes();
             CurrentType = (int)selectViewMainRecipeCardModel.RecipeType;
@@ -142,14 +145,38 @@ namespace RecipeBuddy.ViewModels
             if (result == 1)
             {
                 MainNavTreeViewModel.Instance.RemoveRecipeFromTreeView(selectViewMainRecipeCardModel);
-                DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(selectViewMainRecipeCardModel.Title, (int)selectViewMainRecipeCardModel.RecipeType, UserViewModel.Instance.UsersIDInDB);
+                DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(selectViewMainRecipeCardModel.RecipeDBID);
             }
             if (result == 1 || result == 2)
             {
-                DataBaseAccessorsForRecipeManager.SaveRecipeToDatabase(UserViewModel.Instance.UsersIDInDB, selectViewMainRecipeCardModel, UserViewModel.Instance.UsersIDInDB);
+                DataBaseAccessorsForRecipeManager.SaveRecipeToDatabase(selectViewMainRecipeCardModel, UserViewModel.Instance.UsersIDInDB);
                 //RemoveRecipe();
             }
         }
+
+        /// <summary>
+        /// Saves the recipe to the DB and the TreeView
+        /// </summary>
+        public void SaveRecipeEdits()
+        {
+            selectViewMainRecipeCardModel.SaveEditsToARecipe();
+            DataBaseAccessorsForRecipeManager.UpdateRecipeFromDatabase(selectViewMainRecipeCardModel);
+            //int result = MainWindowViewModel.Instance.mainTreeViewNav.AddRecipeToTreeView(selectViewMainRecipeCardModel, true);
+
+            //if (result == 1)
+            //{
+            //    MainNavTreeViewModel.Instance.RemoveRecipeFromTreeView(selectViewMainRecipeCardModel);
+            //    DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(selectViewMainRecipeCardModel.Title, (int)selectViewMainRecipeCardModel.RecipeType, UserViewModel.Instance.UsersIDInDB);
+            //}
+            //if (result == 1 || result == 2)
+            //{
+            //    DataBaseAccessorsForRecipeManager.SaveRecipeToDatabase(UserViewModel.Instance.UsersIDInDB, selectViewMainRecipeCardModel, UserViewModel.Instance.UsersIDInDB);
+            //    //RemoveRecipe();
+            //}
+        }
+
+
+
 
         /// <summary>
         /// Updates the current card display and updates the edit-textboxes for the ingredient and direction editing
@@ -371,6 +398,7 @@ namespace RecipeBuddy.ViewModels
 
                 TypeEditHeight = "Auto";
             }
+
         }
 
         /// <summary>
@@ -454,6 +482,8 @@ namespace RecipeBuddy.ViewModels
                 selectViewMainRecipeCardModel.SaveEditsToARecipeModel();
                 MainNavTreeViewModel.Instance.SaveUpdatesToRecipe(selectViewMainRecipeCardModel);
             }
+
+            CanSelectSave = true;
         }
 
         private void Cancel(object sender)
@@ -619,20 +649,24 @@ namespace RecipeBuddy.ViewModels
         private bool canSelectSave;
         public bool CanSelectSave
         {
-            set { canSelectSave = value; }
+            set
+            {
+                canSelectSave = value;
+                CmdSave.RaiseCanExecuteChanged();
+            }
             get
             {
-                if (UserViewModel.Instance.CanSelectLogout == true && selectViewMainRecipeCardModel.Title.Length > 0 &&
-                     string.Compare(selectViewMainRecipeCardModel.Title.ToLower(), "search for your next recipe find!") != 0)
-                {
-                    canSelectSave = true;
-                }
-                else
-                {
-                    canSelectSave = false;
-                }
+                //if (UserViewModel.Instance.CanSelectLogout == true && selectViewMainRecipeCardModel.Title.Length > 0 &&
+                //     string.Compare(selectViewMainRecipeCardModel.Title.ToLower(), "search for your next recipe find!") != 0)
+                //{
+                //    canSelectSave = true;
+                //}
+                //else
+                //{
+                //    canSelectSave = false;
+                //}
 
-                CmdSave.RaiseCanExecuteChanged();
+                //CmdSave.RaiseCanExecuteChanged();
                 return canSelectSave;
             }
         }

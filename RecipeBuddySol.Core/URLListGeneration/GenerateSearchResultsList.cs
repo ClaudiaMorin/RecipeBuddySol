@@ -139,7 +139,7 @@ namespace RecipeBuddy.Core.Models
 
             List<Task> TaskList = new List<Task>();
 
-            for (int count = 1; count < RecipeURLLists.MaxEntries-1; count++)    
+            for (int count = 1; recipeCardList.ListCount < RecipeURLLists.MaxEntries-1; count++)    
             {
                 url = recipeCardList.URLLists.RecipeURLsList[count];
                 if (url != null)

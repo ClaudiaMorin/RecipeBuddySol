@@ -36,6 +36,27 @@ namespace RecipeBuddy.Core.Helpers
             }
         }
 
+        /// <summary>
+        /// Creates a dictionary of the properties in the recipe for insertion into the DB
+        /// </summary>
+        /// <returns></returns>
+        public static void ConvertRecipeToDictionaryForDBUpdate(Dictionary<string, object> dictionaryValuePairs, List<string> paramsForSQLStatment, RecipeRecordModel recipeCard)
+        {
+            Dictionary<string, object> recipeEntries;
+            recipeEntries = GetRecipeDictionaryForDBUpdate(recipeCard);
+
+            string temp = "";
+            //Shuffle through and determin if there is actually a value in the entry.  
+            foreach (KeyValuePair<string, object> entry in recipeEntries)
+            {
+                if (entry.Value != null)
+                {
+                    dictionaryValuePairs.Add(entry.Key, entry.Value);
+                    temp = entry.Key.Substring(1);
+                    paramsForSQLStatment.Add(temp);
+                }
+            }
+        }
 
         /// <summary>
         /// Provides a full dictionary of all the recipe properties to be added to the DB
@@ -49,10 +70,7 @@ namespace RecipeBuddy.Core.Helpers
             Dictionary<string, object> recipeDictionary = new Dictionary<string, object>
             {
                 { "@Title", recipeCard.Title },
-                //{ "@Publication", recipeCard.TotalTime },
                 { "@Author",  recipeCard.Author },
-                //{ "@Website", recipeCard.Website },
-                { "@Link", recipeCard.Link },
                 { "@TypeAsInt", recipeCard.TypeAsInt },
                 { "@StringOfIngredientForListFromDB", ingredients},
                 { "@StringOfDirectionsForListFromDB", directions },
@@ -64,19 +82,38 @@ namespace RecipeBuddy.Core.Helpers
 
 
         /// <summary>
+        /// Provides a full dictionary of all the recipe properties needed for a recipe update
+        /// </summary>
+        /// <returns>empty dictionary of all the recipe properties needed for the update</returns>
+        public static Dictionary<string, object> GetRecipeDictionaryForDBUpdate(RecipeRecordModel recipeCard)
+        {
+            string ingredients = StringManipulationHelper.TurnListIntoStringForDB(recipeCard.ListOfIngredientStrings);
+            string directions = StringManipulationHelper.TurnListIntoStringForDB(recipeCard.ListOfDirectionStrings);
+
+            Dictionary<string, object> recipeDictionary = new Dictionary<string, object>
+            {
+                { "@Title", recipeCard.Title },
+                { "@Author",  recipeCard.Author },
+                { "@TypeAsInt", recipeCard.TypeAsInt },
+                { "@StringOfIngredientForListFromDB", ingredients},
+                { "@StringOfDirectionsForListFromDB", directions },
+            };
+
+            return recipeDictionary;
+        }
+
+
+        /// <summary>
         /// Gets a list of all of the items that need to be queried from the Recipies DB table
         /// </summary>
-        /// <returns>a list of all of the items that need to be queried from the Recipies DB tabl</returns>
+        /// <returns>a list of all of the items that need to be queried from the Recipies DB table</returns>
         public static List<string> GetListOfRecipeColumnsForDBQuery()
         {
             List<string> recipeColumnList = new List<string>()
             {
                 { "Title"},
-                { "Publication"},
                 { "Author"},
-                { "Date"},
-                { "Website" },
-                { "Link" },
+                { "RecipeID" },
                 { "TypeAsInt" },
                 { "ListOfIngredientStringsForDisplay"},
                 { "ListOfDirectionStringsForDisplay" },
@@ -90,11 +127,9 @@ namespace RecipeBuddy.Core.Helpers
         /// </summary>
         /// <param name="UserID">The User Key that the strings are associated with</param>
         /// <param name="recipeCard">The recipe that is being saved</param>
-        public static void SaveRecipeToDatabase(int UserID, RecipeDisplayModel recipeCard, int UserIDInDB)
+        public static void SaveRecipeToDatabase(RecipeDisplayModel recipeCard, int UserIDInDB)
         {
             //so that the correct type will be saved to the DB
-            //recipeCard.TypeAsInt = (int)recipeCard.Recipe_Type;
-
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             List<string> paramsForSQLStatment = new List<string>();
 
@@ -129,33 +164,61 @@ namespace RecipeBuddy.Core.Helpers
         /// used to remove a recipe from the database, either because the user
         /// has selected to remove it or because we need to replace it with an edited version
         /// </summary>
-        /// <param name="title">The name of the recipe to delete</param>
-        /// <param name="typeAsInt">The type of recipe to delete, a user could have saved multiple version of same recipe under different types</param>
-        public static void DeleteRecipeFromDatabase(string title, int typeAsInt, int UserIDInDB)
+        /// <param name="RecipeIDInDB">The ID of the recipe to delete</param>
+        public static void DeleteRecipeFromDatabase(int RecipeIDInDB)
         {
-            //Find the recipe
-            string sqlStatment = "select RecipeID from Recipes Where UserID = @UserID and Title = @Title and TypeAsInt = @TypeAsInt" ;
-
-            Dictionary<string, object> dictionaryforQuery = new Dictionary<string, object>
-           {
-                {"@UserID", UserIDInDB },
-                {"@Title", title },
-                {"@TypeAsInt", typeAsInt }
-           };
-
-            List<int> recipeIDs = SqliteDataAccess.LoadData<int>(sqlStatment, dictionaryforQuery);
 
             //Recipe can't be found so we can't delete, ignore.
-            if (recipeIDs.Count > 0)
+            if (RecipeIDInDB == -1)
             {
+
                 Dictionary<string, object> dictionaryforQuery2 = new Dictionary<string, object>
                 {
-                    {"@RecipeID", recipeIDs[0] }
+                    {"@RecipeID", RecipeIDInDB }
                 };
 
-                sqlStatment = "delete from Recipes Where RecipeID= @RecipeID";
+                string sqlStatment = "delete from Recipes Where RecipeID= @RecipeID";
                 SqliteDataAccess.UpdateData(sqlStatment, dictionaryforQuery2);
             }
+        }
+
+        /// <summary>
+        /// used to update a recipe in the database
+        /// </summary>
+        /// <param name="recipeCard">The recipe we are updating</param>
+        public static void UpdateRecipeFromDatabase(RecipeDisplayModel recipeCard)
+        {
+            //We need a valid RecipeID that exists in the DB
+            if (recipeCard.RecipeDBID != -1)
+            {
+                Dictionary<string, object> parameters = new Dictionary<string, object>();
+                List<string> paramsForSQLStatment = new List<string>();
+
+                RecipeRecordModel recipeRecordModel = new RecipeRecordModel(recipeCard);
+                //Put the new users information into a dictionary which will be part of the SQL query
+                ConvertRecipeToDictionaryForDBUpdate(parameters, paramsForSQLStatment, recipeRecordModel);
+
+                string sqlString1 = "UPDATE Recipes SET ";
+
+                //Shortened loop from the add recipe because we don't need the UserID for an update
+                for (int count = 0; count < paramsForSQLStatment.Count; count++)
+                {
+                    //last part of the loop! Removing the last entry because the UserID isn't changing so we don't need to send it in.
+                    if (count == parameters.Count - 1)
+                    {
+                        sqlString1 += paramsForSQLStatment[count] + " = " + "@" + paramsForSQLStatment[count];
+                    }
+                    else
+                    {
+                        sqlString1 += paramsForSQLStatment[count] + " = " + "@" + paramsForSQLStatment[count] + " , ";
+                    }
+                }
+
+                //Update Recipe in DB
+                string sqlStatment =  sqlString1 + " WHERE RecipeID = " + recipeRecordModel.RecipeDBID;
+                SqliteDataAccess.UpdateData(sqlStatment, parameters);
+            }
+
         }
 
         /// <summary>
@@ -187,8 +250,9 @@ namespace RecipeBuddy.Core.Helpers
         /// </summary>
         /// <param name="user">The user name</param>
         /// <returns></returns>
-        internal static int GetUserIDUserFromDatabase(string user)
+        public static int GetUserIDUserFromDatabase(string user)
         {
+            int retInt = -1;
             string sql = "select ID from Users Where  Name='" + user + "'";
 
             UserDBModel userModel = new UserDBModel();
@@ -199,13 +263,19 @@ namespace RecipeBuddy.Core.Helpers
             };
 
             List<UserDBModel> userDBModels = SqliteDataAccess.LoadData<UserDBModel>(sql, userFromDB);
-
-            if (userDBModels[0] != null)
+            try
             {
-                return userDBModels[0].ID;
+                if (userDBModels[0] != null)
+                {
+                    retInt = userDBModels[0].ID;
+                }
+            }
+            catch (Exception e)
+            {
+                return -1;
             }
 
-            return -1;
+            return retInt;
         }
 
         /// <summary>
@@ -258,7 +328,6 @@ namespace RecipeBuddy.Core.Helpers
         /// </summary>
         public static List<RecipeRecordModel> LoadUserDataByID(string username, int userID)
         {
-            string AccountName = username + "'s  ";
             string UsersIDInDB = userID.ToString();
 
             Dictionary<string, object> dictionaryUserRecipesFromDB = new Dictionary<string, object>
@@ -275,11 +344,10 @@ namespace RecipeBuddy.Core.Helpers
             {
                 RecipeRecordModel RRC = new RecipeRecordModel(record.StringOfIngredientForListFromDB, record.StringOfDirectionsForListFromDB);
                 RRC.Title = record.Title;
+                if(record.Author.Length > 0)
                 RRC.Author = record.Author;
-                RRC.Website = record.Website;
-                if(record.Link.Length > 0)
-                RRC.Link = record.Link;
                 RRC.TypeAsInt = record.TypeAsInt;
+                RRC.RecipeDBID = record.RecipeID;
                 recipeModels.Add(RRC);
             }
 
@@ -323,7 +391,7 @@ namespace RecipeBuddy.Core.Helpers
             //Get the new users information from the UI
             UserDBModel userModel = new UserDBModel();
             userModel.Password = bytePassword;
-            userModel.Name = NewAccountName;
+            userModel.Name = NewAccountName.ToLower();
 
             string sqlInsertIntoUsers = "insert into Users (Name, Password) " +
                 "values (@Name, @Password)";

@@ -64,7 +64,8 @@
                     <TextBlock x:Name="currentURI" Text="{Binding CurrentLink}" SelectionHighlightColor="LightSteelBlue"/>
                     <Border BorderThickness="2" BorderBrush="DarkGray"/>
                 </StackPanel>
-                <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollMode="Enabled" >
+                <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" HorizontalScrollMode="Enabled" >
+                   
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="800"/>

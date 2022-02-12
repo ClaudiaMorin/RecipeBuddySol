@@ -103,7 +103,7 @@ namespace RecipeBuddy.Core.Scrapers
             RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
             recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//h1[@class='headline heading-content elementFont__display']", doc));
-            recipeModel.Website = "FoodAndWine";
+            //recipeModel.Website = "FoodAndWine";
             recipeModel.Description = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='recipe-summary elementFont__dek--paragraphWithin elementFont__dek--linkWithin']", doc));
             //recipeBlurbModel.TotalTime = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='recipe-meta-item-body']", doc));
             recipeModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//span[@class='author-name authorName linkHoverStyle']", doc));

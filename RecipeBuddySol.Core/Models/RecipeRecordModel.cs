@@ -16,10 +16,10 @@ namespace RecipeBuddy.Core.Models
         /// <param name="RecipeBlurbModel">The source RecipeBlurbModel with all the information we need</param>
         public RecipeRecordModel(RecipeRecordModel reSource)
         {
+            RecipeDBID = reSource.RecipeDBID;
             Description = reSource.Description;
             Title = reSource.Title;
             Author = reSource.Author;
-            Website = "";
             Link = reSource.Link;
             TypeAsInt = reSource.TypeAsInt;
             ListOfIngredientStrings = new List<string>(reSource.ListOfIngredientStrings);
@@ -28,10 +28,10 @@ namespace RecipeBuddy.Core.Models
 
         public RecipeRecordModel(RecipeDisplayModel reSource)
         {
+            RecipeDBID = reSource.RecipeDBID;
             Description = String.Copy(reSource.Description);
             Title = String.Copy(reSource.Title);
             Author = String.Copy(reSource.Author);
-            Website = "";
             if (reSource.Link != null)
                 Link = String.Copy(reSource.Link.ToString());
             TypeAsInt = (int)reSource.RecipeType;
@@ -41,12 +41,13 @@ namespace RecipeBuddy.Core.Models
 
         public RecipeRecordModel(string title, RecipeDisplayModel reSource)
         {
+            RecipeDBID = reSource.RecipeDBID;
             Description = String.Copy(reSource.Description);
             Title = title;
             Author = String.Copy(reSource.Author);
-            Website = "";
+            //Website = "";
             if(reSource.Link != null)
-            Link = String.Copy(reSource.Link.ToString());
+                Link = String.Copy(reSource.Link.ToString());
             TypeAsInt = (int)reSource.RecipeType;
             ListOfIngredientStrings = new List<string> (reSource.listOfIngredientStringsForDisplay);
             ListOfDirectionStrings = new List<string> (reSource.listOfDirectionStringsForDisplay);
@@ -57,11 +58,11 @@ namespace RecipeBuddy.Core.Models
         /// </summary>
         public RecipeRecordModel()
         {
+            RecipeDBID = -1;
             Title = "Search for your next recipe find!";
             Description = "";
             Author = "";
-            Website = "";
-            Link = null ;
+            Link = null;
             TypeAsInt = (int)Type_Of_Recipe.Unknown;
             ListOfIngredientStrings = new List<string>();
             ListOfDirectionStrings = new List<string>();
@@ -72,10 +73,10 @@ namespace RecipeBuddy.Core.Models
         /// </summary>
         public RecipeRecordModel(string ingredString, string descripString)
         {
+            RecipeDBID = -1;
             Title = "Search for your next recipe find!";
             Description = "";
             Author = "";
-            Website = "";
             Link = null;
             TypeAsInt = (int)Type_Of_Recipe.Unknown;
             ListOfIngredientStrings = new List<string>(StringManipulationHelper.TurnStringintoListFromDB(ingredString));
@@ -87,7 +88,7 @@ namespace RecipeBuddy.Core.Models
             Title = "Search for your next recipe find!";
             Description = "";
             Author = "";
-            Website = "";
+            RecipeDBID = -1;
             Link = null;
             TypeAsInt = (int)Type_Of_Recipe.Unknown;
             ListOfIngredientStrings = new List<string>(ingredString);
@@ -100,7 +101,7 @@ namespace RecipeBuddy.Core.Models
             Description = string.Copy(reSource.Description);
             Title = string.Copy(reSource.Title);
             Author = string.Copy(reSource.Author);
-            Website = reSource.Website;
+            RecipeDBID = reSource.RecipeDBID;
             Link = reSource.Link;
             TypeAsInt = reSource.TypeAsInt;
             ListOfIngredientStrings = new List<string>(reSource.ListOfIngredientStrings);
@@ -112,13 +113,14 @@ namespace RecipeBuddy.Core.Models
             Description = string.Copy(reSource.Description);
             Title = string.Copy(reSource.Title);
             Author = string.Copy(reSource.Author);
-            Website = reSource.Website;
+            RecipeDBID = reSource.RecipeDBID;
             Link = "";
             TypeAsInt = (int)reSource.RecipeType;
             ListOfIngredientStrings = new List<string>(reSource.listOfIngredientStringsForDisplay);
             ListOfDirectionStrings = new List<string>(reSource.listOfDirectionStringsForDisplay);
         }
 
+        public int RecipeDBID;
 
         private int typeAsInt;
         public int TypeAsInt
@@ -153,13 +155,6 @@ namespace RecipeBuddy.Core.Models
         {
             get { return author; }
             set { author = value; }
-        }
-
-        private string website;
-        public string Website
-        {
-            get { return website; }
-            set { website = value; }
         }
 
         /// <summary>

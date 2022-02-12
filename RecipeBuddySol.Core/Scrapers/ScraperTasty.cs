@@ -112,9 +112,7 @@ namespace RecipeBuddy.Core.Scrapers
             RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
             recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//h1[@class='recipe-name extra-bold xs-mb05 md-mb1']", doc));
-            recipeModel.Website = "Tasty";
             recipeModel.Description = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//p[@class='description xs-text-4 md-text-3 lg-text-2 xs-mb2 lg-mb2 lg-pb05']", doc));
-            //recipeBlurbModel.TotalTime = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//p[@class='xs-text-5 extra-bold']", doc));
             recipeModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='byline extra-bold xs-text-4 md-text-2']", doc));
             recipeModel.Link = uri.ToString();
             recipeModel.TypeAsInt = (int)Scraper.FillTypeForRecipeEntry(recipeModel.Title);

@@ -94,15 +94,6 @@ namespace RecipeBuddy.Core.Scrapers
             RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
             recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//h1[@data-testid='ContentHeaderHed']", doc));
-            //HtmlNode timenode = doc.DocumentNode.SelectSingleNode("//ul[@class='InfoSliceList-eUasUM uVRyc']");
-            //{
-            //    if (timenode != null && timenode.ChildNodes[1] != null)
-            //    {
-            //        recipeCardModel.TotalTime = timenode.ChildNodes[1].InnerText.Substring(timenode.ChildNodes[1].InnerText.IndexOf("Total Time") + 10);
-            //    }
-            //}
-
-            //recipeModel.Website = Type_of_Websource.Epicurious;
             recipeModel.Description = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='container--body-inner']", doc));
             recipeModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//span[@data-testid='BylineName']", doc));
             recipeModel.Link = uri.ToString();

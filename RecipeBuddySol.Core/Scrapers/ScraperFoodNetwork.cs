@@ -164,15 +164,11 @@ namespace RecipeBuddy.Core.Scrapers
                 return null;
 
             List<string> directions = new List<string>();
-            //directions.Add("-Direction");
 
             RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
             recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//span[@class='o-AssetTitle__a-HeadlineText']", doc));
-            recipeModel.Website = "FoodNetwork";
             recipeModel.Description = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='o-AssetDescription__a-Description']", doc));
-
-/*            recipeBlurbModel.TotalTime = StringManipulationHelper.CleanHTMLTags(GetTotalTime(doc))*/;
             HtmlNode ingred_top_level = doc.DocumentNode.SelectSingleNode("//span[@class='o-Attribution__a-Name']");
             if (ingred_top_level != null)
             {
@@ -182,7 +178,6 @@ namespace RecipeBuddy.Core.Scrapers
             else
                 recipeModel.Author = "";
 
-            //recipeCardModel.Date = "";
             recipeModel.Link = uri.ToString();
             recipeModel.TypeAsInt = (int)Scraper.FillTypeForRecipeEntry(recipeModel.Title);
             recipeModel.ListOfIngredientStrings = ingredients;

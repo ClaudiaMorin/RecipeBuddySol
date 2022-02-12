@@ -103,7 +103,7 @@ namespace RecipeBuddy.ViewModels
             //This will only do something if their is a value in the quantity field, if not it will simply return here.
             CreateIngredStringsAndSaveToIngredProperties();
             
-            DataBaseAccessorsForRecipeManager.SaveRecipeToDatabase(UserViewModel.Instance.UsersIDInDB, recipeCardModel, UserViewModel.Instance.UsersIDInDB);
+            DataBaseAccessorsForRecipeManager.SaveRecipeToDatabase(recipeCardModel, UserViewModel.Instance.UsersIDInDB);
             MainNavTreeViewModel.Instance.AddRecipeModelsToTreeView(new RecipeRecordModel(recipeCardModel), true);
             ClearRecipeEntry();
         }

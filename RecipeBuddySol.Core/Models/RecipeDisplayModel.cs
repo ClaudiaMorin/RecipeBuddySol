@@ -16,63 +16,63 @@ namespace RecipeBuddy.Core.Models
 
     public class RecipeDisplayModel : ObservableObject
     {
-        /// <summary>
-        /// This constructor is tied to the webscrapping and is called by Scraper.cs to load all the properties
-        /// </summary>
-        /// <param name="ingredDisplay"></param>
-        public RecipeDisplayModel(List<string> ingredDisplay, List<string> directionDisplay)
-        {
-            LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
-            LoadFuncListGettersWithFuncDelegatesForIngredientandDirectionProperties();
-            listOfIngredientStringsForDisplay = new List<string>(ingredDisplay);
-            listOfDirectionStringsForDisplay = new List<string>(directionDisplay);
-            SetIngredientAndDirectionProperties();
-            recipeType = Type_Of_Recipe.Unknown;
-            recipeTypeInt = (int)Type_Of_Recipe.Unknown;
-        }
+        ///// <summary>
+        ///// This constructor is tied to the webscrapping and is called by Scraper.cs to load all the properties
+        ///// </summary>
+        ///// <param name="ingredDisplay"></param>
+        //public RecipeDisplayModel(List<string> ingredDisplay, List<string> directionDisplay)
+        //{
+        //    LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
+        //    LoadFuncListGettersWithFuncDelegatesForIngredientandDirectionProperties();
+        //    listOfIngredientStringsForDisplay = new List<string>(ingredDisplay);
+        //    listOfDirectionStringsForDisplay = new List<string>(directionDisplay);
+        //    SetIngredientAndDirectionProperties();
+        //    recipeType = Type_Of_Recipe.Unknown;
+        //    recipeTypeInt = (int)Type_Of_Recipe.Unknown;
+        //    RecipeDBID = -1;
+        //}
 
-        /// <summary>
-        /// Creating a new RecipeCardModel using the information from another one
-        /// </summary>
-        /// <param name="recipeCard">The source RecipeCardModel with all the information we need</param>
-        public RecipeDisplayModel(RecipeDisplayModel reSource)
-        {
-            LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
-            LoadFuncListGettersWithFuncDelegatesForIngredientandDirectionProperties();
-            listOfIngredientStringsForDisplay = reSource.listOfIngredientStringsForDisplay;
-            listOfDirectionStringsForDisplay = reSource.listOfDirectionStringsForDisplay;
-            SetIngredientAndDirectionProperties();
-            Title = reSource.Title;
-            //Description = reSource.Description;
-            //TotalTime = reSource.TotalTime;
-            Author = reSource.Author;
-            Link = reSource.Link;
-            recipeType = reSource.recipeType;
-            recipeTypeInt = (int)reSource.recipeType;
-            ID = reSource.ID;
-        }
+        ///// <summary>
+        ///// Creating a new RecipeCardModel using the information from another one
+        ///// </summary>
+        ///// <param name="recipeCard">The source RecipeCardModel with all the information we need</param>
+        //public RecipeDisplayModel(RecipeDisplayModel reSource)
+        //{
+        //    LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
+        //    LoadFuncListGettersWithFuncDelegatesForIngredientandDirectionProperties();
+        //    listOfIngredientStringsForDisplay = reSource.listOfIngredientStringsForDisplay;
+        //    listOfDirectionStringsForDisplay = reSource.listOfDirectionStringsForDisplay;
+        //    SetIngredientAndDirectionProperties();
+        //    Title = reSource.Title;
+        //    Author = reSource.Author;
+        //    Link = reSource.Link;
+        //    recipeType = reSource.recipeType;
+        //    recipeTypeInt = (int)reSource.recipeType;
+        //    RecipeDBID = reSource.RecipeDBID;
+        //}
 
-        /// <summary>
-        /// Creating a new RecipeCardModel using the information from a RecipeBlurbModel
-        /// </summary>
-        /// <param name="reSource">The source RecipeBlurbModel with all the information we need</param>
-        public RecipeDisplayModel(RecipeRecordModel reSource)
-        {
-            listOfIngredientStringsForDisplay = reSource.ListOfIngredientStrings;
-            listOfDirectionStringsForDisplay = reSource.ListOfDirectionStrings;
-            LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
-            LoadFuncListGettersWithFuncDelegatesForIngredientandDirectionProperties();
-            Title = reSource.Title;
-            Description = reSource.Description;
-            Author = reSource.Author;
-            Website = reSource.Website;
-            Link = new Uri(reSource.Link);
-            recipeType = (Type_Of_Recipe) reSource.TypeAsInt;
-            recipeTypeInt = reSource.TypeAsInt;
-            ID = -1;
+        ///// <summary>
+        ///// Creating a new RecipeCardModel using the information from a RecipeBlurbModel
+        ///// </summary>
+        ///// <param name="reSource">The source RecipeBlurbModel with all the information we need</param>
+        //public RecipeDisplayModel(RecipeRecordModel reSource)
+        //{
+        //    listOfIngredientStringsForDisplay = reSource.ListOfIngredientStrings;
+        //    listOfDirectionStringsForDisplay = reSource.ListOfDirectionStrings;
+        //    LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
+        //    LoadFuncListGettersWithFuncDelegatesForIngredientandDirectionProperties();
+        //    Title = reSource.Title;
+        //    Description = reSource.Description;
+        //    Author = reSource.Author;
+        //    //Website = reSource.Website;
+        //    //Link = new Uri(reSource.Link);
+        //    Link = new Uri("");
+        //    recipeType = (Type_Of_Recipe) reSource.TypeAsInt;
+        //    recipeTypeInt = reSource.TypeAsInt;
+        //    RecipeDBID = reSource.RecipeDBID;
 
-            SetIngredientAndDirectionProperties();
-        }
+        //    SetIngredientAndDirectionProperties();
+        //}
 
         /// <summary>
         /// the empty RecipeCardModel is used with Dapper when loading information from the DB
@@ -92,7 +92,7 @@ namespace RecipeBuddy.Core.Models
             Link = null;
             recipeType = Type_Of_Recipe.Unknown;
             recipeTypeInt = (int)recipeType;
-            ID = -1;
+            RecipeDBID = -1;
         }
 
         /// <summary>
@@ -1165,7 +1165,7 @@ namespace RecipeBuddy.Core.Models
             //Website = reSource.Website;
             Link = reSource.Link;
             RecipeType = reSource.RecipeType;
-            ID = -1;
+            RecipeDBID = -1;
             reSource.UpdateRecipeForDisplayAfterEdits();
             reSource.LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
 
@@ -1189,17 +1189,9 @@ namespace RecipeBuddy.Core.Models
             RecipeType = (Type_Of_Recipe)reSource.TypeAsInt;
             listOfIngredientStringsForDisplay = reSource.ListOfIngredientStrings;
             listOfDirectionStringsForDisplay = reSource.ListOfDirectionStrings;
-            //Sometimes we have a good link, sometimes we don't
-            try
-            {
-                Link = new Uri(reSource.Link);
-            }
-            catch (Exception e)
-            {
-                Link = null;
-            }
+            Link = null;
 
-            ID = -1;
+            RecipeDBID = reSource.RecipeDBID;
             LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
             SetIngredientAndDirectionProperties();
         }
@@ -1327,8 +1319,7 @@ namespace RecipeBuddy.Core.Models
 
         #region properties that are linked to the datacontext
 
-        public int ID = -1; //the DB number that will be recorded if the recipe is coming from the DB
-
+        public int RecipeDBID = -1; //the DB number that will be recorded if the recipe is coming from the DB
         /// <summary>
         /// This is for use by the DB that stores the Type_Of_Recipe as an int but 
         /// can't get it back out and translated to an enum without help

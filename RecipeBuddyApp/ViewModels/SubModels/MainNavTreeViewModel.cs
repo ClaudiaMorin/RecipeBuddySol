@@ -494,9 +494,8 @@ namespace RecipeBuddy.ViewModels
             {
                 if (ListToUse[i].RecipeModelTV.Title == title && title != "Search For Your Recipe")
                 {
-                    //Remove the recipe
+                    DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(ListToUse[i].RecipeModelTV.RecipeDBID);
                     ListToUse.RemoveAt(i);
-                    DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(title, recipeTypeAsInt, UserViewModel.Instance.UsersIDInDB);
                     return true;
                 }
             }

@@ -74,7 +74,7 @@ namespace RecipeBuddy.ViewModels
         internal void DeleteRecipe()
         {
             MainNavTreeViewModel.Instance.RemoveRecipeFromTreeView(this);
-            DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(this.treeItemTitle, recipeModelTV.TypeAsInt, UserViewModel.Instance.UsersIDInDB);
+            DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(recipeModelTV.RecipeDBID);
         }
 
         internal void ContextMenuOrNot(TreeViewItemInvokedEventArgs arg)

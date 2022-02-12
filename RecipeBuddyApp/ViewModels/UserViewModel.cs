@@ -1,8 +1,6 @@
 ﻿
-using System.Windows.Input;
 using RecipeBuddy.ViewModels.Commands;
 using System.Collections.ObjectModel;
-using System.Security;
 using System;
 using RecipeBuddy.Core.Helpers;
 using RecipeBuddy.Core.Scrapers;
@@ -11,7 +9,8 @@ using System.Collections.Generic;
 using RecipeBuddy.Core.Models;
 using RecipeBuddy.Views;
 using RecipeBuddy.Services;
-using Microsoft.UI.Xaml.Controls;
+using Microsoft.Toolkit.Mvvm.Input;
+using Windows.UI.Xaml;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -24,6 +23,7 @@ namespace RecipeBuddy.ViewModels
         public List<Type_of_Websource> PanelMap;
 
         Action ActionNoParams;
+        Action<RoutedEventArgs> TypedEventHandler;
         Func<bool> FuncBool;
 
         private static readonly UserViewModel instance = new UserViewModel();
@@ -70,6 +70,7 @@ namespace RecipeBuddy.ViewModels
             CmdLogoutBtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => LogOut(), FuncBool = () => CanSelectLogout);
             CmdLoginBtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => SetUpUser(), FuncBool = () => CanSelectLogin);
             CmdCreateUserbtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => SetUpNewUser(), FuncBool = () => CanSelectCreateUser);
+            CmdNewUserLooseFocus = new RelayCommand<RoutedEventArgs>(TypedEventHandler = (a) => ToggleCreateUser(a));
         }
 
 
@@ -145,7 +146,6 @@ namespace RecipeBuddy.ViewModels
         public void SetUpNewUser()
         {
             SaveUser();
-            //SetUpSearchWebsources(true);
             DataBaseAccessorsForRecipeManager.LoadUsersFromDatabase(ListOfUserAccountsInDB);
             ComboBoxIndexOfUserFromDB = ListOfUserAccountsInDB.Count - 1;
         }
@@ -159,14 +159,33 @@ namespace RecipeBuddy.ViewModels
             byte[] bytePassword = PasswordHashing.CalculateHash(ConvertingStringToByteArray.ConvertStringToByteArray(NewPasswordString));
             byte[] bytePasswordCheck = PasswordHashing.CalculateHash(ConvertingStringToByteArray.ConvertStringToByteArray(NewConfirmPasswordString));
 
+            int userID = DataBaseAccessorsForRecipeManager.GetUserIDUserFromDatabase(NewAccountName);
+            Windows.UI.Popups.MessageDialog dialog;
+
+            if (userID != -1)
+            {
+                NewAccountName = "";
+                NewPasswordString = "";
+                NewConfirmPasswordString = "";
+                dialog = new Windows.UI.Popups.MessageDialog("That User Name is taken.");
+                dialog.ShowAsync();
+                return;
+            }
+
             //Validate the account information that has been entered
             if (ValidateNewAccount(NewAccountName, bytePassword, bytePasswordCheck) == false)
             {
-                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("There is a problem with your account!");
+                NewPasswordString = "";
+                NewConfirmPasswordString = "";
+                dialog = new Windows.UI.Popups.MessageDialog("Passwords don't match");
+                dialog.ShowAsync();
                 return;
             }
 
             DataBaseAccessorsForRecipeManager.SaveUserToDatabase(NewAccountName, UserName, bytePassword, bytePasswordCheck);
+
+            dialog = new Windows.UI.Popups.MessageDialog("User: " + NewAccountName + " created, now login!");
+            dialog.ShowAsync();
 
             //Reset the "Create Password" section to empty strings.
             NewAccountName = "";
@@ -184,29 +203,15 @@ namespace RecipeBuddy.ViewModels
         /// <returns></returns>
         private bool ValidateNewAccount(string name, byte[] password, byte[] confirmPassword)
         {
-            if (name.Length < 3)
-            {
-                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("The user name is too short.");
-                NewAccountName = "";
-                return false;
-            }
 
             foreach (string s in ListOfUserAccountsInDB)
             {
                 if (string.Compare(s.ToLower(), name.ToLower()) == 0)
                 {
                     Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("The user name is taken");
-                    newAccountName = "";
+                    NewAccountName = "";
                     return false;
                 }
-            }
-
-            if (password.Length < 6)
-            {
-                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("password must be at least 6 characters.");
-                //NewPasswordSecureString.Clear();
-                NewPasswordString = "";
-                return false;
             }
 
             return PasswordHashing.SequenceEquals(password, confirmPassword);
@@ -222,24 +227,17 @@ namespace RecipeBuddy.ViewModels
         }
 
         //Used to flip the Login button on and off.
-        private void ToggleCreateUser()
+        private void ToggleCreateUser(RoutedEventArgs args = null)
         {
-            if (newAccountName == null || newConfirmPasswordString == null || newPasswordString == null)
+
+           if (newAccountName == null || newConfirmPasswordString == null || newPasswordString == null)
             {
                 CanSelectCreateUser = false;
                 return;
             }
 
-
-            if (newAccountName.Length < 3 || newConfirmPasswordString.Length < 6 || newPasswordString.Length < 6)
+            if ( newAccountName.Length < 3 || newConfirmPasswordString.Length < 6 || newPasswordString.Length < 6 )
             {
-                CanSelectCreateUser = false;
-                return;
-            }
-
-            if (string.Compare(newConfirmPasswordString, newPasswordString) != 0)
-            {
-                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("Passwords must match.");
                 CanSelectCreateUser = false;
                 return;
             }
@@ -355,6 +353,12 @@ namespace RecipeBuddy.ViewModels
         }
 
         public RelayCommandRaiseCanExecute CmdCreateUserbtn
+        {
+            get;
+            private set;
+        }
+
+        public RelayCommand<RoutedEventArgs> CmdNewUserLooseFocus
         {
             get;
             private set;
