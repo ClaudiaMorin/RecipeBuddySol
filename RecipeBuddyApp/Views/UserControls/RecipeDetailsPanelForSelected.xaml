@@ -21,10 +21,11 @@
                 <RowDefinition x:Name="EditRowType" Height="{Binding TypeEditHeight, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0" >
+                <Border Width="20"/>
                 <TextBlock Text="Category :" TextAlignment="Left" FontSize="14"/>
                 <Border Width="6"/>
                 <TextBlock x:Name="RecipeType" TextAlignment="Left" FontSize="14" Text="{Binding Path=RecipeType, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Border Width="10"/>
+                <Border Width="20"/>
                 <Button x:Name="EditTypeBtn" Style="{StaticResource BtnStyleEditRecipeItem}" Command="{Binding CmdLineEdit}" CommandParameter="0, Type"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="1" >

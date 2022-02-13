@@ -66,7 +66,6 @@ namespace RecipeBuddy.ViewModels
             CmdSelectedTypeChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => CanSelect);
             CmdSelectedQuantityChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeQuantityFromComboBox(e), canCallActionFunc => CanSelect);
             CmdCopy = new RelayCommand<string>(ActionNoParams => Copy(), canCallActionFunc => CanSelectAlwaysTrue);
-            //CmdSave = new RelayCommandRaiseCanExecute(ActionNoParams = () => SaveRecipe(), FuncBool = () => CanSelectSave);
             CmdSave = new RelayCommandRaiseCanExecute(ActionNoParams = () => SaveRecipeEdits(), FuncBool = () => CanSelectSave);
             CmdUpdate = new RelayCommand<string>(actionWithObject = s => Update(s), canCallActionFunc => CanSelectAlwaysTrue);
             CmdCancel = new RelayCommand<string>(actionWithObject = s => Cancel(s), canCallActionFunc => CanSelectAlwaysTrue);
@@ -149,7 +148,8 @@ namespace RecipeBuddy.ViewModels
             }
             if (result == 1 || result == 2)
             {
-                DataBaseAccessorsForRecipeManager.SaveRecipeToDatabase(selectViewMainRecipeCardModel, UserViewModel.Instance.UsersIDInDB);
+                int DBID = DataBaseAccessorsForRecipeManager.SaveRecipeToDatabase(selectViewMainRecipeCardModel, UserViewModel.Instance.UsersIDInDB);
+                selectViewMainRecipeCardModel.RecipeDBID = DBID;
                 //RemoveRecipe();
             }
         }
@@ -160,23 +160,9 @@ namespace RecipeBuddy.ViewModels
         public void SaveRecipeEdits()
         {
             selectViewMainRecipeCardModel.SaveEditsToARecipe();
-            DataBaseAccessorsForRecipeManager.UpdateRecipeFromDatabase(selectViewMainRecipeCardModel);
-            //int result = MainWindowViewModel.Instance.mainTreeViewNav.AddRecipeToTreeView(selectViewMainRecipeCardModel, true);
-
-            //if (result == 1)
-            //{
-            //    MainNavTreeViewModel.Instance.RemoveRecipeFromTreeView(selectViewMainRecipeCardModel);
-            //    DataBaseAccessorsForRecipeManager.DeleteRecipeFromDatabase(selectViewMainRecipeCardModel.Title, (int)selectViewMainRecipeCardModel.RecipeType, UserViewModel.Instance.UsersIDInDB);
-            //}
-            //if (result == 1 || result == 2)
-            //{
-            //    DataBaseAccessorsForRecipeManager.SaveRecipeToDatabase(UserViewModel.Instance.UsersIDInDB, selectViewMainRecipeCardModel, UserViewModel.Instance.UsersIDInDB);
-            //    //RemoveRecipe();
-            //}
+            DataBaseAccessorsForRecipeManager.UpdateRecipeFromDatabase(selectViewMainRecipeCardModel, UserViewModel.Instance.UsersIDInDB);
+            CanSelectSave = false;
         }
-
-
-
 
         /// <summary>
         /// Updates the current card display and updates the edit-textboxes for the ingredient and direction editing
@@ -409,6 +395,7 @@ namespace RecipeBuddy.ViewModels
             RecipeRecordModel recipeRecordModel = new RecipeRecordModel(selectViewMainRecipeCardModel.Title + " Copy", selectViewMainRecipeCardModel);
             MainNavTreeViewModel.Instance.AddRecipeModelsToTreeView(recipeRecordModel, true);
             selectViewMainRecipeCardModel.SaveEditsToARecipeModel();
+            CanSelectSave = true;
         }
 
         /// <summary>

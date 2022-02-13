@@ -95,7 +95,6 @@ namespace RecipeBuddy.ViewModels
         /// This does the actual Entry Saving and can be called from either the overwrite? dialog or the CheckEntrySave function
         /// </summary>
         /// <param name="recipeCard">This is an object that is then cast back to a RecipeCardModel to satisfy the ICommandInterface</param>
-        //public async Task SaveEntry(Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView)
         public void SaveEntryToDB()
         {
             recipeCardModel.SaveEditsToARecipeModel();
@@ -103,32 +102,11 @@ namespace RecipeBuddy.ViewModels
             //This will only do something if their is a value in the quantity field, if not it will simply return here.
             CreateIngredStringsAndSaveToIngredProperties();
             
-            DataBaseAccessorsForRecipeManager.SaveRecipeToDatabase(recipeCardModel, UserViewModel.Instance.UsersIDInDB);
+            int recipeID = DataBaseAccessorsForRecipeManager.SaveRecipeToDatabase(recipeCardModel, UserViewModel.Instance.UsersIDInDB);
+            recipeCardModel.RecipeDBID = recipeID;
             MainNavTreeViewModel.Instance.AddRecipeModelsToTreeView(new RecipeRecordModel(recipeCardModel), true);
             ClearRecipeEntry();
         }
-
-
-        /// <summary>
-        /// This manages changes that come in through the user manipulating the combobox on the Recipe Entry Panel
-        /// </summary>
-        /// <param name="e"></param>
-        //internal void ChangeMeasurementTypeFromComboBox(SelectionChangedEventArgs e)
-        //{
-        //    //recipePanelForWebCopy.recipeCardModel.RecipeType = (Type_Of_Recipe)ComboBoxIndexForRecipeType;
-        //    if (e.AddedItems != null && e.AddedItems.Count > 0)
-        //    {
-        //        string type = e.AddedItems[0].ToString();
-
-        //        //for (int index = 0; index < MainNavTreeViewModel.Instance.CatagoryTypes.Count; index++)
-        //        //{
-        //        //    if (string.Compare(RecipePanelForWebCopy.Instance.MeasureTypes[index].ToString().ToLower(), type.ToLower()) == 0)
-        //        //    {
-        //        //        recipePanelForWebCopy.recipeCardModel.RecipeType = (Type_Of_Recipe)index;
-        //        //    }
-        //        //}
-        //    }
-        //}
 
 
         /// <summary>

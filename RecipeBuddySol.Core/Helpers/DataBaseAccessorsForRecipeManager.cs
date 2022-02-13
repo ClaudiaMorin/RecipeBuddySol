@@ -127,7 +127,7 @@ namespace RecipeBuddy.Core.Helpers
         /// </summary>
         /// <param name="UserID">The User Key that the strings are associated with</param>
         /// <param name="recipeCard">The recipe that is being saved</param>
-        public static void SaveRecipeToDatabase(RecipeDisplayModel recipeCard, int UserIDInDB)
+        public static int SaveRecipeToDatabase(RecipeDisplayModel recipeCard, int UserIDInDB)
         {
             //so that the correct type will be saved to the DB
             Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -158,6 +158,7 @@ namespace RecipeBuddy.Core.Helpers
 
             //save Recipe to DB
             SqliteDataAccess.UpdateData(sqlString1, parameters);
+            return DataBaseAccessorsForRecipeManager.GetPKeyofMostRecientlyAddedRecipeFromDB();
         }
 
         /// <summary>
@@ -186,11 +187,12 @@ namespace RecipeBuddy.Core.Helpers
         /// used to update a recipe in the database
         /// </summary>
         /// <param name="recipeCard">The recipe we are updating</param>
-        public static void UpdateRecipeFromDatabase(RecipeDisplayModel recipeCard)
+        public static void UpdateRecipeFromDatabase(RecipeDisplayModel recipeCard, int UserIDInDB)
         {
             //We need a valid RecipeID that exists in the DB
             if (recipeCard.RecipeDBID != -1)
             {
+
                 Dictionary<string, object> parameters = new Dictionary<string, object>();
                 List<string> paramsForSQLStatment = new List<string>();
 
@@ -215,10 +217,9 @@ namespace RecipeBuddy.Core.Helpers
                 }
 
                 //Update Recipe in DB
-                string sqlStatment =  sqlString1 + " WHERE RecipeID = " + recipeRecordModel.RecipeDBID;
+                string sqlStatment = sqlString1 + " WHERE RecipeID = " + recipeRecordModel.RecipeDBID;
                 SqliteDataAccess.UpdateData(sqlStatment, parameters);
             }
-
         }
 
         /// <summary>
@@ -226,19 +227,19 @@ namespace RecipeBuddy.Core.Helpers
         /// so that you an increment the count and add a new one
         /// </summary>
         /// <returns></returns>
-        private static int GetPKeyofMostRecientlyAddedRecipeFromDB()
+        public static int GetPKeyofMostRecientlyAddedRecipeFromDB()
         {
-            string sql = "SELECT Max(ID) FROM Recipes";
+            string sql = "SELECT Max(RecipeID) FROM Recipes";
             int id = 0;
 
             Dictionary<string, object> RecipeIDFromDB = new Dictionary<string, object>
-                {
-                    {"@ID", id },
-                };
+            {
+                {"@RecipeID", id },
+            };
 
             List<int> RecipeID = SqliteDataAccess.LoadData<int>(sql, RecipeIDFromDB);
 
-            if (RecipeID[0] != 0)
+            if (RecipeID.Count != 0)
                 return RecipeID[0];
 
             return -1;

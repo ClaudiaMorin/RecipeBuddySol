@@ -12,7 +12,7 @@ namespace RecipeBuddy.Core.Database
     public static class SqliteDataAccess
     {
         // LoadDate<PersonModel>("Select * from Person", null) = List<PersonModel>
-        //somethign that should trigger a rebuild
+        //something that should trigger a rebuild
         public static List<T> LoadData<T>(string sqlStatement, Dictionary<string, object> parameters, string connectionName = "DataSource")
         {
             //for Dapper
