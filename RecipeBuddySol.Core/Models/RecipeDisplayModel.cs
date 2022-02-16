@@ -16,63 +16,6 @@ namespace RecipeBuddy.Core.Models
 
     public class RecipeDisplayModel : ObservableObject
     {
-        ///// <summary>
-        ///// This constructor is tied to the webscrapping and is called by Scraper.cs to load all the properties
-        ///// </summary>
-        ///// <param name="ingredDisplay"></param>
-        //public RecipeDisplayModel(List<string> ingredDisplay, List<string> directionDisplay)
-        //{
-        //    LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
-        //    LoadFuncListGettersWithFuncDelegatesForIngredientandDirectionProperties();
-        //    listOfIngredientStringsForDisplay = new List<string>(ingredDisplay);
-        //    listOfDirectionStringsForDisplay = new List<string>(directionDisplay);
-        //    SetIngredientAndDirectionProperties();
-        //    recipeType = Type_Of_Recipe.Unknown;
-        //    recipeTypeInt = (int)Type_Of_Recipe.Unknown;
-        //    RecipeDBID = -1;
-        //}
-
-        ///// <summary>
-        ///// Creating a new RecipeCardModel using the information from another one
-        ///// </summary>
-        ///// <param name="recipeCard">The source RecipeCardModel with all the information we need</param>
-        //public RecipeDisplayModel(RecipeDisplayModel reSource)
-        //{
-        //    LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
-        //    LoadFuncListGettersWithFuncDelegatesForIngredientandDirectionProperties();
-        //    listOfIngredientStringsForDisplay = reSource.listOfIngredientStringsForDisplay;
-        //    listOfDirectionStringsForDisplay = reSource.listOfDirectionStringsForDisplay;
-        //    SetIngredientAndDirectionProperties();
-        //    Title = reSource.Title;
-        //    Author = reSource.Author;
-        //    Link = reSource.Link;
-        //    recipeType = reSource.recipeType;
-        //    recipeTypeInt = (int)reSource.recipeType;
-        //    RecipeDBID = reSource.RecipeDBID;
-        //}
-
-        ///// <summary>
-        ///// Creating a new RecipeCardModel using the information from a RecipeBlurbModel
-        ///// </summary>
-        ///// <param name="reSource">The source RecipeBlurbModel with all the information we need</param>
-        //public RecipeDisplayModel(RecipeRecordModel reSource)
-        //{
-        //    listOfIngredientStringsForDisplay = reSource.ListOfIngredientStrings;
-        //    listOfDirectionStringsForDisplay = reSource.ListOfDirectionStrings;
-        //    LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
-        //    LoadFuncListGettersWithFuncDelegatesForIngredientandDirectionProperties();
-        //    Title = reSource.Title;
-        //    Description = reSource.Description;
-        //    Author = reSource.Author;
-        //    //Website = reSource.Website;
-        //    //Link = new Uri(reSource.Link);
-        //    Link = new Uri("");
-        //    recipeType = (Type_Of_Recipe) reSource.TypeAsInt;
-        //    recipeTypeInt = reSource.TypeAsInt;
-        //    RecipeDBID = reSource.RecipeDBID;
-
-        //    SetIngredientAndDirectionProperties();
-        //}
 
         /// <summary>
         /// the empty RecipeCardModel is used with Dapper when loading information from the DB
@@ -142,7 +85,9 @@ namespace RecipeBuddy.Core.Models
         #region List of 50 Ingredient setters used by the List of Action<string> listOfIngredientSetters
 
         private void setIngredient1(string value)
-        { Ingredient1 = value; }
+        { 
+            Ingredient1 = value; 
+        }
 
         private void setIngredient2(string value)
         { Ingredient2 = value; }
@@ -1190,7 +1135,6 @@ namespace RecipeBuddy.Core.Models
             listOfIngredientStringsForDisplay = reSource.ListOfIngredientStrings;
             listOfDirectionStringsForDisplay = reSource.ListOfDirectionStrings;
             Link = null;
-
             RecipeDBID = reSource.RecipeDBID;
             LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
             SetIngredientAndDirectionProperties();
@@ -1284,8 +1228,7 @@ namespace RecipeBuddy.Core.Models
                 else
                 { 
                     listOfDirectionSetters[count].Invoke(""); 
-                }
-                
+                }    
             }
         }
 

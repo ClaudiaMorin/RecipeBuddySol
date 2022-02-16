@@ -29,8 +29,8 @@
                             <Grid x:Name="TitleGrid" Background="#eee" >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="18*" />
-                                    <ColumnDefinition Width="7*" />
-                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="8*" />
+                                    <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="{Binding ElementName=Title, Path=Text, Converter={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
@@ -39,12 +39,12 @@
                             <StackPanel  Grid.Row="0" Grid.Column="0" Orientation="Horizontal" >
                                 <Border Width="20"/>
                                 <TextBlock x:Name="Title" Style="{StaticResource TitleTbkStyleEdit}" Text="{Binding Path=Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <Border Width="20"/>
-                                <Button x:Name="EditBtnTitle" Style="{StaticResource BtnStyleEditRecipeItem}"  Command="{Binding CmdLineEdit}" CommandParameter="1, Title" Visibility="{Binding RecipeLoaded}"  />
                             </StackPanel>
                             <StackPanel  Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button x:Name="EditBtnTitle" Style="{StaticResource BtnStyleEditRecipeItem}"  Command="{Binding CmdLineEdit}" CommandParameter="1, Title" Visibility="{Binding RecipeLoaded}"  />
+                                <Border Width="30"/>
                                 <Button x:Name="SaveBtn" Style="{StaticResource BtnStyleEditRecipeItem}" Content="Save Edits" Background="Red" Width="75" Command="{Binding CmdSave}" Visibility="{Binding RecipeLoaded}" ToolTipService.ToolTip="Save all the edits you have made!" />
-                                <Border Width="20"/>
+                                <Border Width="10"/>
                                 <Button x:Name="MakeCopyBtn" Style="{StaticResource BtnStyleEditRecipeItem}" Content="Make Copy" Width="75" Command="{Binding CmdCopy}" CommandParameter="Title" ToolTipService.ToolTip="Make a copy of this recipe." Visibility="{Binding RecipeLoaded}" />
                             </StackPanel>
                             <StackPanel Grid.Row="1"  Grid.Column="0" Orientation="Horizontal">

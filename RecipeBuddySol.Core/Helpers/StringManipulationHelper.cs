@@ -439,7 +439,8 @@ namespace RecipeBuddy.Core.Helpers
 
         public static string CleanHTMLTags(string target)
         {
-            string returnStr = target.Replace("&#8211;", "-").Replace("&quot;", "\"").Replace("&deg;", "°").Replace("&rsquo;", "'").Replace("&#x27;", "'").Replace("&amp;", "&").Replace("& mdash;", "-").Replace("&ntilde;", "ñ"); 
+            string returnStr = target.Replace("&#8211;", "-").Replace("&quot;", "\"").Replace("&deg;", "°").Replace("&rsquo;", "'").Replace("&#x27;", "'").Replace("&amp;", "&").Replace("& mdash;", "-").Replace("&ntilde;", "ñ")
+               .Replace("&egrave;", "è"); 
             returnStr = returnStr.Trim();
             return returnStr;
         }

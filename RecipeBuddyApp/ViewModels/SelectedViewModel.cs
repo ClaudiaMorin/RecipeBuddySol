@@ -105,6 +105,7 @@ namespace RecipeBuddy.ViewModels
         public void UpdateRecipeEntry(RecipeRecordModel recipeModel)
         {
             CanSelectSave = false;
+            CloseAllEditBoxes();
             selectViewMainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(recipeModel);
             UpdateEditTextBoxes();
             CurrentType = (int)selectViewMainRecipeCardModel.RecipeType;
@@ -170,15 +171,30 @@ namespace RecipeBuddy.ViewModels
         public void UpdateEditTextBoxes()
         {
             TitleEditString = selectViewMainRecipeCardModel.Title;
+            AuthorEditString = selectViewMainRecipeCardModel.Author;
 
-            for (int count = 0; count < selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay.Count; count++)
+            for (int count = 0; count < 50; count++)
             {
-                listOfIngredientEditStringsSetters[count].Invoke(selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[count]);
+                if (count < selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay.Count)
+                {
+                    listOfIngredientEditStringsSetters[count].Invoke(selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[count]);
+                }
+                else
+                {
+                    listOfIngredientEditStringsSetters[count].Invoke("");
+                }
             }
 
-            for (int countDirect = 0; countDirect < selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay.Count; countDirect++)
+            for (int count = 0; count < 30; count++)
             {
-                listOfDirectionEditStringsSetters[countDirect].Invoke(selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[countDirect]);
+                if (count < selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay.Count)
+                {
+                    listOfDirectionEditStringsSetters[count].Invoke(selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[count]);
+                }
+                else
+                {
+                    listOfDirectionEditStringsSetters[count].Invoke("");
+                }
             }
         }
 
@@ -473,6 +489,25 @@ namespace RecipeBuddy.ViewModels
             CanSelectSave = true;
         }
 
+
+        /// <summary>
+        /// Closes any open edit boxes before the user is shown a new recipe
+        /// </summary>
+        private void CloseAllEditBoxes()
+        {
+            TitleEditHeight = "0";
+            TypeEditHeight = "0";
+
+            for (int count = 0; count < 50; count++)
+            {
+                IngredHeightList[count].Invoke("0");
+            }
+            for (int count = 0; count < 30; count++)
+            {
+                DirectHeightList[count].Invoke("0");
+            }
+        }
+
         private void Cancel(object sender)
         {
             int results;
@@ -506,7 +541,7 @@ namespace RecipeBuddy.ViewModels
                 TitleEditHeight = "0";
             }
 
-            if (string.Compare(parameters[1].ToString().ToLower().Trim(), "type") == 0)
+            if (string.Compare(parameters[1].ToString().ToLower().Trim(), "type") == 0 || string.Compare(parameters[1].ToString().ToLower().Trim(), "author") == 0)
             {
                 success = Int32.TryParse(parameters[0], out results);
                 //messed up someplace

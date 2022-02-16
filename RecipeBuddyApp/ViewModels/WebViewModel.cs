@@ -128,9 +128,19 @@ namespace RecipeBuddy.ViewModels
         /// <param name="title">Title of the recipe to remove</param>
         public void RemoveRecipe(string title)
         {
+
             SearchViewModel.Instance.RemoveRecipeFromComboBoxWork(title);
             ComboBoxIndexForRecipeTitle = SearchViewModel.Instance.IndexOfComboBoxItem;
-            CurrentLink = new Uri(SearchViewModel.Instance.listOfRecipeCards.GetCurrentEntry().Link);
+            //Empty list at this point!
+            if (SearchViewModel.Instance.listOfRecipeCards.ListCount > 1)
+            {
+                CurrentLink = new Uri(SearchViewModel.Instance.listOfRecipeCards.GetCurrentEntry().Link);
+            }
+            else 
+            {
+                CurrentLink = null;
+            }
+
             DropDownOpen = false;
         }
 
@@ -173,17 +183,7 @@ namespace RecipeBuddy.ViewModels
         private bool canSelectTrueIfThereIsARecipe;
         public bool CanSelectTrueIfThereIsARecipe
         {
-            get
-            {
-                if (string.Compare(recipePanelForWebCopy.recipeCardModel.Title.ToLower(), "search for your next recipe find!") == 0)
-                {
-                    canSelectTrueIfThereIsARecipe = false;
-                    return canSelectTrueIfThereIsARecipe;
-                }
-                else
-                    canSelectTrueIfThereIsARecipe = true;
-                return canSelectTrueIfThereIsARecipe;
-            }
+            get {return canSelectTrueIfThereIsARecipe;}
 
             set { SetProperty(ref canSelectTrueIfThereIsARecipe, value); }
         }

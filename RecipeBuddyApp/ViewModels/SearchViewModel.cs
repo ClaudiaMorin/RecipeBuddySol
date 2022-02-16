@@ -98,7 +98,6 @@ namespace RecipeBuddy.ViewModels
             t.Wait(5000);
 
             await coreApplicationView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => UIChangesEndSearch());
-
         }
 
         public void GoToWebView()
@@ -145,6 +144,7 @@ namespace RecipeBuddy.ViewModels
         /// <param name="title">Title of the recipe to remove</param>
         public void RemoveRecipe(string title)
         {
+
             RemoveRecipeFromComboBoxWork(title);
             DropDownOpen = false;
         }
@@ -155,23 +155,34 @@ namespace RecipeBuddy.ViewModels
         /// is looking at to the next one in the list.
         /// </summary>
         /// <param name="title">The title of the recipe item to remove</param>
-        public void RemoveRecipeFromComboBoxWork(string title)
+        public async Task RemoveRecipeFromComboBoxWork(string title)
         {
             try
             {
-                if (listOfRecipeCards.ListCount > 0 && listOfRecipeCards.CurrentCardIndex != -1)
-                {
-                    int indexToRemove = listOfRecipeCards.GetEntryIndex(title);
+                int indexToRemove = listOfRecipeCards.GetEntryIndex(title);
 
-                    if (indexToRemove == listOfRecipeCards.CurrentCardIndex)
+                if (listOfRecipeCards.ListCount > 1 )
+                {
+                    if (indexToRemove != 0)
                     {
-                        if (listOfRecipeCards.CurrentCardIndex != listOfRecipeCards.ListCount - 1)
-                        { listOfRecipeCards.CurrentCardIndex++; }
-                        else
-                        { listOfRecipeCards.CurrentCardIndex = 0; }
+                        listOfRecipeCards.CurrentCardIndex = 0;
                     }
-                    listOfRecipeCards.Remove(listOfRecipeCards.GetEntryIndex(title));
+                    else
+                    {
+                        listOfRecipeCards.CurrentCardIndex = 1;
+                    }
                 }
+                else //We have removed the last card!
+                {
+                    listOfRecipeCards.CurrentCardIndex = 0;
+                    WebViewModel.Instance.CanSelectTrueIfThereIsARecipe = false;
+                    WebViewModel.Instance.CmdOpenEntry.NotifyCanExecuteChanged();
+                }
+
+                IndexOfComboBoxItem = listOfRecipeCards.CurrentCardIndex;
+                //Need main UI thread to execute UI changes
+                Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView();
+                await coreApplicationView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => listOfRecipeCards.Remove(indexToRemove));
             }
             catch (Exception e)
             {
@@ -221,7 +232,7 @@ namespace RecipeBuddy.ViewModels
             }
 
             listOfRecipeCards.Add(recipeCard);
-            //WebViewModel.Instance.CanSelectOpenRecipeEntry = true;
+            WebViewModel.Instance.CanSelectTrueIfThereIsARecipe = true;
 
             //If we have nothing in the list we will show the first entry
             if (listOfRecipeCards.ListCount == 1)
