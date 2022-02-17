@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using RecipeBuddy.Core.Helpers;
 using RecipeBuddy.Core.Scrapers;
 using System;
 using System.Collections.Generic;
@@ -56,10 +57,19 @@ namespace RecipeBuddy.Core.Models
         /// <summary>
         /// Steps requires to update a recipe for saving to the TreeView and DB
         /// </summary>
-        public void SaveEditsToARecipeModel()
+        public void SaveEditsToARecipeModel(int UsersIDInDB)
         {
             LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
-            SetIngredientAndDirectionProperties(); 
+            SetIngredientAndDirectionProperties();
+            if (RecipeDBID == -1)
+            {
+                int recipeID = DataBaseAccessorsForRecipeManager.SaveRecipeToDatabase(this, UsersIDInDB);
+                RecipeDBID = recipeID;
+            }
+            else
+            {
+                DataBaseAccessorsForRecipeManager.UpdateRecipeFromDatabase(this, UsersIDInDB);
+            }
         }
 
         /// <summary>

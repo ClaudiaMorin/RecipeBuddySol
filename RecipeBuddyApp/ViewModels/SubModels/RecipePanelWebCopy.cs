@@ -97,13 +97,9 @@ namespace RecipeBuddy.ViewModels
         /// <param name="recipeCard">This is an object that is then cast back to a RecipeCardModel to satisfy the ICommandInterface</param>
         public void SaveEntryToDB()
         {
-            recipeCardModel.SaveEditsToARecipeModel();
-
             //This will only do something if their is a value in the quantity field, if not it will simply return here.
             CreateIngredStringsAndSaveToIngredProperties();
-            
-            int recipeID = DataBaseAccessorsForRecipeManager.SaveRecipeToDatabase(recipeCardModel, UserViewModel.Instance.UsersIDInDB);
-            recipeCardModel.RecipeDBID = recipeID;
+            recipeCardModel.SaveEditsToARecipeModel(UserViewModel.Instance.UsersIDInDB);
             MainNavTreeViewModel.Instance.AddRecipeModelsToTreeView(new RecipeRecordModel(recipeCardModel), true);
             ClearRecipeEntry();
         }

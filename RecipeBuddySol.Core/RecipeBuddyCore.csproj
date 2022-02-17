@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>RecipeBuddySol.Core</RootNamespace>
+    <RootNamespace>RecipeBuddyCore</RootNamespace>
     <Configurations>Debug;Release;64-build;any</Configurations>
   </PropertyGroup>
 

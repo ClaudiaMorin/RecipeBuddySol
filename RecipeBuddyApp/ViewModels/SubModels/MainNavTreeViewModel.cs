@@ -607,7 +607,7 @@ namespace RecipeBuddy.ViewModels
         /// Add the recipe to the Borrow list and select that recipe in the combobox as well as 
         /// take the user to the Edit page.
         /// </summary>
-        internal void AddRecipeToSelectList(RecipeTreeItem recipeTreeItem)
+        internal void AddRecipeToSelect(RecipeTreeItem recipeTreeItem)
         {
             NavigationService.Navigate(typeof(SelectedView));
             SelectedViewModel.Instance.UpdateRecipeEntry(recipeTreeItem.RecipeModelTV);

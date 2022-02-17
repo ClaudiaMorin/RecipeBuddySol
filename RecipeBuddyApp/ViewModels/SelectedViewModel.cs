@@ -151,17 +151,21 @@ namespace RecipeBuddy.ViewModels
             {
                 int DBID = DataBaseAccessorsForRecipeManager.SaveRecipeToDatabase(selectViewMainRecipeCardModel, UserViewModel.Instance.UsersIDInDB);
                 selectViewMainRecipeCardModel.RecipeDBID = DBID;
-                //RemoveRecipe();
             }
         }
 
         /// <summary>
-        /// Saves the recipe to the DB and the TreeView
+        /// Saves the recipe to the DB and the TreeView if the recipe doesn't already exist - as the case with a copy function, or updates
+        /// and existing recipe.
         /// </summary>
         public void SaveRecipeEdits()
         {
             selectViewMainRecipeCardModel.SaveEditsToARecipe();
             DataBaseAccessorsForRecipeManager.UpdateRecipeFromDatabase(selectViewMainRecipeCardModel, UserViewModel.Instance.UsersIDInDB);
+            if (MainNavTreeViewModel.Instance.CheckIfRecipeAlreadyPresent(selectViewMainRecipeCardModel.Title, selectViewMainRecipeCardModel.RecipeTypeInt) == false)
+            {
+                MainNavTreeViewModel.Instance.AddRecipeToTreeView(selectViewMainRecipeCardModel);
+            }
             CanSelectSave = false;
         }
 
@@ -410,7 +414,8 @@ namespace RecipeBuddy.ViewModels
         {
             RecipeRecordModel recipeRecordModel = new RecipeRecordModel(selectViewMainRecipeCardModel.Title + " Copy", selectViewMainRecipeCardModel);
             MainNavTreeViewModel.Instance.AddRecipeModelsToTreeView(recipeRecordModel, true);
-            selectViewMainRecipeCardModel.SaveEditsToARecipeModel();
+            selectViewMainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(recipeRecordModel);
+            TitleEditString = recipeRecordModel.Title;
             CanSelectSave = true;
         }
 
@@ -462,7 +467,7 @@ namespace RecipeBuddy.ViewModels
                 TitleEditHeight = "0";
                 MainNavTreeViewModel.Instance.ChangedTreeItemTitle(selectViewMainRecipeCardModel.Title, TitleEditString, selectViewMainRecipeCardModel.RecipeType);
                 selectViewMainRecipeCardModel.Title = TitleEditString;
-                selectViewMainRecipeCardModel.SaveEditsToARecipeModel();
+                selectViewMainRecipeCardModel.SaveEditsToARecipeModel(UserViewModel.Instance.UsersIDInDB);
             }
 
             if (string.Compare(parameters[1].ToString().ToLower().Trim(), "type") == 0)
@@ -482,7 +487,7 @@ namespace RecipeBuddy.ViewModels
             {
                 TypeEditHeight = "0";
                 selectViewMainRecipeCardModel.Author = AuthorEditString;
-                selectViewMainRecipeCardModel.SaveEditsToARecipeModel();
+                selectViewMainRecipeCardModel.SaveEditsToARecipeModel(UserViewModel.Instance.UsersIDInDB);
                 MainNavTreeViewModel.Instance.SaveUpdatesToRecipe(selectViewMainRecipeCardModel);
             }
 

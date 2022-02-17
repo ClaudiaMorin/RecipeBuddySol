@@ -61,7 +61,7 @@ namespace RecipeBuddy.ViewModels
         {
             if ((recipeModelTV.TypeAsInt != (int)Type_Of_Recipe.Header))
             {
-                MainNavTreeViewModel.Instance.AddRecipeToSelectList(this);
+                MainNavTreeViewModel.Instance.AddRecipeToSelect(this);
                 NavigationService.Navigate((typeof(SelectedView)));
             }
         }

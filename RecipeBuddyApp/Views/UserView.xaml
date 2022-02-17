@@ -94,7 +94,7 @@
                         <Button x:Name="btnCreateAccount" BorderThickness="2" HorizontalAlignment="Center" BorderBrush="Gray" Width="120" Height="35" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Create User" Command="{Binding CmdCreateUserbtn}"/>
                     </StackPanel>
                 </Grid>
-                
+
                 <TextBlock Text="About" FontSize="20" TextAlignment="Center" Margin=" 0, 0, 0, 20"/>
                 <TextBlock Margin="6" Text="RecipeBuddy a private, digital repository of recipes that have been selected, altered, or created and then saved to a database on the users computer.  It is the sole creation of Claudia Morin and is distributed free of charge, all rights reserved." TextWrapping="Wrap" />
                 <StackPanel Orientation="Horizontal">

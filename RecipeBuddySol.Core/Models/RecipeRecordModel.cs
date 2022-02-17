@@ -39,9 +39,14 @@ namespace RecipeBuddy.Core.Models
             ListOfDirectionStrings = new List<string>(reSource.listOfDirectionStringsForDisplay);
         }
 
+        /// <summary>
+        /// Used when copying another recipe which is why we assign the RecipeDBID = -1
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="reSource"></param>
         public RecipeRecordModel(string title, RecipeDisplayModel reSource)
         {
-            RecipeDBID = reSource.RecipeDBID;
+            RecipeDBID = -1;
             Description = String.Copy(reSource.Description);
             Title = title;
             Author = String.Copy(reSource.Author);

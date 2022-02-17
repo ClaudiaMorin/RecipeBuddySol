@@ -369,9 +369,9 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RecipeBuddySol.Core\RecipeBuddy.Core.csproj">
+    <ProjectReference Include="..\RecipeBuddySol.Core\RecipeBuddyCore.csproj">
       <Project>{f357f96d-c2ac-4b75-9b14-f15fc3b0e240}</Project>
-      <Name>RecipeBuddy.Core</Name>
+      <Name>RecipeBuddyCore</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

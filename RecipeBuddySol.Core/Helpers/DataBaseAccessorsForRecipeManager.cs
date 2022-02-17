@@ -220,6 +220,10 @@ namespace RecipeBuddy.Core.Helpers
                 string sqlStatment = sqlString1 + " WHERE RecipeID = " + recipeRecordModel.RecipeDBID;
                 SqliteDataAccess.UpdateData(sqlStatment, parameters);
             }
+            else
+            {
+                SaveRecipeToDatabase(recipeCard, UserIDInDB);
+            }
         }
 
         /// <summary>
