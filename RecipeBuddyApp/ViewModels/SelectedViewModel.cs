@@ -160,12 +160,21 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void SaveRecipeEdits()
         {
+
             selectViewMainRecipeCardModel.SaveEditsToARecipe();
-            DataBaseAccessorsForRecipeManager.UpdateRecipeFromDatabase(selectViewMainRecipeCardModel, UserViewModel.Instance.UsersIDInDB);
+            
             if (MainNavTreeViewModel.Instance.CheckIfRecipeAlreadyPresent(selectViewMainRecipeCardModel.Title, selectViewMainRecipeCardModel.RecipeTypeInt) == false)
             {
+                DataBaseAccessorsForRecipeManager.UpdateAddRecipeFromDatabase(selectViewMainRecipeCardModel, UserViewModel.Instance.UsersIDInDB);
                 MainNavTreeViewModel.Instance.AddRecipeToTreeView(selectViewMainRecipeCardModel);
             }
+            else
+            {
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a unique title within this catagory to save a recipe", "Please rename the recipe you are saving!");
+                dialog.ShowAsync();
+            }
+
+
             CanSelectSave = false;
         }
 
@@ -413,10 +422,12 @@ namespace RecipeBuddy.ViewModels
         private void Copy()
         {
             RecipeRecordModel recipeRecordModel = new RecipeRecordModel(selectViewMainRecipeCardModel.Title + " Copy", selectViewMainRecipeCardModel);
-            MainNavTreeViewModel.Instance.AddRecipeModelsToTreeView(recipeRecordModel, true);
+
+            //MainNavTreeViewModel.Instance.AddRecipeModelsToTreeView(recipeRecordModel, true);
             selectViewMainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(recipeRecordModel);
             TitleEditString = recipeRecordModel.Title;
             CanSelectSave = true;
+            CmdSave.RaiseCanExecuteChanged();
         }
 
         /// <summary>
@@ -428,6 +439,7 @@ namespace RecipeBuddy.ViewModels
             int results;
             bool success;
             string[] parameters = sender.ToString().Split(',');
+            CanSelectSave = false;
 
             if (string.Compare(parameters[1].ToString().ToLower().Trim(), "ingredient") == 0)
             {
@@ -437,9 +449,14 @@ namespace RecipeBuddy.ViewModels
                 { return; }
 
                 IngredHeightList[results - 1].Invoke("0");
-                selectViewMainRecipeCardModel.listOfIngredientSetters[results - 1].Invoke(listOfIngredientEditStringsGetters[results - 1].Invoke());
-                selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[results - 1] = listOfIngredientEditStringsGetters[results - 1].Invoke();
-                listOfIngredientQuantitySetters[results - 1].Invoke(CreateQuantityString(selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[results - 1]));
+
+                if (string.Compare(listOfIngredientEditStringsGetters[results - 1].Invoke().ToLower(), selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[results - 1].ToLower()) != 0)
+                {
+                    selectViewMainRecipeCardModel.listOfIngredientSetters[results - 1].Invoke(listOfIngredientEditStringsGetters[results - 1].Invoke());
+                    selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[results - 1] = listOfIngredientEditStringsGetters[results - 1].Invoke();
+                    listOfIngredientQuantitySetters[results - 1].Invoke(CreateQuantityString(selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[results - 1]));
+                    CanSelectSave = true;
+                }
             }
 
             if (string.Compare(parameters[1].ToString().ToLower().Trim(), "direction") == 0)
@@ -450,11 +467,16 @@ namespace RecipeBuddy.ViewModels
                 { return; }
 
                 DirectHeightList[results - 1].Invoke("0");
-                string st1 = selectViewMainRecipeCardModel.listOfDirectionGetters[results - 1].Invoke();
-                selectViewMainRecipeCardModel.listOfDirectionSetters[results - 1].Invoke(st1);
-                string st2 = listOfDirectionEditStringsGetters[results - 1].Invoke();
-                selectViewMainRecipeCardModel.listOfDirectionSetters[results - 1].Invoke(st2);
-                selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[results - 1] = listOfDirectionEditStringsGetters[results - 1].Invoke();
+
+                if (string.Compare(listOfDirectionEditStringsGetters[results - 1].Invoke().ToLower(), selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[results - 1].ToLower()) != 0)
+                {
+                    string st1 = selectViewMainRecipeCardModel.listOfDirectionGetters[results - 1].Invoke();
+                    selectViewMainRecipeCardModel.listOfDirectionSetters[results - 1].Invoke(st1);
+                    string st2 = listOfDirectionEditStringsGetters[results - 1].Invoke();
+                    selectViewMainRecipeCardModel.listOfDirectionSetters[results - 1].Invoke(st2);
+                    selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[results - 1] = listOfDirectionEditStringsGetters[results - 1].Invoke();
+                    CanSelectSave = true;
+                }
             }
 
             if (string.Compare(parameters[1].ToString().ToLower().Trim(), "title") == 0)
@@ -464,10 +486,23 @@ namespace RecipeBuddy.ViewModels
                 if (success == false)
                 { return; }
 
-                TitleEditHeight = "0";
-                MainNavTreeViewModel.Instance.ChangedTreeItemTitle(selectViewMainRecipeCardModel.Title, TitleEditString, selectViewMainRecipeCardModel.RecipeType);
-                selectViewMainRecipeCardModel.Title = TitleEditString;
-                selectViewMainRecipeCardModel.SaveEditsToARecipeModel(UserViewModel.Instance.UsersIDInDB);
+                
+                //if there is a change we do something, otherwise we don't
+                if (string.Compare(selectViewMainRecipeCardModel.Title.ToLower(), TitleEditString.ToLower()) != 0)
+                {
+                    //if the title is uniqe we are good.
+                    if (MainNavTreeViewModel.Instance.CheckIfRecipeAlreadyPresent(TitleEditString.ToLower(), selectViewMainRecipeCardModel.RecipeTypeInt) == false)
+                    {
+                        selectViewMainRecipeCardModel.Title = TitleEditString;
+                        TitleEditHeight = "0";
+                        CanSelectSave = true;
+                    }
+                    else
+                    {
+                        Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a unique title within this catagory to save a recipe", "Please rename the recipe you are saving!");
+                        dialog.ShowAsync();
+                    }
+                }
             }
 
             if (string.Compare(parameters[1].ToString().ToLower().Trim(), "type") == 0)
@@ -478,20 +513,26 @@ namespace RecipeBuddy.ViewModels
                 { return; }
 
                 TypeEditHeight = "0";
-                Type_Of_Recipe deleteFrom = selectViewMainRecipeCardModel.RecipeType;
-                selectViewMainRecipeCardModel.RecipeType = (Type_Of_Recipe)CurrentType;
-                MainNavTreeViewModel.Instance.MoveSelectedTreeViewItem(selectViewMainRecipeCardModel, (Type_Of_Recipe)deleteFrom);
+                if (selectViewMainRecipeCardModel.RecipeType != (Type_Of_Recipe)CurrentType)
+                {
+                    Type_Of_Recipe deleteFrom = selectViewMainRecipeCardModel.RecipeType;
+                    selectViewMainRecipeCardModel.RecipeType = (Type_Of_Recipe)CurrentType;
+                    MainNavTreeViewModel.Instance.MoveSelectedTreeViewItem(selectViewMainRecipeCardModel, (Type_Of_Recipe)deleteFrom);
+                }
             }
 
             if (string.Compare(parameters[1].ToString().ToLower().Trim(), "author") == 0)
             {
                 TypeEditHeight = "0";
-                selectViewMainRecipeCardModel.Author = AuthorEditString;
-                selectViewMainRecipeCardModel.SaveEditsToARecipeModel(UserViewModel.Instance.UsersIDInDB);
-                MainNavTreeViewModel.Instance.SaveUpdatesToRecipe(selectViewMainRecipeCardModel);
-            }
 
-            CanSelectSave = true;
+                if (string.Compare(selectViewMainRecipeCardModel.Author.ToLower(), AuthorEditString.ToLower()) != 0)
+                {
+                    selectViewMainRecipeCardModel.Author = AuthorEditString;
+                    //selectViewMainRecipeCardModel.SaveEditsToARecipeModel(UserViewModel.Instance.UsersIDInDB);
+                    //MainNavTreeViewModel.Instance.SaveUpdatesToRecipe(selectViewMainRecipeCardModel);
+                    CanSelectSave = true;
+                }
+            }
         }
 
 
@@ -683,17 +724,6 @@ namespace RecipeBuddy.ViewModels
             }
             get
             {
-                //if (UserViewModel.Instance.CanSelectLogout == true && selectViewMainRecipeCardModel.Title.Length > 0 &&
-                //     string.Compare(selectViewMainRecipeCardModel.Title.ToLower(), "search for your next recipe find!") != 0)
-                //{
-                //    canSelectSave = true;
-                //}
-                //else
-                //{
-                //    canSelectSave = false;
-                //}
-
-                //CmdSave.RaiseCanExecuteChanged();
                 return canSelectSave;
             }
         }

@@ -40,7 +40,7 @@
                     </i:Interaction.Behaviors>
                 </ComboBox>
                 <Border Width="10"/>
-                <Button x:Name="UpdateTypeBtn" Style="{StaticResource BtnStyleUpdateEditRecipeItem}" Command="{Binding CmdUpdate}" CommandParameter="0, type"/>
+                <Button x:Name="UpdateTypeBtn" Style="{StaticResource BtnStyleUpdateEditRecipeItem}" Command="{Binding CmdUpdate}" Content="Switch" CommandParameter="0, type"/>
                 <Button x:Name="CancelTypeBtn" Style="{StaticResource BtnStyleCancelEditRecipeItem}"  Command="{Binding CmdCancel}" CommandParameter="0, type"/>
             </StackPanel>
 

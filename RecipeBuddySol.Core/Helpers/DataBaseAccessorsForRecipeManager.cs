@@ -168,11 +168,9 @@ namespace RecipeBuddy.Core.Helpers
         /// <param name="RecipeIDInDB">The ID of the recipe to delete</param>
         public static void DeleteRecipeFromDatabase(int RecipeIDInDB)
         {
-
             //Recipe can't be found so we can't delete, ignore.
-            if (RecipeIDInDB == -1)
+            if (RecipeIDInDB != -1)
             {
-
                 Dictionary<string, object> dictionaryforQuery2 = new Dictionary<string, object>
                 {
                     {"@RecipeID", RecipeIDInDB }
@@ -184,10 +182,10 @@ namespace RecipeBuddy.Core.Helpers
         }
 
         /// <summary>
-        /// used to update a recipe in the database
+        /// used to update a recipe in the database or add the recipe if it doesn't exist
         /// </summary>
         /// <param name="recipeCard">The recipe we are updating</param>
-        public static void UpdateRecipeFromDatabase(RecipeDisplayModel recipeCard, int UserIDInDB)
+        public static void UpdateAddRecipeFromDatabase(RecipeDisplayModel recipeCard, int UserIDInDB)
         {
             //We need a valid RecipeID that exists in the DB
             if (recipeCard.RecipeDBID != -1)

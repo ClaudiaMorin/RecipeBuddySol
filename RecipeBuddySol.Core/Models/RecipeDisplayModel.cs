@@ -68,7 +68,7 @@ namespace RecipeBuddy.Core.Models
             }
             else
             {
-                DataBaseAccessorsForRecipeManager.UpdateRecipeFromDatabase(this, UsersIDInDB);
+                DataBaseAccessorsForRecipeManager.UpdateAddRecipeFromDatabase(this, UsersIDInDB);
             }
         }
 

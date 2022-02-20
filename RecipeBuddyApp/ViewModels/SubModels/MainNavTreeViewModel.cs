@@ -267,7 +267,7 @@ namespace RecipeBuddy.ViewModels
             }
             else
             {
-                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a unique title within this catagory to move a recipe", "Please rename the recipe you are moving!");
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a unique title within a catagory to save a recipe", "Please rename the recipe you are saving!");
                 dialog.ShowAsync();
                 return;
             }
@@ -453,7 +453,7 @@ namespace RecipeBuddy.ViewModels
         {
             if (AddRecipeToTreeView(recipe, true) == 0)
             {
-                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a unique title within this catagory to move a recipe",  "Please rename the recipe you are moving!");
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a unique title within this catagory to save a recipe",  "Please rename the recipe you are saving!");
                 dialog.ShowAsync();
                 return;
             }
@@ -469,6 +469,7 @@ namespace RecipeBuddy.ViewModels
                 }
             }
 
+            DataBaseAccessorsForRecipeManager.UpdateAddRecipeFromDatabase(recipe, UserViewModel.Instance.UsersIDInDB);
         }
 
         /// <summary>

@@ -65,7 +65,6 @@
                     <Border BorderThickness="2" BorderBrush="DarkGray"/>
                 </StackPanel>
                 <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" HorizontalScrollMode="Enabled" >
-                   
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="800"/>
