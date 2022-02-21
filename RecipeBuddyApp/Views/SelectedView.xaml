@@ -49,7 +49,7 @@
                             </StackPanel>
                             <StackPanel Grid.Row="1"  Grid.Column="0" Orientation="Horizontal">
                                 <Border Width="20"/>
-                                <TextBox x:Name="TextBoxTitle" Style="{Binding Path=TitleEditString, Converter={StaticResource StyleConverterTextBoxRedFont}, ConverterParameter = 0}" Text="{Binding Path=TitleEditString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="0" />
+                                <TextBox x:Name="TextBoxTitle" Style="{Binding Path=TitleEditString, Converter={StaticResource StyleConverterTextBoxRedFont}, ConverterParameter = 0}" Text="{Binding Path=TitleEditString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="0" MaxLength="{Binding Path=TitleMaxLength}" />
                                 <Border Width="20"/>
                                 <Button x:Name="UpdateBtnTitle" Style="{StaticResource BtnStyleUpdateEditRecipeItem}" Content="Update" Command="{Binding CmdUpdate}" CommandParameter="1, Title"/>
                                 <Button x:Name="CancelBtnTitle" Style="{StaticResource BtnStyleCancelEditRecipeItem}" Command="{Binding CmdCancel}" CommandParameter="1, Title"/>

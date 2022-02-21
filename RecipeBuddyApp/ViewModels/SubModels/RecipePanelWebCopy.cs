@@ -42,6 +42,9 @@ namespace RecipeBuddy.ViewModels
             {
                "---", "Cup(s)","Tablespoon(s)","Teaspoon(s)"
             };
+            ingredQuantMaxLength = "5";
+
+
             ClearValuesForWebCopyQuantityMeasurementType();
             CmdSaveButton = new RelayCommand(action = () => SaveEntry());
             CmdCancelButton = new RelayCommand(action = () => CancelEntry());
@@ -425,6 +428,14 @@ namespace RecipeBuddy.ViewModels
         #endregion
 
         #region Ingredient Qantities and Measurement types backing the UI combobox and qantity fields attached to creating an recipe from scratch
+
+        private string ingredQuantMaxLength;
+        public string IngredQuantMaxLength
+        {
+            get { return ingredQuantMaxLength; }
+            set { SetProperty(ref ingredQuantMaxLength, value); }
+        }
+
         private string ingred1Quant;
         public string Ingred1Quant
         {

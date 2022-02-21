@@ -37,6 +37,10 @@ namespace RecipeBuddy.Core.Models
             recipeType = Type_Of_Recipe.Unknown;
             recipeTypeInt = (int)recipeType;
             RecipeDBID = -1;
+            authorMaxLength = "30";
+            titleMaxLength = "40";
+            ingredMaxLength = "200";
+            directMaxLength = "2000";
         }
 
         /// <summary>
@@ -1328,6 +1332,34 @@ namespace RecipeBuddy.Core.Models
         {
             get { return website; }
             set { SetProperty(ref website, value); }
+        }
+
+        private string authorMaxLength;
+        public string AuthorMaxLength
+        {
+            get { return authorMaxLength; }
+            set { SetProperty(ref authorMaxLength, value); }
+        }
+
+        private string titleMaxLength;
+        public string TitleMaxLength
+        {
+            get { return titleMaxLength; }
+            set { SetProperty(ref titleMaxLength, value); }
+        }
+
+        private string directMaxLength;
+        public string DirectMaxLength
+        {
+            get { return directMaxLength; }
+            set { SetProperty(ref directMaxLength, value); }
+        }
+
+        private string ingredMaxLength;
+        public string IngredMaxLength
+        {
+            get { return ingredMaxLength; }
+            set { SetProperty(ref ingredMaxLength, value); }
         }
 
         #endregion

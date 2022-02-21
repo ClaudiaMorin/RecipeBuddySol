@@ -55,6 +55,11 @@ namespace RecipeBuddy.ViewModels
             typeEditHeight = "0";
             authorEditString = "";
             titleEditString = "";
+            authorMaxLength = "30";
+            titleMaxLength = "40";
+            ingredMaxLength = "200";
+            directMaxLength = "2000";
+
             listOfIngredientQuantitySetters = new List<Action<string>>();
 
             LoadListSettersWithActionDelegatesForIngredientQuantities();
@@ -70,7 +75,6 @@ namespace RecipeBuddy.ViewModels
             CmdUpdate = new RelayCommand<string>(actionWithObject = s => Update(s), canCallActionFunc => CanSelectAlwaysTrue);
             CmdCancel = new RelayCommand<string>(actionWithObject = s => Cancel(s), canCallActionFunc => CanSelectAlwaysTrue);
             CmdLineEdit = new RelayCommand<string>(actionWithObject = s => LineEdit(s), canCallActionFunc => CanSelectAlwaysTrue);
-
         }
 
         #region the private strings for ingredients edits- 50 - and directions edit -30- and the List<string> of IngredientValues and DirectionValues
@@ -160,7 +164,6 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void SaveRecipeEdits()
         {
-
             selectViewMainRecipeCardModel.SaveEditsToARecipe();
             
             if (MainNavTreeViewModel.Instance.CheckIfRecipeAlreadyPresent(selectViewMainRecipeCardModel.Title, selectViewMainRecipeCardModel.RecipeTypeInt) == false)
@@ -887,6 +890,34 @@ namespace RecipeBuddy.ViewModels
         {
             get { return titleEditString; }
             set { SetProperty(ref titleEditString, value); }
+        }
+
+        private string authorMaxLength;
+        public string AuthorMaxLength
+        {
+            get { return authorMaxLength; }
+            set { SetProperty(ref authorMaxLength, value); }
+        }
+
+        private string titleMaxLength;
+        public string TitleMaxLength
+        {
+            get { return titleMaxLength; }
+            set { SetProperty(ref titleMaxLength, value); }
+        }
+
+        private string directMaxLength;
+        public string DirectMaxLength
+        {
+            get { return directMaxLength; }
+            set { SetProperty(ref directMaxLength, value); }
+        }
+
+        private string ingredMaxLength;
+        public string IngredMaxLength
+        {
+            get { return ingredMaxLength; }
+            set { SetProperty(ref ingredMaxLength, value); }
         }
 
         #endregion
