@@ -1,60 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <AppInstaller
 	Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy.appinstaller"
-	Version="1.0.4.0" xmlns="http://schemas.microsoft.com/appx/appinstaller/2017/2">
+	Version="1.0.8.0" xmlns="http://schemas.microsoft.com/appx/appinstaller/2017/2">
 	<MainBundle
 		Name="63168489-A50A-493F-81B8-BDDD0356EA8D"
-		Version="1.0.4.0"
-		Publisher="CN=BlueC"
-		Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy_1.0.4.0_Test/RecipeBuddy_1.0.4.0_x86_x64.msixbundle" />
+		Version="1.0.8.0"
+		Publisher="CN=Claudia Morin, O=Claudia Morin, S=Washington, C=US"
+		Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy_1.0.8.0_Test/RecipeBuddy_1.0.8.0_x86_x64.msixbundle" />
 	<Dependencies>
 		<Package
 			Name="Microsoft.UI.Xaml.2.7"
 			Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
 			ProcessorArchitecture="x86"
-			Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy_1.0.4.0_Test/Dependencies/x86/Microsoft.UI.Xaml.2.7.appx"
+			Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy_1.0.8.0_Test/Dependencies/x86/Microsoft.UI.Xaml.2.7.appx"
 			Version="7.2109.13004.0" />
 		<Package
 			Name="Microsoft.UI.Xaml.2.7"
 			Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
 			ProcessorArchitecture="x64"
-			Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy_1.0.4.0_Test/Dependencies/x64/Microsoft.UI.Xaml.2.7.appx"
+			Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy_1.0.8.0_Test/Dependencies/x64/Microsoft.UI.Xaml.2.7.appx"
 			Version="7.2109.13004.0" />
 		<Package
 			Name="Microsoft.NET.Native.Framework.2.2"
 			Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
 			ProcessorArchitecture="x86"
-			Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy_1.0.4.0_Test/Dependencies/x86/Microsoft.NET.Native.Framework.2.2.appx"
+			Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy_1.0.8.0_Test/Dependencies/x86/Microsoft.NET.Native.Framework.2.2.appx"
 			Version="2.2.29512.0" />
 		<Package
 			Name="Microsoft.NET.Native.Framework.2.2"
 			Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
 			ProcessorArchitecture="x64"
-			Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy_1.0.4.0_Test/Dependencies/x64/Microsoft.NET.Native.Framework.2.2.appx"
+			Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy_1.0.8.0_Test/Dependencies/x64/Microsoft.NET.Native.Framework.2.2.appx"
 			Version="2.2.29512.0" />
 		<Package
 			Name="Microsoft.NET.Native.Runtime.2.2"
 			Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
 			ProcessorArchitecture="x86"
-			Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy_1.0.4.0_Test/Dependencies/x86/Microsoft.NET.Native.Runtime.2.2.appx"
+			Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy_1.0.8.0_Test/Dependencies/x86/Microsoft.NET.Native.Runtime.2.2.appx"
 			Version="2.2.28604.0" />
 		<Package
 			Name="Microsoft.NET.Native.Runtime.2.2"
 			Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
 			ProcessorArchitecture="x64"
-			Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy_1.0.4.0_Test/Dependencies/x64/Microsoft.NET.Native.Runtime.2.2.appx"
+			Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy_1.0.8.0_Test/Dependencies/x64/Microsoft.NET.Native.Runtime.2.2.appx"
 			Version="2.2.28604.0" />
 		<Package
 			Name="Microsoft.VCLibs.140.00"
 			Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
 			ProcessorArchitecture="x64"
-			Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy_1.0.4.0_Test/Dependencies/x64/Microsoft.VCLibs.x64.14.00.appx"
+			Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy_1.0.8.0_Test/Dependencies/x64/Microsoft.VCLibs.x64.14.00.appx"
 			Version="14.0.30035.0" />
 		<Package
 			Name="Microsoft.VCLibs.140.00"
 			Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
 			ProcessorArchitecture="x86"
-			Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy_1.0.4.0_Test/Dependencies/x86/Microsoft.VCLibs.x86.14.00.appx"
+			Uri="file:///C:/Users/BlueC/source/repos/GitHub/UWPRecipeBuddyCode/RecipeBuddySol/RecipeBuddy_1.0.8.0_Test/Dependencies/x86/Microsoft.VCLibs.x86.14.00.appx"
 			Version="14.0.30035.0" />
 	</Dependencies>
 	<UpdateSettings>
