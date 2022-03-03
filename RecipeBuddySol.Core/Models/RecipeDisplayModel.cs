@@ -26,8 +26,8 @@ namespace RecipeBuddy.Core.Models
         {
             LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
             LoadFuncListGettersWithFuncDelegatesForIngredientandDirectionProperties();
-            listOfIngredientStringsForDisplay = new List<string>();
-            listOfDirectionStringsForDisplay = new List<string>();
+            listOfIngredientStringsForDisplay = new List<string>(50);
+            listOfDirectionStringsForDisplay = new List<string>(30);
 
             Title = "Search for your next recipe find!";
             Description = "";
@@ -1150,6 +1150,27 @@ namespace RecipeBuddy.Core.Models
             listOfDirectionStringsForDisplay = reSource.ListOfDirectionStrings;
             Link = null;
             RecipeDBID = reSource.RecipeDBID;
+            LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
+            SetIngredientAndDirectionProperties();
+        }
+
+        /// <summary>
+        /// Used to update the display from a record when the user intends to make a copy of the new record
+        /// and it hasn't yet been saved to the DB, so the RecipeDBID = -1
+        /// </summary>
+        /// <param name="reSource"></param>
+        public void UpdateRecipeDisplayFromRecipeRecordForCopy(RecipeRecordModel reSource)
+        {
+            if (reSource == null)
+            { return; }
+            Title = reSource.Title;
+            Description = reSource.Description;
+            Author = reSource.Author;
+            RecipeType = (Type_Of_Recipe)reSource.TypeAsInt;
+            listOfIngredientStringsForDisplay = reSource.ListOfIngredientStrings;
+            listOfDirectionStringsForDisplay = reSource.ListOfDirectionStrings;
+            Link = null;
+            RecipeDBID = -1;
             LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
             SetIngredientAndDirectionProperties();
         }

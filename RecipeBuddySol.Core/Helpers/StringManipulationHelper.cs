@@ -447,5 +447,15 @@ namespace RecipeBuddy.Core.Helpers
 
         #endregion
 
+        //public static string ConvertDictionaryToStringForSQLStatments(Dictionary<string, object> parameters)
+        //{
+        //    string retStr = "";
+        //    string foo = retStr;
+
+        //    string foobar = "bart";
+
+        //    return retStr;
+        //}
+
     }
 }

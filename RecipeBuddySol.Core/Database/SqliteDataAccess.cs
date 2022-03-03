@@ -1,5 +1,6 @@
-﻿using Dapper;
-using System.Data.SQLite;
+﻿
+using Microsoft.Data.Sqlite;
+using RecipeBuddy.Core.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,57 +12,112 @@ namespace RecipeBuddy.Core.Database
 {
     public static class SqliteDataAccess
     {
-        // LoadDate<PersonModel>("Select * from Person", null) = List<PersonModel>
-        //something that should trigger a rebuild
-        public static List<T> LoadData<T>(string sqlStatement, Dictionary<string, object> parameters, string connectionName = "DataSource")
+        public static List<List<object>> LoadData(string sqlStatement, int paramsPerRecord, Dictionary<string, object> parameters = null, string connectionName = "DataSource")
         {
-            //for Dapper
-            DynamicParameters p = parameters.ToDynamicParameters();
             string myconnectionStr = DataAccessHelpers.LoadConnectionString(connectionName);
-            IDbConnection cnn;
+
+            List<List<object>> rows = new List<List<object>>();
 
             try
             {
-                SQLiteConnection myconnection = new SQLiteConnection(myconnectionStr);
-                cnn = (IDbConnection)myconnection;
+                SqliteConnection myconnection = new SqliteConnection(myconnectionStr);
+                myconnection.Open();
+                SqliteCommand sqliteCommand = myconnection.CreateCommand();
+                sqliteCommand.CommandText = sqlStatement;
 
-                using (cnn)
+                if (parameters != null)
                 {
-                    var rows = cnn.Query<T>(sqlStatement, p);
-                    return rows.ToList();
+                    foreach (var key in parameters.Keys)
+                    {
+                        sqliteCommand.Parameters.AddWithValue(key, parameters[key]);
+                    }
                 }
+
+                using (var reader = sqliteCommand.ExecuteReader())
+                {
+                    List<object> currRow;
+                    object result = new object();
+                    while (reader.Read())
+                    {
+                        currRow = new List<object>();
+                        for (int count = 0; count < paramsPerRecord; count++)
+                        {
+                            result = reader.GetValue(count);
+                            currRow.Add(result);
+                        }
+                        
+                        rows.Add(currRow);
+                    }   
+                }
+
+                myconnection.Close();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
 
-            return new List<T>();
+            return rows;
         }
 
+        public static Byte[] GetPasswordFromDB(string userName, string connectionName = "DataSource")
+        {
+            string myconnectionStr = DataAccessHelpers.LoadConnectionString(connectionName);
+            Byte[] result = null;
+            try
+            {
+                SqliteConnection myconnection = new SqliteConnection(myconnectionStr);
+                myconnection.Open();
+                SqliteCommand sqliteCommand = myconnection.CreateCommand();
+                sqliteCommand.CommandText = "select Password from Users Where  Name='" + userName + "'";
+
+                using (var reader = sqliteCommand.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        result = (Byte[]) reader.GetValue(0);
+                    }
+                }
+
+                myconnection.Close();  
+            }
+
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+            return result;
+
+        }
 
         public static void UpdateData(string sqlStatement, Dictionary<string, object> parameters, string connectionName = "DataSource")
         {
-            //for Dapper
-            DynamicParameters p = parameters.ToDynamicParameters();
+            string myconnectionStr = DataAccessHelpers.LoadConnectionString(connectionName);
 
-            using (IDbConnection cnn = new SQLiteConnection(DataAccessHelpers.LoadConnectionString(connectionName)))
+            try 
             {
-                cnn.Execute(sqlStatement, p);
+                SqliteConnection myconnection = new SqliteConnection(myconnectionStr);
+                myconnection.Open();
+                SqliteCommand sqliteCommand = myconnection.CreateCommand();
+                sqliteCommand.CommandText = sqlStatement;
+
+                //var rows = cnn.Query<T>(sqlStatement, p);
+                if (parameters != null)
+                {
+                    foreach (var key in parameters.Keys)
+                    {
+                        sqliteCommand.Parameters.AddWithValue(key, parameters[key]);
+                    }
+                }
+
+                int results = sqliteCommand.ExecuteNonQuery();
+                myconnection.Close();
             }
-        }
-
-        public static DynamicParameters ToDynamicParameters(this Dictionary<string, object> p)
-        {
-            //for Dapper
-            DynamicParameters output = new DynamicParameters();
-
-            foreach (var param in p)
+            catch (Exception e)
             {
-                output.Add(param.Key, param.Value);
+                string foo = e.Message;
             }
-
-            return output;
         }
     }
 }

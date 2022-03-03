@@ -61,7 +61,7 @@ namespace RecipeBuddy.ViewModels
                 return;
             }
 
-            if (MainNavTreeViewModel.Instance.CheckIfRecipeAlreadyPresent(recipeCardModel.Title, (int)recipeCardModel.RecipeType) == true)
+            if (MainNavTreeViewModel.Instance.CheckIfRecipeAlreadyPresentAndUpdate(recipeCardModel.Title, (int)recipeCardModel.RecipeType, -1) == -1)
             {
                 Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a unique title to save a recipe in the catagory: " + recipeCardModel.RecipeType, "You can't save this recipe, yet.");
                 dialog.ShowAsync();
@@ -102,6 +102,7 @@ namespace RecipeBuddy.ViewModels
         {
             //This will only do something if their is a value in the quantity field, if not it will simply return here.
             CreateIngredStringsAndSaveToIngredProperties();
+          
             recipeCardModel.SaveEditsToARecipeModel(UserViewModel.Instance.UsersIDInDB);
             MainNavTreeViewModel.Instance.AddRecipeModelsToTreeView(new RecipeRecordModel(recipeCardModel), true);
             ClearRecipeEntry();

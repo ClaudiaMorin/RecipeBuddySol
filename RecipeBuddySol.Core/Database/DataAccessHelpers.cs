@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.SQLite;
+using Microsoft.Data.Sqlite;
 
 namespace RecipeBuddy.Core.Database
 {
@@ -12,8 +12,7 @@ namespace RecipeBuddy.Core.Database
             var path = Environment.GetFolderPath(folder);
             string DbPath = $"{path}{System.IO.Path.DirectorySeparatorChar}RecipeManagerDB.db";
 
-            SQLiteConnectionStringBuilder sQLiteConnectionStringBuilder = new SQLiteConnectionStringBuilder();
-            sQLiteConnectionStringBuilder.Version = 3;
+            SqliteConnectionStringBuilder sQLiteConnectionStringBuilder = new SqliteConnectionStringBuilder();
             sQLiteConnectionStringBuilder.DataSource = DbPath;
             return sQLiteConnectionStringBuilder.ConnectionString;
         }

@@ -144,6 +144,7 @@ namespace RecipeBuddy.ViewModels
         public void SaveRecipe()
         {
             selectViewMainRecipeCardModel.SaveEditsToARecipe();
+            
             int result = MainWindowViewModel.Instance.mainTreeViewNav.AddRecipeToTreeView(selectViewMainRecipeCardModel, true);
 
             if (result == 1)
@@ -165,18 +166,35 @@ namespace RecipeBuddy.ViewModels
         public void SaveRecipeEdits()
         {
             selectViewMainRecipeCardModel.SaveEditsToARecipe();
-            
-            if (MainNavTreeViewModel.Instance.CheckIfRecipeAlreadyPresent(selectViewMainRecipeCardModel.Title, selectViewMainRecipeCardModel.RecipeTypeInt) == false)
-            {
-                DataBaseAccessorsForRecipeManager.UpdateAddRecipeFromDatabase(selectViewMainRecipeCardModel, UserViewModel.Instance.UsersIDInDB);
-                MainNavTreeViewModel.Instance.AddRecipeToTreeView(selectViewMainRecipeCardModel);
-            }
-            else
+            int resultOfQuery = MainNavTreeViewModel.Instance.CheckIfRecipeAlreadyPresentAndUpdate(selectViewMainRecipeCardModel.Title, selectViewMainRecipeCardModel.RecipeTypeInt, selectViewMainRecipeCardModel.RecipeDBID);
+
+            //Duplicate name in the same catagory we are trying to save a recipe to.
+            if (resultOfQuery == -1)
             {
                 Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a unique title within this catagory to save a recipe", "Please rename the recipe you are saving!");
                 dialog.ShowAsync();
             }
 
+            //Recipe Exist we just need to update it
+            if (resultOfQuery == 0)
+            {
+                DataBaseAccessorsForRecipeManager.UpdateAddRecipeFromDatabase(selectViewMainRecipeCardModel, UserViewModel.Instance.UsersIDInDB);
+            }
+
+            //Special Case updating the title needs to be fixed in the tree view as well.
+            if (resultOfQuery == 2)
+            {
+                string sTitle = DataBaseAccessorsForRecipeManager.GetTitleOfRecipeFromDBByRecipeID(selectViewMainRecipeCardModel.RecipeDBID);
+                DataBaseAccessorsForRecipeManager.UpdateAddRecipeFromDatabase(selectViewMainRecipeCardModel, UserViewModel.Instance.UsersIDInDB);
+                MainNavTreeViewModel.Instance.ChangedTreeItemTitle(sTitle, selectViewMainRecipeCardModel.Title, selectViewMainRecipeCardModel.RecipeType);
+            }
+
+            //Recipe doesn't exist in DB and there is no dup title in it's catagory, save away!
+            if (resultOfQuery == 1)
+            {
+                DataBaseAccessorsForRecipeManager.UpdateAddRecipeFromDatabase(selectViewMainRecipeCardModel, UserViewModel.Instance.UsersIDInDB);
+                MainNavTreeViewModel.Instance.AddRecipeToTreeView(selectViewMainRecipeCardModel);
+            }
 
             CanSelectSave = false;
         }
@@ -426,8 +444,7 @@ namespace RecipeBuddy.ViewModels
         {
             RecipeRecordModel recipeRecordModel = new RecipeRecordModel(selectViewMainRecipeCardModel.Title + " Copy", selectViewMainRecipeCardModel);
 
-            //MainNavTreeViewModel.Instance.AddRecipeModelsToTreeView(recipeRecordModel, true);
-            selectViewMainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(recipeRecordModel);
+            selectViewMainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecordForCopy(recipeRecordModel);
             TitleEditString = recipeRecordModel.Title;
             CanSelectSave = true;
             CmdSave.RaiseCanExecuteChanged();
@@ -470,8 +487,10 @@ namespace RecipeBuddy.ViewModels
                 { return; }
 
                 DirectHeightList[results - 1].Invoke("0");
+                string s1 = listOfDirectionEditStringsGetters[results - 1].Invoke().ToLower();
+                string s2 = selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[results - 1].ToLower();
 
-                if (string.Compare(listOfDirectionEditStringsGetters[results - 1].Invoke().ToLower(), selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[results - 1].ToLower()) != 0)
+                if (string.Compare(s1, s2) != 0)
                 {
                     string st1 = selectViewMainRecipeCardModel.listOfDirectionGetters[results - 1].Invoke();
                     selectViewMainRecipeCardModel.listOfDirectionSetters[results - 1].Invoke(st1);
@@ -494,7 +513,7 @@ namespace RecipeBuddy.ViewModels
                 if (string.Compare(selectViewMainRecipeCardModel.Title.ToLower(), TitleEditString.ToLower()) != 0)
                 {
                     //if the title is uniqe we are good.
-                    if (MainNavTreeViewModel.Instance.CheckIfRecipeAlreadyPresent(TitleEditString.ToLower(), selectViewMainRecipeCardModel.RecipeTypeInt) == false)
+                    if (MainNavTreeViewModel.Instance.CheckIfRecipeAlreadyPresentAndUpdate(TitleEditString.ToLower(), selectViewMainRecipeCardModel.RecipeTypeInt, selectViewMainRecipeCardModel.RecipeDBID) == 2)
                     {
                         selectViewMainRecipeCardModel.Title = TitleEditString;
                         TitleEditHeight = "0";

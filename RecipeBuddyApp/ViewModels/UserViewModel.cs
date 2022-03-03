@@ -68,7 +68,7 @@ namespace RecipeBuddy.ViewModels
             comboBoxIndexOfUserFromDB = 0;
 
             CmdLogoutBtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => LogOut(), FuncBool = () => CanSelectLogout);
-            CmdLoginBtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => SetUpUser(), FuncBool = () => CanSelectLogin);
+            CmdLoginBtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => LogIn(), FuncBool = () => CanSelectLogin);
             CmdCreateUserbtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => SetUpNewUser(), FuncBool = () => CanSelectCreateUser);
             CmdNewUserLooseFocus = new RelayCommand<RoutedEventArgs>(TypedEventHandler = (a) => ToggleCreateUser(a));
         }
@@ -78,11 +78,11 @@ namespace RecipeBuddy.ViewModels
         /// We take in the users password and then set up the users account and load the tree-view with saved recipes if the
         /// account passwords match.
         /// </summary>
-        public void SetUpUser()
+        public void LogIn()
         {
             string AccountName = ListOfUserAccountsInDB[ComboBoxIndexOfUserFromDB];
 
-            UsersIDInDB = DataBaseAccessorsForRecipeManager.LoadUserFromDatabase(PasswordString, ListOfUserAccountsInDB[ComboBoxIndexOfUserFromDB]);
+            UsersIDInDB = DataBaseAccessorsForRecipeManager.LoadUserFromDatabase(PasswordString, AccountName);
             if (AccountName.Length > 0 && UsersIDInDB != -1)
             {
                 SetUpSearchWebsources(false);
@@ -91,7 +91,7 @@ namespace RecipeBuddy.ViewModels
                 CanSelectLogin = false;
                 PasswordBoxEnabled = "false";
                 //Set Up TreeView
-                List<RecipeRecordModel> recipeRecords = DataBaseAccessorsForRecipeManager.LoadUserDataByID(AccountName, UsersIDInDB);
+                List<RecipeRecordModel> recipeRecords = DataBaseAccessorsForRecipeManager.LoadUserDataByID(UsersIDInDB);
                 MainNavTreeViewModel.Instance.AddRecipeModelsToTreeViewAsPartOfInitialSetup(recipeRecords);
                 NavigationService.Navigate(typeof(SearchView));
             }
@@ -108,7 +108,6 @@ namespace RecipeBuddy.ViewModels
         {
             MainNavTreeViewModel.Instance.ClearTree();
             UsersIDInDB = -1;
-            AccountName = "";
             UserName = "";
             NewAccountName = "";
             
@@ -142,82 +141,58 @@ namespace RecipeBuddy.ViewModels
             PasswordBoxEnabled = "true"; 
         }
 
-
-        public void SetUpNewUser()
-        {
-            SaveUser();
-            DataBaseAccessorsForRecipeManager.LoadUsersFromDatabase(ListOfUserAccountsInDB);
-            ComboBoxIndexOfUserFromDB = ListOfUserAccountsInDB.Count - 1;
-        }
-
         /// <summary>
         /// Saves a new user to the DB
         /// </summary>
         //private void SaveUser(string NewAccountName, string NewEmail, string UserName, SecureString NewPasswordSecureString, SecureString NewConfirmPasswordSecureString)
-        private void SaveUser()
+        private void SetUpNewUser()
         {
+            Windows.UI.Popups.MessageDialog dialog;
             byte[] bytePassword = PasswordHashing.CalculateHash(ConvertingStringToByteArray.ConvertStringToByteArray(NewPasswordString));
             byte[] bytePasswordCheck = PasswordHashing.CalculateHash(ConvertingStringToByteArray.ConvertStringToByteArray(NewConfirmPasswordString));
 
-            int userID = DataBaseAccessorsForRecipeManager.GetUserIDUserFromDatabase(NewAccountName);
-            Windows.UI.Popups.MessageDialog dialog;
-
-            if (userID != -1)
+            //Is that name already taken?  If so the user needs to give us another one!
+            for (int count = 0; count < ListOfUserAccountsInDB.Count; count++)
             {
-                NewAccountName = "";
-                NewPasswordString = "";
-                NewConfirmPasswordString = "";
-                dialog = new Windows.UI.Popups.MessageDialog("That User Name is taken.");
-                dialog.ShowAsync();
-                return;
+                if (string.Compare(ListOfUserAccountsInDB[count].ToLower(), NewAccountName.ToLower()) == 0)
+                {
+                    NewAccountName = "";
+                    NewPasswordString = "";
+                    NewConfirmPasswordString = "";
+                    dialog = new Windows.UI.Popups.MessageDialog("That User Name is taken.");
+                    dialog.ShowAsync();
+                    return ;
+                }
             }
 
-            //Validate the account information that has been entered
-            if (ValidateNewAccount(NewAccountName, bytePassword, bytePasswordCheck) == false)
+            //Validate passwords
+            if (PasswordHashing.SequenceEquals(bytePassword, bytePasswordCheck) == false)
             {
                 NewPasswordString = "";
                 NewConfirmPasswordString = "";
                 dialog = new Windows.UI.Popups.MessageDialog("Passwords don't match");
                 dialog.ShowAsync();
-                return;
+                return ;
             }
 
-            DataBaseAccessorsForRecipeManager.SaveUserToDatabase(NewAccountName, UserName, bytePassword, bytePasswordCheck);
+            DataBaseAccessorsForRecipeManager.SaveUserToDatabase(NewAccountName, bytePassword, bytePasswordCheck);
+
+            ListOfUserAccountsInDB.Add(NewAccountName);
+            ComboBoxIndexOfUserFromDB = ListOfUserAccountsInDB.Count - 1;
 
             dialog = new Windows.UI.Popups.MessageDialog("User: " + NewAccountName + " created, now login!");
             dialog.ShowAsync();
-
+            
             //Reset the "Create Password" section to empty strings.
             NewAccountName = "";
             NewPasswordString = "";
             NewConfirmPasswordString = "";
         }
 
+
         /// <summary>
-        /// Some account validation rules for the new account items
+        /// Used to flip the Login button on and off.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="email"></param>
-        /// <param name="password"></param>
-        /// <param name="confirmPassword"></param>
-        /// <returns></returns>
-        private bool ValidateNewAccount(string name, byte[] password, byte[] confirmPassword)
-        {
-
-            foreach (string s in ListOfUserAccountsInDB)
-            {
-                if (string.Compare(s.ToLower(), name.ToLower()) == 0)
-                {
-                    Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("The user name is taken");
-                    NewAccountName = "";
-                    return false;
-                }
-            }
-
-            return PasswordHashing.SequenceEquals(password, confirmPassword);
-        }
-
-        //Used to flip the Login button on and off.
         private void ToggleLogin()
         {
             if (PasswordString != null && PasswordString.Length > 6 && checkBoxEnabledCount == 3 && loggedin == false)
@@ -261,13 +236,6 @@ namespace RecipeBuddy.ViewModels
         {
             get { return usersIDInDB; }
             set { SetProperty(ref usersIDInDB, value);}
-        }
-
-        private string accountName;
-        public string AccountName
-        {
-            get { return accountName; }
-            set { SetProperty(ref accountName, value);}
         }
 
 

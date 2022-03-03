@@ -86,7 +86,7 @@ namespace RecipeBuddy.ViewModels
             FillCatagoryCollectionForDropDown();
 
             //Add User Data To Tree
-            List<RecipeRecordModel> recipesFromDB =  DataBaseAccessorsForRecipeManager.LoadUserDataByID(UserViewModel.Instance.UserName, UserViewModel.Instance.UsersIDInDB);   
+            //List<RecipeRecordModel> recipesFromDB =  DataBaseAccessorsForRecipeManager.LoadUserDataByID(UserViewModel.Instance.UserName, UserViewModel.Instance.UsersIDInDB);   
         }
 
         /// <summary>
@@ -547,10 +547,10 @@ namespace RecipeBuddy.ViewModels
             RecipeTreeItem recipeTreeItem = new RecipeTreeItem(recipeModel);
             RecipeTreeItem parentTreeNode = GetRecipeParentNodeFromType(recipeTreeItem.RecipeModelTV.TypeAsInt);
 
-            if (CheckIfRecipeAlreadyPresent(recipeTreeItem.TreeItemTitle, recipeTreeItem.RecipeModelTV.TypeAsInt) == true)
-            {
-                return 0;
-            }
+            //if (CheckIfRecipeAlreadyPresentAndUpdate(recipeTreeItem.TreeItemTitle, recipeTreeItem.RecipeModelTV.TypeAsInt, recipeTreeItem.RecipeModelTV.RecipeDBID) != 1)
+            //{
+            //    return 0;
+            //}
 
             parentTreeNode.Children.Add(recipeTreeItem);
             parentTreeNode.ItemExpanded = expandTreeViewHeader;
@@ -583,25 +583,45 @@ namespace RecipeBuddy.ViewModels
 
         /// <summary>
         /// goes through the list looking for the same title that we are trying to add to the list
-        /// if found it will return true
+        /// if found it will return true until it also exists in the DB under this same title then it is an update not an add and we are fine
         /// </summary>
         /// <param name="title">the title of the recipe we are attempting to add</param>
         /// <param name="type">the type of this recipe, we use this to fine the parent node and then access the collection through the children</param>
-        /// <returns>true if an identical title if found, false otherwise</returns>
-        public bool CheckIfRecipeAlreadyPresent(string title, int type)
+        /// <returns>0 = recipe exists in DB same title, 2 = recipe exists in DB new title, -1 if the recipe exists in the tree but not the DB (title is taken), returns 1 if the title can't be found</returns>
+        public int CheckIfRecipeAlreadyPresentAndUpdate(string title, int type, int DBID)
         {
+            int retInt = 1;
 
-            RecipeTreeItem parentNode = MainNavTreeViewModel.instance.GetRecipeParentNodeFromType(type);
-
-            foreach (RecipeTreeItem recipe in parentNode.Children)
+            //This recipe is already in the DB so we don't need to add it again.
+            if (DBID != -1)
             {
-                if (string.Compare(title.ToLower(), recipe.TreeItemTitle.ToLower()) == 0)
+                //Check the DB - this this recipe exists there with the same title then everything is good, we can do an update
+                string sTitle = DataBaseAccessorsForRecipeManager.GetTitleOfRecipeFromDBByRecipeID(DBID);
+                if (string.Compare(sTitle.ToLower(), title.ToLower()) == 0) //title exists and is tied to this DBID, we are good, this is just an update with same title
                 {
-                    return true;
+                    retInt = 0;
+                }
+                else
+                {
+                    retInt = 2; 
+                }   
+            }
+
+            else //recipe is not in the tree
+            {
+                RecipeTreeItem parentNode = MainNavTreeViewModel.instance.GetRecipeParentNodeFromType(type);
+
+                foreach (RecipeTreeItem recipe in parentNode.Children)
+                {
+                    if (string.Compare(title.ToLower(), recipe.TreeItemTitle.ToLower()) == 0)
+                    {
+                        retInt = -1;
+                    }
                 }
             }
 
-            return false; //recipe title doesn't already exists so don't worry about it!
+            //recipe title doesn't already exists
+            return retInt; 
         }
 
         /// <summary>

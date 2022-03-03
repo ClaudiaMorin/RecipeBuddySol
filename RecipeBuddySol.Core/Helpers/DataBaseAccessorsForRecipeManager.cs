@@ -190,7 +190,6 @@ namespace RecipeBuddy.Core.Helpers
             //We need a valid RecipeID that exists in the DB
             if (recipeCard.RecipeDBID != -1)
             {
-
                 Dictionary<string, object> parameters = new Dictionary<string, object>();
                 List<string> paramsForSQLStatment = new List<string>();
 
@@ -220,7 +219,7 @@ namespace RecipeBuddy.Core.Helpers
             }
             else
             {
-                SaveRecipeToDatabase(recipeCard, UserIDInDB);
+                recipeCard.RecipeDBID = SaveRecipeToDatabase(recipeCard, UserIDInDB);
             }
         }
 
@@ -234,19 +233,35 @@ namespace RecipeBuddy.Core.Helpers
             string sql = "SELECT Max(RecipeID) FROM Recipes";
             int id = 0;
 
-            Dictionary<string, object> RecipeIDFromDB = new Dictionary<string, object>
-            {
-                {"@RecipeID", id },
-            };
-
-            List<int> RecipeID = SqliteDataAccess.LoadData<int>(sql, RecipeIDFromDB);
+            List<List<object>> RecipeID = SqliteDataAccess.LoadData(sql, 1);
 
             if (RecipeID.Count != 0)
-                return RecipeID[0];
+                return Int32.Parse((RecipeID[0][0]).ToString());
 
             return -1;
         }
 
+        /// <summary>
+        /// Get the Title of a recipe stored in the DB
+        /// </summary>
+        /// <returns></returns>
+        public static string GetTitleOfRecipeFromDBByRecipeID(int RecipeIDInDB)
+        {
+            string rStr = "";
+            //Recipe ID is not valid
+            if (RecipeIDInDB != -1)
+            {
+                Dictionary<string, object> dictionaryforQuery2 = new Dictionary<string, object>
+                {
+                    {"@RecipeID", RecipeIDInDB }
+                };
+
+                string sqlStatment = "Select Title from Recipes Where RecipeID= " + RecipeIDInDB;
+                rStr = SqliteDataAccess.LoadData(sqlStatment, 1)[0][0].ToString();
+            }
+
+            return rStr;
+        }
 
         /// <summary>
         /// Get the users ID from the DB
@@ -260,17 +275,12 @@ namespace RecipeBuddy.Core.Helpers
 
             UserDBModel userModel = new UserDBModel();
 
-            Dictionary<string, object> userFromDB = new Dictionary<string, object>
-            {
-                {"@ID", userModel.ID },
-            };
-
-            List<UserDBModel> userDBModels = SqliteDataAccess.LoadData<UserDBModel>(sql, userFromDB);
+            List<List<object>> userDBModels = SqliteDataAccess.LoadData(sql, 1);
             try
             {
                 if (userDBModels[0] != null)
                 {
-                    retInt = userDBModels[0].ID;
+                    retInt = Int32.Parse(userDBModels[0][0].ToString());
                 }
             }
             catch (Exception e)
@@ -284,73 +294,57 @@ namespace RecipeBuddy.Core.Helpers
         /// <summary>
         /// Lodes the user-specific information from the DB, adaptation because UWP doesn't allow secure strings
         /// </summary>
-        /// <param name="PasswordSecureString">users password as a secure string</param>
+        /// <param name="PasswordString">users password</param>
         /// <param name="user">the username</param>
         /// <returns>The user ID that is held in the DB</returns>
-        //public static string LoadUserFromDatabase(SecureString PasswordSecureString, string user)
         public static int LoadUserFromDatabase(string PasswordString, string user)
         {
-            //string user = SelectedComboBoxItem;
-            //SecureString password = PasswordSecureString;
-            string sql = "select * from Users Where  Name='" + user + "'";
+            List<List<object>> userDBModel = new List<List<object>>(1);
 
-            UserDBModel userModel = new UserDBModel();
+            byte[] bytePassword = PasswordHashing.CalculateHash(ConvertingStringToByteArray.ConvertStringToByteArray(PasswordString));
+            byte[] bytePasswordStored = SqliteDataAccess.GetPasswordFromDB(user);
 
-            Dictionary<string, object> userFromDB = new Dictionary<string, object>
-           {
-                {"@Name", userModel.Name },
-                {"@ID", userModel.ID },
-                {"@Password", userModel.Password },
-           };
-
-            List<UserDBModel> userDBModels = SqliteDataAccess.LoadData<UserDBModel>(sql, userFromDB);
-
-            if (userDBModels[0] != null)
+            //do the two passwords match ?
+            if (PasswordHashing.SequenceEquals(bytePassword, bytePasswordStored) == true)
             {
-                byte[] bytePassword = PasswordHashing.CalculateHash(ConvertingStringToByteArray.ConvertStringToByteArray(PasswordString));
-
-                //do the two passwords match?
-                if (PasswordHashing.SequenceEquals(bytePassword, userDBModels[0].Password) == true)
-                {
-                    //PasswordSecureString.Clear();
-                    PasswordString = null;
-                    //return userDBModels[0].Name.ToString();
-                    return userDBModels[0].ID;
-                }
-                else
-                {
-                     //new Windows.UI.Popups.MessageDialog("Invalid Password!").ShowAsync();
-                }
+                //PasswordSecureString.Clear();
+                PasswordString = null;
+                string sql = "select ID from Users Where Name='" + user + "'";
+                userDBModel = SqliteDataAccess.LoadData(sql, 1);
+                int i = Int32.Parse(userDBModel[0][0].ToString());
+                return i;
+            }
+            else
+            {
+                new Windows.UI.Popups.MessageDialog("Invalid Password!").ShowAsync();
             }
 
             return -1;
         }
-
+   
         /// <summary>
         /// Gets the User's Saved Recipes from the DB and sends them to the TreeViewModel
         /// </summary>
-        public static List<RecipeRecordModel> LoadUserDataByID(string username, int userID)
+        public static List<RecipeRecordModel> LoadUserDataByID(int userID)
         {
             string UsersIDInDB = userID.ToString();
 
-            Dictionary<string, object> dictionaryUserRecipesFromDB = new Dictionary<string, object>
-            {
-                 {"@UserID", UsersIDInDB },
-            };
-
             //Get the stored recipies and connect that to the TreeView
-            string sql = "SELECT * FROM Recipes WHERE UserID = @UserID";
-            List<RecipeRecordDBModel> recipeDBModels = SqliteDataAccess.LoadData<RecipeRecordDBModel>(sql, dictionaryUserRecipesFromDB);
+            string sql = "SELECT * FROM Recipes WHERE UserID = " + UsersIDInDB;
+
+            List<List<object>> recipeDBModels = SqliteDataAccess.LoadData(sql, 7);
             List<RecipeRecordModel> recipeModels = new List<RecipeRecordModel>();
 
             foreach (var record in recipeDBModels)
             {
-                RecipeRecordModel RRC = new RecipeRecordModel(record.StringOfIngredientForListFromDB, record.StringOfDirectionsForListFromDB);
-                RRC.Title = record.Title;
-                if(record.Author.Length > 0)
-                RRC.Author = record.Author;
-                RRC.TypeAsInt = record.TypeAsInt;
-                RRC.RecipeDBID = record.RecipeID;
+                RecipeRecordModel RRC = new RecipeRecordModel();
+                RRC.RecipeDBID = Int32.Parse(record[0].ToString());
+                RRC.Title = record[1].ToString();
+                if (record[2] != null)
+                    RRC.Author = record[2].ToString();
+                RRC.TypeAsInt = Int32.Parse(record[3].ToString());
+                RRC.ListOfIngredientStrings = StringManipulationHelper.TurnStringintoListFromDB(record[4].ToString());
+                RRC.ListOfDirectionStrings = StringManipulationHelper.TurnStringintoListFromDB(record[5].ToString());
                 recipeModels.Add(RRC);
             }
 
@@ -367,18 +361,13 @@ namespace RecipeBuddy.Core.Helpers
             string sql = "select Name from Users";
             UserDBModel userModel = new UserDBModel();
 
-            Dictionary<string, object> usersFromDB = new Dictionary<string, object>
-            {
-                {"@Name", userModel.Name }
-            };
+            List<List<object>> users = SqliteDataAccess.LoadData(sql, 1);
 
-            List<UserDBModel> userDBModels = SqliteDataAccess.LoadData<UserDBModel>(sql, usersFromDB);
-
-            if (userDBModels.Count > 0)
+            if (users.Count > 0)
             {
-                for (int count = 0; count < userDBModels.Count; count++)
+                for (int count = 0; count < users.Count; count++)
                 {
-                    ListOfUserAccountsInDB.Add(userDBModels[count].Name);
+                    ListOfUserAccountsInDB.Add((string)users[count][0]);
                 }
             }
         }
@@ -386,10 +375,8 @@ namespace RecipeBuddy.Core.Helpers
         /// <summary>
         /// Saves a new user to the DB
         /// </summary>
-        public static void SaveUserToDatabase(string NewAccountName, string UserName, byte[] bytePassword, byte[] bytePasswordCheck)
+        public static void SaveUserToDatabase(string NewAccountName, byte[] bytePassword, byte[] bytePasswordCheck)
         {
-            //byte[] bytePassword = PasswordHashing.CalculateHash(SecureStringToByteArray.ConvertSecureStringToByteArray(NewPasswordSecureString));
-            //byte[] bytePasswordCheck = PasswordHashing.CalculateHash(SecureStringToByteArray.ConvertSecureStringToByteArray(NewConfirmPasswordSecureString));
 
             //Get the new users information from the UI
             UserDBModel userModel = new UserDBModel();
@@ -399,7 +386,6 @@ namespace RecipeBuddy.Core.Helpers
             string sqlInsertIntoUsers = "insert into Users (Name, Password) " +
                 "values (@Name, @Password)";
 
-
             //Put the new users information into a dictionary which will be part of the SQL query
             Dictionary<string, object> parameters = new Dictionary<string, object>
             {
@@ -407,16 +393,12 @@ namespace RecipeBuddy.Core.Helpers
                 {"@Password", userModel.Password },
             };
 
+           
             //save user to User table in DB
             SqliteDataAccess.UpdateData(sqlInsertIntoUsers, parameters);
 
             //Reset the "Create Password" section to empty strings.
             NewAccountName = "";
-
-            int userID = GetUserIDUserFromDatabase(userModel.Name);
-            //check that we have a valid ID returned to us.
-            if (userID != -1)
-                LoadUserDataByID(UserName, userID);
 
         }
 
