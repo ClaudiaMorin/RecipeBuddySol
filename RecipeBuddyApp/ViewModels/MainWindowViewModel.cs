@@ -1,14 +1,6 @@
-﻿//using Squirrel;
+﻿
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Threading.Tasks;
-//using System.Windows.Controls;
-using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using RecipeBuddy.ViewModels.Commands;
-using Windows.UI.Xaml.Controls;
 
 namespace RecipeBuddy.ViewModels
 {

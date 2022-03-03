@@ -1,16 +1,8 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-using RecipeBuddy.Core.Helpers;
 using RecipeBuddy.Core.Models;
-using RecipeBuddy.Core.Scrapers;
-using RecipeBuddy.ViewModels.Commands;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using Windows.UI.Xaml.Controls;
 
 namespace RecipeBuddy.ViewModels

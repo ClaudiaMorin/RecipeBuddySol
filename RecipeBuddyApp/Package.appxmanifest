@@ -10,7 +10,7 @@
   <Identity
     Name="63168489-A50A-493F-81B8-BDDD0356EA8D"
     Publisher="CN=Claudia Morin, O=Claudia Morin, S=Washington, C=US"
-    Version="1.0.13.0" />
+    Version="1.0.14.0" />
 
   <mp:PhoneIdentity PhoneProductId="63168489-A50A-493F-81B8-BDDD0356EA8D" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

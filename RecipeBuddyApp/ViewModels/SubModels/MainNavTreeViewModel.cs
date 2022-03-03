@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows;
 using System.Windows.Input;
-using RecipeBuddy.ViewModels.Commands;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using RecipeBuddy.Core.Models;
 using RecipeBuddy.Core.Helpers;
-using Windows.UI.Popups;
-using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
 using RecipeBuddy.Services;
 using RecipeBuddy.Views;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -19,7 +13,6 @@ using Microsoft.Toolkit.Mvvm.Input;
 namespace RecipeBuddy.ViewModels
 {
     
-
     public class MainNavTreeViewModel : ObservableObject
     {
         Action<TreeViewItemInvokedEventArgs> actionTreeViewArg;
@@ -504,12 +497,6 @@ namespace RecipeBuddy.ViewModels
             return false;
         }
 
-        public void SaveUpdatesToRecipe(RecipeDisplayModel recipeDisplay)
-        {
-            RecipeTreeItem recipeTreeItem = FindRecipeInCollection(recipeDisplay.RecipeType, recipeDisplay.Title);
-            recipeTreeItem.UpdateRecipeEntry(recipeDisplay);
-        }
-
         /// <summary>
         /// Takes the RecipeCardModel, converts it to a recipeModel and then saves it to the treeview
         /// </summary>
@@ -546,11 +533,6 @@ namespace RecipeBuddy.ViewModels
             //Create a new RecipeCardTreeItem
             RecipeTreeItem recipeTreeItem = new RecipeTreeItem(recipeModel);
             RecipeTreeItem parentTreeNode = GetRecipeParentNodeFromType(recipeTreeItem.RecipeModelTV.TypeAsInt);
-
-            //if (CheckIfRecipeAlreadyPresentAndUpdate(recipeTreeItem.TreeItemTitle, recipeTreeItem.RecipeModelTV.TypeAsInt, recipeTreeItem.RecipeModelTV.RecipeDBID) != 1)
-            //{
-            //    return 0;
-            //}
 
             parentTreeNode.Children.Add(recipeTreeItem);
             parentTreeNode.ItemExpanded = expandTreeViewHeader;

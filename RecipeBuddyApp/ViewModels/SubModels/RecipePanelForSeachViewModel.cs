@@ -88,13 +88,19 @@ namespace RecipeBuddy.ViewModels
         public void ShowCurrentEntryAndActivateButtons()
         {
             UpdateRecipeEntry(listOfRecipeModels.GetCurrentEntry());
-
-            CanSelectSelect = true;
-            CmdSelectButton.RaiseCanExecuteChanged();
-            CanSelectBack = true;
-            CmdBackButton.RaiseCanExecuteChanged();
-            CanSelectNext = true;
-            CmdNextButton.RaiseCanExecuteChanged();
+            if (string.Compare(recipeCard.Title.ToLower(), "search for your next recipe find!") != 0)
+            {
+                CanSelectSelect = true;
+                CmdSelectButton.RaiseCanExecuteChanged();
+                CanSelectBack = true;
+                CmdBackButton.RaiseCanExecuteChanged();
+                CanSelectNext = true;
+                CmdNextButton.RaiseCanExecuteChanged();
+            }
+            else
+            {
+                recipeCard.Title = "Something went wrong with the search at " + type_Of_Source.ToString() + " !";
+            }
         }
 
         /// <summary>
@@ -135,7 +141,7 @@ namespace RecipeBuddy.ViewModels
         /// <param name="reSource">The new RecipeCard which we will use to overwrite the old values</param>
         private void UpdateRecipeEntry(RecipeRecordModel reSource)
         {
-            if (reSource == null)
+            if (reSource == null )
                 return;
 
             recipeCard.UpdateRecipeDisplayFromRecipeRecord(reSource);

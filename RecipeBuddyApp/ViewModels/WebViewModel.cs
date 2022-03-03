@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Windows.Input;
-using RecipeBuddy.ViewModels.Commands;
 using RecipeBuddy.Core.Models;
-using RecipeBuddy.Core.Helpers;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using System.Threading.Tasks;
-using Windows.UI.Core;
-using RecipeBuddy.Views;
 using Microsoft.Toolkit.Mvvm.Input;
+using RecipeBuddy.ViewModels.Commands;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -43,7 +37,7 @@ namespace RecipeBuddy.ViewModels
             recipePanelForWebCopy = RecipePanelForWebCopy.Instance;
 
             CmdRemove = new RelayCommand<string>(actionWithString = s => RemoveRecipe(s));
-            CmdOpenEntry = new RelayCommand(action = () => OpenRecipePanel(), funcBool = () => CanSelectTrueIfThereIsARecipe);
+            CmdOpenEntry = new RelayCommandRaiseCanExecute(action = () => OpenRecipePanel(), funcBool = () => CanSelectTrueIfThereIsARecipe);
             CmdOpenEmptyEntry = new RelayCommand(action = () => OpenEmptyRecipePanel());
             CmdSelectedTypeChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
             CmdSelectedItemChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeFromComboBox(e), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
@@ -191,7 +185,7 @@ namespace RecipeBuddy.ViewModels
         /// <summary>
         /// property for the Save button command
         /// </summary>
-        public RelayCommand CmdOpenEntry
+        public RelayCommandRaiseCanExecute CmdOpenEntry
         {
             get;
             private set;

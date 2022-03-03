@@ -1,19 +1,12 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using RecipeBuddy.ViewModels.Commands;
-using RecipeBuddy.Core.Scrapers;
-using Windows.System.Threading.Core;
-using System.Threading;
-using Windows.Foundation;
 using System;
 using Windows.UI.Core;
-using RecipeBuddy.Views;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
 using RecipeBuddy.Core.Models;
 using RecipeBuddy.Services;
 using Microsoft.Toolkit.Mvvm.Input;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 
 namespace RecipeBuddy.ViewModels
@@ -161,22 +154,20 @@ namespace RecipeBuddy.ViewModels
             {
                 int indexToRemove = listOfRecipeCards.GetEntryIndex(title);
 
-                if (listOfRecipeCards.ListCount > 1 )
+                if (indexToRemove == 0 && listOfRecipeCards.ListCount > 1)
                 {
-                    if (indexToRemove != 0)
-                    {
-                        listOfRecipeCards.CurrentCardIndex = 0;
-                    }
-                    else
-                    {
-                        listOfRecipeCards.CurrentCardIndex = 1;
-                    }
+                    listOfRecipeCards.CurrentCardIndex = 1;
                 }
-                else //We have removed the last card!
+                else
                 {
                     listOfRecipeCards.CurrentCardIndex = 0;
+                }
+
+                //because we are removing this one remaining item at the end of the function, 1 -> 0
+                if (listOfRecipeCards.ListCount == 1 )
+                {
                     WebViewModel.Instance.CanSelectTrueIfThereIsARecipe = false;
-                    WebViewModel.Instance.CmdOpenEntry.NotifyCanExecuteChanged();
+                    WebViewModel.Instance.CmdOpenEntry.RaiseCanExecuteChanged();
                 }
 
                 IndexOfComboBoxItem = listOfRecipeCards.CurrentCardIndex;
