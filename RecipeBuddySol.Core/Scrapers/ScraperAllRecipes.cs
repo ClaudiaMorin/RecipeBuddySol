@@ -53,8 +53,9 @@ namespace RecipeBuddy.Core.Scrapers
             string str1 = null;
             string str2 = "";
             string str3 = "";
-            HtmlNode Node1 = doc.DocumentNode.SelectSingleNode("//div[@class='search-results-content']");
-            HtmlNodeCollection list1 = Node1.SelectNodes("//div[@class='component card card__recipe card__facetedSearchResult']");
+            HtmlNode Node1 = doc.DocumentNode.SelectSingleNode("//div[@class='searchResults__contentContainer']");
+            HtmlNode Node2 = Node1.SelectSingleNode("//div[@class='searchResults__contentResultsWrapper']");
+            HtmlNodeCollection list1 = Node2.SelectNodes("//div[@class='card__recipe card__facetedSearchResult']");
             List<HtmlNode> list2 = new List<HtmlNode>();
 
                 //Search didn't find anything!

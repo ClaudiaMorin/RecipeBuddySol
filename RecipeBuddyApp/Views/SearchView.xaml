@@ -4,9 +4,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:ui ="using:Microsoft.Toolkit.Uwp.UI"
-    xmlns:extensions="using:Microsoft.Toolkit.Extensions"
     xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d"
     xmlns:local="using:RecipeBuddy.Views" 
@@ -14,7 +11,9 @@
     MaxHeight="800"
     MaxWidth="1400">
 
-    <StackPanel x:Name="SeachDockPanelUserControl" ui:FrameworkElementExtensions.Cursor ="{Binding CursorType, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+    <!--xmlns:ui ="using:Microsoft.Toolkit.Uwp.UI"
+    <StackPanel x:Name="SeachDockPanelUserControl" ui:FrameworkElementExtensions.Cursor ="{Binding CursorType, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">-->
+        <StackPanel x:Name="SeachDockPanelUserControl" >
         <local:AppHeader/>
         <StackPanel Orientation="Horizontal" Background="LightSteelBlue" >
             <Border BorderThickness="3" BorderBrush="Gray"/>

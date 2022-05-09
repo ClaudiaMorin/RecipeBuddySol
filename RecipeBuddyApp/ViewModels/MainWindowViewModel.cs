@@ -27,14 +27,12 @@ namespace RecipeBuddy.ViewModels
             {
                 selectedTabIndexInt = (int)MainWindowViewModel.Tabs.UserTab;
                 titleAndVersion = "RecipeBuddy    version ";
-                //mainTreeViewNav = MainNavTreeViewModel.Instance;
             }
             catch (Exception e)
             {
                 string stuff = "stuff";
             }
 
-            
             //AddVersionNumber();
             //CheckForUpdates();
         }
@@ -55,7 +53,7 @@ namespace RecipeBuddy.ViewModels
         //private void AddVersionNumber()
         //{
         //    System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
-        //    FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location); 
+        //    FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
         //    TitleAndVersion = TitleAndVersion + versionInfo.FileVersion;
         //}
         public static MainWindowViewModel Instance

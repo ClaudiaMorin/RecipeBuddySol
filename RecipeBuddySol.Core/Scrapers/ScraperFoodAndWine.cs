@@ -42,14 +42,14 @@ namespace RecipeBuddy.Core.Scrapers
             try
             {
                 var doc = web.Load(strQuery);
-                HtmlNode searchResultsNode = doc.DocumentNode.SelectSingleNode("//div[@class='search-results-content-results-wrapper']");
+                HtmlNode searchResultsNode = doc.DocumentNode.SelectSingleNode("//div[@class='searchResults__contentResultsWrapper']");
                 //Search didn't find anything!
                 if (searchResultsNode == null)
                 {
                     return -1;
                 }
 
-                HtmlNodeCollection list = searchResultsNode.SelectNodes("//div[@class='search-result']");
+                HtmlNodeCollection list = searchResultsNode.SelectNodes("//div[@class='searchResult__content']");
 
                 //Search didn't find anything!
                 if (list == null || list.Count == 0)

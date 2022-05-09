@@ -76,7 +76,7 @@ namespace RecipeBuddy.ViewModels
 
         /// <summary>
         /// We take in the users password and then set up the users account and load the tree-view with saved recipes if the
-        /// account passwords match.
+        /// account passwords match. 
         /// </summary>
         public void LogIn()
         {
