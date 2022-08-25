@@ -104,10 +104,10 @@ namespace RecipeBuddy.Core.Scrapers
         public static RecipeRecordModel ProcessTastyRecipeType(HtmlDocument doc, char[] splitter, Uri uri)
         {
             List<string> ingredients = FillIngredientListTastyForRecipeEntry(doc, 50);
+            List<string> directions = FillDirectionsListAllRecipesForRecipeEntry(doc, 30);
             //no ingredients it isn't a real recipe so we bail
             if (ingredients.Count == 0)
                 return null;
-            List<string> directions = new List<string>();
 
             RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
@@ -144,6 +144,28 @@ namespace RecipeBuddy.Core.Scrapers
             { }
 
             return Scraper.TrimListToSpecifiedEntries(50, ingredients);
+        }
+
+        private static List<string> FillDirectionsListAllRecipesForRecipeEntry(HtmlDocument doc, int countList)
+        {
+            List<string> directions = new List<string>();
+
+            HtmlNode direct_node = doc.DocumentNode.SelectSingleNode("//ol[@class='prep-steps list-unstyled xs-text-3']");
+
+            try
+            {
+                HtmlNodeCollection htmlNodes = direct_node.ChildNodes;
+
+                for (int i = 0; i < countList; i++)
+                {
+                    HtmlNode sectionHeader_node = htmlNodes[i];
+                    directions.Add(StringManipulationHelper.CleanHTMLTags(sectionHeader_node.InnerText));
+                }
+            }
+            catch (Exception e)
+            { }
+
+            return Scraper.TrimListToSpecifiedEntries(countList, directions);
         }
     }
 }

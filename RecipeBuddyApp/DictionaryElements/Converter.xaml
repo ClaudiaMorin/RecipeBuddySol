@@ -10,5 +10,6 @@
     <converters:RowHeightConverter x:Key="RowVisibleConverter"/>
     <converters:StyleConverterTextBox x:Key="StyleConverterTextBox"/>
     <converters:StyleConverterTextBoxRedFont x:Key="StyleConverterTextBoxRedFont"/>
+    <converters:StyleConverterSearching x:Key="StyleConverterSearching"/>
 
 </ResourceDictionary>

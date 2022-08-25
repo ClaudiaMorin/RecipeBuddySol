@@ -4,8 +4,7 @@ using RecipeBuddy.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+
 
 namespace RecipeBuddy.Core.Scrapers
 {
@@ -86,10 +85,11 @@ namespace RecipeBuddy.Core.Scrapers
         {
 
             List<string> ingredients = FillIngredientListEpicuriousForRecipeEntry(doc, 50);
+            List<string> directions = FillDirectionsListAllRecipesForRecipeEntry(doc, 30);
+
             //no ingredients it isn't a real recipe so we bail
             if (ingredients == null || ingredients.Count == 0)
                 return null;
-            List<string> directions = new List<string>();
 
             RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
@@ -149,6 +149,28 @@ namespace RecipeBuddy.Core.Scrapers
                 ingredients.Add(amount + " " + ingred);
                 count++;
             }
+        }
+
+        private static List<string> FillDirectionsListAllRecipesForRecipeEntry(HtmlDocument doc, int countList)
+        {
+            List<string> directions = new List<string>();
+
+            HtmlNode direct_node = doc.DocumentNode.SelectSingleNode("//div[@class='InstructionGroupWrapper-hmyafp bJfiL']");
+
+            try
+            {
+                HtmlNodeCollection htmlNodes = direct_node.SelectNodes("//div[@class='BaseWrap-sc-UABmB BaseText-fETRLB InstructionBody-huDCkh hkSZSE xURKj eyjXXE']");
+
+                for (int i = 0; i < countList; i++)
+                {
+                    HtmlNode sectionHeader_node = htmlNodes[i];
+                    directions.Add(StringManipulationHelper.CleanHTMLTags(sectionHeader_node.InnerText));
+                }
+            }
+            catch (Exception e)
+            { }
+
+            return Scraper.TrimListToSpecifiedEntries(countList, directions);
         }
     }
 }

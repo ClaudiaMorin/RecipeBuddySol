@@ -33,7 +33,11 @@
                             </ic:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
                     </TextBox>
-                    <Button x:Name="SearchButton" Width="100" Height="30" Style="{StaticResource BtnStyleSearch}" IsEnabled="{Binding SearchEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding SearchButtonCmd}" Content="Search" />
+
+                    <!--<Button x:Name="SearchButton" Width="100" Height="30" Style="{Binding SearchEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StyleConverterSearching}}" IsEnabled="{Binding SearchEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding SearchButtonCmd}"/>-->
+
+                    <Button x:Name="SearchButton" Width="100" Height="30" Style="{StaticResource BtnStyleSearch}" IsEnabled="{Binding SearchEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding SearchButtonCmd}"/>
+                    
                     <Border BorderThickness="50" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Column="1" >

@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using RecipeBuddy.Core.Helpers;
 using RecipeBuddy.Core.Scrapers;
 using System;
@@ -1134,11 +1134,22 @@ namespace RecipeBuddy.Core.Models
             SetIngredientAndDirectionProperties();
         }
 
-        /// Updates the various elements of the RecipeEntry from the next entry in the RecipeEntriesList, triggering the OnPropertyChanged event that is "contextbound" to the UI
-        /// Adds the ingredents and Directions dynamically and then deletes them before the new recipe is replacing the old one.
-        /// </summary>
-        /// <param name="reSource">The new RecipeCard which we will use to overwrite the old values</param>
-        public void UpdateRecipeDisplayFromRecipeRecord(RecipeRecordModel reSource)
+        public void CopyRecipeDisplayModelAndDirections(RecipeDisplayModel reSource)
+        {
+            if (reSource == null)
+            { return; }
+
+            //Call to get the directions information pulled.
+
+
+            CopyRecipeDisplayModel(reSource);
+        }
+
+            /// Updates the various elements of the RecipeEntry from the next entry in the RecipeEntriesList, triggering the OnPropertyChanged event that is "contextbound" to the UI
+            /// Adds the ingredents and Directions dynamically and then deletes them before the new recipe is replacing the old one.
+            /// </summary>
+            /// <param name="reSource">The new RecipeCard which we will use to overwrite the old values</param>
+            public void UpdateRecipeDisplayFromRecipeRecord(RecipeRecordModel reSource)
         {
             if (reSource == null)
             { return; }

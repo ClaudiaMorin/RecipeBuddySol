@@ -10,7 +10,7 @@ using System.Threading;
 using System.Collections.Generic;
 using Windows.UI.Core;
 using Windows.ApplicationModel.Core;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace RecipeBuddy.Core.Models
 {
@@ -101,8 +101,8 @@ namespace RecipeBuddy.Core.Models
                         break;
                     }
                 case Type_of_Websource.FoodAndWine:
-                    { //Failed Search
-
+                    {
+                        // Failed Search
                         if (ScraperFoodAndWine.GenerateURLsListFromFoodAndWineSearch(SearchString, recipeListModel) == -1)
                         {
                             Console.WriteLine("error in GenerateURLs");

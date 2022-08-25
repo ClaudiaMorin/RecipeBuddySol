@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using RecipeBuddy.Core.Models;
 using RecipeBuddy.Core.Helpers;
 using Windows.UI.Xaml.Controls;
 using RecipeBuddy.Services;
 using RecipeBuddy.Views;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 
 namespace RecipeBuddy.ViewModels
 {

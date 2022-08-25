@@ -3,7 +3,7 @@ using RecipeBuddy.Core.Helpers;
 using RecipeBuddy.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.Windows;
+using System.Xml.Linq;
 
 namespace RecipeBuddy.Core.Scrapers
 {
@@ -36,20 +36,21 @@ namespace RecipeBuddy.Core.Scrapers
                 strQuery += item + '+';
             }
             strQuery = strQuery.TrimEnd('+');
-            strQuery = String.Concat(strQuery, strSearch);
             var web = new HtmlWeb();
+
+
 
             try
             {
                 var doc = web.Load(strQuery);
-                HtmlNode searchResultsNode = doc.DocumentNode.SelectSingleNode("//div[@class='searchResults__contentResultsWrapper']");
+                HtmlNode searchResultsNode = doc.DocumentNode.SelectSingleNode("//div[@id='card-list_1-0']");
                 //Search didn't find anything!
                 if (searchResultsNode == null)
                 {
                     return -1;
                 }
 
-                HtmlNodeCollection list = searchResultsNode.SelectNodes("//div[@class='searchResult__content']");
+                HtmlNodeCollection list = searchResultsNode.SelectNodes("//a[@class='comp mntl-card-list-items mntl-document-card mntl-card card card--no-image']");
 
                 //Search didn't find anything!
                 if (list == null || list.Count == 0)
@@ -69,7 +70,7 @@ namespace RecipeBuddy.Core.Scrapers
                     if (firstStr.Contains("https://www.foodandwine.com/recipes/"))
                     {
                         secondStr = firstStr.Substring(firstStr.IndexOf("https:"));
-                        firstStr = secondStr.Substring(0, secondStr.IndexOf(">")-1);
+                        firstStr = secondStr.Substring(0, secondStr.IndexOf(" ") -1);
                         listModel.URLLists.Add(new Uri(firstStr));
                     }
                 }
@@ -93,20 +94,18 @@ namespace RecipeBuddy.Core.Scrapers
         {
 
             List<string> ingredients = FillIngredientListFoodAndWineForRecipeEntry(doc, 50);
+            List<string> directions = FillDirectionsListAllRecipesForRecipeEntry(doc, 30);
             //no ingredients it isn't a real recipe so we bail
             if (ingredients.Count == 0)
                 return null;
 
-            List<string> directions = new List<string>();
-            //directions.Add("-Direction");
-
             RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
-            recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//h1[@class='headline heading-content elementFont__display']", doc));
+            recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//h1[@class='comp type--lion article-heading mntl-text-block']", doc));
             //recipeModel.Website = "FoodAndWine";
-            recipeModel.Description = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='recipe-summary elementFont__dek--paragraphWithin elementFont__dek--linkWithin']", doc));
+            recipeModel.Description = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//h2[@id='article-subheading_1-0']", doc));
             //recipeBlurbModel.TotalTime = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='recipe-meta-item-body']", doc));
-            recipeModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//span[@class='author-name authorName linkHoverStyle']", doc));
+            recipeModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//a[@class='mntl-attribution__item-name']", doc));
             recipeModel.Link = uri.ToString();
             recipeModel.TypeAsInt = (int)Scraper.FillTypeForRecipeEntry(recipeModel.Title);
             recipeModel.ListOfIngredientStrings = ingredients;
@@ -120,14 +119,14 @@ namespace RecipeBuddy.Core.Scrapers
             List<string> ingredients = new List<string>();
             string headerTag = "-";
 
-            HtmlNode ingred_node = doc.DocumentNode.SelectSingleNode("//fieldset[@class='ingredients-section__fieldset']");
+            HtmlNode ingred_node = doc.DocumentNode.SelectSingleNode("//div[@id='article-content_1-0']");
 
             try
             {
                 //string section_header = "Ingredients";
                 //ingredients.Add(headerTag + section_header);
-                HtmlNode htmlNode = ingred_node.SelectSingleNode("//ul[@class='ingredients-section']");
-                HtmlNodeCollection htmlNodes = htmlNode.SelectNodes("//li[@class='ingredients-item']");
+                HtmlNode htmlNode = ingred_node.SelectSingleNode("//ul[@class='mntl-structured-ingredients__list']");
+                HtmlNodeCollection htmlNodes = htmlNode.SelectNodes("//li[@class='mntl-structured-ingredients__list-item ']");
                 string node;
                 for (int i = 0; i < htmlNodes.Count; i++)
                 {
@@ -147,5 +146,26 @@ namespace RecipeBuddy.Core.Scrapers
             return Scraper.TrimListToSpecifiedEntries(50, ingredients);
         }
 
+        private static List<string> FillDirectionsListAllRecipesForRecipeEntry(HtmlDocument doc, int countList)
+        {
+            List<string> directions = new List<string>();
+
+            HtmlNode direct_node = doc.DocumentNode.SelectSingleNode("//div[@class='comp recipe__steps-content mntl-sc-page mntl-block']");
+
+            try
+            {
+                HtmlNodeCollection htmlNodes = direct_node.SelectNodes("//p[@class='comp mntl-sc-block mntl-sc-block-html']");
+
+                for (int i = 0; i < countList; i++)
+                {
+                    HtmlNode sectionHeader_node = htmlNodes[i];
+                    directions.Add(StringManipulationHelper.CleanHTMLTags(sectionHeader_node.InnerText));
+                }
+            }
+            catch (Exception e)
+            { }
+
+            return Scraper.TrimListToSpecifiedEntries(countList, directions);
+        }
     }
 }

@@ -1,9 +1,7 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿
 using RecipeBuddy.Core.Helpers;
-using RecipeBuddy.Core.Scrapers;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace RecipeBuddy.Core.Models
 {

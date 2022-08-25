@@ -140,19 +140,18 @@ namespace RecipeBuddy.Core.Scrapers
         {
 
             List<string> ingredients = FillIngredientListSouthernLivingForRecipeEntry(doc, 50);
+            List<string> directions = FillDirectionsListAllRecipesForRecipeEntry(doc, 30);
             //no ingredients it isn't a real recipe so we bail
             if (ingredients == null)
                 return null;
             if (ingredients.Count < 1)
                 return null;
 
-            List<string> directions = new List<string>();
-
             RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
 
             recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//h1[@class='headline heading-content elementFont__display']", doc));
-            recipeModel.Description = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='recipe-summary elementFont__dek--paragraphWithin elementFont__dek--linkWithin']", doc));
+            recipeModel.Description = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//div[@class='recipe-summary elementFont__dek--within']", doc));
 
             recipeModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML(".//span[@class='author-name authorName']", doc));
 
@@ -162,6 +161,28 @@ namespace RecipeBuddy.Core.Scrapers
             recipeModel.ListOfDirectionStrings = directions;
 
             return recipeModel;
+        }
+
+        private static List<string> FillDirectionsListAllRecipesForRecipeEntry(HtmlDocument doc, int countList)
+        {
+            List<string> directions = new List<string>();
+
+            HtmlNode direct_node = doc.DocumentNode.SelectSingleNode("//ul[@class='instructions-section']");
+
+            try
+            {
+                HtmlNodeCollection htmlNodes = direct_node.SelectNodes("//div[@class='section-body elementFont__body--paragraphWithin elementFont__body--linkWithin']");
+
+                for (int i = 0; i < countList; i++)
+                {
+                    HtmlNode sectionHeader_node = htmlNodes[i];
+                    directions.Add(StringManipulationHelper.CleanHTMLTags(sectionHeader_node.InnerText));
+                }
+            }
+            catch (Exception e)
+            { }
+
+            return Scraper.TrimListToSpecifiedEntries(countList, directions);
         }
     }
 }

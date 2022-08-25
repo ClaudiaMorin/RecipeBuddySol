@@ -1,12 +1,12 @@
 ﻿using System.Windows.Input;
 using System.Collections.ObjectModel;
 using RecipeBuddy.Core.Models;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using RecipeBuddy.Core.Helpers;
 using Microsoft.UI.Xaml.Controls;
 using RecipeBuddy.Services;
 using RecipeBuddy.Views;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using System;
 
 namespace RecipeBuddy.ViewModels

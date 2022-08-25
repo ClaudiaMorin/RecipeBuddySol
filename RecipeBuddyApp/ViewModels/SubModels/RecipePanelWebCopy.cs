@@ -1,5 +1,5 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using RecipeBuddy.Core.Models;
 using System;
 using System.Collections.ObjectModel;
@@ -69,6 +69,15 @@ namespace RecipeBuddy.ViewModels
         /// Creates are recipeCardModel out of a recipeModel
         /// </summary>
         public void LoadRecipeCardModel(RecipeDisplayModel recipeModel)
+        {
+            recipeCardModel.CopyRecipeDisplayModel(recipeModel);
+            ClearValuesForWebCopyQuantityMeasurementType();
+        }
+
+        /// <summary>
+        /// Creates are recipeCardModel out of a recipeModel
+        /// </summary>
+        public void LoadRecipeCardModelAndDirections(RecipeDisplayModel recipeModel)
         {
             recipeCardModel.CopyRecipeDisplayModel(recipeModel);
             ClearValuesForWebCopyQuantityMeasurementType();

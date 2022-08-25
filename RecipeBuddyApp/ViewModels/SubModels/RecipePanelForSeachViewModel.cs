@@ -1,6 +1,6 @@
 ﻿using System;
 using RecipeBuddy.ViewModels.Commands;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using RecipeBuddy.Core.Scrapers;
 using RecipeBuddy.Core.Models;
 using System.Threading.Tasks;
@@ -124,6 +124,7 @@ namespace RecipeBuddy.ViewModels
         /// <returns></returns>
         public async Task SearchAndFillList(string searchTerms, Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView)
         {
+
             //Creating a new list dumps any leftover search results that might be coming in.
             ActionShowCurrentEntry = () => ShowCurrentEntryAndActivateButtons();
             int results = await GenerateSearchResultsLists.SearchSitesAndGenerateEntryList(searchTerms, listOfRecipeModels, type_Of_Source, ActionShowCurrentEntry, coreApplicationView);

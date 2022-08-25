@@ -4,13 +4,14 @@ using System.Collections.ObjectModel;
 using System;
 using RecipeBuddy.Core.Helpers;
 using RecipeBuddy.Core.Scrapers;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using RecipeBuddy.Core.Models;
 using RecipeBuddy.Views;
 using RecipeBuddy.Services;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Input;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -21,6 +22,7 @@ namespace RecipeBuddy.ViewModels
         public int checkBoxEnabledCountNewUser = 0;
         public bool loggedin;
         public List<Type_of_Websource> PanelMap;
+        Action<KeyRoutedEventArgs> actionWithKeyEventArgs;
 
         Action ActionNoParams;
         Action<RoutedEventArgs> TypedEventHandler;
@@ -34,6 +36,7 @@ namespace RecipeBuddy.ViewModels
 
         private UserViewModel()
         {
+            CmdEnterKeyDown = new RelayCommand<KeyRoutedEventArgs>(actionWithKeyEventArgs = e => EnterKeyDown(e));
             ListOfUserAccountsInDB = new ObservableCollection<string>();
             DataBaseAccessorsForRecipeManager.LoadUsersFromDatabase(ListOfUserAccountsInDB);
             PanelMap = new List<Type_of_Websource>();
@@ -93,6 +96,7 @@ namespace RecipeBuddy.ViewModels
                 //Set Up TreeView
                 List<RecipeRecordModel> recipeRecords = DataBaseAccessorsForRecipeManager.LoadUserDataByID(UsersIDInDB);
                 MainNavTreeViewModel.Instance.AddRecipeModelsToTreeViewAsPartOfInitialSetup(recipeRecords);
+
                 NavigationService.Navigate(typeof(SearchView));
             }
             else //user password didm't match
@@ -102,6 +106,7 @@ namespace RecipeBuddy.ViewModels
             }
 
             PasswordString = "";
+
         }
 
         public void LogOut()
@@ -180,13 +185,13 @@ namespace RecipeBuddy.ViewModels
             ListOfUserAccountsInDB.Add(NewAccountName);
             ComboBoxIndexOfUserFromDB = ListOfUserAccountsInDB.Count - 1;
 
-            dialog = new Windows.UI.Popups.MessageDialog("User: " + NewAccountName + " created, now login!");
+            dialog = new Windows.UI.Popups.MessageDialog("User: " + NewAccountName + " created, now pick sites to search!");
             dialog.ShowAsync();
-            
+            PasswordString = NewPasswordString;
             //Reset the "Create Password" section to empty strings.
             NewAccountName = "";
             NewPasswordString = "";
-            NewConfirmPasswordString = "";
+            NewConfirmPasswordString = "";  
         }
 
 
@@ -603,6 +608,31 @@ namespace RecipeBuddy.ViewModels
         public object Navigate { get; private set; }
 
         #endregion
+
+        /// <summary>
+        /// Allows the enter key to automatically target the search function
+        /// </summary>
+        /// <param name="args"></param>
+        internal void EnterKeyDown(KeyRoutedEventArgs args)
+        {
+            switch (args.Key)
+            {
+                case Windows.System.VirtualKey.Enter:
+                    if (canSelectLogin == true)
+                        LogIn();
+                    else if (canSelectCreateUser == true)
+                        SetUpNewUser();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public RelayCommand<KeyRoutedEventArgs> CmdEnterKeyDown
+        {
+            get;
+            private set;
+        }
 
     }
 }

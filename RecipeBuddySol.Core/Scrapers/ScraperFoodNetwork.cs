@@ -4,7 +4,6 @@ using RecipeBuddy.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 
 namespace RecipeBuddy.Core.Scrapers
 {
@@ -159,11 +158,10 @@ namespace RecipeBuddy.Core.Scrapers
         public static RecipeRecordModel ProcessFoodNetworkRecipeType(HtmlDocument doc, char[] splitter, Uri uri)
         {
             List<string> ingredients = FillIngredientListFoodNetworkForRecipeEntry(doc, 50);
+            List<string> directions = FillDirectionsListAllRecipesForRecipeEntry(doc, 30);
             //no ingredients it isn't a real recipe so we bail
             if (ingredients == null || ingredients.Count == 0)
                 return null;
-
-            List<string> directions = new List<string>();
 
             RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
 
@@ -205,6 +203,30 @@ namespace RecipeBuddy.Core.Scrapers
             {
                 return "";
             }
+        }
+
+        private static List<string> FillDirectionsListAllRecipesForRecipeEntry(HtmlDocument doc, int countList)
+        {
+            List<string> directions = new List<string>();
+
+            HtmlNode direct_node = doc.DocumentNode.SelectSingleNode("//section[@class='o-Method']");
+
+            try
+            {
+                HtmlNodeCollection htmlNodes = direct_node.ChildNodes;
+
+                for (int i = 0; i < countList; i++)
+                {
+                    HtmlNode sectionHeader_node = htmlNodes[i];
+                    string data = sectionHeader_node.InnerText.Trim();
+                    if(data.Length > 1)
+                        directions.Add(StringManipulationHelper.CleanHTMLTags(data));
+                }
+            }
+            catch (Exception e)
+            { }
+
+            return Scraper.TrimListToSpecifiedEntries(countList, directions);
         }
     }
 }

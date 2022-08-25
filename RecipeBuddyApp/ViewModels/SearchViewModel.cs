@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using RecipeBuddy.ViewModels.Commands;
 using System;
 using Windows.UI.Core;
 using System.Threading.Tasks;
 using RecipeBuddy.Core.Models;
 using RecipeBuddy.Services;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using Windows.UI.Xaml.Input;
 
 namespace RecipeBuddy.ViewModels
@@ -73,16 +73,14 @@ namespace RecipeBuddy.ViewModels
             SearchString = "";
         }
 
-        /// <summary>
-        /// Call the Cursor change and the buttonTitle Change and then launches the background thread
-        /// that fills the panels.
-        /// </summary>
         public async Task Search()
         {
             //Need main UI thread to execute UI changes
             Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView();
+            await coreApplicationView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, () => UISearchingChanges());
+            
             await coreApplicationView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => UIChangesBeginSearch());
-  
+
             List<Task> TaskListOfSearches = new List<Task>();
             TaskListOfSearches.Add(Task.Run(() => SearchBackground(recipePanelForSearch1, searchString, coreApplicationView)));
             TaskListOfSearches.Add(Task.Run(() => SearchBackground(recipePanelForSearch2, searchString, coreApplicationView)));
@@ -100,12 +98,19 @@ namespace RecipeBuddy.ViewModels
         }
 
         /// <summary>
+        /// triggers the change of the Search button to indicate it is busy
+        /// </summary>
+        private void UISearchingChanges()
+        {
+            SearchEnabled = false;
+        }
+
+        /// <summary>
         /// Changes to the UI button to indicate that a search is happening
         /// Clears out lists so that the new search will have a place for the results.
         /// </summary>
         private void UIChangesBeginSearch()
         {
-            SearchEnabled = false;
             recipePanelForSearch1.ClearRecipeEntry();
             recipePanelForSearch1.ClearRecipeBlurbModelList();
             recipePanelForSearch2.ClearRecipeEntry();
@@ -113,6 +118,7 @@ namespace RecipeBuddy.ViewModels
             recipePanelForSearch3.ClearRecipeEntry();
             recipePanelForSearch3.ClearRecipeBlurbModelList();
         }
+
 
         private void UIChangesEndSearch()
         {
@@ -137,7 +143,6 @@ namespace RecipeBuddy.ViewModels
         /// <param name="title">Title of the recipe to remove</param>
         public void RemoveRecipe(string title)
         {
-
             RemoveRecipeFromComboBoxWork(title);
             DropDownOpen = false;
         }
@@ -154,23 +159,26 @@ namespace RecipeBuddy.ViewModels
             {
                 int indexToRemove = listOfRecipeCards.GetEntryIndex(title);
 
-                if (indexToRemove == 0 && listOfRecipeCards.ListCount > 1)
-                {
-                    listOfRecipeCards.CurrentCardIndex = 1;
-                }
-                else
-                {
-                    listOfRecipeCards.CurrentCardIndex = 0;
-                }
-
-                //because we are removing this one remaining item at the end of the function, 1 -> 0
-                if (listOfRecipeCards.ListCount == 1 )
+                //are we are removing the last recipe?
+                if (listOfRecipeCards.ListCount == 1)
                 {
                     WebViewModel.Instance.CanSelectTrueIfThereIsARecipe = false;
                     WebViewModel.Instance.CmdOpenEntry.RaiseCanExecuteChanged();
                 }
+                else
+                {
+                    if (indexToRemove == 0)
+                    {
+                        listOfRecipeCards.CurrentCardIndex = 1;
+                    }
+                    else
+                    {
+                        listOfRecipeCards.CurrentCardIndex = 0;
+                    }
 
-                IndexOfComboBoxItem = listOfRecipeCards.CurrentCardIndex;
+                    IndexOfComboBoxItem = listOfRecipeCards.CurrentCardIndex;
+                }
+
                 //Need main UI thread to execute UI changes
                 Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView();
                 await coreApplicationView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => listOfRecipeCards.Remove(indexToRemove));

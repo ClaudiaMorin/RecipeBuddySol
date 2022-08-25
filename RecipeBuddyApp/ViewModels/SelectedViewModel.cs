@@ -6,8 +6,8 @@ using RecipeBuddy.ViewModels.Commands;
 using RecipeBuddy.Core.Models;
 using Windows.UI.Xaml.Controls;
 using RecipeBuddy.Core.Helpers;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace RecipeBuddy.ViewModels
 {

@@ -1,7 +1,6 @@
-﻿using System;
-using RecipeBuddy.Core.Helpers;
+﻿
 using System.Collections.ObjectModel;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace RecipeBuddy.Core.Models
 {
@@ -69,6 +68,8 @@ namespace RecipeBuddy.Core.Models
         {
             RecipesList.RemoveAt(currIndex);
             ListCount = ListCount - 1;
+            if(ListCount > 0)
+                currentCardIndex = 0;
         }
 
         /// <summary>
@@ -113,8 +114,9 @@ namespace RecipeBuddy.Core.Models
         //it will loop back to the begining.
         public RecipeRecordModel GetCurrentEntry()
         {
-            if (RecipesList.Count > 0)
+            if (RecipesList.Count >= 0)
                 return RecipesList[CurrentCardIndex];
+
             else
                 return null;
         }

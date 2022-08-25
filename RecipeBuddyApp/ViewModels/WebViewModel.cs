@@ -1,8 +1,8 @@
 ﻿using System;
 using RecipeBuddy.Core.Models;
 using Windows.UI.Xaml.Controls;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using RecipeBuddy.ViewModels.Commands;
 
 namespace RecipeBuddy.ViewModels
@@ -54,7 +54,7 @@ namespace RecipeBuddy.ViewModels
             RecipeEntryFromWebVisibility = "Visible";
             FirstColumnTreeViewVisibility = "Collapsed";
             NewRecipeEntryVisibility = "Collapsed";
-            recipePanelForWebCopy.LoadRecipeCardModel(recipePanelForWebCopy.recipeCardModel);
+            recipePanelForWebCopy.LoadRecipeCardModelAndDirections(recipePanelForWebCopy.recipeCardModel);
         }
 
         /// <summary>
@@ -122,12 +122,13 @@ namespace RecipeBuddy.ViewModels
         /// <param name="title">Title of the recipe to remove</param>
         public void RemoveRecipe(string title)
         {
-
             SearchViewModel.Instance.RemoveRecipeFromComboBoxWork(title);
-            ComboBoxIndexForRecipeTitle = SearchViewModel.Instance.IndexOfComboBoxItem;
-            //Empty list at this point!
+            CloseKeepRecipePanel();
+
+            //Empty list ?
             if (SearchViewModel.Instance.listOfRecipeCards.ListCount > 1)
             {
+                ComboBoxIndexForRecipeTitle = SearchViewModel.Instance.IndexOfComboBoxItem;
                 CurrentLink = new Uri(SearchViewModel.Instance.listOfRecipeCards.GetCurrentEntry().Link);
             }
             else 

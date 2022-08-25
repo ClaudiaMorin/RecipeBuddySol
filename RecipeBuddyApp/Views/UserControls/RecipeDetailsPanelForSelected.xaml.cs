@@ -1,11 +1,6 @@
 ﻿using RecipeBuddy.ViewModels;
-using System;
-using System.Diagnostics;
-using System.Windows;
 using Windows.UI.Xaml.Controls;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Input;
+
 
 namespace RecipeBuddy.Views
 {

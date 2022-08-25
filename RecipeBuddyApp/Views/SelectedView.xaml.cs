@@ -2,7 +2,7 @@
 using Windows.UI.Xaml.Controls;
 using RecipeBuddy.ViewModels;
 using RecipeBuddy.Views;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace RecipeBuddy.Views
 {

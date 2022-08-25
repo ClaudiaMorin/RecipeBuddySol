@@ -53,9 +53,8 @@ namespace RecipeBuddy.Core.Scrapers
             string str1 = null;
             string str2 = "";
             string str3 = "";
-            HtmlNode Node1 = doc.DocumentNode.SelectSingleNode("//div[@class='searchResults__contentContainer']");
-            HtmlNode Node2 = Node1.SelectSingleNode("//div[@class='searchResults__contentResultsWrapper']");
-            HtmlNodeCollection list1 = Node2.SelectNodes("//div[@class='card__recipe card__facetedSearchResult']");
+            HtmlNode Node1 = doc.DocumentNode.SelectSingleNode("//div[@class='searchResults__contentResultsWrapper grid-view ']");
+            HtmlNodeCollection list1 = Node1.SelectNodes("//div[@class='component card card__recipe card__facetedSearchResult']");
             List<HtmlNode> list2 = new List<HtmlNode>();
 
                 //Search didn't find anything!
@@ -95,7 +94,7 @@ namespace RecipeBuddy.Core.Scrapers
         {
 
             List<string> ingredients = FillIngredientListAllRecipesForRecipeEntry(doc, 50);
-            List<string> directions = new List<string>();
+            List<string> directions = FillDirectionsListAllRecipesForRecipeEntry(doc, 30);
 
             //no ingredients it isn't a real recipe so we bail
             if (ingredients.Count == 0)
@@ -106,7 +105,7 @@ namespace RecipeBuddy.Core.Scrapers
             //recipeModel.Website = "AllRecipes";
             recipeModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//div[@class='recipe-summary elementFont__dek--within']").InnerText);
 
-            recipeModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//span[@class='author-name authorName linkHoverStyle']", doc));
+            recipeModel.Author = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//a[@class='author-name author-text__block elementFont__detailsLinkOnly--underlined elementFont__details--bold']", doc));
             recipeModel.Link = uri.ToString();
             recipeModel.TypeAsInt = (int)Scraper.FillTypeForRecipeEntry(recipeModel.Title);
             recipeModel.ListOfIngredientStrings = ingredients;
@@ -161,8 +160,30 @@ namespace RecipeBuddy.Core.Scrapers
             catch (Exception e)
             { }
 
-            return Scraper.TrimListToSpecifiedEntries(50, ingredients);
+            return Scraper.TrimListToSpecifiedEntries(countList, ingredients);
         }
-        
+
+        private static List<string> FillDirectionsListAllRecipesForRecipeEntry(HtmlDocument doc, int countList)
+        {
+            List<string> directions = new List<string>();
+
+            HtmlNode direct_node = doc.DocumentNode.SelectSingleNode("//ul[@class='instructions-section']");
+
+            try
+            {
+                HtmlNodeCollection htmlNodes = direct_node.SelectNodes("//div[@class='section-body elementFont__body--paragraphWithin elementFont__body--linkWithin']");
+
+                for (int i = 0; i < countList; i++)
+                {
+                    HtmlNode sectionHeader_node = htmlNodes[i];
+                    directions.Add(StringManipulationHelper.CleanHTMLTags(sectionHeader_node.InnerText));
+                }
+            }
+            catch (Exception e)
+            { }
+
+            return Scraper.TrimListToSpecifiedEntries(countList, directions);
+        }
+
     }
 }

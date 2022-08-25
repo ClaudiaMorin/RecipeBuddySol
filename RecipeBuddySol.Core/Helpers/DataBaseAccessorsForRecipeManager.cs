@@ -321,7 +321,24 @@ namespace RecipeBuddy.Core.Helpers
 
             return -1;
         }
-   
+
+
+        /// <summary>
+        /// Lodes the user-specific information from the DB, adaptation because UWP doesn't allow secure strings
+        /// </summary>
+        /// <param name="PasswordString">users password</param>
+        /// <param name="user">the username</param>
+        /// <returns>The user ID that is held in the DB</returns>
+        public static int LoadUserFromDatabase(string user)
+        {
+            List<List<object>> userDBModel = new List<List<object>>(1);
+
+            string sql = "select ID from Users Where Name='" + user + "'";
+            userDBModel = SqliteDataAccess.LoadData(sql, 1);
+            int i = Int32.Parse(userDBModel[0][0].ToString());
+            return i;
+        }
+
         /// <summary>
         /// Gets the User's Saved Recipes from the DB and sends them to the TreeViewModel
         /// </summary>
