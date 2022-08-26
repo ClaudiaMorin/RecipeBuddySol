@@ -77,8 +77,8 @@ namespace RecipeBuddy.ViewModels
         {
             //Need main UI thread to execute UI changes
             Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView();
-            await coreApplicationView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, () => UISearchingChanges());
-            
+            SearchEnabled = false;
+
             await coreApplicationView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => UIChangesBeginSearch());
 
             List<Task> TaskListOfSearches = new List<Task>();
@@ -95,14 +95,6 @@ namespace RecipeBuddy.ViewModels
         {
             WebViewModel.Instance.ChangeRecipeFromModel();
             NavigationService.Navigate(typeof(Views.WebView));
-        }
-
-        /// <summary>
-        /// triggers the change of the Search button to indicate it is busy
-        /// </summary>
-        private void UISearchingChanges()
-        {
-            SearchEnabled = false;
         }
 
         /// <summary>

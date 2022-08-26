@@ -137,8 +137,9 @@
                     </StackPanel>
                 </Grid>
 
-                <TextBlock Text="About" FontSize="20" TextAlignment="Center" Margin=" 0, 0, 0, 20"/>
+                <TextBlock Text="About" FontSize="20" TextAlignment="Center" Margin=" 0, 0, 0, 10"/>
                 <TextBlock Margin="6" Text="RecipeBuddy a private, digital repository of recipes that have been selected, altered, or created and then saved to a database on the users computer.  It is the sole creation of Claudia Morin and is distributed free of charge, all rights reserved." TextWrapping="Wrap" />
+                <TextBlock Margin="6" Text="Privacy Policy:  RecipeBuddy does not access, collect or transmit personal information.  Please note, RecipeBuddy does use 3rd party sites as part of its search methods and they may have trackers." TextWrapping="Wrap" />
                 <StackPanel Orientation="Horizontal">
                     <TextBlock x:Name="HyperlinkPublicDomain" Margin="6"  Text="All images sorced from:  "/>
                     <HyperlinkButton NavigateUri="https://publicdomainvectors.org/en" >
