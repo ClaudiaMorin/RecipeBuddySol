@@ -10,7 +10,7 @@
   <Identity
     Name="23061ClaudiaMorin.RecipeBuddy"
     Publisher="CN=76CEA5AA-E9D6-4374-825A-C29AA523693A"
-    Version="1.0.45.0" />
+    Version="1.0.46.0" />
 
   <mp:PhoneIdentity PhoneProductId="4070a593-fe45-4c30-8063-e494b16f15b9" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
