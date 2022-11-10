@@ -61,7 +61,7 @@ namespace RecipeBuddy.Core.Models
                 case Type_of_Websource.AllRecipes:
                     {
                         //Failed Search
-                        if (ScraperAllRecipes.GenerateURLsListFromAllRecipesSearch(SearchString, recipeListModel) == -1)
+                        if (Scraper_AllRecipes_Southern_FoodAndWine.GenerateURLsListFromSearch(SearchString, recipeListModel, 0) == -1)
                         {
                             Console.WriteLine("error in GenerateURLs");
                             return -1;
@@ -82,7 +82,7 @@ namespace RecipeBuddy.Core.Models
                 case Type_of_Websource.SouthernLiving:
                     {
                         //Failed Search
-                        if (ScraperSouthernLiving.GenerateURLsListFromSouthernLivingSearch(SearchString, recipeListModel) == -1)
+                        if (Scraper_AllRecipes_Southern_FoodAndWine.GenerateURLsListFromSearch(SearchString, recipeListModel, 1) == -1)
                         {
                             Console.WriteLine("error in GenerateURLs");
                             return -1;
@@ -103,7 +103,7 @@ namespace RecipeBuddy.Core.Models
                 case Type_of_Websource.FoodAndWine:
                     {
                         // Failed Search
-                        if (ScraperFoodAndWine.GenerateURLsListFromFoodAndWineSearch(SearchString, recipeListModel) == -1)
+                        if (Scraper_AllRecipes_Southern_FoodAndWine.GenerateURLsListFromSearch(SearchString, recipeListModel, 2) == -1)
                         {
                             Console.WriteLine("error in GenerateURLs");
                             return -1;
@@ -132,7 +132,7 @@ namespace RecipeBuddy.Core.Models
             int UrlNum = recipeCardList.URLLists.URLListCount;
             
             RecipeRecordModel re = Scraper.ScrapeDataForRecipeEntry(recipeCardList.URLLists.RecipeURLsList[0]);
-            
+
             //Gives us the first recipe to fill the blank panel and then the rest can happen async
             view.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => recipeCardList.Add(re));
             view.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => showCurrentEntry());

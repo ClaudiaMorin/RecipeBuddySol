@@ -79,7 +79,6 @@ namespace RecipeBuddy.ViewModels
             NewRecipeEntryVisibility = "Collapsed";
             MainViewWidth = "3*";
             FirstColumnTreeViewVisibility = "Visible";
-            ChangeRecipeFromModel();
         }
 
         /// <summary>
@@ -88,7 +87,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void ChangeRecipeFromModel()
         {
-            ComboBoxIndexForRecipeTitle = SearchViewModel.Instance.IndexOfComboBoxItem;
+              ComboBoxIndexForRecipeTitle = SearchViewModel.Instance.IndexOfComboBoxItem;
         }
 
         /// <summary>
@@ -122,9 +121,8 @@ namespace RecipeBuddy.ViewModels
         /// <param name="title">Title of the recipe to remove</param>
         public void RemoveRecipe(string title)
         {
-            SearchViewModel.Instance.RemoveRecipeFromComboBoxWork(title);
             CloseKeepRecipePanel();
-
+            SearchViewModel.Instance.RemoveRecipeFromComboBoxWork(title);
             //Empty list ?
             if (SearchViewModel.Instance.listOfRecipeCards.ListCount > 1)
             {
@@ -133,6 +131,7 @@ namespace RecipeBuddy.ViewModels
             }
             else 
             {
+                ComboBoxIndexForRecipeTitle = 0;
                 CurrentLink = null;
             }
 
@@ -223,7 +222,9 @@ namespace RecipeBuddy.ViewModels
         public int ComboBoxIndexForRecipeTitle
         {
             get { return comboBoxIndexForRecipeTitle; }
-            set { SetProperty(ref comboBoxIndexForRecipeTitle, value); }
+            set {
+                    SetProperty(ref comboBoxIndexForRecipeTitle, value);
+                }
         }
 
         /// <summary>

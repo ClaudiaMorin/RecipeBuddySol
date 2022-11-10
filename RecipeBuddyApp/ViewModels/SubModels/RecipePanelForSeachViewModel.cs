@@ -87,7 +87,8 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void ShowCurrentEntryAndActivateButtons()
         {
-            UpdateRecipeEntry(listOfRecipeModels.GetCurrentEntry());
+            if(listOfRecipeModels.ListCount > 0)
+                UpdateRecipeEntry(listOfRecipeModels.GetCurrentEntry());
             if (string.Compare(recipeCard.Title.ToLower(), "search for your next recipe find!") != 0)
             {
                 CanSelectSelect = true;
@@ -124,9 +125,9 @@ namespace RecipeBuddy.ViewModels
         /// <returns></returns>
         public async Task SearchAndFillList(string searchTerms, Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView)
         {
-
             //Creating a new list dumps any leftover search results that might be coming in.
             ActionShowCurrentEntry = () => ShowCurrentEntryAndActivateButtons();
+
             int results = await GenerateSearchResultsLists.SearchSitesAndGenerateEntryList(searchTerms, listOfRecipeModels, type_Of_Source, ActionShowCurrentEntry, coreApplicationView);
 
             if (results == -1)

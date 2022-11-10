@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using RecipeBuddy.Core.Database;
 using RecipeBuddy.Core.Scrapers;
 using System;
+using System.Threading;
+using Windows.System;
 
 namespace RecipeBuddy.Core.Helpers
 {
@@ -297,26 +299,39 @@ namespace RecipeBuddy.Core.Helpers
         /// <param name="PasswordString">users password</param>
         /// <param name="user">the username</param>
         /// <returns>The user ID that is held in the DB</returns>
-        public static int LoadUserFromDatabase(string PasswordString, string user)
+        public static int LoadUserFromDatabase(string PasswordString, string user, bool checkpasswords = true)
         {
             List<List<object>> userDBModel = new List<List<object>>(1);
 
-            byte[] bytePassword = PasswordHashing.CalculateHash(ConvertingStringToByteArray.ConvertStringToByteArray(PasswordString));
-            byte[] bytePasswordStored = SqliteDataAccess.GetPasswordFromDB(user);
-
-            //do the two passwords match ?
-            if (PasswordHashing.SequenceEquals(bytePassword, bytePasswordStored) == true)
+            if (checkpasswords)
             {
-                //PasswordSecureString.Clear();
-                PasswordString = null;
-                string sql = "select ID from Users Where Name='" + user + "'";
-                userDBModel = SqliteDataAccess.LoadData(sql, 1);
-                int i = Int32.Parse(userDBModel[0][0].ToString());
-                return i;
+                byte[] bytePassword = PasswordHashing.CalculateHash(ConvertingStringToByteArray.ConvertStringToByteArray(PasswordString));
+                byte[] bytePasswordStored = SqliteDataAccess.GetPasswordFromDB(user);
+                //do the two passwords match ?
+                if (PasswordHashing.SequenceEquals(bytePassword, bytePasswordStored) == true)
+                {
+                    //PasswordSecureString.Clear();
+                    PasswordString = null;
+                    string sql = "select ID from Users Where Name='" + user.ToLower() + "'";
+                    userDBModel = SqliteDataAccess.LoadData(sql, 1);
+                    int i = Int32.Parse(userDBModel[0][0].ToString());
+                    return i;
+                }
+                else
+                {
+                    new Windows.UI.Popups.MessageDialog("Invalid Password!").ShowAsync();
+                }
             }
             else
             {
-                new Windows.UI.Popups.MessageDialog("Invalid Password!").ShowAsync();
+                string sql = "select ID from Users Where Name='" + user + "'";
+                userDBModel = SqliteDataAccess.LoadData(sql, 1);
+
+                if (userDBModel.Count > 0)
+                {
+                    List<object> userIDFromDB = userDBModel[0];
+                    return (int)userIDFromDB[0];
+                }
             }
 
             return -1;
@@ -333,10 +348,15 @@ namespace RecipeBuddy.Core.Helpers
         {
             List<List<object>> userDBModel = new List<List<object>>(1);
 
-            string sql = "select ID from Users Where Name='" + user + "'";
+            string sql = "select ID from Users Where Name='" + user.ToLower() + "'";
             userDBModel = SqliteDataAccess.LoadData(sql, 1);
-            int i = Int32.Parse(userDBModel[0][0].ToString());
-            return i;
+            if (userDBModel.Count > 0)
+            {
+                int i = Int32.Parse(userDBModel[0][0].ToString());
+                return i;
+            }
+
+            return -1;
         }
 
         /// <summary>
@@ -392,7 +412,7 @@ namespace RecipeBuddy.Core.Helpers
         /// <summary>
         /// Saves a new user to the DB
         /// </summary>
-        public static void SaveUserToDatabase(string NewAccountName, byte[] bytePassword, byte[] bytePasswordCheck)
+        public static int SaveUserToDatabase(string NewAccountName, byte[] bytePassword)
         {
 
             //Get the new users information from the UI
@@ -413,9 +433,7 @@ namespace RecipeBuddy.Core.Helpers
            
             //save user to User table in DB
             SqliteDataAccess.UpdateData(sqlInsertIntoUsers, parameters);
-
-            //Reset the "Create Password" section to empty strings.
-            NewAccountName = "";
+            return LoadUserFromDatabase(NewAccountName);
 
         }
 

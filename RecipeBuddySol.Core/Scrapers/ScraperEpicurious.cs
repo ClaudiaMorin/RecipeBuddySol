@@ -33,17 +33,15 @@ namespace RecipeBuddy.Core.Scrapers
         {
             List<string> myQuery = new List<string>();
 
-            string strQuery = "https://www.epicurious.com";
+            string strQuery = "https://www.epicurious.com/search/";
             var web = new HtmlWeb();
 
-            myQuery.Add("search");
-            myQuery.Add(strSearch);
-
-            foreach (var item in myQuery)
+            string[] strings = strSearch.Split(' ');
+            strQuery += "/" + strings[0];
+            for(int i = 1; i < strings.Length; i++)
             {
-                strQuery += '/' + item;
+                strQuery +="%20" + strings[i];
             }
-            strQuery += "?content=recipe";
 
             try
             {
@@ -155,18 +153,22 @@ namespace RecipeBuddy.Core.Scrapers
         {
             List<string> directions = new List<string>();
 
-            HtmlNode direct_node = doc.DocumentNode.SelectSingleNode("//div[@class='InstructionGroupWrapper-hmyafp bJfiL']");
+            HtmlNode direct_node = doc.DocumentNode.SelectSingleNode("//div[@class='InstructionsWrapper-guLFNa itVwC']");
 
             try
             {
-                HtmlNodeCollection htmlNodes = direct_node.SelectNodes("//div[@class='BaseWrap-sc-UABmB BaseText-fETRLB InstructionBody-huDCkh hkSZSE xURKj eyjXXE']");
-
-                for (int i = 0; i < countList; i++)
+                if (direct_node != null)
                 {
-                    HtmlNode sectionHeader_node = htmlNodes[i];
-                    directions.Add(StringManipulationHelper.CleanHTMLTags(sectionHeader_node.InnerText));
+                    HtmlNodeCollection htmlNodes = direct_node.SelectNodes("//li[@class='InstructionListWrapper-ejYxLz fjpmHX']");
+
+                    for (int i = 0; i < countList; i++)
+                    {
+                        HtmlNode sectionHeader_node = htmlNodes[i];
+                        directions.Add(StringManipulationHelper.CleanHTMLTags(sectionHeader_node.InnerText));
+                    }
                 }
             }
+
             catch (Exception e)
             { }
 

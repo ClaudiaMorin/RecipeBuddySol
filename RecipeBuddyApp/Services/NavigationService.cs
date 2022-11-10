@@ -56,26 +56,36 @@ namespace RecipeBuddy.Services
 
         public static bool Navigate(Type pageType, object parameter = null, NavigationTransitionInfo infoOverride = null)
         {
-            if (pageType == null || !pageType.IsSubclassOf(typeof(Page)))
+            try
             {
-                throw new ArgumentException($"Invalid pageType '{pageType}', please provide a valid pageType.", nameof(pageType));
-            }
-
-            // Don't open the same page multiple times
-            if (Frame.Content?.GetType() != pageType || (parameter != null && !parameter.Equals(_lastParamUsed)))
-            {
-                var navigationResult = Frame.Navigate(pageType, parameter, infoOverride);
-                if (navigationResult)
+                if (pageType == null || !pageType.IsSubclassOf(typeof(Page)))
                 {
-                    _lastParamUsed = parameter;
+                    throw new ArgumentException($"Invalid pageType '{pageType}', please provide a valid pageType.", nameof(pageType));
                 }
 
-                return navigationResult;
+                // Don't open the same page multiple times
+                if (Frame.Content?.GetType() != pageType || (parameter != null && !parameter.Equals(_lastParamUsed)))
+                {
+                    var navigationResult = Frame.Navigate(pageType, parameter, infoOverride);
+                    if (navigationResult)
+                    {
+                        _lastParamUsed = parameter;
+                    }
+
+                    return navigationResult;
+                }
+                else
+                {
+                    return false;
+                }
+
             }
-            else
+            catch (Exception e)
             {
-                return false;
+                Console.WriteLine(e.Message);
             }
+
+            return false;
         }
 
         public static bool Navigate<T>(object parameter = null, NavigationTransitionInfo infoOverride = null)

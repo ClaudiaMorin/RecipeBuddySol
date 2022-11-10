@@ -12,6 +12,7 @@ using RecipeBuddy.Services;
 using CommunityToolkit.Mvvm.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
+using System.Linq;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -69,6 +70,7 @@ namespace RecipeBuddy.ViewModels
             canSelectCreateUser = false;
             loggedin = false;
             comboBoxIndexOfUserFromDB = 0;
+            loginNewUser = false;
 
             CmdLogoutBtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => LogOut(), FuncBool = () => CanSelectLogout);
             CmdLoginBtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => LogIn(), FuncBool = () => CanSelectLogin);
@@ -85,27 +87,39 @@ namespace RecipeBuddy.ViewModels
         {
             string AccountName = ListOfUserAccountsInDB[ComboBoxIndexOfUserFromDB];
 
-            UsersIDInDB = DataBaseAccessorsForRecipeManager.LoadUserFromDatabase(PasswordString, AccountName);
-            if (AccountName.Length > 0 && UsersIDInDB != -1)
+            if (loginNewUser == false)
+            {
+                UsersIDInDB = DataBaseAccessorsForRecipeManager.LoadUserFromDatabase(PasswordString, AccountName);
+                if (AccountName.Length > 0 && UsersIDInDB != -1)
+                {
+                    SetUpSearchWebsources(false);
+                    loggedin = true;
+                    CanSelectLogout = true;
+                    CanSelectLogin = false;
+                    PasswordBoxEnabled = "false";
+                    //Set Up TreeView
+                    List<RecipeRecordModel> recipeRecords = DataBaseAccessorsForRecipeManager.LoadUserDataByID(UsersIDInDB);
+                    MainNavTreeViewModel.Instance.AddRecipeModelsToTreeViewAsPartOfInitialSetup(recipeRecords);
+                    NavigationService.Navigate(typeof(SearchView));
+
+                }
+                else //user password didm't match
+                {
+                    Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("Password Incorrect!  Casing counts!");
+                    dialog.ShowAsync();
+                }
+            }
+            else //this is a new user without any records, we already have set the UserDBID
             {
                 SetUpSearchWebsources(false);
                 loggedin = true;
                 CanSelectLogout = true;
                 CanSelectLogin = false;
                 PasswordBoxEnabled = "false";
-                //Set Up TreeView
-                List<RecipeRecordModel> recipeRecords = DataBaseAccessorsForRecipeManager.LoadUserDataByID(UsersIDInDB);
-                MainNavTreeViewModel.Instance.AddRecipeModelsToTreeViewAsPartOfInitialSetup(recipeRecords);
-
+                PasswordString = "";
+                loginNewUser = false;
                 NavigationService.Navigate(typeof(SearchView));
             }
-            else //user password didm't match
-            {
-                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("Password Incorrect!  Casing counts!");
-                dialog.ShowAsync();
-            }
-
-            PasswordString = "";
 
         }
 
@@ -149,12 +163,10 @@ namespace RecipeBuddy.ViewModels
         /// <summary>
         /// Saves a new user to the DB
         /// </summary>
-        //private void SaveUser(string NewAccountName, string NewEmail, string UserName, SecureString NewPasswordSecureString, SecureString NewConfirmPasswordSecureString)
         private void SetUpNewUser()
         {
             Windows.UI.Popups.MessageDialog dialog;
-            byte[] bytePassword = PasswordHashing.CalculateHash(ConvertingStringToByteArray.ConvertStringToByteArray(NewPasswordString));
-            byte[] bytePasswordCheck = PasswordHashing.CalculateHash(ConvertingStringToByteArray.ConvertStringToByteArray(NewConfirmPasswordString));
+            
 
             //Is that name already taken?  If so the user needs to give us another one!
             for (int count = 0; count < ListOfUserAccountsInDB.Count; count++)
@@ -166,21 +178,23 @@ namespace RecipeBuddy.ViewModels
                     NewConfirmPasswordString = "";
                     dialog = new Windows.UI.Popups.MessageDialog("That User Name is taken.");
                     dialog.ShowAsync();
-                    return ;
+                    return;
                 }
             }
 
             //Validate passwords
-            if (PasswordHashing.SequenceEquals(bytePassword, bytePasswordCheck) == false)
+            if (NewPasswordString.SequenceEqual(newConfirmPasswordString) == false)
             {
                 NewPasswordString = "";
                 NewConfirmPasswordString = "";
                 dialog = new Windows.UI.Popups.MessageDialog("Passwords don't match");
                 dialog.ShowAsync();
-                return ;
+                return;
             }
 
-            DataBaseAccessorsForRecipeManager.SaveUserToDatabase(NewAccountName, bytePassword, bytePasswordCheck);
+            byte[] bytePassword = PasswordHashing.CalculateHash(ConvertingStringToByteArray.ConvertStringToByteArray(NewPasswordString));
+            UsersIDInDB = DataBaseAccessorsForRecipeManager.SaveUserToDatabase(NewAccountName, bytePassword);
+
 
             ListOfUserAccountsInDB.Add(NewAccountName);
             ComboBoxIndexOfUserFromDB = ListOfUserAccountsInDB.Count - 1;
@@ -188,10 +202,12 @@ namespace RecipeBuddy.ViewModels
             dialog = new Windows.UI.Popups.MessageDialog("User: " + NewAccountName + " created, now pick sites to search!");
             dialog.ShowAsync();
             PasswordString = NewPasswordString;
+            PasswordBoxEnabled = "false";
             //Reset the "Create Password" section to empty strings.
             NewAccountName = "";
             NewPasswordString = "";
-            NewConfirmPasswordString = "";  
+            NewConfirmPasswordString = "";
+            loginNewUser = true;
         }
 
 
@@ -200,7 +216,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         private void ToggleLogin()
         {
-            if (PasswordString != null && PasswordString.Length > 6 && checkBoxEnabledCount == 3 && loggedin == false)
+            if (PasswordString != null && PasswordString.Length >= 6 && checkBoxEnabledCount == 3 && loggedin == false)
                 CanSelectLogin = true;
             else
                 CanSelectLogin = false;
@@ -228,6 +244,7 @@ namespace RecipeBuddy.ViewModels
 
         #region properties, private strings, and ICommands
 
+        private bool loginNewUser;
 
         private string passwordBoxEnabled;
         public string PasswordBoxEnabled

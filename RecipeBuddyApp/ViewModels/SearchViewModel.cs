@@ -8,6 +8,8 @@ using RecipeBuddy.Core.Models;
 using RecipeBuddy.Services;
 using CommunityToolkit.Mvvm.Input;
 using Windows.UI.Xaml.Input;
+using Windows.ApplicationModel.Core;
+using RecipeBuddy.Core.Scrapers;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -45,6 +47,7 @@ namespace RecipeBuddy.ViewModels
             CmdRemove = new RelayCommand<string>(actionWithString = s => RemoveRecipe(s));
             SearchButtonCmd = new RelayCommandRaiseCanExecute(ActionNoParams = () => Search(), FuncBool = () => SearchEnabled);
             WebButtonCmd = new RelayCommandRaiseCanExecute(ActionNoParams = () => GoToWebView(), FuncBool = () => WebViewEnabled);
+
         }
 
         /// <summary>
@@ -56,6 +59,8 @@ namespace RecipeBuddy.ViewModels
             recipePanelForSearch1.type_Of_Source = UserViewModel.Instance.PanelMap[0];
             recipePanelForSearch2.type_Of_Source = UserViewModel.Instance.PanelMap[1];
             recipePanelForSearch3.type_Of_Source = UserViewModel.Instance.PanelMap[2];
+            //Testing changes to AllRecipesSite.
+            //ScraperAllRecipes.GenerateURLsListFromAllRecipesSearch("cake", listOfRecipeCards);
         }
 
         /// <summary>
@@ -75,6 +80,7 @@ namespace RecipeBuddy.ViewModels
 
         public async Task Search()
         {
+            
             //Need main UI thread to execute UI changes
             Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView();
             SearchEnabled = false;
@@ -93,8 +99,15 @@ namespace RecipeBuddy.ViewModels
 
         public void GoToWebView()
         {
-            WebViewModel.Instance.ChangeRecipeFromModel();
-            NavigationService.Navigate(typeof(Views.WebView));
+            try
+            {
+                WebViewModel.Instance.ChangeRecipeFromModel();
+                NavigationService.Navigate(typeof(Views.WebView));
+            }
+            catch (Exception e)
+            {
+                    Console.WriteLine(e.ToString());
+            }
         }
 
         /// <summary>
@@ -157,7 +170,7 @@ namespace RecipeBuddy.ViewModels
                     WebViewModel.Instance.CanSelectTrueIfThereIsARecipe = false;
                     WebViewModel.Instance.CmdOpenEntry.RaiseCanExecuteChanged();
                 }
-                else
+                else //so we have at least 2 in our count
                 {
                     if (indexToRemove == 0)
                     {
@@ -225,15 +238,17 @@ namespace RecipeBuddy.ViewModels
             listOfRecipeCards.Add(recipeCard);
             WebViewModel.Instance.CanSelectTrueIfThereIsARecipe = true;
 
-            //If we have nothing in the list we will show the first entry
-            if (listOfRecipeCards.ListCount == 1)
-            {
-                listOfRecipeCards.CurrentCardIndex = 0;
-            }
-            else
-            {
-                listOfRecipeCards.CurrentCardIndex = listOfRecipeCards.ListCount - 1;
-            }
+            //If we have nothing in the list we will show the first entry otherwise we will show the
+            //most recient one.
+            listOfRecipeCards.CurrentCardIndex = listOfRecipeCards.ListCount - 1;
+            //if (listOfRecipeCards.ListCount == 1)
+            //{
+            //    listOfRecipeCards.CurrentCardIndex = 0;
+            //}
+            //else
+            //{
+                
+            //}
 
             ShowSpecifiedEntry(listOfRecipeCards.CurrentCardIndex);
         }

@@ -93,43 +93,36 @@ namespace RecipeBuddy.Core.Scrapers
                 if (uri.Host == "www.epicurious.com")
                 {
                     RecipeRecordModel dataEpicurious = ScraperEpicurious.ProcessEpicuriousRecipeType(doc, splitter, uri);
-
-                    if (dataEpicurious != null)
                         return dataEpicurious;
                 }
 
                 if (uri.Host == "www.allrecipes.com")
                 {
-                    RecipeRecordModel dataBlurbAllRecipes = ScraperAllRecipes.ProcessAllRecipesRecipeType(doc, splitter, uri);
-                    if (dataBlurbAllRecipes != null)
+                    RecipeRecordModel dataBlurbAllRecipes = Scraper_AllRecipes_Southern_FoodAndWine.ProcessRecipeType(doc, splitter, uri);
                         return dataBlurbAllRecipes;
                 }
 
                 if (uri.Host == "www.foodnetwork.com")
                 {
                     RecipeRecordModel dataFoodNetwork = ScraperFoodNetwork.ProcessFoodNetworkRecipeType(doc, splitter, uri);
-                    if (dataFoodNetwork != null)
                         return dataFoodNetwork;
                 }
 
                 if (uri.Host == "www.southernliving.com")
                 {
-                    RecipeRecordModel dataSouthernLiving = ScraperSouthernLiving.ProcessSouthernLivingRecipeType(doc, splitter, uri);
-                    if (dataSouthernLiving != null)
+                    RecipeRecordModel dataSouthernLiving = Scraper_AllRecipes_Southern_FoodAndWine.ProcessRecipeType(doc, splitter, uri);
                         return dataSouthernLiving;
                 }
 
                 if (uri.Host == "www.tasty.co")
                 {
                     RecipeRecordModel dataTasty = ScraperTasty.ProcessTastyRecipeType(doc, splitter, uri);
-                    if (dataTasty != null)
                         return dataTasty;
                 }
 
                 if (uri.Host == "www.foodandwine.com")
                 {
-                    RecipeRecordModel dataFoodAndWine = ScraperFoodAndWine.ProcessFoodAndWineRecipeType(doc, splitter, uri);
-                    if (dataFoodAndWine != null)
+                    RecipeRecordModel dataFoodAndWine = Scraper_AllRecipes_Southern_FoodAndWine.ProcessRecipeType(doc, splitter, uri);
                         return dataFoodAndWine;
                 }
             }
