@@ -48,16 +48,7 @@ namespace RecipeBuddy.Core.Models
         {
             switch (websource)
             {
-                case Type_of_Websource.Epicurious:
-                    {
-                        //Failed Search
-                        if (ScraperEpicurious.GenerateURLsListFromEpicuriousSearch(SearchString, recipeListModel) == -1)
-                        {
-                            Console.WriteLine("error in GenerateURLs");
-                            return -1;
-                        }
-                        break;
-                    }
+                
                 case Type_of_Websource.AllRecipes:
                     {
                         //Failed Search
@@ -69,16 +60,7 @@ namespace RecipeBuddy.Core.Models
                         break;
                     }
 
-                case Type_of_Websource.FoodNetwork:
-                    {
-                        //Failed Search
-                        if (ScraperFoodNetwork.GenerateURLsListFromFoodNetworkSearch(SearchString, recipeListModel) == -1)
-                        {
-                            Console.WriteLine("error in GenerateURLs");
-                            return -1;
-                        }
-                        break;
-                    }
+                
                 case Type_of_Websource.SouthernLiving:
                     {
                         //Failed Search
@@ -90,16 +72,7 @@ namespace RecipeBuddy.Core.Models
                         break;
                     }
 
-                case Type_of_Websource.Tasty:
-                    {
-                        //Failed Search
-                        if (ScraperTasty.GenerateURLsListFromTastySearch(SearchString, recipeListModel) == -1)
-                        {
-                            Console.WriteLine("error in GenerateURLs");
-                            return -1;
-                        }
-                        break;
-                    }
+               
                 case Type_of_Websource.FoodAndWine:
                     {
                         // Failed Search

@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Controls;
 using RecipeBuddy.Services;
 using RecipeBuddy.Views;
 using CommunityToolkit.Mvvm.Input;
+using RecipeBuddy.ViewModels.Commands;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -16,6 +17,8 @@ namespace RecipeBuddy.ViewModels
     public class MainNavTreeViewModel : ObservableObject
     {
         Action<TreeViewItemInvokedEventArgs> actionTreeViewArg;
+        Action ActionNoParams;
+
 
         private static readonly MainNavTreeViewModel instance = new MainNavTreeViewModel();
         public static MainNavTreeViewModel Instance
@@ -28,7 +31,8 @@ namespace RecipeBuddy.ViewModels
 
         private MainNavTreeViewModel()
         {
-            
+
+
             CmdAddTreeVeiwItemToSelectList = new RelayCommand<TreeViewItemInvokedEventArgs>(actionTreeViewArg = (args) => AddSelectedTreeViewItem(args));
 
             RecipeTreeRootNodes = new ObservableCollection<RecipeTreeItem>();
@@ -589,7 +593,7 @@ namespace RecipeBuddy.ViewModels
                 }   
             }
 
-            else //recipe is not in the tree
+            else //recipe is not in the DB
             {
                 RecipeTreeItem parentNode = MainNavTreeViewModel.instance.GetRecipeParentNodeFromType(type);
 
@@ -665,6 +669,8 @@ namespace RecipeBuddy.ViewModels
             get;
             private set;
         }
+
+
 
 
         /// <summary>

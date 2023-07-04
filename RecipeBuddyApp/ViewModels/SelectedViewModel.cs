@@ -19,6 +19,7 @@ namespace RecipeBuddy.ViewModels
         Action<string> actionWithObject;
         Func<bool> FuncBool;
 
+        public MainNavTreeViewModel mainTreeViewNav;
         public RecipeDisplayModel selectViewMainRecipeCardModel;
 
         public string QuantitySelectedAsString;
@@ -54,7 +55,7 @@ namespace RecipeBuddy.ViewModels
             authorEditString = "";
             titleEditString = "";
             authorMaxLength = "30";
-            titleMaxLength = "40";
+            titleMaxLength = "60";
             ingredMaxLength = "200";
             directMaxLength = "2000";
 
@@ -62,10 +63,11 @@ namespace RecipeBuddy.ViewModels
 
             LoadListSettersWithActionDelegatesForIngredientQuantities();
             selectViewMainRecipeCardModel = new RecipeDisplayModel();
-            selectViewMainRecipeCardModel.Title = "Select a saved recipe from the treeview!";
+            selectViewMainRecipeCardModel.Title = "Select a saved recipe from the treeview to edit!";
             IngredientQuantityShift = new List<string>();
             typeComboBoxVisibility = "Collapsed";
 
+            
             CmdSelectedTypeChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => CanSelect);
             CmdSelectedQuantityChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeQuantityFromComboBox(e), canCallActionFunc => CanSelect);
             CmdCopy = new RelayCommand<string>(ActionNoParams => Copy(), canCallActionFunc => CanSelectAlwaysTrue);
@@ -143,7 +145,7 @@ namespace RecipeBuddy.ViewModels
         {
             selectViewMainRecipeCardModel.SaveEditsToARecipe();
             
-            int result = MainWindowViewModel.Instance.mainTreeViewNav.AddRecipeToTreeView(selectViewMainRecipeCardModel, true);
+            int result = mainTreeViewNav.AddRecipeToTreeView(selectViewMainRecipeCardModel, true);
 
             if (result == 1)
             {
@@ -510,6 +512,7 @@ namespace RecipeBuddy.ViewModels
                 //if there is a change we do something, otherwise we don't
                 if (string.Compare(selectViewMainRecipeCardModel.Title.ToLower(), TitleEditString.ToLower()) != 0)
                 {
+
                     //if the title is uniqe we are good.
                     if (MainNavTreeViewModel.Instance.CheckIfRecipeAlreadyPresentAndUpdate(TitleEditString.ToLower(), selectViewMainRecipeCardModel.RecipeTypeInt, selectViewMainRecipeCardModel.RecipeDBID) == 2)
                     {
@@ -2897,5 +2900,7 @@ namespace RecipeBuddy.ViewModels
             get { return selectViewMainRecipeCardModel; }
             set { SetProperty(ref selectViewMainRecipeCardModel, value); }
         }
+
+
     }
 }

@@ -8,5 +8,6 @@ namespace RecipeBuddy.Core.Database
         public string Name { get; set; }
 
         public byte[] Password { get; set; }
+
     }
 }

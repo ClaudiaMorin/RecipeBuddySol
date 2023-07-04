@@ -134,7 +134,26 @@ namespace RecipeBuddy.Core.Scrapers
 
             recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//h1[@id='article-heading_1-0']", doc));
 
-            recipeModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//h2[@id='article-subheading_1-0']").InnerText);
+            if (uri.Host == "www.southernliving.com")
+            {
+                recipeModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//div[@id='mntl-recipe-intro__content_1-0']").InnerText);
+                recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//h1[@id='article-heading_2-0']", doc));
+            }
+
+            else if (uri.Host == "www.foodandwine.com")
+            {
+                recipeModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//p[@id='article-subheading_1-0']").InnerText);;
+            }
+            else if (uri.Host == "www.allrecipes.com")
+            {
+                recipeModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//p[@id='article-subheading_1-0']").InnerText);
+            }
+
+            if (recipeModel.Description.Length > 200)
+            {
+                recipeModel.Description = recipeModel.Description.Substring(0, 200);
+                recipeModel.Description = recipeModel.Description.Substring(0, recipeModel.Description.LastIndexOf(' '));
+            }
 
             recipeModel.Author = "By: " + StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//a[@class='mntl-attribution__item-name']", doc));
             recipeModel.Link = uri.ToString();

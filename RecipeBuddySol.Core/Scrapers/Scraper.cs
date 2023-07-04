@@ -10,11 +10,11 @@ using RecipeBuddy.Core.Models;
 
 namespace RecipeBuddy.Core.Scrapers
 {
-    public enum Type_of_Websource { None, Epicurious, AllRecipes, FoodNetwork, SouthernLiving, Tasty, FoodAndWine }
+    public enum Type_of_Websource { None, AllRecipes, SouthernLiving, FoodAndWine }
 
     public sealed class Scraper
     {
-
+            
         private static readonly Scraper instance = new Scraper();
 
         static Scraper()
@@ -89,12 +89,7 @@ namespace RecipeBuddy.Core.Scrapers
             {
                 HtmlWeb web = new HtmlWeb();
                 HtmlDocument doc = web.Load(uri);
-
-                if (uri.Host == "www.epicurious.com")
-                {
-                    RecipeRecordModel dataEpicurious = ScraperEpicurious.ProcessEpicuriousRecipeType(doc, splitter, uri);
-                        return dataEpicurious;
-                }
+               
 
                 if (uri.Host == "www.allrecipes.com")
                 {
@@ -102,22 +97,11 @@ namespace RecipeBuddy.Core.Scrapers
                         return dataBlurbAllRecipes;
                 }
 
-                if (uri.Host == "www.foodnetwork.com")
-                {
-                    RecipeRecordModel dataFoodNetwork = ScraperFoodNetwork.ProcessFoodNetworkRecipeType(doc, splitter, uri);
-                        return dataFoodNetwork;
-                }
 
                 if (uri.Host == "www.southernliving.com")
                 {
                     RecipeRecordModel dataSouthernLiving = Scraper_AllRecipes_Southern_FoodAndWine.ProcessRecipeType(doc, splitter, uri);
                         return dataSouthernLiving;
-                }
-
-                if (uri.Host == "www.tasty.co")
-                {
-                    RecipeRecordModel dataTasty = ScraperTasty.ProcessTastyRecipeType(doc, splitter, uri);
-                        return dataTasty;
                 }
 
                 if (uri.Host == "www.foodandwine.com")

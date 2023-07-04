@@ -9,17 +9,16 @@
       mc:Ignorable="d"
       MaxHeight="800"
       MaxWidth="1400"
-      x:Name="WebTabView">
+      x:Name="WebTabView"
+      Tag="WebView">
+    
     <StackPanel x:Name="MasterStackPanel">
         <local:AppHeader/>
         <Grid Height="798">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="{Binding MainViewWidth}"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <StackPanel x:Name="FirstColumn" Grid.Row="0" Grid.Column="0" Visibility="{Binding FirstColumnTreeView, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Background="LightSteelBlue" >
-                <local:RecipeTreeView x:Name="SavedRecipesTreeView"/>
-            </StackPanel>
             <StackPanel x:Name="TextBoxRecipe" Grid.Row="0" Grid.Column="0" Visibility="{Binding RecipeEntryVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                 <StackPanel Orientation="Horizontal" Background="Gray">
                     <Border Width="10"/>

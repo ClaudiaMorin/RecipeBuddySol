@@ -11,7 +11,8 @@
              mc:Ignorable="d"
              MaxHeight="800"
              MaxWidth="1400"
-             x:Name="SelectedViewTab">
+             x:Name="SelectedViewTab"
+             Tag="SelectedView">
 
     <StackPanel>
         <local:AppHeader/>

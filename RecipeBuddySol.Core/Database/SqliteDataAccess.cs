@@ -4,9 +4,12 @@ using RecipeBuddy.Core.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Xml.Linq;
+using Windows.System;
 
 namespace RecipeBuddy.Core.Database     
 {
@@ -62,30 +65,10 @@ namespace RecipeBuddy.Core.Database
 
         public static Byte[] GetPasswordFromDB(string userName, string connectionName = "DataSource")
         {
-            string myconnectionStr = DataAccessHelpers.LoadConnectionString(connectionName);
-            Byte[] result = null;
-            try
-            {
-                SqliteConnection myconnection = new SqliteConnection(myconnectionStr);
-                myconnection.Open();
-                SqliteCommand sqliteCommand = myconnection.CreateCommand();
-                sqliteCommand.CommandText = "select Password from Users Where  Name='" + userName + "'";
-
-                using (var reader = sqliteCommand.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        result = (Byte[]) reader.GetValue(0);
-                    }
-                }
-
-                myconnection.Close();  
-            }
-
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
+            Dictionary<string, object> myResults = new Dictionary<string, object>();
+            string queryStr = "select Password from Users Where Name='" + userName.ToLower() + "'"; ;
+            List<List<object>> Data = LoadData(queryStr, 1, myResults);
+            Byte[] result = (byte[])Data[0][0];
 
             return result;
 

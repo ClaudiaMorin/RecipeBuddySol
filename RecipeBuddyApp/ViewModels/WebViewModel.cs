@@ -29,11 +29,11 @@ namespace RecipeBuddy.ViewModels
         private WebViewModel()
         {
             dropDownOpen = false;
-            firstColumnTreeViewVisibility = "Visible";
+            firstColumnVisibility = "Collapsed";
             recipeEntryVisibility = "Collapsed";
             recipeEntryFromWebVisibility = "Collapsed";
             newRecipeEntryVisibility = "Collapsed";
-            mainViewWidth = "3*";
+            mainViewWidth = "Auto";
             recipePanelForWebCopy = RecipePanelForWebCopy.Instance;
 
             CmdRemove = new RelayCommand<string>(actionWithString = s => RemoveRecipe(s));
@@ -52,7 +52,7 @@ namespace RecipeBuddy.ViewModels
             MainViewWidth = "*";
             RecipeEntryVisibility = "Visible";
             RecipeEntryFromWebVisibility = "Visible";
-            FirstColumnTreeViewVisibility = "Collapsed";
+            FirstColumnVisibility = "Collapsed";
             NewRecipeEntryVisibility = "Collapsed";
             recipePanelForWebCopy.LoadRecipeCardModelAndDirections(recipePanelForWebCopy.recipeCardModel);
         }
@@ -67,7 +67,7 @@ namespace RecipeBuddy.ViewModels
             emptyRecipeCardModel.Title = "Recipe Title Here";
             RecipeEntryVisibility = "Visible";
             NewRecipeEntryVisibility = "Visible";
-            FirstColumnTreeViewVisibility = "Collapsed";
+            FirstColumnVisibility = "Collapsed";
             RecipeEntryFromWebVisibility = "Collapsed";
             recipePanelForWebCopy.LoadRecipeCardModel(emptyRecipeCardModel);
         }
@@ -77,8 +77,8 @@ namespace RecipeBuddy.ViewModels
             RecipeEntryVisibility = "Collapsed";
             RecipeEntryFromWebVisibility = "Collapsed";
             NewRecipeEntryVisibility = "Collapsed";
-            MainViewWidth = "3*";
-            FirstColumnTreeViewVisibility = "Visible";
+            MainViewWidth = "Auto";
+            FirstColumnVisibility = "Collapsed";
         }
 
         /// <summary>
@@ -262,11 +262,11 @@ namespace RecipeBuddy.ViewModels
         }
 
 
-        private string firstColumnTreeViewVisibility;
-        public string FirstColumnTreeViewVisibility
+        private string firstColumnVisibility;
+        public string FirstColumnVisibility
         {
-            get { return firstColumnTreeViewVisibility; }
-            set { SetProperty(ref firstColumnTreeViewVisibility, value); }
+            get { return firstColumnVisibility; }
+            set { SetProperty(ref firstColumnVisibility, value); }
         }
 
         private string mainViewWidth;

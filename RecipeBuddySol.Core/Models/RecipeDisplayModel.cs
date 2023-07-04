@@ -29,7 +29,7 @@ namespace RecipeBuddy.Core.Models
             listOfIngredientStringsForDisplay = new List<string>(50);
             listOfDirectionStringsForDisplay = new List<string>(30);
 
-            Title = "Search for your next recipe find!";
+            Title = "Search for your next recipe, or create one from scratch.";
             Description = "";
             Author = "";
             //Website = Type_of_Websource.None;

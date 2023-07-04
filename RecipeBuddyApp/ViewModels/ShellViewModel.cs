@@ -7,6 +7,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RecipeBuddy.Helpers;
 using RecipeBuddy.Services;
+using RecipeBuddy.ViewModels.Commands;
+using RecipeBuddy.Views;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -20,7 +22,7 @@ namespace RecipeBuddy.ViewModels
 
     public sealed class ShellViewModel : ObservableObject
     {
-        
+        Action ActionNoParams;
         private static readonly ShellViewModel instance = new ShellViewModel();
         private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
         private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
@@ -31,6 +33,8 @@ namespace RecipeBuddy.ViewModels
         private WinUI.NavigationViewItem _selected;
         private ICommand _loadedCommand;
         private ICommand _itemInvokedCommand;
+
+
 
         public bool IsBackEnabled
         {
@@ -51,8 +55,7 @@ namespace RecipeBuddy.ViewModels
 
 
         private ShellViewModel()
-        {
-        }
+        { }
 
         static ShellViewModel()
         { }
@@ -69,6 +72,7 @@ namespace RecipeBuddy.ViewModels
             NavigationService.Frame = frame;
             NavigationService.NavigationFailed += Frame_NavigationFailed;
             NavigationService.Navigated += Frame_Navigated;
+
             _navigationView.BackRequested += OnBackRequested;
         }
 
@@ -78,6 +82,8 @@ namespace RecipeBuddy.ViewModels
             // More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8
             _keyboardAccelerators.Add(_altLeftKeyboardAccelerator);
             _keyboardAccelerators.Add(_backKeyboardAccelerator);
+
+
             await Task.CompletedTask;
         }
 
@@ -165,7 +171,11 @@ namespace RecipeBuddy.ViewModels
 
         private bool IsUserLoggedIn(WinUI.NavigationViewItemInvokedEventArgs obj)
         {
-            return UserViewModel.Instance.loggedin;
+            //return true;
+            bool login = UserViewModel.Instance.loggedin;
+            return login;
+            //return UserViewModel.Instance.loggedin;
         }
+
     }
 }

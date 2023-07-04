@@ -1,14 +1,19 @@
 ﻿
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
+using RecipeBuddy.Services;
+using RecipeBuddy.ViewModels.Commands;
+using RecipeBuddy.Views;
+using Windows.UI.Xaml;
 
 namespace RecipeBuddy.ViewModels
 {
     
     public sealed class MainWindowViewModel : ObservableObject
     {
-
-        public enum Tabs { SearchTab, WebViewTab, SelectedTab,  UserTab };
+        Action ActionNoParams;
+        Func<bool> FuncBool;
+        //public enum Tabs { SearchTab, WebViewTab, SelectedTab,  UserTab };
 
 
         /// <summary>
@@ -16,17 +21,19 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         private static readonly MainWindowViewModel instance = new MainWindowViewModel();
         
-        public MainNavTreeViewModel mainTreeViewNav;
+        //public MainNavTreeViewModel mainTreeViewNav;
         
         string basketTabName;
         static int selectedTabIndexInt;
 
         private MainWindowViewModel()
         {
+
+
             try
             {
-                selectedTabIndexInt = (int)MainWindowViewModel.Tabs.UserTab;
-                titleAndVersion = "RecipeBuddy    version ";
+                //selectedTabIndexInt = (int)MainWindowViewModel.Tabs.UserTab;
+                titleAndVersion = "RecipeBuddy   version ";
             }
             catch (Exception e)
             {
@@ -61,6 +68,7 @@ namespace RecipeBuddy.ViewModels
 
 
         #region properties for page controls
+
         public int SelectedTabIndex
         {
             get { return selectedTabIndexInt; }

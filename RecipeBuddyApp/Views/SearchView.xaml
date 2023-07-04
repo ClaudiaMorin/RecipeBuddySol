@@ -7,9 +7,10 @@
     xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d"
     xmlns:local="using:RecipeBuddy.Views" 
-    x:Name="SeachTabView"
+    x:Name="SeachView"
     MaxHeight="800"
-    MaxWidth="1400">
+    MaxWidth="1400"
+    Tag="SearchView">
 
     <!--xmlns:ui ="using:Microsoft.Toolkit.Uwp.UI"
     <StackPanel x:Name="SeachDockPanelUserControl" ui:FrameworkElementExtensions.Cursor ="{Binding CursorType, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">-->

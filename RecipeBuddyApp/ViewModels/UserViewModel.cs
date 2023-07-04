@@ -19,8 +19,8 @@ namespace RecipeBuddy.ViewModels
     public sealed class UserViewModel : ObservableObject
     {
         public ObservableCollection<string> ListOfUserAccountsInDB { get; set; }
-        public int checkBoxEnabledCount = 0;
-        public int checkBoxEnabledCountNewUser = 0;
+        //public int checkBoxEnabledCount = 0;
+        //public int checkBoxEnabledCountNewUser = 0;
         public bool loggedin;
         public List<Type_of_Websource> PanelMap;
         Action<KeyRoutedEventArgs> actionWithKeyEventArgs;
@@ -40,42 +40,22 @@ namespace RecipeBuddy.ViewModels
             CmdEnterKeyDown = new RelayCommand<KeyRoutedEventArgs>(actionWithKeyEventArgs = e => EnterKeyDown(e));
             ListOfUserAccountsInDB = new ObservableCollection<string>();
             DataBaseAccessorsForRecipeManager.LoadUsersFromDatabase(ListOfUserAccountsInDB);
-            PanelMap = new List<Type_of_Websource>();
-
-            allRecipesCheckBoxChecked = false;
-            allRecipesCheckBoxEnabled = true;
-
-            epicuriousCheckBoxChecked = false;
-            EpicuriousCheckBoxEnabled = true;
-
-            foodAndWineCheckBoxChecked = false;
-            FoodAndWineCheckBoxEnabled = true;
-
-            foodNetworkCheckBoxChecked = false;
-            FoodNetworkCheckBoxEnabled = true;
-
-            southernLivingCheckBoxChecked = false;
-            SouthernLivingCheckBoxEnabled = true;
-
-            tastyCheckBoxChecked = false;
-            TastyCheckBoxEnabled = true;
-
-            foodAndWineCheckBoxChecked = false;
-            FoodAndWineCheckBoxEnabled = true;
 
             passwordBoxEnabled = "true";
-            PasswordString = "";
+            passwordString = "";
             canSelectLogin = false;
             canSelectLogout = false;
             canSelectCreateUser = false;
+
             loggedin = false;
             comboBoxIndexOfUserFromDB = 0;
             loginNewUser = false;
 
             CmdLogoutBtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => LogOut(), FuncBool = () => CanSelectLogout);
             CmdLoginBtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => LogIn(), FuncBool = () => CanSelectLogin);
-            CmdCreateUserbtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => SetUpNewUser(), FuncBool = () => CanSelectCreateUser);
-            CmdNewUserLooseFocus = new RelayCommand<RoutedEventArgs>(TypedEventHandler = (a) => ToggleCreateUser(a));
+            CmdCreateUserBtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => SetUpNewUser(), FuncBool = () => CanSelectCreateUser);
+
+            CmdLoginBtnLooseFocus = new RelayCommand<RoutedEventArgs>(TypedEventHandler = (a) => ToggleCreateUser(a));
         }
 
 
@@ -87,41 +67,19 @@ namespace RecipeBuddy.ViewModels
         {
             string AccountName = ListOfUserAccountsInDB[ComboBoxIndexOfUserFromDB];
 
-            if (loginNewUser == false)
-            {
-                UsersIDInDB = DataBaseAccessorsForRecipeManager.LoadUserFromDatabase(PasswordString, AccountName);
-                if (AccountName.Length > 0 && UsersIDInDB != -1)
-                {
-                    SetUpSearchWebsources(false);
-                    loggedin = true;
-                    CanSelectLogout = true;
-                    CanSelectLogin = false;
-                    PasswordBoxEnabled = "false";
-                    //Set Up TreeView
-                    List<RecipeRecordModel> recipeRecords = DataBaseAccessorsForRecipeManager.LoadUserDataByID(UsersIDInDB);
-                    MainNavTreeViewModel.Instance.AddRecipeModelsToTreeViewAsPartOfInitialSetup(recipeRecords);
-                    NavigationService.Navigate(typeof(SearchView));
 
-                }
-                else //user password didm't match
-                {
-                    Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("Password Incorrect!  Casing counts!");
-                    dialog.ShowAsync();
-                }
-            }
-            else //this is a new user without any records, we already have set the UserDBID
+            UsersIDInDB = DataBaseAccessorsForRecipeManager.LoadUserFromDatabase(PasswordString, AccountName);
+            if (AccountName.Length > 0 && UsersIDInDB != -1)
             {
-                SetUpSearchWebsources(false);
-                loggedin = true;
-                CanSelectLogout = true;
-                CanSelectLogin = false;
-                PasswordBoxEnabled = "false";
-                PasswordString = "";
-                loginNewUser = false;
-                NavigationService.Navigate(typeof(SearchView));
+                setUpLoggedInUser();
             }
-
+            else //user password didm't match
+            {
+               Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("Password Incorrect!  Casing counts!");
+               dialog.ShowAsync();
+            }
         }
+
 
         public void LogOut()
         {
@@ -129,34 +87,17 @@ namespace RecipeBuddy.ViewModels
             UsersIDInDB = -1;
             UserName = "";
             NewAccountName = "";
-            
-            EpicuriousCheckBoxChecked = false;
-            EpicuriousCheckBoxEnabled = true;
 
-            AllRecipesCheckBoxChecked = false;
-            AllRecipesCheckBoxEnabled = true;
-
-            FoodNetworkCheckBoxChecked = false;
-            FoodNetworkCheckBoxEnabled = true;
-
-            SouthernLivingCheckBoxChecked = false;
-            SouthernLivingCheckBoxEnabled = true;
-
-            TastyCheckBoxChecked = false;
-            TastyCheckBoxEnabled = true;
-
-            FoodAndWineCheckBoxChecked = false;
-            FoodAndWineCheckBoxEnabled = true;
-
-            checkBoxEnabledCount = 0;
             SearchViewModel.Instance.ResetViewModel();
             SelectedViewModel.Instance.ResetViewModel();
             WebViewModel.Instance.ResetViewModel();
 
-            PanelMap.Clear();
             loggedin = false;
             CanSelectLogin = false;
             CanSelectLogout = false;
+
+            CanSelectCreateUser = false;
+            PasswordString = "";
             PasswordBoxEnabled = "true"; 
         }
 
@@ -192,22 +133,39 @@ namespace RecipeBuddy.ViewModels
                 return;
             }
 
-            byte[] bytePassword = PasswordHashing.CalculateHash(ConvertingStringToByteArray.ConvertStringToByteArray(NewPasswordString));
-            UsersIDInDB = DataBaseAccessorsForRecipeManager.SaveUserToDatabase(NewAccountName, bytePassword);
+
+            UsersIDInDB = DataBaseAccessorsForRecipeManager.SaveUserToDatabase(NewAccountName, NewPasswordString);
 
 
             ListOfUserAccountsInDB.Add(NewAccountName);
             ComboBoxIndexOfUserFromDB = ListOfUserAccountsInDB.Count - 1;
 
-            dialog = new Windows.UI.Popups.MessageDialog("User: " + NewAccountName + " created, now pick sites to search!");
-            dialog.ShowAsync();
-            PasswordString = NewPasswordString;
             PasswordBoxEnabled = "false";
+            //PasswordBoxEnabled = "true";
             //Reset the "Create Password" section to empty strings.
             NewAccountName = "";
             NewPasswordString = "";
             NewConfirmPasswordString = "";
-            loginNewUser = true;
+
+            setUpLoggedInUser();
+
+        }
+
+        /// <summary>
+        /// housekeeping for any user setup after they log in.
+        /// </summary>
+        private void setUpLoggedInUser()
+        {
+
+            //Set Up TreeView
+            List<RecipeRecordModel> recipeRecords = DataBaseAccessorsForRecipeManager.LoadUserDataByID(UsersIDInDB);
+            MainNavTreeViewModel.Instance.AddRecipeModelsToTreeViewAsPartOfInitialSetup(recipeRecords);
+
+            PasswordBoxEnabled = "false";
+            loggedin = true;
+            CanSelectLogout = true;
+            CanSelectLogin = false;
+            CanSelectCreateUser = false;
         }
 
 
@@ -216,7 +174,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         private void ToggleLogin()
         {
-            if (PasswordString != null && PasswordString.Length >= 6 && checkBoxEnabledCount == 3 && loggedin == false)
+            if (PasswordString != null && PasswordString.Length >= 6 && loggedin == false)
                 CanSelectLogin = true;
             else
                 CanSelectLogin = false;
@@ -226,21 +184,21 @@ namespace RecipeBuddy.ViewModels
         private void ToggleCreateUser(RoutedEventArgs args = null)
         {
 
-           if (newAccountName == null || newConfirmPasswordString == null || newPasswordString == null)
+            if (newAccountName == null || newConfirmPasswordString == null || newPasswordString == null)
             {
                 CanSelectCreateUser = false;
                 return;
             }
 
-            if ( newAccountName.Length < 3 || newConfirmPasswordString.Length < 6 || newPasswordString.Length < 6 )
+            if (newAccountName.Length < 3 || newConfirmPasswordString.Length < 6 || newPasswordString.Length < 6)
             {
                 CanSelectCreateUser = false;
                 return;
             }
 
-            else
-                CanSelectCreateUser = true;
+            CanSelectCreateUser = true;
         }
+
 
         #region properties, private strings, and ICommands
 
@@ -342,13 +300,20 @@ namespace RecipeBuddy.ViewModels
             private set;
         }
 
-        public RelayCommandRaiseCanExecute CmdCreateUserbtn
+
+        public RelayCommandRaiseCanExecute CmdCreateUserBtn
         {
             get;
             private set;
         }
 
         public RelayCommand<RoutedEventArgs> CmdNewUserLooseFocus
+        {
+            get;
+            private set;
+        }
+
+        public RelayCommand<RoutedEventArgs> CmdLoginBtnLooseFocus
         {
             get;
             private set;
@@ -366,7 +331,7 @@ namespace RecipeBuddy.ViewModels
             set
             {
                 SetProperty(ref canSelectCreateUser, value);
-                CmdCreateUserbtn.RaiseCanExecuteChanged();
+                CmdCreateUserBtn.RaiseCanExecuteChanged();
             }
         }
 
@@ -380,10 +345,7 @@ namespace RecipeBuddy.ViewModels
             get { return canSelectLogin; }
             set
             {
-                bool temp = CanSelectLogin;
                 SetProperty(ref canSelectLogin, value);
-
-                if(canSelectLogin != temp)
                 CmdLoginBtn.RaiseCanExecuteChanged();
             }
         }
@@ -405,226 +367,8 @@ namespace RecipeBuddy.ViewModels
 
         #endregion
 
-        #region CheckBox properties and functions to establish the 3 websources the user is going to use
-
-        /// <summary>
-        /// The guts of what allows the user to select only 3 websources no matter how many options are presented
-        /// </summary>
-        /// <param name="value">true if the user is selecting the checkbox, false if they are unselecting it</param>
-        private void CheckBoxEnabledShift(bool value)
-        {
-            if (value == true)
-                checkBoxEnabledCount++;
-            else
-                checkBoxEnabledCount--;
-
-            if (checkBoxEnabledCount == 3)
-            {
-                if (allRecipesCheckBoxChecked == true) 
-                    AllRecipesCheckBoxEnabled = true;
-                else
-                    AllRecipesCheckBoxEnabled = false;
-
-                if (epicuriousCheckBoxChecked == true)
-                    EpicuriousCheckBoxEnabled = true;
-                else
-                    EpicuriousCheckBoxEnabled = false;
-
-                if (foodNetworkCheckBoxChecked == true)
-                    FoodNetworkCheckBoxEnabled = true;
-                else
-                    FoodNetworkCheckBoxEnabled = false;
-
-                if (southernLivingCheckBoxChecked == true)
-                    SouthernLivingCheckBoxEnabled = true;
-                else
-                    SouthernLivingCheckBoxEnabled = false;
-
-                if (tastyCheckBoxChecked == true)
-                    TastyCheckBoxEnabled = true;
-                else
-                    TastyCheckBoxEnabled = false;
-
-                if (foodAndWineCheckBoxChecked == true)
-                    foodAndWineCheckBoxEnabled = true;
-                else
-                    FoodAndWineCheckBoxEnabled = false;
-
-                //Check to see if the user can log in now?
-                ToggleLogin();
-            }
-
-            if (checkBoxEnabledCount < 3)
-            {
-                AllRecipesCheckBoxEnabled = true;
-                EpicuriousCheckBoxEnabled = true;
-                FoodNetworkCheckBoxEnabled = true;
-                SouthernLivingCheckBoxEnabled = true;
-                TastyCheckBoxEnabled = true;
-                FoodAndWineCheckBoxEnabled = true;
-                ToggleLogin();
-            }
-        }
-
-        private void SetUpSearchWebsources(bool newUser)
-        {
-            if (newUser == false)
-            {
-                if (allRecipesCheckBoxChecked == true)
-                    PanelMap.Add(Type_of_Websource.AllRecipes);
-
-                if (epicuriousCheckBoxChecked == true)
-                    PanelMap.Add(Type_of_Websource.Epicurious);             
-
-                if (foodNetworkCheckBoxChecked == true)
-                    PanelMap.Add(Type_of_Websource.FoodNetwork);
-             
-                if (southernLivingCheckBoxChecked == true)
-                    PanelMap.Add(Type_of_Websource.SouthernLiving);             
-
-                if (tastyCheckBoxChecked == true)
-                    PanelMap.Add(Type_of_Websource.Tasty);
-
-                if (foodAndWineCheckBoxChecked == true)
-                    PanelMap.Add(Type_of_Websource.FoodAndWine);
-
-                SearchViewModel.Instance.UpdateSearchWebsources();
-            }
-        }
-
-        #endregion
-
-        #region checkbox properties
-
-        private bool allRecipesCheckBoxChecked;
-        public bool AllRecipesCheckBoxChecked
-        {
-            get { return allRecipesCheckBoxChecked; }
-            set
-            {
-                SetProperty(ref allRecipesCheckBoxChecked, value);
-                CheckBoxEnabledShift(value);
-            }
-        }
-
-        private bool allRecipesCheckBoxEnabled;
-        public bool AllRecipesCheckBoxEnabled
-        {
-            get { return allRecipesCheckBoxEnabled; }
-            set
-            {
-                SetProperty(ref allRecipesCheckBoxEnabled, value);
-            }
-        }
-
-        private bool epicuriousCheckBoxChecked;
-        public bool EpicuriousCheckBoxChecked
-        {
-            get { return epicuriousCheckBoxChecked; }
-            set
-            {
-                SetProperty(ref epicuriousCheckBoxChecked, value);
-                CheckBoxEnabledShift(value);
-            }
-        }
-
-        private bool epicuriousCheckBoxEnabled;
-        public bool EpicuriousCheckBoxEnabled
-        {
-            get { return epicuriousCheckBoxEnabled; }
-            set
-            {
-                SetProperty(ref epicuriousCheckBoxEnabled, value);
-            }
-        }
-
-        private bool foodNetworkCheckBoxChecked;
-        public bool FoodNetworkCheckBoxChecked
-        {
-            get { return foodNetworkCheckBoxChecked; }
-            set
-            {
-                SetProperty(ref foodNetworkCheckBoxChecked, value);
-                CheckBoxEnabledShift(value);
-            }
-        }
-
-        private bool foodNetworkCheckBoxEnabled;
-        public bool FoodNetworkCheckBoxEnabled
-        {
-            get { return foodNetworkCheckBoxEnabled; }
-            set
-            {
-                SetProperty(ref foodNetworkCheckBoxEnabled, value);
-            }
-        }
-
-        private bool southernLivingCheckBoxChecked;
-        public bool SouthernLivingCheckBoxChecked
-        {
-            get { return southernLivingCheckBoxChecked; }
-            set
-            {
-                SetProperty(ref southernLivingCheckBoxChecked, value);
-                CheckBoxEnabledShift(value);
-            }
-        }
-
-        private bool southernLivingCheckBoxEnabled;
-        public bool SouthernLivingCheckBoxEnabled
-        {
-            get { return southernLivingCheckBoxEnabled; }
-            set
-            {
-                SetProperty(ref southernLivingCheckBoxEnabled, value);
-            }
-        }
-
-        private bool tastyCheckBoxChecked;
-        public bool TastyCheckBoxChecked
-        {
-            get { return tastyCheckBoxChecked; }
-            set
-            {
-                SetProperty(ref tastyCheckBoxChecked, value);
-                CheckBoxEnabledShift(value);
-            }
-        }
-
-        private bool tastyCheckBoxEnabled;
-        public bool TastyCheckBoxEnabled
-        {
-            get { return tastyCheckBoxEnabled; }
-            set
-            {
-                SetProperty(ref tastyCheckBoxEnabled, value);
-            }
-        }
-
-        private bool foodAndWineCheckBoxChecked;
-        public bool FoodAndWineCheckBoxChecked
-        {
-            get { return foodAndWineCheckBoxChecked; }
-            set
-            {
-                SetProperty(ref foodAndWineCheckBoxChecked, value);
-                CheckBoxEnabledShift(value);
-            }
-        }
-
-        private bool foodAndWineCheckBoxEnabled;
-        public bool FoodAndWineCheckBoxEnabled
-        {
-            get { return foodAndWineCheckBoxEnabled; }
-            set
-            {
-                SetProperty(ref foodAndWineCheckBoxEnabled, value);
-            }
-        }
-
         public object Navigate { get; private set; }
 
-        #endregion
 
         /// <summary>
         /// Allows the enter key to automatically target the search function
@@ -644,6 +388,7 @@ namespace RecipeBuddy.ViewModels
                     break;
             }
         }
+
 
         public RelayCommand<KeyRoutedEventArgs> CmdEnterKeyDown
         {

@@ -26,7 +26,7 @@ namespace RecipeBuddy.ViewModels
         Action<KeyRoutedEventArgs> actionWithKeyEventArgs;
 
         private static readonly SearchViewModel instance = new SearchViewModel();
-
+        
         public static SearchViewModel Instance
         {
             get { return instance; }
@@ -39,10 +39,7 @@ namespace RecipeBuddy.ViewModels
             searchEnabled = true;
             webViewEnabled = true;
             listOfRecipeCards = new RecipeListModel();
-            recipePanelForSearch1 = new RecipePanelForSearchViewModel();
-            recipePanelForSearch2 = new RecipePanelForSearchViewModel();
-            recipePanelForSearch3 = new RecipePanelForSearchViewModel();
-
+            UpdateSearchWebsources();
             CmdEnterKeyDown = new RelayCommand<KeyRoutedEventArgs>(actionWithKeyEventArgs = e => EnterKeyDown(e));
             CmdRemove = new RelayCommand<string>(actionWithString = s => RemoveRecipe(s));
             SearchButtonCmd = new RelayCommandRaiseCanExecute(ActionNoParams = () => Search(), FuncBool = () => SearchEnabled);
@@ -56,9 +53,9 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         public void UpdateSearchWebsources()
         {
-            recipePanelForSearch1.type_Of_Source = UserViewModel.Instance.PanelMap[0];
-            recipePanelForSearch2.type_Of_Source = UserViewModel.Instance.PanelMap[1];
-            recipePanelForSearch3.type_Of_Source = UserViewModel.Instance.PanelMap[2];
+            recipePanelForSearch1 = new RecipePanelForSearchViewModel(Type_of_Websource.AllRecipes);
+            recipePanelForSearch2 = new RecipePanelForSearchViewModel(Type_of_Websource.SouthernLiving);
+            recipePanelForSearch3 = new RecipePanelForSearchViewModel(Type_of_Websource.FoodAndWine);
             //Testing changes to AllRecipesSite.
             //ScraperAllRecipes.GenerateURLsListFromAllRecipesSearch("cake", listOfRecipeCards);
         }
@@ -75,6 +72,7 @@ namespace RecipeBuddy.ViewModels
             recipePanelForSearch3.ClearRecipeEntry();
             recipePanelForSearch3.ClearRecipeBlurbModelList();
             listOfRecipeCards.ClearList();
+            UpdateSearchWebsources();
             SearchString = "";
         }
 
@@ -84,7 +82,6 @@ namespace RecipeBuddy.ViewModels
             //Need main UI thread to execute UI changes
             Windows.ApplicationModel.Core.CoreApplicationView coreApplicationView = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView();
             SearchEnabled = false;
-
             await coreApplicationView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => UIChangesBeginSearch());
 
             List<Task> TaskListOfSearches = new List<Task>();

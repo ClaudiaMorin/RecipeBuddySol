@@ -409,11 +409,16 @@ namespace RecipeBuddy.Core.Helpers
             }
         }
 
-        /// <summary>
-        /// Saves a new user to the DB
-        /// </summary>
-        public static int SaveUserToDatabase(string NewAccountName, byte[] bytePassword)
+/// <summary>
+/// saves a new user to the DB
+/// </summary>
+/// <param name="NewAccountName">The users unique name</param>
+/// <param name="password">the strig password which is hashed before storing into the DB</param>
+/// <returns>UsersDBID</returns>
+        public static int SaveUserToDatabase(string NewAccountName, string password)
         {
+
+            byte[] bytePassword = PasswordHashing.CalculateHash(ConvertingStringToByteArray.ConvertStringToByteArray(password));
 
             //Get the new users information from the UI
             UserDBModel userModel = new UserDBModel();
@@ -430,7 +435,6 @@ namespace RecipeBuddy.Core.Helpers
                 {"@Password", userModel.Password },
             };
 
-           
             //save user to User table in DB
             SqliteDataAccess.UpdateData(sqlInsertIntoUsers, parameters);
             return LoadUserFromDatabase(NewAccountName);
