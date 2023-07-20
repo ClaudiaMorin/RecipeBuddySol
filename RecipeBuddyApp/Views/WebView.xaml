@@ -9,7 +9,7 @@
       mc:Ignorable="d"
       MaxHeight="800"
       MaxWidth="1400"
-      x:Name="WebTabView"
+      x:Name="WebRecipeView"
       Tag="WebView">
     
     <StackPanel x:Name="MasterStackPanel">
@@ -27,10 +27,8 @@
                     <Button x:Name="Cancel" Style="{StaticResource BtnStyleStandard}" Content="Cancel" Background="LightSteelBlue" Width="100" Command="{Binding CmdCancelButton}" HorizontalAlignment="Right" />
                 </StackPanel>
                 <StackPanel x:Name="WebSaveDetails" Visibility="{Binding RecipeEntryFromWebVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <local:RecipeDetailsPanelForWebSave x:Name="RecipeDetailsForEdit"  />
+                    <local:RecipeDetailsPanelForWebSave x:Name="RecipeDetailsForEdit" />
                 </StackPanel >
-                <StackPanel x:Name="NewRecipeDetails" Visibility="{Binding NewRecipeEntryVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <local:RecipeDetailsPanelForEmptyRecipe x:Name="RecipeDetailsForEditEmpty"  />
             </StackPanel>
 
             <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
@@ -58,7 +56,6 @@
                         <Border BorderThickness="5"/>
                             <Button x:Name="btnOpenEntry" Width="100" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Get recipe" Command="{Binding CmdOpenEntry, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="Click to save recipe under the selected Catagory." />
                         <Border BorderThickness="5"/>
-                        <Button x:Name="btnOpenEmptyEntry" Width="100" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}"  Content="Empty entry" Command="{Binding CmdOpenEmptyEntry}" ToolTipService.ToolTip="Click create an blank entry."  />
                     </StackPanel>
                     <TextBlock x:Name="currentURI" Text="{Binding CurrentLink}" SelectionHighlightColor="LightSteelBlue"/>
                     <Border BorderThickness="2" BorderBrush="DarkGray"/>

@@ -266,6 +266,43 @@ namespace RecipeBuddy.Core.Helpers
         }
 
         /// <summary>
+        /// Get the Title of a recipe stored in the DB
+        /// </summary>
+        /// <returns></returns>
+        public static int GetTypeOfRecipeFromDBByRecipeID(int RecipeIDInDB)
+        {
+            int ret = -1;
+            //Recipe ID is not valid
+            if (RecipeIDInDB != -1)
+            {
+                Dictionary<string, object> dictionaryforQuery2 = new Dictionary<string, object>
+                {
+                    {"@TypeAsInt", RecipeIDInDB }
+                };
+
+                string sqlStatment = "Select TypeAsInt from Recipes Where RecipeID= " + RecipeIDInDB;
+                ret =  Int32.Parse(SqliteDataAccess.LoadData(sqlStatment, 1)[0][0].ToString());
+            }
+
+            return ret;
+        }
+
+
+        /// <summary>
+        /// Get the Title of a recipe stored in the DB
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsRecipeTitleInDB(string title)
+        {
+            //Recipe ID is not valid
+            string sqlStatment = "Select RecipeID from Recipes Where Title = '" + title + "'";
+            List < List<object> > result = SqliteDataAccess.LoadData(sqlStatment, 1);
+            if(result.Count == 0)
+                return false;
+            return true;
+        }
+
+        /// <summary>
         /// Get the users ID from the DB
         /// </summary>
         /// <param name="user">The user name</param>

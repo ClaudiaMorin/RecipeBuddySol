@@ -89,7 +89,8 @@
         <Setter Property="Background" Value="#eee"/>
         <Setter Property="BorderBrush" Value="Black"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="ToolTipService.ToolTip" Value="Edit the content of this item."/>
+        <Setter Property="ToolTipService.ToolTip" Value="Entries in the order, quantity then ingredient
+                ex:1 Cup flour, 2/3 tablespoon."/>
         <Setter Property="Width" Value="25"/>
         <Setter Property="Content" Value="E"/>
         <Setter Property="FontWeight" Value="Bold"/>
@@ -105,7 +106,8 @@
         <Setter Property="Background" Value="LightSteelBlue"/>
         <Setter Property="BorderBrush" Value="Black"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="ToolTipService.ToolTip" Value="Edit the content of this item."/>
+        <Setter Property="ToolTipService.ToolTip" Value="Entries in the order, quantity then ingredient
+                ex:1 Cup flour, 2/3 tablespoon."/>
         <Setter Property="Margin" Value="0,0,0,0"/>
         <Setter Property="Content" Value="E"/>
         <Setter Property="FontWeight" Value="Bold"/>

@@ -1,4 +1,5 @@
 ﻿using RecipeBuddy.ViewModels;
+using RecipeBuddyApp.ViewModels;
 using Windows.UI.Xaml.Controls;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -11,14 +12,17 @@ namespace RecipeBuddy.Views
         public RecipeDetailsPanelForEmptyRecipe()
         {
             this.InitializeComponent();
-            TypesInComboBox.ItemsSource = MainNavTreeViewModel.Instance.CatagoryTypes;
-            ICommandSelectTypeChanged.Command = WebViewModel.Instance.CmdSelectedTypeChanged;
-            TypesInComboBox.SelectedIndex = 18;
-            
 
-            Ingredient1.DataContext = WebViewModel.Instance.recipePanelForWebCopy.recipeCardModel;
-            IngredientGrid.DataContext = WebViewModel.Instance.recipePanelForWebCopy;
-            DataContext = WebViewModel.Instance.recipePanelForWebCopy.recipeCardModel;
+            TypesInComboBox.ItemsSource = MainNavTreeViewModel.Instance.CatagoryTypes;
+
+            //All of the Ingredient1 - 50 are keyed to the DataContext of Ingredient1 so leave this.
+            //Because rebinding doesn't happen you need to Databind the specific feilds before you do the more
+            //general DataContext binding to the entire Grid.
+            Ingredient1.DataContext = BlankEntryModel.Instance.recipePanelForNew.recipeCardModel;
+            Directions.DataContext = BlankEntryModel.Instance.recipePanelForNew.recipeCardModel;
+            MasterStackPanel.DataContext = BlankEntryModel.Instance.recipePanelForNew;
+
+            InitializeComponent();
         }
     }
 }

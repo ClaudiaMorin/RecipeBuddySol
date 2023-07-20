@@ -12,15 +12,14 @@ namespace RecipeBuddy.Views
         public WebView()
         {
             InitializeComponent();
-            Save.DataContext = WebViewModel.Instance.recipePanelForWebCopy;
-            Cancel.DataContext = WebViewModel.Instance.recipePanelForWebCopy;
+
             MasterStackPanel.DataContext = WebViewModel.Instance;
             WebControl.DataContext = WebViewModel.Instance;
-            //SavedRecipesTreeView.DataContext = MainNavTreeViewModel.Instance;
 
             //Wires the combobox to the list of recipes
             RecipesInComboBox.ItemsSource = SearchViewModel.Instance.listOfRecipeCards.RecipesList;
            
         }
+
     }
 }

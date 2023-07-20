@@ -97,7 +97,7 @@
 
     <Style x:Key="TitleTbkStyle" TargetType="TextBlock">
         <Setter Property="TextAlignment" Value="Center" />
-        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="FontWeight" Value="Bold"/>
@@ -106,7 +106,7 @@
 
     <Style x:Key="TitleTbkStyleEdit" TargetType="TextBlock">
         <Setter Property="TextAlignment" Value="Center" />
-        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
         <Setter Property="FontSize" Value="24"/>
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="FontWeight" Value="Bold"/>

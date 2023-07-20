@@ -5,8 +5,10 @@
     xmlns:local="using:RecipeBuddy.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewmodels="using:RecipeBuddy.ViewModels" xmlns:i="using:Microsoft.Xaml.Interactivity" xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
-    d:DataContext="{d:DesignInstance Type=viewmodels:RecipePanelForWebCopy}"
+    xmlns:viewmodels="using:RecipeBuddy.ViewModels"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+    d:DataContext="{d:DesignInstance Type=viewmodels:RecipePanelForWebCopyOrNew}"
     mc:Ignorable="d">
 
     <StackPanel x:Name="MasterStackPanel" Background="White" Margin ="0,0,0,0">

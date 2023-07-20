@@ -1,0 +1,42 @@
+﻿<Page
+    x:Class="RecipeBuddy.Views.BlankEntryView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:RecipeBuddy.Views"
+    xmlns:viewmodels="using:RecipeBuddyApp.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewmodels:BlankEntryModel}"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:icore="using:Microsoft.Xaml.Interactions.Core" 
+    MaxHeight="800"
+    MaxWidth="1400"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    x:Name="BlankRecipeView"
+    Tag="BlankRecipeView">
+
+    <StackPanel x:Name="MasterStackPanel">
+        <local:AppHeader/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel x:Name="TreeView"  Grid.Column="0" Background="LightSteelBlue" >
+                    <local:RecipeTreeView x:Name="SavedRecipesTreeView"/>
+                </StackPanel>
+            <StackPanel x:Name="RecipeStackPanel" Grid.Row="0" Grid.Column="1">
+                <StackPanel Orientation="Horizontal" Background="Gray">
+                    <Border Width="10"/>
+                    <Button x:Name="Save" Style="{StaticResource BtnStyleStandard}" Content="Save" Background="LightSteelBlue" Width="100" Command="{Binding CmdSaveButton}" HorizontalAlignment="Right" />
+                    <Border BorderThickness="10" HorizontalAlignment="Right" />
+                    <Button x:Name="Cancel" Style="{StaticResource BtnStyleStandard}" Content="Cancel" Background="LightSteelBlue" Width="100" Command="{Binding CmdCancelButton}" HorizontalAlignment="Right" />
+                </StackPanel>
+                <StackPanel x:Name="NewRecipeDetails" />
+                <local:RecipeDetailsPanelForEmptyRecipe x:Name="RecipeDetailsForEditEmpty"/>
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</Page>
+

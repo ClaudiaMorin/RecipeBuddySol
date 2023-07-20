@@ -7,7 +7,6 @@
              xmlns:viewmodels="using:RecipeBuddy.ViewModels"
              xmlns:i="using:Microsoft.Xaml.Interactivity"
              xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
-             d:DataContext="{d:DesignInstance Type=viewmodels:UserViewModel}"
              mc:Ignorable="d"
              MaxHeight="800"
              MaxWidth="1400"
@@ -16,7 +15,7 @@
 
     <StackPanel>
         <local:AppHeader/>
-        <Grid>
+        <Grid x:Name="MasterGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="3*"/>
@@ -24,41 +23,61 @@
             <StackPanel x:Name="TreeView"  Grid.Column="0" Background="LightSteelBlue" >
                 <local:RecipeTreeView x:Name="SavedRecipesTreeView"/>
             </StackPanel>
-            <StackPanel Grid.Column="1" x:Name="SelectedControls">
-                <Border BorderBrush="Gray" BorderThickness="5">
-                    <StackPanel x:Name="MasterStackPanel" Orientation="Vertical" Background="#eee" Margin ="0,0,0,0">
-                            <Grid x:Name="TitleGrid" Background="#eee" >
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="18*" />
-                                    <ColumnDefinition Width="8*" />
-                                    <ColumnDefinition Width="1*" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="{Binding ElementName=Title, Path=Text, Converter={StaticResource ResourceKey=RowVisibleConverter}, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <RowDefinition x:Name="EditRowTitle" Height="{Binding TitleEditHeight, UpdateSourceTrigger=PropertyChanged}"/>
-                                </Grid.RowDefinitions>
-                            <StackPanel  Grid.Row="0" Grid.Column="0" Orientation="Horizontal" >
-                                <Border Width="20"/>
-                                <TextBlock x:Name="Title" Style="{StaticResource TitleTbkStyleEdit}" Text="{Binding Path=Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <StackPanel x:Name="RecipeStack" Grid.Column="1" >
+            <Grid x:Name="RecipeGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition x:Name="NoLoadedRecipe" Height="{Binding NoLoadedRecipeHeight, UpdateSourceTrigger=PropertyChanged}" />
+                    <RowDefinition x:Name="LoadedRecipe" Height="{Binding LoadedRecipeHeight, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid.RowDefinitions>
+                <StackPanel x:Name="DefaultView" Grid.Row="0" Orientation="Vertical" Background="#eee">
+                    <Border BorderBrush="Gray" BorderThickness="5">
+                        <TextBlock Style="{StaticResource TitleTbkStyleEdit}" Text="Select a Recipe from the Tree to Edit!" VerticalAlignment="Bottom"/>
+                    </Border>
+                </StackPanel>
+                <StackPanel x:Name="SelectedControls" Grid.Row="1">
+                        <Border BorderBrush="Gray" BorderThickness="5">
+                            <StackPanel x:Name="MasterStackPanel" Orientation="Vertical" Background="#eee" Margin ="0,0,0,0" >
+                                <Grid x:Name="TitleGrid" Background="#eee" >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="18*" />
+                                        <ColumnDefinition Width="10*" />
+                                        <ColumnDefinition Width="1*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="50"/>
+                                        <RowDefinition x:Name="EditRowTitle" Height="{Binding TitleTypeAuthorHeight, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel  Grid.Row="0" Grid.Column="0" Orientation="Horizontal" >
+                                        <Border Width="20"/>
+                                        <TextBlock x:Name="RecipeTitle" HorizontalAlignment="left" FontSize="25" FontWeight="ExtraBold" Height="60" Text="{Binding Path=Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </StackPanel>
+                                    <StackPanel  Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" >
+                                        <Button x:Name="EditDetails" Style="{StaticResource BtnStyleEditRecipeItem}" Width="75" Content="Edit Details"  Command="{Binding CmdLineEdit}" CommandParameter="1, editDetails" />
+                                        <Border Width="6"/>
+                                        <Button x:Name="SaveBtn" Style="{StaticResource BtnStyleEditRecipeItem}" Content="Save Edits" Width="75" Command="{Binding CmdSave}" ToolTipService.ToolTip="Save all the edits you have made!" />
+                                        <Border Width="6"/>
+                                        <Button x:Name="MakeCopyBtn" Style="{StaticResource BtnStyleEditRecipeItem}" Content="Make Copy" Width="75" Command="{Binding CmdCopy}" CommandParameter="Title" ToolTipService.ToolTip="Copy a recipe that doesn't have open edits pending."  />
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="1"  Grid.Column="0" Orientation="Horizontal" Height="{Binding TitleTypeAuthorHeight, UpdateSourceTrigger=PropertyChanged}">
+                                        <Border Width="20"/>
+                                        <TextBlock Text="Title :" TextAlignment="Left" FontSize="14"/>
+                                        <Border Width="6"/>
+                                        <TextBox x:Name="TextBoxTitle" HorizontalAlignment="left" Text="{Binding Path=TitleEditString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="0" MaxLength="{Binding Path=TitleMaxLength}" Foreground="Red" />
+                                    </StackPanel>
+                                    <StackPanel x:Name="EditBtnPanel" Grid.Row="1"  Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" >
+                                        <Button x:Name="UpdateBtnDetails" Style="{StaticResource BtnStyleEditRecipeItem}" Width="75" Content="Update" Command="{Binding CmdUpdate}" CommandParameter="0, titleTypeAuthor" />
+                                        <Button x:Name="CancelBtnDetails" Style="{StaticResource BtnStyleEditRecipeItem}" Width="75" Content="Cancel" Command="{Binding CmdCancel}" CommandParameter="0, titleTypeAuthor" Grid.Row="1"  Grid.Column="2" />
+                                    </StackPanel>
+                                </Grid>
+                                <StackPanel x:Name="DetailsPanelForSelected">
+                                    <local:RecipeDetailsPanelForSelected  />
+                                </StackPanel>
                             </StackPanel>
-                            <StackPanel  Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                                <Button x:Name="EditBtnTitle" Style="{StaticResource BtnStyleEditRecipeItem}"  Command="{Binding CmdLineEdit}" CommandParameter="1, Title" Visibility="{Binding RecipeLoaded}"  />
-                                <Border Width="30"/>
-                                <Button x:Name="SaveBtn" Style="{StaticResource BtnStyleEditRecipeItem}" Content="Save Edits" Background="Red" Width="75" Command="{Binding CmdSave}" Visibility="{Binding RecipeLoaded}" ToolTipService.ToolTip="Save all the edits you have made!" />
-                                <Border Width="10"/>
-                                <Button x:Name="MakeCopyBtn" Style="{StaticResource BtnStyleEditRecipeItem}" Content="Make Copy" Width="75" Command="{Binding CmdCopy}" CommandParameter="Title" ToolTipService.ToolTip="Make a copy of this recipe." Visibility="{Binding RecipeLoaded}" />
-                            </StackPanel>
-                            <StackPanel Grid.Row="1"  Grid.Column="0" Orientation="Horizontal">
-                                <Border Width="20"/>
-                                <TextBox x:Name="TextBoxTitle" Style="{Binding Path=TitleEditString, Converter={StaticResource StyleConverterTextBoxRedFont}, ConverterParameter = 0}" Text="{Binding Path=TitleEditString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="0" MaxLength="{Binding Path=TitleMaxLength}" />
-                                <Border Width="20"/>
-                                <Button x:Name="UpdateBtnTitle" Style="{StaticResource BtnStyleUpdateEditRecipeItem}" Content="Update" Command="{Binding CmdUpdate}" CommandParameter="1, Title"/>
-                                <Button x:Name="CancelBtnTitle" Style="{StaticResource BtnStyleCancelEditRecipeItem}" Command="{Binding CmdCancel}" CommandParameter="1, Title"/>
-                            </StackPanel>
-                            </Grid>
-                            <local:RecipeDetailsPanelForSelected x:Name="DetailsPanelForSelected" Visibility="{Binding RecipeLoaded}"/>
-                    </StackPanel>
-                </Border>
+                        </Border>
+                </StackPanel>
+                </Grid>
+
+           
             </StackPanel>
         </Grid>
     </StackPanel>

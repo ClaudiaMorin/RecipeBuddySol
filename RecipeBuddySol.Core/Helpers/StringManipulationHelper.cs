@@ -1,221 +1,93 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using Windows.UI.Xaml.Controls;
 
 namespace RecipeBuddy.Core.Helpers
 {
     public static class StringManipulationHelper
     {
-        #region Convertion to and from Float-String-VulgarFraction
-        /// <summary>
-        /// converts the "vulgar fraction into a float so it can be used mathmatically
-        /// </summary>
-        /// <param name="target">the string we are searching for the fraction to convert</param>
-        /// <returns>the float that result from the convertion</returns>
-        public static float ConvertVulgerFractionStringToFloat(string target)
-        {
-            string amount = " ";
 
-            if (target.Contains(" "))
-            {
-                amount = target.Substring(0, target.IndexOf(' '));
-            }
-            else
-            {
-                amount = target;
-            }
-
-            if (amount.Contains('-')) //to handle the case where the amounts are 3-4 apples... 
-                amount = amount.Substring(0, target.IndexOf('-'));
-
-            string convertedfraction = ConvertVulgarFaction(amount);
-
-            if (string.Compare(convertedfraction, "-1") != 0)
-            {
-                float parseFloat;
-                //parse to a float and return
-                if (float.TryParse(convertedfraction, out parseFloat) == true)
-                {
-                    return parseFloat;
-                }     
-            }
-
-            return -1;
-        }
 
         /// <summary>
-        /// Tests a string to verify that it is a number.
+        /// Tests a string to verify that it is a fraction, not a whole number
         /// </summary>
         /// <param name="quantityStr"></param>
         /// <returns></returns>
-        public static bool IsNumber(string quantityStr)
+        public static bool IsFraction(string quantityStr)
         {
             bool breturn = false;
-            int valRet;
-
-            //This should handel all common numbers but not the fractions
-            if (Int32.TryParse(quantityStr, out valRet) == true)
+            if(quantityStr.Contains("/"))
                 return true;
 
-            switch (quantityStr)
+            for (int i = 0; i < quantityStr.Length; i++)
             {
-                case "1/2":
-                    breturn = true;
-                    break;
-                case "½":
-                    breturn = true;
-                    break;
-                case "1/4":
-                    breturn = true;
-                    break;
-                case "¼":
-                    breturn = true;
-                    break;
-                case "3/4":
-                    breturn = true;
-                    break;
-                case "¾":
-                    breturn = true;
-                    break;
-                case "1/8":
-                    breturn = true;
-                    break;
-                case "⅛":
-                    breturn = true;
-                    break;
-                case "1/3":
-                    breturn = true;
-                    break;
-                case "⅓":
-                    breturn = true;
-                    break;
-                case "2/3":
-                    breturn = true;
-                    break;
-                case "⅔":
-                    breturn = true;
-                    break;
+                switch (quantityStr[i])
+                {
+
+                    case '½':
+                        return true;
+
+                    case '¼':
+                        return true;
+
+                    case '¾':
+                        return true;
+
+                    case '⅛':
+                        return true;
+
+                    case '⅓':
+                        return true;
+
+                    case '⅔':
+                        return true;
+                }
             }
+
+            
 
             return breturn;
         }
-
-        ///// <summary>
-        ///// a convertion from vulgar fractions to a decimal representation in string form
-        ///// </summary>
-        ///// <param name="fraction"></param>
-        ///// <returns></returns>
-        //public static string ConvertVulgarFaction(string fraction)
-        //{
-        //    // we are dealing with an amount so replace the vulgar fractions if they exist
-        //    int foundIndex = -1;
-        //    string decimalValue;
-        //    foundIndex = fraction.IndexOf('½');
-        //    if (foundIndex != -1)
-        //    {
-        //        return ".5";
-        //    }
-
-        //    foundIndex = fraction.IndexOf("1/2");
-        //    if (foundIndex != -1)
-        //    {
-        //        decimalValue = fraction.Remove(foundIndex, 1).Insert(foundIndex, ".5");
-        //        return decimalValue;
-        //    }
-
-        //    foundIndex = fraction.IndexOf('¼');
-        //    if (foundIndex != -1)
-        //    {
-        //        decimalValue = fraction.Remove(foundIndex, 1).Insert(foundIndex, ".25");
-        //        return decimalValue;
-        //    }
-
-        //    foundIndex = fraction.IndexOf("1/4");
-        //    if (foundIndex != -1)
-        //    {
-        //        decimalValue = fraction.Remove(foundIndex, 1).Insert(foundIndex, ".25");
-        //        return decimalValue;
-        //    }
-
-        //    foundIndex = fraction.IndexOf('¾');
-        //    if (foundIndex != -1)
-        //    {
-        //        decimalValue = fraction.Remove(foundIndex, 1).Insert(foundIndex, ".75");
-        //        return decimalValue;
-        //    }
-
-        //    foundIndex = fraction.IndexOf("3/4");
-        //    if (foundIndex != -1)
-        //    {
-        //        decimalValue = fraction.Remove(foundIndex, 1).Insert(foundIndex, ".75");
-        //        return decimalValue;
-        //    }
-
-        //    foundIndex = fraction.IndexOf('⅓');
-        //    if (foundIndex != -1)
-        //    {
-        //        decimalValue = fraction.Remove(foundIndex, 1).Insert(foundIndex, ".33");
-        //        return decimalValue;
-        //    }
-
-        //    foundIndex = fraction.IndexOf("1/3");
-        //    if (foundIndex != -1)
-        //    {
-        //        decimalValue = fraction.Remove(foundIndex, 1).Insert(foundIndex, ".33");
-        //        return decimalValue;
-        //    }
-
-        //    foundIndex = fraction.IndexOf('⅔');
-        //    if (foundIndex != -1)
-        //    {
-        //        decimalValue = fraction.Remove(foundIndex, 1).Insert(foundIndex, ".66");
-        //        return decimalValue;
-        //    }
-
-        //    foundIndex = fraction.IndexOf("2/3");
-        //    if (foundIndex != -1)
-        //    {
-        //        decimalValue = fraction.Remove(foundIndex, 1).Insert(foundIndex, ".66");
-        //        return decimalValue;
-        //    }
-
-        //    return "-1";
-        //}
 
         /// <summary>
         /// a convertion from vulgar fractions to a decimal representation in string form
         /// </summary>
         /// <param name="fraction"></param>
         /// <returns></returns>
-        public static string ConvertVulgarFaction(string fraction)
+        public static double ConvertVulgarFaction(string fraction)
         {
             if (fraction.IndexOf('½') != -1 || fraction.IndexOf("1/2") != -1)
             {
-                return ".5";
+                return 0.500;
             }
 
             if (fraction.IndexOf('¼') != -1 || fraction.IndexOf("1/4") != -1)
             {
-                return ".25";
+                return .250;
             }
 
             if (fraction.IndexOf('¾') != -1 || fraction.IndexOf("3/4") != -1)
             {
-                return ".75";
+                return .750;
             }
 
             if (fraction.IndexOf('⅓') != -1 || fraction.IndexOf("1/3") != -1)
             {
-                return ".33";
+                return .3333;
             }
 
             if (fraction.IndexOf('⅔') != -1 || fraction.IndexOf("2/3") != -1)
             {
-                return ".66";
+                return .6666;
             }
 
-            return "-1";
+            if (fraction.IndexOf('⅛') != -1 || fraction.IndexOf("1/8") != -1)
+            {
+                return 0.125;
+            }
+
+            return -1;
         }
 
         /// <summary>
@@ -230,90 +102,185 @@ namespace RecipeBuddy.Core.Helpers
 
             switch (typeToCheck)
             {
+                case "c":
                 case "cup":
                 case "cups":
                 case "cup(s)":
                     toReturn = "C";
                     break;
 
+                case "tsp":
+                case "tsp.":
                 case "teaspoon":
                 case "teaspoons":
                 case "teaspoon(s)":
                     toReturn = "tsp.";
                     break;
 
+                case "tbsp":
+                case "tbsp.":
                 case "tablespoon":
                 case "tablespoons":
                 case "tablespoon(s)":
                     toReturn = "Tbsp.";
+                    break;
+
+                case "lbs":
+                case "lbs.":
+                case "pound":
+                case "pounds":
+                case "pound(s)":
+                    toReturn = "lbs.";
+                    break;
+
+                case "g":
+                case "g.":
+                case "gram":
+                case "grams":
+                case "gram(s)":
+                    toReturn = "grams";
                     break;
             }
 
             return toReturn;
         }
 
-        public static string FinalQuantityString(int quantity, string measureType)
+        public static string FinalQuantityString(double quantity, string measureType)
         {
+
+            double quantityASDouble = Math.Round(quantity, 3, MidpointRounding.AwayFromZero);
+            int wholeNumberOfInt = (int)quantityASDouble;
+
+            double remainderAsDouble = Math.Round(quantityASDouble - wholeNumberOfInt, 3, MidpointRounding.AwayFromZero);
+
+
             string stringForCompare = measureType.ToLower().Trim();
+            string retVal = "";
 
-            if (string.Compare(stringForCompare, "cup") == 0 || (string.Compare(stringForCompare, "cups") == 0) || (string.Compare(stringForCompare, "cup(s)") == 0))
-                return quantity.ToString() + " C";
-
-            if (string.Compare(stringForCompare, "teaspoon") == 0 || string.Compare(stringForCompare, "teaspoons") == 0 || string.Compare(stringForCompare, "teaspoon(s)") == 0 ||  string.Compare(stringForCompare, "tsp.") == 0 )
+            //Great Starting place for most of the measurement types
+            //if not, as with teaspoons we will overwrite these values!
+            if (retVal.Length == 0)
             {
-                if (quantity < 3 && quantity > 0)
-                {
-                    return quantity.ToString() + " tsp.";
-                }
-                if (quantity >= 3 )
-                {
-                    int quantityAsInt = quantity / 3;
-                    int remainder = quantity % 3;
-
-                    if (quantityAsInt < 4 && remainder > 0)
-                        return quantityAsInt.ToString() + " Tbsp. + " + remainder.ToString() + " tsp.";
-
-                    else
-                        return quantityAsInt.ToString() + " Tbsp.";
-                }
+                if (wholeNumberOfInt > 0)
+                    retVal += wholeNumberOfInt;
+                if (remainderAsDouble > 0)
+                    retVal += ConvertDoubleToVulgarFaction(remainderAsDouble);
             }
 
-            if (string.Compare(stringForCompare, "tablespoon") == 0 || string.Compare(stringForCompare, "tablespoons") == 0 || string.Compare(stringForCompare, "tablespoon(s)") == 0 || string.Compare(stringForCompare, "Tbsp.") == 0)
+            switch (measureType.ToLower())
             {
-                double quantityAsDouble = (double)(quantity);
+                case "g":
+                case "g.":
+                case "gram":
+                case "grams":
+                case "gram(s)":
+                    retVal += " grams";
+                    break;
 
-                if (quantity < 4 && quantity > 0)
-                {
-                    return quantity.ToString() + " Tbsp.";
-                }
-                if (quantity >= 4)
-                {
-                    //the most a given recipe would call for would be 3 tablespoons, 3*5 = 15 tablespoons, so 
-                    //we shouldn't ever get more than 15 tablespoons, 16 makes a cup so we should always be under that.
-                    int quantityAsInt = quantity / 4;
-                    int remainder = quantity % 4;
+                case "lbs":
+                case "lbs.":
+                case "pound":
+                case "pounds":
+                case "pound(s)":
+                    retVal += " lbs";
+                    break;
 
-                    if (quantityAsInt >= 3 && remainder == 0)
-                        return "¾ C"; 
+                case "cup":
+                case "cups":
+                case "c":
+                case "c.":
+                    retVal += " C";
+                    break;
 
-                    if (quantityAsInt >= 3 && remainder > 0)
-                        return "¾ C + " + remainder.ToString() + " Tbsp.";
+                case "teaspoon":
+                case "teaspoons":
+                case "tsp":
+                case "tsp.":
+                    retVal = "";
+                    bool tablespoons = false;
+                    if (wholeNumberOfInt >= 3)
+                    {
+                        tablespoons = true;
+                        int newTbls = wholeNumberOfInt / 3;
+                        retVal += newTbls;
+                        wholeNumberOfInt -= newTbls * 3;
+                    }
+                    if (tablespoons)
+                    { 
+                        if(remainderAsDouble > 0 || wholeNumberOfInt > 0)
+                            retVal += " Tbsp + ";
+                        else
+                            retVal += " Tbsp";
+                    }
+                        
+                    if (wholeNumberOfInt > 0) //still have some tsp left
+                    {
+                        if (remainderAsDouble > 0)
+                            retVal += wholeNumberOfInt;
+                        else
+                            retVal += wholeNumberOfInt + " tsp";
+                    }
 
-                    if (quantityAsInt >= 2 && remainder == 0)
-                        return "½ C";
+                    if (remainderAsDouble > 0)
+                    {
+                        retVal += ConvertDoubleToVulgarFaction(remainderAsDouble) + " tsp";
+                    }
 
-                    if (quantityAsInt >= 2 && remainder > 0)
-                        return "½ C + " + remainder.ToString() + " Tbsp.";
+                    break;
 
-                    if (quantityAsInt >= 1 && remainder == 0)
-                        return "¼ C";
 
-                    if (quantityAsInt >= 1 && remainder > 0)
-                        return "¼ C + " + remainder.ToString() + " Tbsp.";
-                } 
+                case "tablespoon":
+                case "tablespoons":
+                case "tbsp":
+                case "tbsp.":
+                    retVal = "";
+                    bool cups = false;
+                    while (wholeNumberOfInt >= 4)
+                    {
+                        cups = true;
+                        if (wholeNumberOfInt >= 16)
+                        {
+                            int newCups = wholeNumberOfInt / 16;
+                            retVal += newCups;
+                            wholeNumberOfInt -= newCups * 16;
+                        }
+                        if (wholeNumberOfInt >= 12)
+                        {
+                            retVal += "¾";
+                            wholeNumberOfInt -= 12;
+                        }
+                        if (wholeNumberOfInt >= 8)
+                        {
+                            retVal += "½";
+                            wholeNumberOfInt -= 8;
+                        }
+                        if (wholeNumberOfInt >= 4)
+                        {
+                            retVal += "¼";
+                            wholeNumberOfInt -= 4;
+                        }
+                    }
+
+                    if (cups) //we managed to simplify to cups
+                    {
+                        if(wholeNumberOfInt > 0 || remainderAsDouble > 0)
+                            retVal += " C + ";
+                        else
+                            retVal += " C";
+                    }
+                    //Do we have any remainders?
+                    if (wholeNumberOfInt < 4 && wholeNumberOfInt > 0)
+                    { 
+                        if(remainderAsDouble > 0)
+                            retVal += wholeNumberOfInt + ConvertDoubleToVulgarFaction(remainderAsDouble) + " Tbsp";
+                        else
+                            retVal += wholeNumberOfInt + " Tbsp";
+                    }
+                    break;
+
             }
-
-            return quantity.ToString();
+                
+            return retVal;
         }
 
 
@@ -322,81 +289,56 @@ namespace RecipeBuddy.Core.Helpers
         /// </summary>
         /// <param name="fraction"></param>
         /// <returns></returns>
-        public static string ConvertFloatToVulgarFaction(string FloatToConvert)
+        public static char ConvertDoubleToVulgarFaction(double doubleToConvert)
         {
+            if (doubleToConvert == 0.250)
+                return '¼';
+            if (doubleToConvert == 0.500)
+                return '½';
+            if (doubleToConvert == 0.750)
+                return '¾';
+            if (doubleToConvert == 0.125)
+                return '⅛';
+            if (doubleToConvert == 0.375)
+                return '⅜';
+            if (doubleToConvert == 0.625)
+                return '⅝';
+            if (doubleToConvert == 0.667 || doubleToConvert == 0.666)
+                return '⅔';
+            if (doubleToConvert == 0.333)
+                return '⅓';
+            if (doubleToConvert == 0.875)
+                return '⅞';
 
-            if (FloatToConvert.Contains(".") == false)
-            {
-                return FloatToConvert;
-            }
-            
-            // we are dealing with a fraction of some kind.
-            string[] convertedFloat = FloatToConvert.ToString().Split('.');
 
-            //we don't want a preceeding 0, it looks weird with a vulgar fraction
-            if (string.Compare(convertedFloat[0], "0") == 0)
-             convertedFloat[0] = ""; 
-            
-            string fractionToConvert = convertedFloat[1];
-
-            if (string.Compare(fractionToConvert, "25") == 0)
-                return convertedFloat[0] + '¼';
-           
-            if (string.Compare(fractionToConvert, "5") == 0)
-                return convertedFloat[0] + '½';
-            
-            if (string.Compare(fractionToConvert, "75") == 0)
-                return convertedFloat[0] + '¾';
-            
-            //using just the first place of the decimal for the thirds since the second place
-            //is less reliable the more they are multipled
-            if (string.Compare(fractionToConvert.Substring(0,1) , "3") == 0)
-                return convertedFloat[0] + '⅓';
-            
-            if (string.Compare(fractionToConvert.Substring(0, 1), "6") == 0)
-                return convertedFloat[0] + '⅔';
-
-            if (string.Compare(fractionToConvert.Substring(0, 1), "9") == 0)
-            {
-                int parseInt;
-                //parse to an int and then add one and return
-                if (Int32.TryParse(convertedFloat[0], out parseInt) == true)
-                {
-                    return (parseInt + 1).ToString();
-                }
-                return "-1";
-            }
-                
-            return "-1";
+            return '0';
         }
 
-        public static string TryToConvertWritenNumbersToDigits(string amount)
+        public static int TryToConvertWritenNumbersToDigits(string amount)
         {
             if (string.Compare(amount.ToLower(), "one") == 0)
-                return "1";
+                return 1;
             if (string.Compare(amount.ToLower(), "two") == 0)
-                return "2";
+                return 2;
             if (string.Compare(amount.ToLower(), "three") == 0)
-                return "3";
+                return 3;
             if (string.Compare(amount.ToLower(), "four") == 0)
-                return "4";
+                return 4;
             if (string.Compare(amount.ToLower(), "five") == 0)
-                return "5";
+                return 5;
             if (string.Compare(amount.ToLower(), "six") == 0)
-                return "6";
+                return 6;
             if (string.Compare(amount.ToLower(), "seven") == 0)
-                return "7";
+                return 7;
             if (string.Compare(amount.ToLower(), "eight") == 0)
-                return "8";
+                return 8;
             if (string.Compare(amount.ToLower(), "nine") == 0)
-                return "9";
+                return 9;
             if (string.Compare(amount.ToLower(), "ten") == 0)
-                return "10";
+                return 10;
             else
-                return "";
+                return 0;
         }
-
-        #endregion
 
         #region Turning the ingredients and directions into lists to be stored/returned form the DB
 

@@ -19,8 +19,6 @@ namespace RecipeBuddy.ViewModels
     public sealed class UserViewModel : ObservableObject
     {
         public ObservableCollection<string> ListOfUserAccountsInDB { get; set; }
-        //public int checkBoxEnabledCount = 0;
-        //public int checkBoxEnabledCountNewUser = 0;
         public bool loggedin;
         public List<Type_of_Websource> PanelMap;
         Action<KeyRoutedEventArgs> actionWithKeyEventArgs;
@@ -49,12 +47,10 @@ namespace RecipeBuddy.ViewModels
 
             loggedin = false;
             comboBoxIndexOfUserFromDB = 0;
-            loginNewUser = false;
 
             CmdLogoutBtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => LogOut(), FuncBool = () => CanSelectLogout);
             CmdLoginBtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => LogIn(), FuncBool = () => CanSelectLogin);
             CmdCreateUserBtn = new RelayCommandRaiseCanExecute(ActionNoParams = () => SetUpNewUser(), FuncBool = () => CanSelectCreateUser);
-
             CmdLoginBtnLooseFocus = new RelayCommand<RoutedEventArgs>(TypedEventHandler = (a) => ToggleCreateUser(a));
         }
 
@@ -132,20 +128,10 @@ namespace RecipeBuddy.ViewModels
                 dialog.ShowAsync();
                 return;
             }
-
-
+            //Set up the in the DB
             UsersIDInDB = DataBaseAccessorsForRecipeManager.SaveUserToDatabase(NewAccountName, NewPasswordString);
-
-
             ListOfUserAccountsInDB.Add(NewAccountName);
             ComboBoxIndexOfUserFromDB = ListOfUserAccountsInDB.Count - 1;
-
-            PasswordBoxEnabled = "false";
-            //PasswordBoxEnabled = "true";
-            //Reset the "Create Password" section to empty strings.
-            NewAccountName = "";
-            NewPasswordString = "";
-            NewConfirmPasswordString = "";
 
             setUpLoggedInUser();
 
@@ -157,15 +143,20 @@ namespace RecipeBuddy.ViewModels
         private void setUpLoggedInUser()
         {
 
-            //Set Up TreeView
+            //Set Up TreeView from the DB if there are any records
             List<RecipeRecordModel> recipeRecords = DataBaseAccessorsForRecipeManager.LoadUserDataByID(UsersIDInDB);
             MainNavTreeViewModel.Instance.AddRecipeModelsToTreeViewAsPartOfInitialSetup(recipeRecords);
-
+            PasswordBoxEnabled = "false";
+            //Reset the "Create Password" section to empty strings.
+            NewAccountName = "";
+            NewPasswordString = "";
+            NewConfirmPasswordString = "";
             PasswordBoxEnabled = "false";
             loggedin = true;
             CanSelectLogout = true;
             CanSelectLogin = false;
             CanSelectCreateUser = false;
+            NavigationService.Navigate(typeof(Views.SearchView));
         }
 
 
@@ -202,7 +193,7 @@ namespace RecipeBuddy.ViewModels
 
         #region properties, private strings, and ICommands
 
-        private bool loginNewUser;
+        //private bool loginNewUser;
 
         private string passwordBoxEnabled;
         public string PasswordBoxEnabled
@@ -270,10 +261,6 @@ namespace RecipeBuddy.ViewModels
                 ToggleCreateUser();
             }
         }
-
-        /// <summary>
-        /// SecureString doesn't work with UWP so until I figure out a workaround this is dead!
-        /// </summary>
 
         private int comboBoxIndexOfUserFromDB;
         public int ComboBoxIndexOfUserFromDB

@@ -166,17 +166,22 @@
     <Compile Include="ValueConverters\StyleConverterTextBoxRedFont.cs" />
     <Compile Include="ValueConverters\StyleConverterTextBoxSlim.cs" />
     <Compile Include="ValueConverters\StyleConverterSearching.cs" />
+    <Compile Include="ViewModels\BlankEntryModel.cs" />
     <Compile Include="ViewModels\Commands\ICommmandViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
     <Compile Include="ViewModels\SelectedViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\SubModels\MainNavTreeViewModel.cs" />
+    <Compile Include="ViewModels\SubModels\RecipeEditsViewModel.cs" />
     <Compile Include="ViewModels\SubModels\RecipeTreeItem.cs" />
     <Compile Include="ViewModels\SubModels\RecipePanelForSeachViewModel.cs" />
-    <Compile Include="ViewModels\SubModels\RecipePanelWebCopy.cs" />
+    <Compile Include="ViewModels\SubModels\RecipePanelWebCopyOrNew.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="ViewModels\WebViewModel.cs" />
+    <Compile Include="Views\BlankEntryView.xaml.cs">
+      <DependentUpon>BlankEntryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SearchView.xaml.cs">
       <DependentUpon>SearchView.xaml</DependentUpon>
     </Compile>
@@ -272,6 +277,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DictionaryElements\TextBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BlankEntryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

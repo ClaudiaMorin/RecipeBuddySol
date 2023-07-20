@@ -17,7 +17,7 @@
             <TextBlock x:Name="Author" TextAlignment="Left" Grid.Column= "0" Grid.Row="0" FontSize="14" Text="{Binding Path=Author, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock x:Name="Website" TextAlignment="Right" Grid.Column= "1" Grid.Row="0" FontSize="14" Text="{Binding Path=RecipeType, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Visible" Height="480">
+        <ScrollViewer VerticalScrollBarVisibility="Visible" Height="auto">
             <StackPanel x:Name="IngredientDirections">
                 <Border BorderThickness="2" BorderBrush="DarkGray"/>
                 <TextBlock x:Name="Description" TextAlignment="Left" FontSize="14" TextWrapping="Wrap" Text="{Binding Path=Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>

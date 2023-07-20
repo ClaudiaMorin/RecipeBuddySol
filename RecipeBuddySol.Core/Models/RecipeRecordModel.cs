@@ -30,9 +30,9 @@ namespace RecipeBuddy.Core.Models
             Description = String.Copy(reSource.Description);
             Title = String.Copy(reSource.Title);
             Author = String.Copy(reSource.Author);
-            if (reSource.Link != null)
-                Link = String.Copy(reSource.Link.ToString());
-            TypeAsInt = (int)reSource.RecipeType;
+            //if (reSource.Link != null)
+            //    Link = String.Copy(reSource.Link.ToString());
+            TypeAsInt = reSource.RecipeTypeInt;
             ListOfIngredientStrings = new List<string>(reSource.listOfIngredientStringsForDisplay);
             ListOfDirectionStrings = new List<string>(reSource.listOfDirectionStringsForDisplay);
         }
@@ -48,10 +48,10 @@ namespace RecipeBuddy.Core.Models
             Description = String.Copy(reSource.Description);
             Title = title;
             Author = String.Copy(reSource.Author);
-            //Website = "";
-            if(reSource.Link != null)
-                Link = String.Copy(reSource.Link.ToString());
-            TypeAsInt = (int)reSource.RecipeType;
+
+            //if(reSource.Link != null)
+            //    Link = String.Copy(reSource.Link.ToString());
+            TypeAsInt = reSource.RecipeTypeInt;
             ListOfIngredientStrings = new List<string> (reSource.listOfIngredientStringsForDisplay);
             ListOfDirectionStrings = new List<string> (reSource.listOfDirectionStringsForDisplay);
         }
@@ -118,7 +118,7 @@ namespace RecipeBuddy.Core.Models
             Author = string.Copy(reSource.Author);
             RecipeDBID = reSource.RecipeDBID;
             Link = "";
-            TypeAsInt = (int)reSource.RecipeType;
+            TypeAsInt = reSource.RecipeTypeInt;
             ListOfIngredientStrings = new List<string>(reSource.listOfIngredientStringsForDisplay);
             ListOfDirectionStrings = new List<string>(reSource.listOfDirectionStringsForDisplay);
         }

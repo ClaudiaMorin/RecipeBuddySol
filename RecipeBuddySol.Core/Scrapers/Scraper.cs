@@ -315,10 +315,10 @@ namespace RecipeBuddy.Core.Scrapers
                     break;
                 }
                 
-                if (StringManipulationHelper.IsNumber(ingred1.Substring(0, 1)) == true)
+                if (StringManipulationHelper.IsFraction(ingred1.Substring(0, 1)) == true)
                 {
                     //Not a multi-line ingredient! Add it!
-                    if (StringManipulationHelper.IsNumber(IngredSection.Substring(0, 1)) == true)
+                    if (StringManipulationHelper.IsFraction(IngredSection.Substring(0, 1)) == true)
                     {
                         listOfIngredients.Add(ingred1);
                     }

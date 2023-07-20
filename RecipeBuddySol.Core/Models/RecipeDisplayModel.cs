@@ -32,10 +32,9 @@ namespace RecipeBuddy.Core.Models
             Title = "Search for your next recipe, or create one from scratch.";
             Description = "";
             Author = "";
-            //Website = Type_of_Websource.None;
-            Link = null;
+
             recipeType = Type_Of_Recipe.Unknown;
-            recipeTypeInt = (int)recipeType;
+            recipeTypeInt = 18;
             RecipeDBID = -1;
             authorMaxLength = "30";
             titleMaxLength = "40";
@@ -1121,11 +1120,11 @@ namespace RecipeBuddy.Core.Models
             Title = reSource.Title;
             Description = reSource.Description;
             Author = reSource.Author;
-            //Website = reSource.Website;
-            Link = reSource.Link;
-            RecipeType = reSource.RecipeType;
+
+            //Link = reSource.Link;
+            RecipeType = (Type_Of_Recipe)reSource.RecipeTypeInt;
             RecipeDBID = -1;
-            reSource.UpdateRecipeForDisplayAfterEdits();
+            //reSource.UpdateRecipeForDisplayAfterEdits();
             reSource.LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
 
             listOfIngredientStringsForDisplay = reSource.listOfIngredientStringsForDisplay;
@@ -1145,21 +1144,21 @@ namespace RecipeBuddy.Core.Models
             CopyRecipeDisplayModel(reSource);
         }
 
-            /// Updates the various elements of the RecipeEntry from the next entry in the RecipeEntriesList, triggering the OnPropertyChanged event that is "contextbound" to the UI
-            /// Adds the ingredents and Directions dynamically and then deletes them before the new recipe is replacing the old one.
-            /// </summary>
-            /// <param name="reSource">The new RecipeCard which we will use to overwrite the old values</param>
-            public void UpdateRecipeDisplayFromRecipeRecord(RecipeRecordModel reSource)
+        /// Updates the various elements of the RecipeEntry from the next entry in the RecipeEntriesList, triggering the OnPropertyChanged event that is "contextbound" to the UI
+        /// Adds the ingredents and Directions dynamically and then deletes them before the new recipe is replacing the old one.
+        /// </summary>
+        /// <param name="reSource">The new RecipeCard which we will use to overwrite the old values</param>
+        public void UpdateRecipeDisplayFromRecipeRecord(RecipeRecordModel reSource)
         {
             if (reSource == null)
             { return; }
             Title = reSource.Title;
             Description = reSource.Description;
             Author = reSource.Author;
-            RecipeType = (Type_Of_Recipe)reSource.TypeAsInt;
+            RecipeTypeInt = reSource.TypeAsInt;
             listOfIngredientStringsForDisplay = reSource.ListOfIngredientStrings;
             listOfDirectionStringsForDisplay = reSource.ListOfDirectionStrings;
-            Link = null;
+            //Link = null;
             RecipeDBID = reSource.RecipeDBID;
             LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
             SetIngredientAndDirectionProperties();
@@ -1177,10 +1176,10 @@ namespace RecipeBuddy.Core.Models
             Title = reSource.Title;
             Description = reSource.Description;
             Author = reSource.Author;
-            RecipeType = (Type_Of_Recipe)reSource.TypeAsInt;
+            RecipeTypeInt = reSource.TypeAsInt;
             listOfIngredientStringsForDisplay = reSource.ListOfIngredientStrings;
             listOfDirectionStringsForDisplay = reSource.ListOfDirectionStrings;
-            Link = null;
+
             RecipeDBID = -1;
             LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
             SetIngredientAndDirectionProperties();
@@ -1284,8 +1283,8 @@ namespace RecipeBuddy.Core.Models
         /// and listOfDirectionStringsForDisplay of the RecipeCardModel
         /// </summary>
         /// <returns>The string to be added to the DB</returns>
-        private void UpdateRecipeForDisplayAfterEdits()
-        { 
+        public void UpdateRecipeForDisplayAfterEdits()
+        {
             List<string> newListIngredients = new List<string>();
 
             for (int count = 0; count < 50; count++)
@@ -1304,6 +1303,7 @@ namespace RecipeBuddy.Core.Models
             }
 
             listOfDirectionStringsForDisplay = new List<string>(newListDirections);
+
         }
 
         #region properties that are linked to the datacontext
@@ -1317,10 +1317,9 @@ namespace RecipeBuddy.Core.Models
         public Type_Of_Recipe RecipeType
         {
             get { return recipeType; }
-            set 
+            private set
             { 
                 SetProperty(ref recipeType, value);
-                RecipeTypeInt = (int)recipeType;
             }
         }
 
@@ -1328,7 +1327,10 @@ namespace RecipeBuddy.Core.Models
         public int RecipeTypeInt
         {
             get { return recipeTypeInt; }
-            set { SetProperty(ref recipeTypeInt, value); }
+            set { 
+                SetProperty(ref recipeTypeInt, value);
+                RecipeType = (Type_Of_Recipe)recipeTypeInt;
+            }
         }
 
         private string title;
@@ -1336,13 +1338,6 @@ namespace RecipeBuddy.Core.Models
         {
             get { return title; }
             set { SetProperty(ref title, value); }
-        }
-
-        private Uri link;
-        public Uri Link
-        {
-            get { return link; }
-            set { SetProperty(ref link, value); }
         }
 
         private string author;
@@ -1357,13 +1352,6 @@ namespace RecipeBuddy.Core.Models
         {
             get { return description; }
             set { SetProperty(ref description, value); }
-        }
-
-        private string website;
-        public string Website
-        {
-            get { return website; }
-            set { SetProperty(ref website, value); }
         }
 
         private string authorMaxLength;

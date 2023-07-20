@@ -11,10 +11,9 @@
     MaxHeight="800"
     MaxWidth="1400"
     Tag="SearchView">
-
     <!--xmlns:ui ="using:Microsoft.Toolkit.Uwp.UI"
     <StackPanel x:Name="SeachDockPanelUserControl" ui:FrameworkElementExtensions.Cursor ="{Binding CursorType, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">-->
-        <StackPanel x:Name="SeachDockPanelUserControl" >
+    <StackPanel x:Name="SeachDockPanelUserControl" >
         <local:AppHeader/>
         <StackPanel Orientation="Horizontal" Background="LightSteelBlue" >
             <Border BorderThickness="3" BorderBrush="Gray"/>
@@ -34,8 +33,6 @@
                             </ic:EventTriggerBehavior>
                         </i:Interaction.Behaviors>-->
                     </TextBox>
-
-                    <!--<Button x:Name="SearchButton" Width="100" Height="30" Style="{Binding SearchEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StyleConverterSearching}}" IsEnabled="{Binding SearchEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding SearchButtonCmd}"/>-->
 
                     <Button x:Name="SearchButton" Width="100" Height="30" Style="{StaticResource BtnStyleSearch}" IsEnabled="{Binding SearchEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding SearchButtonCmd}"/>
                     
@@ -73,7 +70,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="680"/>
                 </Grid.RowDefinitions>
-                <StackPanel x:Name="MasterStackPanel1" Orientation="Vertical" Background="White" Margin ="0,0,0,0" Grid.Row="0" Grid.Column="0" >
+                <StackPanel x:Name="MasterStackPanel1" Orientation="Vertical" Background="White" Margin ="0,0,0,0" Grid.Row="0" Grid.Column="0"  >
                         <Border BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue">
                             <TextBlock x:Name="Title1" Style="{StaticResource TitleTbkStyle}" Text="{Binding Path=Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                         </Border>
@@ -97,9 +94,7 @@
                         </Grid>
                         <Border BorderThickness="2" BorderBrush="Gray" >
                             <StackPanel>
-                                <local:RecipeDetailsPanelForSearch x:Name="DetailsPanelView1" DataContext="{Binding ElementName=Title1, Path=DataContext}"/>
-                            <Border BorderThickness="2" BorderBrush="Gray" />
-                            <TextBlock  Height="50" Text="For directions, pictures, and reviews add recipe to the Weblist and view on the Web tab!" TextWrapping="WrapWholeWords" Foreground="red" />
+                            <local:RecipeDetailsPanelForSearch x:Name="DetailsPanelView1" DataContext="{Binding ElementName=Title1, Path=DataContext}"/>
                         </StackPanel>
                         </Border>
                     </StackPanel>
@@ -128,12 +123,10 @@
                         <Border BorderThickness="2" BorderBrush="Gray">
                             <StackPanel >
                             <local:RecipeDetailsPanelForSearch x:Name="DetailsPanelView2" DataContext="{Binding ElementName=Title2, Path=DataContext}"/>
-                            <Border BorderThickness="2" BorderBrush="Gray" />
-                            <TextBlock  Height="50" Text="For directions, pictures, and reviews add recipe to the Weblist and view on the Web tab!" TextWrapping="WrapWholeWords" Foreground="red" />
                         </StackPanel>
                         </Border>
                     </StackPanel>
-                <StackPanel x:Name="MasterStackPanel3" Orientation="Vertical" Background="White" Margin ="0,0,0,0" Grid.Row="0" Grid.Column="3" >
+                <StackPanel x:Name="MasterStackPanel3" Orientation="Vertical" Background="White" Margin ="0,0,0,0" Grid.Row="0" Grid.Column="3">
                         <Border BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue">
                             <TextBlock x:Name="Title3" Style="{StaticResource TitleTbkStyle}" Text="{Binding Path=Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                         </Border>
@@ -155,11 +148,9 @@
                             <Button x:Name="btnNext3" Height="30" Grid.Column="3" BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Next >" Command="{Binding CmdNextButton}"/>
                             <Button x:Name="btnSelect3"  Height="30" Grid.Column="0" BorderThickness="2" BorderBrush="Gray"  Background="#eee" Style="{StaticResource BtnStyleStandard}" Content="Add to Weblist!" Command="{Binding CmdSelectButton}" ToolTipService.ToolTip="Create a list of recipes sites to visit under the Web tab!"/>
                         </Grid>
-                        <Border BorderThickness="2" BorderBrush="Gray" >
+                        <Border BorderThickness="2" BorderBrush="Gray"  >
                             <StackPanel>
                             <local:RecipeDetailsPanelForSearch x:Name="DetailsPanelView3" DataContext="{Binding ElementName=Title3, Path=DataContext}"/>
-                            <Border BorderThickness="2" BorderBrush="Gray"/>
-                            <TextBlock  Height="50" Text="For directions, pictures, and reviews add recipe to the Weblist and view on the Web tab!" TextWrapping="WrapWholeWords" Foreground="red" />
                         </StackPanel>
                         </Border>
                 </StackPanel>

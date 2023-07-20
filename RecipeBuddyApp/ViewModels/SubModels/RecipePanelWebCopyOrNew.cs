@@ -7,27 +7,17 @@ using Windows.UI.Xaml.Controls;
 
 namespace RecipeBuddy.ViewModels
 {
-    public class RecipePanelForWebCopy : ObservableObject
+    public class RecipePanelForWebCopyOrNew : ObservableObject
     {
         public RecipeDisplayModel recipeCardModel;
-        
 
         Action action;
         public Action<SelectionChangedEventArgs> actionWithEventArgs;
 
-        private static readonly RecipePanelForWebCopy instance = new RecipePanelForWebCopy();
-        public static RecipePanelForWebCopy Instance
-        {
-            get { return instance; }
-        }
-
-        static RecipePanelForWebCopy()
-        { }
-
         /// <summary>
         /// URLList is used by the Scraper and GenerateSearchResults to pull the URL of all the found recipes 
         /// </summary>
-        private RecipePanelForWebCopy()
+        public RecipePanelForWebCopyOrNew()
         {
             recipeCardModel = new RecipeDisplayModel();
             measureTypes = new ObservableCollection<string>()
@@ -38,30 +28,14 @@ namespace RecipeBuddy.ViewModels
 
 
             ClearValuesForWebCopyQuantityMeasurementType();
-            CmdSaveButton = new RelayCommand(action = () => SaveEntry());
-            CmdCancelButton = new RelayCommand(action = () => CancelEntry());
         }
 
-        public void SaveEntry()
+        public int SaveEntry()
         {
             recipeCardModel.SaveEditsToARecipe();
-
-            if (recipeCardModel.Title.Length < 1 || string.Compare(recipeCardModel.Title.ToLower(), "recipe title here") == 0)
-            {
-                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a title to save a recipe.", "You can't save this recipe, yet.");
-                dialog.ShowAsync();
-                return;
-            }
-
-            if (MainNavTreeViewModel.Instance.CheckIfRecipeAlreadyPresentAndUpdate(recipeCardModel.Title, (int)recipeCardModel.RecipeType, -1) == -1)
-            {
-                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a unique title to save a recipe in the catagory: " + recipeCardModel.RecipeType, "You can't save this recipe, yet.");
-                dialog.ShowAsync();
-                return;
-            }
-
-            SaveEntryToDB();
-            WebViewModel.Instance.CloseKeepRecipePanel();
+            
+            int res = MainNavTreeViewModel.Instance.AddUpdateMoveRecipe(recipeCardModel);
+            return res;
         }
 
 
@@ -85,14 +59,12 @@ namespace RecipeBuddy.ViewModels
 
         public void ClearRecipeEntry()
         {
-            WebViewModel.Instance.CloseKeepRecipePanel();
             ClearValuesForWebCopyQuantityMeasurementType();
         }
 
         public void CancelEntry()
         {
             ClearRecipeEntry();
-            WebViewModel.Instance.CloseKeepRecipePanel();
         }
 
         /// <summary>
@@ -413,19 +385,6 @@ namespace RecipeBuddy.ViewModels
             get { return measureTypes; }
             set { SetProperty(ref measureTypes, value); }
         }
-
-        public RelayCommand CmdSaveButton
-        {
-            get;
-            private set;
-        }
-
-        public RelayCommand CmdCancelButton
-        {
-            get;
-            private set;
-        }
-
 
         #endregion
 
