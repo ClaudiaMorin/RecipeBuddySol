@@ -41,14 +41,15 @@ namespace RecipeBuddy.ViewModels
         /// Adds the ingredents and Directions dynamically and then deletes them before the new recipe is replacing the old one.
         /// </summary>
         /// <param name="reSource">The new RecipeCard which we will use to overwrite the old values</param>
-        public void UpdateRecipeEntry(RecipeTreeItem reSource)
-        {
-            recipeModelTV.CopyRecipeModel(reSource.recipeModelTV); 
-        }
+        //public void UpdateRecipeEntry(RecipeTreeItem reSource)
+        //{
+        //    recipeModelTV.CopyRecipeModel(reSource.recipeModelTV); 
+        //}
 
         public void UpdateRecipeEntry(RecipeDisplayModel reSource)
         {
             recipeModelTV.CopyRecipeModel(reSource);
+            TreeItemTitle = reSource.Title;
         }
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         internal void AddRecipeToSelectList()
         {
-            if ((recipeModelTV.TypeAsInt != (int)Type_Of_Recipe.Header))
+            if (recipeModelTV.TypeAsInt != (int)Type_Of_Recipe.Header)
             {
                 MainNavTreeViewModel.Instance.AddRecipeToSelect(this);
                 NavigationService.Navigate((typeof(SelectedView)));

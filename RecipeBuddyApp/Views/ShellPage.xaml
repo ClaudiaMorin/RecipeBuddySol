@@ -36,7 +36,7 @@
             Edit String/en-US/Resources.resw: Add a menu item title for each page
             -->
             <winui:NavigationViewItem x:Uid="Shell_Login" x:Name="UserView" helpers:NavHelper.NavigateTo ="views:UserView" Content="Login/Logout"  />
-            <winui:NavigationViewItem x:Uid="Shell_Select" x:Name="SelectedView" helpers:NavHelper.NavigateTo ="views:SelectedView"  Content="Edit Saved Recipe" />
+            <winui:NavigationViewItem x:Uid="Shell_Select" x:Name="SelectedView" helpers:NavHelper.NavigateTo ="views:SelectedView"  Content="Saved Recipes" />
             <winui:NavigationViewItem x:Uid="Shell_Search" x:Name="SearchView"  helpers:NavHelper.NavigateTo ="views:SearchView" Content="Search for Recipe"  />
             <winui:NavigationViewItem x:Uid="Shell_Web" x:Name="WebView"  helpers:NavHelper.NavigateTo ="views:WebView" Content="Get Recipe From Web"  />
             <winui:NavigationViewItem x:Uid="Shell_Blank" x:Name="BlankRecipeView"  helpers:NavHelper.NavigateTo ="views:BlankEntryView" Content="Create a Recipe From Scratch"  />

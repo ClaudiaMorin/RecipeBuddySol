@@ -1,8 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using RecipeBuddy.Core.Helpers;
 using RecipeBuddy.Core.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.Security.Cryptography;
 using Windows.UI.Xaml.Controls;
 
 namespace RecipeBuddy.ViewModels
@@ -12,6 +14,7 @@ namespace RecipeBuddy.ViewModels
         public RecipeDisplayModel recipeCardModel;
 
         Action action;
+
         public Action<SelectionChangedEventArgs> actionWithEventArgs;
 
         /// <summary>
@@ -20,6 +23,7 @@ namespace RecipeBuddy.ViewModels
         public RecipePanelForWebCopyOrNew()
         {
             recipeCardModel = new RecipeDisplayModel();
+            CmdSelectedTypeChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => true);
             measureTypes = new ObservableCollection<string>()
             {
                "---", "Cup(s)","Tablespoon(s)","Teaspoon(s)"
@@ -32,10 +36,17 @@ namespace RecipeBuddy.ViewModels
 
         public int SaveEntry()
         {
-            recipeCardModel.SaveEditsToARecipe();
-            
-            int res = MainNavTreeViewModel.Instance.AddUpdateMoveRecipe(recipeCardModel);
-            return res;
+            bool titleExists = DataBaseAccessorsForRecipeManager.IsRecipeTitleInDB(recipeCardModel.Title);
+            if (titleExists == true) //Title clash don't save.
+            {
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a unique title to save a recipe", "Please rename the recipe you are saving!");
+                dialog.ShowAsync();
+                return -1;
+            }
+            else
+            {
+                return MainNavTreeViewModel.Instance.AddUpdateMoveRecipe(recipeCardModel);
+            }
         }
 
 
@@ -75,9 +86,8 @@ namespace RecipeBuddy.ViewModels
         {
             //This will only do something if their is a value in the quantity field, if not it will simply return here.
             CreateIngredStringsAndSaveToIngredProperties();
-          
-            recipeCardModel.SaveEditsToARecipeModel(UserViewModel.Instance.UsersIDInDB);
-            MainNavTreeViewModel.Instance.AddRecipeModelsToTreeView(new RecipeRecordModel(recipeCardModel), true);
+            //recipeCardModel.SaveEditsToARecipeModel(UserViewModel.Instance.UsersIDInDB);
+            MainNavTreeViewModel.Instance.AddUpdateMoveRecipe(recipeCardModel);
             ClearRecipeEntry();
         }
 
@@ -344,6 +354,27 @@ namespace RecipeBuddy.ViewModels
 
         }
 
+        /// <summary>
+        /// This manages changes that come in through the user manipulating the combobox on the Create/WebView page
+        /// This is one list that is shared by both the SearchView and the CreateView
+        /// </summary>
+        /// <param name="e"></param>
+        internal void ChangeRecipeTypeFromComboBox(SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems != null && e.AddedItems.Count > 0)
+            {
+                string type = e.AddedItems[0].ToString();
+
+                for (int index = 0; index < MainNavTreeViewModel.Instance.CatagoryTypes.Count; index++)
+                {
+                    if (string.Compare(MainNavTreeViewModel.Instance.CatagoryTypes[index].ToString().ToLower(), type.ToLower()) == 0)
+                    {
+                        recipeCardModel.RecipeTypeInt = index;
+                    }
+                }
+            }
+        }
+
         private void ManageStringCreation(string ingred, string quantity, int measureIndex)
         {
             string strNewIngredVal;
@@ -384,6 +415,15 @@ namespace RecipeBuddy.ViewModels
         {
             get { return measureTypes; }
             set { SetProperty(ref measureTypes, value); }
+        }
+
+        /// <summary>
+        /// Property for the Recipe combobox change command
+        /// </summary>
+        public RelayCommand<SelectionChangedEventArgs> CmdSelectedTypeChanged
+        {
+            get;
+            private set;
         }
 
         #endregion

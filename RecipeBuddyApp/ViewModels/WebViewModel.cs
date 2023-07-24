@@ -4,6 +4,7 @@ using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RecipeBuddy.ViewModels.Commands;
+using RecipeBuddy.Core.Helpers;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -14,6 +15,7 @@ namespace RecipeBuddy.ViewModels
         public RecipePanelForWebCopyOrNew recipePanelForWebCopy;
 
         public Action<SelectionChangedEventArgs> actionWithEventArgs;
+        Func<bool> FuncBool;
         Action<string> actionWithString;
         Action action;
 
@@ -30,18 +32,16 @@ namespace RecipeBuddy.ViewModels
         private WebViewModel()
         {
             dropDownOpen = false;
-            firstColumnVisibility = "Collapsed";
-            recipeEntryVisibility = "Collapsed";
-            recipeEntryFromWebVisibility = "Collapsed";
-            mainViewWidth = "Auto";
+            recipeViewWidth = "0";
             recipePanelForWebCopy = new RecipePanelForWebCopyOrNew();
+            canSelectGetRecipe = false;
+            noLoadedRecipeHeight = "50";
+            loadedRecipeHeight = "0";
             CmdSaveButton = new RelayCommand(action = () => SaveEntry());
             CmdCancelButton = new RelayCommand(action = () => CancelEntry());
-
             CmdRemove = new RelayCommand<string>(actionWithString = s => RemoveRecipe(s));
-            CmdOpenEntry = new RelayCommandRaiseCanExecute(action = () => OpenRecipePanel(), funcBool = () => CanSelectTrueIfThereIsARecipe);
-            CmdSelectedTypeChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
-            CmdSelectedItemChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeFromComboBox(e), canCallActionFunc => CanSelectTrueIfThereIsARecipe);
+            CmdOpenEntry = new RelayCommandRaiseCanExecute(action = () => OpenRecipePanel(), FuncBool = () => CanSelectGetRecipe);
+            CmdSelectedItemChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeFromComboBox(e), canCallActionFunc => true);
         }
 
         /// <summary>
@@ -50,18 +50,17 @@ namespace RecipeBuddy.ViewModels
         public void OpenRecipePanel()
         {
             recipePanelForWebCopy.recipeCardModel.UpdateRecipeDisplayFromRecipeRecord(SearchViewModel.Instance.listOfRecipeCards.GetCurrentEntry());
-            MainViewWidth = "*";
-            RecipeEntryVisibility = "Visible";
-            RecipeEntryFromWebVisibility = "Visible";
-            FirstColumnVisibility = "Collapsed";
+            RecipeViewWidth = "*";
             recipePanelForWebCopy.LoadRecipeCardModelAndDirections(recipePanelForWebCopy.recipeCardModel);
+            CanSelectGetRecipe = false;
         }
 
 
         public void SaveEntry()
         {
             int res = recipePanelForWebCopy.SaveEntry();
-            if(res == 1)
+
+            if (res == 1)
                 CloseKeepRecipePanel();
         }
 
@@ -78,11 +77,8 @@ namespace RecipeBuddy.ViewModels
 
         public void CloseKeepRecipePanel()
         {
-            RecipeEntryVisibility = "Collapsed";
-            RecipeEntryFromWebVisibility = "Collapsed";
-            //NewRecipeEntryVisibility = "Collapsed";
-            MainViewWidth = "Auto";
-            FirstColumnVisibility = "Collapsed";
+            RecipeViewWidth = "0";
+            CanSelectGetRecipe = true;
         }
 
         /// <summary>
@@ -117,6 +113,7 @@ namespace RecipeBuddy.ViewModels
             }
         }
 
+
         /// <summary>
         /// Linked to the command behind the button to remove a recipe from the combobox
         /// </summary>
@@ -134,6 +131,7 @@ namespace RecipeBuddy.ViewModels
             else 
             {
                 ComboBoxIndexForRecipeTitle = 0;
+                WebViewModel.Instance.CanSelectGetRecipe = false;
                 CurrentLink = null;
             }
 
@@ -149,44 +147,8 @@ namespace RecipeBuddy.ViewModels
             CurrentLink = null;
         }
 
-        /// <summary>
-        /// This manages changes that come in through the user manipulating the combobox on the Create/WebView page
-        /// This is one list that is shared by both the SearchView and the CreateView
-        /// </summary>
-        /// <param name="e"></param>
-        internal void ChangeRecipeTypeFromComboBox(SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems != null && e.AddedItems.Count > 0)
-            {
-                string type = e.AddedItems[0].ToString();
-
-                for (int index = 0; index < MainNavTreeViewModel.Instance.CatagoryTypes.Count; index++)
-                {
-                    if (string.Compare(MainNavTreeViewModel.Instance.CatagoryTypes[index].ToString().ToLower(), type.ToLower()) == 0)
-                    {
-                        recipePanelForWebCopy.recipeCardModel.RecipeTypeInt = index;
-                    }
-                }
-            }
-        }
-
         #region ICommand, Properties, CanSelect
 
-        /// <summary>
-        /// Indicates whether or not we can click the recipe-related button, there needs to be a recipe in the CardView so the 
-        /// total list count has to be greater than 0.
-        /// </summary>
-        private bool canSelectTrueIfThereIsARecipe;
-        public bool CanSelectTrueIfThereIsARecipe
-        {
-            get {return canSelectTrueIfThereIsARecipe;}
-
-            set { SetProperty(ref canSelectTrueIfThereIsARecipe, value); }
-        }
-
-        /// <summary>
-        /// property for the Save button command
-        /// </summary>
         public RelayCommandRaiseCanExecute CmdOpenEntry
         {
             get;
@@ -197,15 +159,6 @@ namespace RecipeBuddy.ViewModels
         /// Property for the Recipe combobox change command
         /// </summary>
         public RelayCommand<SelectionChangedEventArgs> CmdSelectedItemChanged
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Property for the Recipe combobox change command
-        /// </summary>
-        public RelayCommand<SelectionChangedEventArgs> CmdSelectedTypeChanged
         {
             get;
             private set;
@@ -233,33 +186,32 @@ namespace RecipeBuddy.ViewModels
             }
         }
 
-        private string recipeEntryFromWebVisibility;
-        public string RecipeEntryFromWebVisibility
+        private bool canSelectGetRecipe;
+        public bool CanSelectGetRecipe
         {
-            get { return recipeEntryFromWebVisibility; }
-            set { SetProperty(ref recipeEntryFromWebVisibility, value); }
+            get { return canSelectGetRecipe; }
+            set { SetProperty(ref canSelectGetRecipe, value); }
         }
 
-        private string recipeEntryVisibility;
-        public string RecipeEntryVisibility
+        private string recipeViewWidth;
+        public string RecipeViewWidth
         {
-            get { return recipeEntryVisibility; }
-            set { SetProperty(ref recipeEntryVisibility, value); }
+            get { return recipeViewWidth; }
+            set { SetProperty(ref recipeViewWidth, value); }
         }
 
-
-        private string firstColumnVisibility;
-        public string FirstColumnVisibility
+        private string noLoadedRecipeHeight;
+        public string NoLoadedRecipeHeight
         {
-            get { return firstColumnVisibility; }
-            set { SetProperty(ref firstColumnVisibility, value); }
+            get { return noLoadedRecipeHeight; }
+            set { SetProperty(ref noLoadedRecipeHeight, value); }
         }
 
-        private string mainViewWidth;
-        public string MainViewWidth
+        private string loadedRecipeHeight;
+        public string LoadedRecipeHeight
         {
-            get { return mainViewWidth; }
-            set { SetProperty(ref mainViewWidth, value); }
+            get { return loadedRecipeHeight; }
+            set { SetProperty(ref loadedRecipeHeight, value); }
         }
 
         /// <summary>

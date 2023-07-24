@@ -20,7 +20,6 @@ namespace RecipeBuddy.ViewModels
         Action<SelectionChangedEventArgs> actionWithEventArgs;
         Func<bool> FuncBool;
 
-
         public string QuantitySelectedAsString;
         public int QuantitySelectedAsInt;
         public List<string> IngredientQuantityShift;
@@ -45,11 +44,9 @@ namespace RecipeBuddy.ViewModels
 
             listOfIngredientQuantitySetters = new List<Action<string>>();
             LoadListSettersWithActionDelegatesForIngredientQuantities();
-
             IngredientQuantityShift = new List<string>();
 
             CmdSelectedQuantityChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeQuantityFromComboBox(e), canCallActionFunc => CanSelect);
-            //CmdCopy = new RelayCommand(ActionNoParams = () => Copy());
             CmdCopy = new RelayCommandRaiseCanExecute(ActionNoParams = () => Copy(), FuncBool = () => canSelectCopy);
             CmdSave = new RelayCommandRaiseCanExecute(ActionNoParams = () => SaveRecipeEdits(), FuncBool = () => canSelectSave);
         }
@@ -75,10 +72,7 @@ namespace RecipeBuddy.ViewModels
             LoadedRecipeHeight = "Auto";
 
             RecipeEditsViewModel.Instance.LoadRecipeEntry(recipeModel);
-            
             UpdateQuantityCalc();
-
-            //CanSelectSave = canSelectSave;
         }
 
         private void ChangeQuantityFromComboBox(SelectionChangedEventArgs e)
@@ -87,7 +81,6 @@ namespace RecipeBuddy.ViewModels
             QuantitySelectedAsString = comboBoxItem.Content.ToString().Trim().Substring(0, 1);
             //get the multipler and parse it to an int
             bool success = Int32.TryParse(QuantitySelectedAsString, out QuantitySelectedAsInt);
-            
             UpdateQuantityCalc();
         }
         /// <summary>
@@ -118,10 +111,10 @@ namespace RecipeBuddy.ViewModels
             //Remove quantity and measure type from the ingredient string!  These are the only values of the ingred string that could possibly
             //have the information that we are looking for, can dump the rest!
             string[] qArray = ingredient.Trim().Split(' ');
-            string[] ingredArr = new string[3];
+            string[] ingredArr = { "", "", "" };
             int count = 0;
             int sourceCount = 0;
-            while (count < 3 && sourceCount < qArray.Length)
+            while (count < 3 && count < qArray.Length)
             {
                 if (qArray[sourceCount].Trim().Length > 0)
                 {
@@ -155,7 +148,8 @@ namespace RecipeBuddy.ViewModels
             else if (StringManipulationHelper.IsFraction(ingredArr[0]))
             {
                 measureType = StringManipulationHelper.CheckMeasureString(ingredArr[1]);
-                    return produceNewQuantity(ingredArr[0], measureType);
+                string results = produceNewQuantity(ingredArr[0], measureType);
+                return results;
             }
 
             //Still checking for weird strings like 1(4-5 lbs chicken)!
@@ -232,8 +226,10 @@ namespace RecipeBuddy.ViewModels
                 //If we have factions we send it to another function!
                 if (StringManipulationHelper.IsFraction(ingredQuantity))
                 {
-                    string foo = manageQuantityMeasurementStringForFractions(ingredQuantity, measureType);
-                    return foo;
+                    string resultFrac = manageQuantityMeasurementStringForFractions(ingredQuantity, measureType);
+                    if (resultFrac.Equals("-1"))
+                        resultFrac = "";
+                    return resultFrac;
                 }
                 
 
@@ -250,7 +246,7 @@ namespace RecipeBuddy.ViewModels
             { }
 
             //************************************ Can't figure it out!
-            return "-1";
+            return "";
         }
 
         /// <summary>
@@ -299,7 +295,8 @@ namespace RecipeBuddy.ViewModels
 
             //Multiply by the QuantitySelectedAsInt on the UI page
             fractionAsDouble = fractionAsDouble * QuantitySelectedAsInt;
-            return StringManipulationHelper.FinalQuantityString(fractionAsDouble, measureType);
+            string result = StringManipulationHelper.FinalQuantityString(fractionAsDouble, measureType);
+            return result;
         }
 
         /// <summary>
@@ -325,7 +322,7 @@ namespace RecipeBuddy.ViewModels
             EmptyIngredientQuanityRow();
 
             //Multiply the ingredient quantity and limit us to 50.
-            for (int i = 0; i < RecipeEditsViewModel.Instance.selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay.Count && i < 50; i++)
+            for (int i = 0; i < 50; i++)
             {
                 if (RecipeEditsViewModel.Instance.selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[i].Length > 0)
                 {
@@ -340,7 +337,8 @@ namespace RecipeBuddy.ViewModels
             }
 
             //filling the ingredientQuantiy properties
-            for (int IngredientCount = 0; IngredientCount < IngredientQuantityShift.Count; IngredientCount++)
+            //for (int IngredientCount = 0; IngredientCount < IngredientQuantityShift.Count; IngredientCount++)
+            for (int IngredientCount = 0; IngredientCount < 50; IngredientCount++)
             {
                 if (IngredientQuantityShift[IngredientCount].Length > 0)
                 {
@@ -359,13 +357,9 @@ namespace RecipeBuddy.ViewModels
         /// </summary>
         private void Copy()
         {
-            RecipeRecordModel recipeRecordModel = new RecipeRecordModel(RecipeEditsViewModel.Instance.selectViewMainRecipeCardModel.Title + " Copy", RecipeEditsViewModel.Instance.selectViewMainRecipeCardModel);
-
+            RecipeRecordModel recipeRecordModel = new RecipeRecordModel("Copy-" + RecipeEditsViewModel.Instance.selectViewMainRecipeCardModel.Title , RecipeEditsViewModel.Instance.selectViewMainRecipeCardModel);
             RecipeEditsViewModel.Instance.selectViewMainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecordForCopy(recipeRecordModel);
-            RecipeEditsViewModel.Instance.Title = RecipeEditsViewModel.Instance.selectViewMainRecipeCardModel.Title;
-            RecipeEditsViewModel.Instance.TitleEditString = RecipeEditsViewModel.Instance.selectViewMainRecipeCardModel.Title;
-            RecipeEditsViewModel.Instance.Author = RecipeEditsViewModel.Instance.selectViewMainRecipeCardModel.Author;
-            RecipeEditsViewModel.Instance.CurrentTypeFromCombo = RecipeEditsViewModel.Instance.selectViewMainRecipeCardModel.RecipeTypeInt;
+
             CanSelectSave = true;
             CmdSave.RaiseCanExecuteChanged();
         }
@@ -380,13 +374,8 @@ namespace RecipeBuddy.ViewModels
         {
             get
             {
-                //if (string.Compare(selectViewMainRecipeCardModel.Title.ToLower(), "search for your next recipe find!") == 0)
-                //    return false;
-                //else
-                    return true;
+                return true;
             }
-
-
         }
 
         /// <summary>
@@ -416,6 +405,7 @@ namespace RecipeBuddy.ViewModels
             set
             {
                 canSelectSave = value;
+                CanSelectCopy = !value;
                 CmdSave.RaiseCanExecuteChanged();
             }
             get
@@ -478,15 +468,6 @@ namespace RecipeBuddy.ViewModels
             private set;
         }
 
-        ///// <summary>
-        ///// Property for the Recipe combobox change command
-        ///// </summary>
-        //public ICommand CmdSelectedTypeChanged
-        //{
-        //    get;
-        //    private set;
-        //}
-
         public RelayCommandRaiseCanExecute CmdCopy
         {
             get;
@@ -499,16 +480,6 @@ namespace RecipeBuddy.ViewModels
             get { return comboBoxIndexForRecipeMultiplier; }
             set { SetProperty(ref comboBoxIndexForRecipeMultiplier, value); }
         }
-
-        //private string currentTypeString;
-        //public string CurrentTypeString
-        //{
-        //    get { return currentTypeString; }
-        //    private set //because of the listbox I need to set the type property here and trigger the save button.
-        //    {
-        //        SetProperty(ref currentTypeString, value);
-        //    }
-        //}
 
         private string noLoadedRecipeHeight;
         public string NoLoadedRecipeHeight

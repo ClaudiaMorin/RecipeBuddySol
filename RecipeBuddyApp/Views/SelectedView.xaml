@@ -54,9 +54,9 @@
                                     <StackPanel  Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" >
                                         <Button x:Name="EditDetails" Style="{StaticResource BtnStyleEditRecipeItem}" Width="75" Content="Edit Details"  Command="{Binding CmdLineEdit}" CommandParameter="1, editDetails" />
                                         <Border Width="6"/>
-                                        <Button x:Name="SaveBtn" Style="{StaticResource BtnStyleEditRecipeItem}" Content="Save Edits" Width="75" Command="{Binding CmdSave}" ToolTipService.ToolTip="Save all the edits you have made!" />
+                                        <Button x:Name="MakeCopyBtn" Style="{StaticResource BtnStyleEditRecipeItem}" Content="Make Copy" Width="75" Command="{Binding CmdCopy}" CommandParameter="Title" ToolTipService.ToolTip="Copy a recipe from the DB, unsaved changes will be lost!"  />
                                         <Border Width="6"/>
-                                        <Button x:Name="MakeCopyBtn" Style="{StaticResource BtnStyleEditRecipeItem}" Content="Make Copy" Width="75" Command="{Binding CmdCopy}" CommandParameter="Title" ToolTipService.ToolTip="Copy a recipe that doesn't have open edits pending."  />
+                                        <Button x:Name="SaveBtn" Style="{StaticResource BtnStyleEditRecipeItem}" Background="DarkSalmon" Content="Save Edits" Width="75" Command="{Binding CmdSave}" ToolTipService.ToolTip="Save all the edits you have made!" />
                                     </StackPanel>
                                     <StackPanel Grid.Row="1"  Grid.Column="0" Orientation="Horizontal" Height="{Binding TitleTypeAuthorHeight, UpdateSourceTrigger=PropertyChanged}">
                                         <Border Width="20"/>

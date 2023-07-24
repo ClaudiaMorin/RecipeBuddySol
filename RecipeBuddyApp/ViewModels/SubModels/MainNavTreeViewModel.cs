@@ -249,49 +249,55 @@ namespace RecipeBuddy.ViewModels
             return FindRecipeInCollection(recipeTreeNode.Children, titleOfRecipe);
         }
 
-        private void UpdateTreeViewUI(RecipeDisplayModel recipeCardModel, string oldTitle = null,  int oldType = -1 )
+        /// <summary>
+        /// Updates the TreeViewUI to the changes that have been made to the recipe if it is a title change or a type change
+        /// </summary>
+        /// <param name="recipeCardModel">the recipeCardModel that has been just taken from the DB after the changes have been applied</param>
+        /// <param name="existingRecipe">is this a new recipe or an update to an old one</param>
+        /// <param name="oldTitle">the recipe's previous title</param>
+        /// <param name="oldType">the recipe's previous type</param>
+        private void UpdateTreeViewUI(RecipeDisplayModel recipeCardModel, bool  existingRecipe, string oldTitle = null,  int oldType = -1 )
         {
-            if (oldTitle == null) //new recipe, no name clashes!
+
+            if (existingRecipe == true)
+            {
+                //Don't bother changing the title it is a complete delete at this point
+                if (oldType != recipeCardModel.RecipeTypeInt)
+                    MoveSelectedTreeViewItem(recipeCardModel, oldTitle, (Type_Of_Recipe)oldType);
+
+                else
+                {
+                    if (oldTitle != recipeCardModel.Title) //change the title
+                    {
+                        RecipeTreeItem recipeTreeNode = GetRecipeTreeItem(oldTitle, oldType);
+                        recipeTreeNode.UpdateRecipeEntry(recipeCardModel);
+                        //recipeTreeNode.RecipeModelTV.Title = recipeCardModel.Title;
+                        //recipeTreeNode.TreeItemTitle = recipeCardModel.Title;
+                        //recipeTreeNode.UpdateRecipeEntry(recipeCardModel);
+                    }
+                    else
+                    {
+                        RecipeTreeItem recipeTreeNode = GetRecipeTreeItem(recipeCardModel.Title, oldType);
+                        recipeTreeNode.UpdateRecipeEntry(recipeCardModel);
+                    }
+                }
+            }
+            else //New recipe, just add!
             {
                 AddRecipeToTreeView(recipeCardModel);
-                return;
             }
 
-            if (oldType == recipeCardModel.RecipeTypeInt && oldTitle != recipeCardModel.Title) //just change the title
-            {
-                RecipeTreeItem recipeTreeNode = GetRecipeTreeItem(oldTitle, oldType);
-
-                recipeTreeNode.RecipeModelTV.Title = recipeCardModel.Title;
-                recipeTreeNode.TreeItemTitle = recipeCardModel.Title;
-
-                return;
-            }
-
-            if (oldType != recipeCardModel.RecipeTypeInt && oldTitle == recipeCardModel.Title) //just change the catagory
-            {
-                MoveSelectedTreeViewItem(recipeCardModel, (Type_Of_Recipe)oldType);
-                return;
-            }
-
-            if (oldType != recipeCardModel.RecipeTypeInt && oldTitle != recipeCardModel.Title) //change both
-            {
-                RecipeTreeItem recipeTreeNode = GetRecipeTreeItem(oldTitle, oldType);
-
-                recipeTreeNode.RecipeModelTV.Title = recipeCardModel.Title;
-                recipeTreeNode.TreeItemTitle = recipeCardModel.Title;
-                MoveSelectedTreeViewItem(recipeCardModel, (Type_Of_Recipe)oldType);
-                return;
-            }
+            return;
         }
 
-            /// <summary>
-            /// uses the type_of_Recipe to identify the Parent Header node and then itterates through the children to find one where
-            /// the title matches and returns that to the caller
-            /// </summary>
-            /// <param name="title">The title of the recipe we are looking for</param>
-            /// <param name="type_Of_Recipe">The recipe type which gives us the "parent node type"</param>
-            /// <returns>The recipe tree Item we are looking for</returns>
-            public RecipeTreeItem GetRecipeTreeItem(string title, int type)
+        /// <summary>
+        /// uses the type_of_Recipe to identify the Parent Header node and then itterates through the children to find one where
+        /// the title matches and returns that to the caller
+        /// </summary>
+        /// <param name="title">The title of the recipe we are looking for</param>
+        /// <param name="type_Of_Recipe">The recipe type which gives us the "parent node type"</param>
+        /// <returns>The recipe tree Item we are looking for</returns>
+        public RecipeTreeItem GetRecipeTreeItem(string title, int type)
         {
             RecipeTreeItem recipeTreeNode = GetRecipeParentNodeFromType((Type_Of_Recipe)type);
             RecipeTreeItem recipeTreeItem = null;
@@ -307,6 +313,8 @@ namespace RecipeBuddy.ViewModels
 
             return recipeTreeItem;
         }
+
+
 
         /// <summary>
         /// Removes a recipe from the treeview 
@@ -460,13 +468,19 @@ namespace RecipeBuddy.ViewModels
             }
         }
 
-        private void MoveSelectedTreeViewItem(RecipeDisplayModel recipe, Type_Of_Recipe oldRecipeType)
+        /// <summary>
+        /// Does the fuction of deleting a recipe from the old catagory/old name and then
+        /// adding it back with the new name or in the new catagory!
+        /// </summary>
+        /// <param name="recipe"></param>
+        /// <param name="oldRecipeType"></param>
+        private void MoveSelectedTreeViewItem(RecipeDisplayModel recipe, string oldTitle, Type_Of_Recipe oldRecipeType)
         {
             RecipeTreeItem parent = GetRecipeParentNodeFromType(oldRecipeType);
 
             for (int i = 0; i < parent.Children.Count; i++)
             {
-                if (parent.Children[i].RecipeModelTV.Title == recipe.Title)
+                if (parent.Children[i].RecipeModelTV.Title == oldTitle)
                 {
                     //Remove the recipe
                     parent.Children.RemoveAt(i);
@@ -584,8 +598,8 @@ namespace RecipeBuddy.ViewModels
             //New recipe
             if (recipeToAdd.RecipeDBID == -1)
             {
-                DataBaseAccessorsForRecipeManager.UpdateAddRecipeFromDatabase(recipeToAdd, UserViewModel.Instance.UsersIDInDB);
-                UpdateTreeViewUI(recipeToAdd);
+                DataBaseAccessorsForRecipeManager.UpdateAddRecipeToDatabase(recipeToAdd, UserViewModel.Instance.UsersIDInDB);
+                UpdateTreeViewUI(recipeToAdd, false);
                 return 1;
             }
             else //existing recipe
@@ -593,8 +607,11 @@ namespace RecipeBuddy.ViewModels
                 string sTitle = DataBaseAccessorsForRecipeManager.GetTitleOfRecipeFromDBByRecipeID(recipeToAdd.RecipeDBID);
                 int RecipeType = DataBaseAccessorsForRecipeManager.GetTypeOfRecipeFromDBByRecipeID(recipeToAdd.RecipeDBID);
 
-                DataBaseAccessorsForRecipeManager.UpdateAddRecipeFromDatabase(recipeToAdd, UserViewModel.Instance.UsersIDInDB);
-                UpdateTreeViewUI(recipeToAdd, sTitle, RecipeType);
+                RecipeRecordModel record = DataBaseAccessorsForRecipeManager.UpdateAddRecipeToDatabase(recipeToAdd, UserViewModel.Instance.UsersIDInDB);
+
+               recipeToAdd.UpdateRecipeDisplayFromRecipeRecord(record);
+
+                UpdateTreeViewUI(recipeToAdd, true, sTitle, RecipeType);
                 return 1;
             }
         }

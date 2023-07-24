@@ -34,12 +34,13 @@
                         </i:Interaction.Behaviors>-->
                     </TextBox>
 
-                    <Button x:Name="SearchButton" Width="100" Height="30" Style="{StaticResource BtnStyleSearch}" IsEnabled="{Binding SearchEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding SearchButtonCmd}"/>
+                    <Button x:Name="SearchButton" Width="100" Height="30" Style="{StaticResource BtnStyleSearch}" IsEnabled="{Binding SearchEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Command="{Binding SearchButtonCmd}" ToolTipService.ToolTip="Search for recipe titles containing the term(s) in SearchBox" />
                     
                     <Border BorderThickness="50" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Column="1" >
-                    <ComboBox x:Name="RecipesInComboBox" HorizontalAlignment="Right" Width="300" Grid.Column="1" SelectedIndex="{Binding IndexOfComboBoxItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsDropDownOpen="{Binding DropDownOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="List of selected Recipes">
+                    <ComboBox x:Name="RecipesInComboBox" HorizontalAlignment="Right" Width="300" Grid.Column="1" SelectedIndex="{Binding IndexOfComboBoxItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsDropDownOpen="{Binding DropDownOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="List of selected recipes to view">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -56,7 +57,8 @@
                             </ic:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
                     </ComboBox>
-                    <Button x:Name="GoToWeb" Width="100" Height="30" Content="WebView" Style="{StaticResource BtnStyleSearch}" Command="{Binding WebButtonCmd}" />
+                    <Button x:Name="GoToWeb" Width="100" Height="30" Content="WebView" Style="{StaticResource BtnStyleSearch}" Command="{Binding WebButtonCmd}" IsEnabled="{Binding WebViewEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                            ToolTipService.ToolTip="Navigate to the recipe's website!" />
                 </StackPanel>
             </Grid>
         </StackPanel>

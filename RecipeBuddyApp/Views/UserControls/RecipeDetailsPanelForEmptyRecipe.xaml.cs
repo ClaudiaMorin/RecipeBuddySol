@@ -20,6 +20,7 @@ namespace RecipeBuddy.Views
             //general DataContext binding to the entire Grid.
             Ingredient1.DataContext = BlankEntryModel.Instance.recipePanelForNew.recipeCardModel;
             Directions.DataContext = BlankEntryModel.Instance.recipePanelForNew.recipeCardModel;
+            //Ingred1Quant.DataContext = BlankEntryModel.Instance.recipePanelForNew;
             MasterStackPanel.DataContext = BlankEntryModel.Instance.recipePanelForNew;
 
             InitializeComponent();

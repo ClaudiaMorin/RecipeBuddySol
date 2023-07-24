@@ -24,7 +24,7 @@ namespace RecipeBuddy.Views
         {
             this.InitializeComponent();
             TypesInComboBox.ItemsSource = MainNavTreeViewModel.Instance.CatagoryTypes;
-            ICommandSelectTypeChanged.Command = WebViewModel.Instance.CmdSelectedTypeChanged;
+            //ICommandSelectTypeChanged.Command = WebViewModel.Instance.CmdSelectedTypeChanged;
             DataContext = WebViewModel.Instance.recipePanelForWebCopy.recipeCardModel;
         }
     }

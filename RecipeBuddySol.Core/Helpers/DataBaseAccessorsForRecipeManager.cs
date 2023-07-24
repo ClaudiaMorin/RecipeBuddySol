@@ -92,6 +92,10 @@ namespace RecipeBuddy.Core.Helpers
             string ingredients = StringManipulationHelper.TurnListIntoStringForDB(recipeCard.ListOfIngredientStrings);
             string directions = StringManipulationHelper.TurnListIntoStringForDB(recipeCard.ListOfDirectionStrings);
 
+            //Update the recipe card to be consistant with the DB ingred/direction string order!
+            recipeCard.ListOfIngredientStrings = StringManipulationHelper.TurnStringintoListFromDB(ingredients);
+            recipeCard.ListOfDirectionStrings = StringManipulationHelper.TurnStringintoListFromDB(directions);
+
             Dictionary<string, object> recipeDictionary = new Dictionary<string, object>
             {
                 { "@Title", recipeCard.Title },
@@ -187,15 +191,16 @@ namespace RecipeBuddy.Core.Helpers
         /// used to update a recipe in the database or add the recipe if it doesn't exist
         /// </summary>
         /// <param name="recipeCard">The recipe we are updating</param>
-        public static void UpdateAddRecipeFromDatabase(RecipeDisplayModel recipeCard, int UserIDInDB)
+        public static RecipeRecordModel UpdateAddRecipeToDatabase(RecipeDisplayModel recipeCard, int UserIDInDB)
         {
+            RecipeRecordModel recipeRecordModel = new RecipeRecordModel(recipeCard);
+
             //We need a valid RecipeID that exists in the DB
             if (recipeCard.RecipeDBID != -1)
             {
                 Dictionary<string, object> parameters = new Dictionary<string, object>();
                 List<string> paramsForSQLStatment = new List<string>();
 
-                RecipeRecordModel recipeRecordModel = new RecipeRecordModel(recipeCard);
                 //Put the new users information into a dictionary which will be part of the SQL query
                 ConvertRecipeToDictionaryForDBUpdate(parameters, paramsForSQLStatment, recipeRecordModel);
 
@@ -223,6 +228,8 @@ namespace RecipeBuddy.Core.Helpers
             {
                 recipeCard.RecipeDBID = SaveRecipeToDatabase(recipeCard, UserIDInDB);
             }
+
+            return recipeRecordModel;
         }
 
         /// <summary>

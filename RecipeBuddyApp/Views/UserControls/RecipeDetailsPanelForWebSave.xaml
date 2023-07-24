@@ -27,11 +27,6 @@
                 <TextBlock Text="Category: " FontSize="14" VerticalAlignment="Center" FontWeight="Bold"/>
                 <Border BorderThickness="10"/>
                 <ComboBox x:Name="TypesInComboBox" VerticalAlignment="Center" SelectedIndex="{Binding RecipeTypeInt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <i:Interaction.Behaviors>
-                        <ic:EventTriggerBehavior  EventName="SelectionChanged">
-                            <ic:InvokeCommandAction x:Name="ICommandSelectTypeChanged" Command="{Binding CmdSelectedTypeChanged}" />
-                        </ic:EventTriggerBehavior >
-                    </i:Interaction.Behaviors>
                 </ComboBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Row="0"  Grid.Column= "1">

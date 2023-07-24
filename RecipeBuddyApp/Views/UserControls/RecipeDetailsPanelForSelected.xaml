@@ -47,7 +47,7 @@
             <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" >
                 <TextBlock Text="Author :" TextAlignment="Left" FontSize="14"/>
                 <Border Width="6"/>
-                <TextBox x:Name="AuthorTextBox" Text="{Binding Path=AuthorEditString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Red" MaxLength="{Binding Path=AuthorEditString}"  />
+                <TextBox x:Name="AuthorTextBox" Text="{Binding Path=AuthorEditString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Red" MaxLength="{Binding Path=AuthorMaxLength}"  />
                 <Border Width="10"/>
             </StackPanel>
         </Grid>

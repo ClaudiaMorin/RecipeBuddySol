@@ -29,6 +29,7 @@ namespace RecipeBuddy.Core.Models
             listOfIngredientStringsForDisplay = new List<string>(50);
             listOfDirectionStringsForDisplay = new List<string>(30);
 
+
             Title = "Search for your next recipe, or create one from scratch.";
             Description = "";
             Author = "";
@@ -53,10 +54,10 @@ namespace RecipeBuddy.Core.Models
         /// Saves the edits to a recipe including a new title
         /// </summary>
         /// <param name="title">The changed title</param>
-        public void SaveEditsToARecipe()
-        {
-            UpdateRecipeForDisplayAfterEdits();
-        }
+        //public void SaveEditsToARecipe()
+        //{
+        //    UpdateRecipeForDisplayAfterEdits();
+        //}
         /// <summary>
         /// Steps requires to update a recipe for saving to the TreeView and DB
         /// </summary>
@@ -64,6 +65,8 @@ namespace RecipeBuddy.Core.Models
         {
             LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
             SetIngredientAndDirectionProperties();
+
+            
             if (RecipeDBID == -1)
             {
                 int recipeID = DataBaseAccessorsForRecipeManager.SaveRecipeToDatabase(this, UsersIDInDB);
@@ -71,8 +74,9 @@ namespace RecipeBuddy.Core.Models
             }
             else
             {
-                DataBaseAccessorsForRecipeManager.UpdateAddRecipeFromDatabase(this, UsersIDInDB);
+                DataBaseAccessorsForRecipeManager.UpdateAddRecipeToDatabase(this, UsersIDInDB);
             }
+
         }
 
         /// <summary>
@@ -1139,8 +1143,6 @@ namespace RecipeBuddy.Core.Models
             { return; }
 
             //Call to get the directions information pulled.
-
-
             CopyRecipeDisplayModel(reSource);
         }
 
@@ -1156,9 +1158,7 @@ namespace RecipeBuddy.Core.Models
             Description = reSource.Description;
             Author = reSource.Author;
             RecipeTypeInt = reSource.TypeAsInt;
-            listOfIngredientStringsForDisplay = reSource.ListOfIngredientStrings;
-            listOfDirectionStringsForDisplay = reSource.ListOfDirectionStrings;
-            //Link = null;
+            copyIngredDirectionListsFromRecipeRecordModelToRecipeDisplayModel(reSource);
             RecipeDBID = reSource.RecipeDBID;
             LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
             SetIngredientAndDirectionProperties();
@@ -1177,12 +1177,38 @@ namespace RecipeBuddy.Core.Models
             Description = reSource.Description;
             Author = reSource.Author;
             RecipeTypeInt = reSource.TypeAsInt;
-            listOfIngredientStringsForDisplay = reSource.ListOfIngredientStrings;
-            listOfDirectionStringsForDisplay = reSource.ListOfDirectionStrings;
-
+            copyIngredDirectionListsFromRecipeRecordModelToRecipeDisplayModel(reSource);
             RecipeDBID = -1;
             LoadListSettersWithActionDelegatesForIngredientandDirectionProperties();
             SetIngredientAndDirectionProperties();
+        }
+
+        /// <summary>
+        /// Copy over the values from the RecipeRecordModel and then pad out if needed until we have 50 and 30.
+        /// </summary>
+        /// <param name="reSource"></param>
+        public void copyIngredDirectionListsFromRecipeRecordModelToRecipeDisplayModel(RecipeRecordModel reSource)
+        {
+            listOfIngredientStringsForDisplay.Clear();
+            listOfDirectionStringsForDisplay.Clear();
+
+            //clean out whatever might be leftover and set up the new values
+            for (int count = 0; count < 50; count++)
+            {
+                if (count < reSource.ListOfIngredientStrings.Count)
+                    listOfIngredientStringsForDisplay.Add(reSource.ListOfIngredientStrings[count]);
+                else
+                    listOfIngredientStringsForDisplay.Add("");
+            }
+
+            //clean out whatever might be leftover and set up the new values
+            for (int count = 0; count < 30; count++)
+            {
+                if (count < reSource.ListOfDirectionStrings.Count)
+                    listOfDirectionStringsForDisplay.Add(reSource.ListOfDirectionStrings[count]);
+                else
+                    listOfDirectionStringsForDisplay.Add("");
+            }
         }
 
         /// <summary>
@@ -1251,6 +1277,7 @@ namespace RecipeBuddy.Core.Models
         /// </summary>
         public void SetIngredientAndDirectionProperties()
         {
+
             //clean out whatever might be leftover
             for (int count = 0; count < 50; count++)
             {
@@ -1283,28 +1310,33 @@ namespace RecipeBuddy.Core.Models
         /// and listOfDirectionStringsForDisplay of the RecipeCardModel
         /// </summary>
         /// <returns>The string to be added to the DB</returns>
-        public void UpdateRecipeForDisplayAfterEdits()
-        {
-            List<string> newListIngredients = new List<string>();
+        //public void UpdateRecipeForDisplayAfterEdits()
+        //{
+        //    listOfIngredientStringsForDisplay.Clear();
 
-            for (int count = 0; count < 50; count++)
-            {
-                newListIngredients.Add(listOfIngredientGetters[count].Invoke());
-            }
+        //    for (int count = 0; count < 50; count++)
+        //    {
+        //        string Ingred = listOfIngredientGetters[count].Invoke();
+        //        if (Ingred.Length > 0)
+        //            listOfIngredientStringsForDisplay.Add(Ingred);
+        //        else
+        //            listOfIngredientStringsForDisplay.Add("");
+        //    }
 
-            listOfIngredientStringsForDisplay = new List<string>(newListIngredients);
+        //    listOfDirectionStringsForDisplay.Clear();
 
+        //    for (int count = 0; count < 30; count++)
+        //    {
+        //        string Direct = listOfDirectionGetters[count].Invoke();
+        //        if (Direct.Length > 0)
+        //            listOfDirectionStringsForDisplay.Add(Direct);
+        //        else
+        //            listOfDirectionStringsForDisplay.Add("");
+        //    }
 
-            List<string> newListDirections = new List<string>();
+        //    SetIngredientAndDirectionProperties();
 
-            for (int count = 0; count < 30; count++)
-            {
-                newListDirections.Add(listOfDirectionGetters[count].Invoke());
-            }
-
-            listOfDirectionStringsForDisplay = new List<string>(newListDirections);
-
-        }
+        //}
 
         #region properties that are linked to the datacontext
 

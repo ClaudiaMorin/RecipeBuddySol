@@ -15,23 +15,33 @@
     <StackPanel x:Name="MasterStackPanel">
         <local:AppHeader/>
         <Grid Height="798">
+            <Grid.RowDefinitions>
+                <RowDefinition x:Name="NoLoadedRecipe" Height="{Binding NoLoadedRecipeHeight, UpdateSourceTrigger=PropertyChanged}" />
+                <RowDefinition x:Name="LoadedRecipe" Height="{Binding LoadedRecipeHeight, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{Binding MainViewWidth}"/>
+                <ColumnDefinition Width="{Binding RecipeViewWidth}"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <StackPanel x:Name="TextBoxRecipe" Grid.Row="0" Grid.Column="0" Visibility="{Binding RecipeEntryVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+
+            <StackPanel x:Name="DefaultView" Grid.Row="0" Grid.Column="1" Orientation="Vertical" Background="#eee">
+                <Border BorderBrush="Gray" BorderThickness="5">
+                    <TextBlock Style="{StaticResource TitleTbkStyleEdit}" Text="Search for a recipe, add it to the weblist and then view!" VerticalAlignment="Bottom"/>
+                </Border>
+            </StackPanel>
+            <StackPanel x:Name="TextBoxRecipe" Grid.Row="1" Grid.Column="0" Orientation="Vertical" Background="#eee">
                 <StackPanel Orientation="Horizontal" Background="Gray">
                     <Border Width="10"/>
                     <Button x:Name="Save" Style="{StaticResource BtnStyleStandard}" Content="Save" Background="LightSteelBlue" Width="100" Command="{Binding CmdSaveButton}" HorizontalAlignment="Right" />
                     <Border BorderThickness="10" HorizontalAlignment="Right" />
                     <Button x:Name="Cancel" Style="{StaticResource BtnStyleStandard}" Content="Cancel" Background="LightSteelBlue" Width="100" Command="{Binding CmdCancelButton}" HorizontalAlignment="Right" />
                 </StackPanel>
-                <StackPanel x:Name="WebSaveDetails" Visibility="{Binding RecipeEntryFromWebVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <StackPanel x:Name="WebSaveDetails">
                     <local:RecipeDetailsPanelForWebSave x:Name="RecipeDetailsForEdit" />
-                </StackPanel >
+                </StackPanel>
             </StackPanel>
 
-            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
+            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
                 <StackPanel x:Name="SelectedControls" Orientation="Horizontal"/>
                 <Border BorderBrush="Gray" BorderThickness="2"/>
                 <StackPanel Grid.Column="0" Orientation="Vertical" Background="White" Margin ="0,0,0,0" Width="1108">

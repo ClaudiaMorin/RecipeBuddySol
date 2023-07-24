@@ -65,7 +65,6 @@ namespace RecipeBuddy.ViewModels
             IngredientQuantityShift = new List<string>();
 
             CmdSelectedTypeChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => CanSelect);
-            //CmdSave = new RelayCommandRaiseCanExecute(ActionNoParams = () => SaveRecipeEdits(), FuncBool = () => CanSelectSave);
             CmdUpdate = new RelayCommand<string>(actionWithObject = s => Update(s), canCallActionFunc => CanSelectAlwaysTrue);
             CmdCancel = new RelayCommand<string>(actionWithObject = s => Cancel(s), canCallActionFunc => CanSelectAlwaysTrue);
             CmdLineEdit = new RelayCommand<string>(actionWithObject = s => LineEdit(s), canCallActionFunc => CanSelectAlwaysTrue);
@@ -85,19 +84,6 @@ namespace RecipeBuddy.ViewModels
         #endregion
 
 
-        ///// <summary>
-        ///// For use when a user logs out of his/her account
-        ///// </summary>
-        //public void ResetViewModel()
-        //{
-        //    //RecipeLoaded = "Collapsed";
-        //    //RecipeNotLoaded = "Visible";
-        //    //selectViewMainRecipeCardModel.CopyRecipeDisplayModel(new RecipeDisplayModel());
-        //    //selectViewMainRecipeCardModel = new RecipeDisplayModel();
-        //    //selectViewMainRecipeCardModel.Title = "Select a recipe from the tree to edit!";
-        //    //EmptyIngredientQuanityRow();
-        //}
-
         /// <summary>
         /// updates the display to the newly selected recipe and updates the list of Edit textboxes so that the 
         /// user can edit the ingredients and we can check it before it is submitted.
@@ -108,8 +94,8 @@ namespace RecipeBuddy.ViewModels
             CloseAllEditBoxes();
             selectViewMainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecord(recipeModel);
             UpdateEditTextBoxes();
-            CurrentTypeString = MainNavTreeViewModel.Instance.CatagoryTypes[selectViewMainRecipeCardModel.RecipeTypeInt];
-            CurrentTypeFromCombo = 0;
+            CurrentTypeFromCombo = selectViewMainRecipeCardModel.RecipeTypeInt;
+
             Title = selectViewMainRecipeCardModel.Title;
             Author = selectViewMainRecipeCardModel.Author;
             titleTypeAuthorHeight = "0";
@@ -143,7 +129,6 @@ namespace RecipeBuddy.ViewModels
         public void SaveRecipeEdits()
         {
             MainNavTreeViewModel.Instance.AddUpdateMoveRecipe(selectViewMainRecipeCardModel);
-
             SelectedViewModel.Instance.CanSelectCopy = true;
         }
 
@@ -158,7 +143,7 @@ namespace RecipeBuddy.ViewModels
 
             for (int count = 0; count < 50; count++)
             {
-                if (selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[count].Length > 0)
+                if (count < selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay.Count && selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[count].Length > 0)
                 {
                     listOfIngredientEditStringsSetters[count].Invoke(selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[count]);
                 }
@@ -170,7 +155,7 @@ namespace RecipeBuddy.ViewModels
 
             for (int count = 0; count < 30; count++)
             {
-                if (selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[count].Length > 0)
+                if (count < selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay.Count  && selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[count].Length > 0)
                 {
                     listOfDirectionEditStringsSetters[count].Invoke(selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[count]);
                 }
@@ -229,7 +214,8 @@ namespace RecipeBuddy.ViewModels
         }
 
         /// <summary>
-        /// Called by the update buttons on the line edits, will also update the RecipeDisplayModel
+        /// Called by anything that saves a recipe.  It filters out a title change and alerts the user if there is a title class and
+        /// doesn't close the edit box if that is the case.
         /// </summary>
         /// <param name="sender">argument sent from the xaml with the command to indicate what we are updating</param>
         private void Update(object sender)
@@ -239,95 +225,89 @@ namespace RecipeBuddy.ViewModels
             string[] parameters = sender.ToString().Split(',');
             //CanSelectSave = false;
 
-            if (string.Compare(parameters[1].ToString().ToLower().Trim(), "ingredient") == 0)
+            ///This needs to be handled first because the update box can't be closed until the user has canceled or picked a good title!
+            if (string.Compare(parameters[1].ToString().ToLower().Trim(), "titletypeauthor") == 0 && string.Compare(selectViewMainRecipeCardModel.Title.ToLower(), TitleEditString.ToLower()) != 0 && DataBaseAccessorsForRecipeManager.IsRecipeTitleInDB(TitleEditString))
             {
-                success = Int32.TryParse(parameters[0], out results);
-                //messed up someplace
-                if (success == false)
-                { return; }
-
-                IngredHeightList[results - 1].Invoke("0");
-
-                if (string.Compare(listOfIngredientEditStringsGetters[results - 1].Invoke().ToLower(), selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[results - 1].ToLower()) != 0)
-                {
-                    selectViewMainRecipeCardModel.listOfIngredientSetters[results - 1].Invoke(listOfIngredientEditStringsGetters[results - 1].Invoke());
-                    selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[results - 1] = listOfIngredientEditStringsGetters[results - 1].Invoke();
-
-                    SelectedViewModel.Instance.CanSelectSave = true;
-                    TitleTypeAuthorHeight = "0";
-                }
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a unique title to save a recipe", "Please rename the recipe you are saving!");
+                dialog.ShowAsync();
             }
 
-            if (string.Compare(parameters[1].ToString().ToLower().Trim(), "direction") == 0)
+            ///We don't have a title clash so the rest is pretty easy.
+            else
             {
-                success = Int32.TryParse(parameters[0], out results);
-                //messed up someplace
-                if (success == false)
-                { return; }
-
-                DirectHeightList[results - 1].Invoke("0");
-                string s1 = listOfDirectionEditStringsGetters[results - 1].Invoke().ToLower();
-                string s2 = selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[results - 1].ToLower();
-
-                if (string.Compare(s1, s2) != 0)
-                {
-                    string st1 = selectViewMainRecipeCardModel.listOfDirectionGetters[results - 1].Invoke();
-                    selectViewMainRecipeCardModel.listOfDirectionSetters[results - 1].Invoke(st1);
-                    string st2 = listOfDirectionEditStringsGetters[results - 1].Invoke();
-                    selectViewMainRecipeCardModel.listOfDirectionSetters[results - 1].Invoke(st2);
-                    selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[results - 1] = listOfDirectionEditStringsGetters[results - 1].Invoke();
-                    SelectedViewModel.Instance.CanSelectSave = true;
-                    TitleTypeAuthorHeight = "0";
-                }
-            }
-
-            if (string.Compare(parameters[1].ToString().ToLower().Trim(), "titletypeauthor") == 0)
-            {
-                success = Int32.TryParse(parameters[0], out results);
-                //messed up someplace
-                if (success == false)
-                { return; }
-
-                if (string.Compare(selectViewMainRecipeCardModel.Author.ToLower(), AuthorEditString.ToLower()) != 0)
-                {
-                    Author = AuthorEditString;
-                    selectViewMainRecipeCardModel.Author = Author;
-                    SelectedViewModel.Instance.CanSelectSave = true;
-                    TitleTypeAuthorHeight = "0";
-                }
-
-                if (selectViewMainRecipeCardModel.RecipeTypeInt != CurrentTypeFromCombo)
-                {
-                    CurrentTypeString = MainNavTreeViewModel.Instance.CatagoryTypes[CurrentTypeFromCombo];
-                    selectViewMainRecipeCardModel.RecipeTypeInt = CurrentTypeFromCombo;
-                    SelectedViewModel.Instance.CanSelectSave = true;
-                    TitleTypeAuthorHeight = "0";
-                }
-
                 //if there is a change we do something, otherwise we don't..  this has to be the first thing that we address.
                 //the user cannot be allowed to get passed this if the title isn't unique.
                 if (string.Compare(selectViewMainRecipeCardModel.Title.ToLower(), TitleEditString.ToLower()) != 0)
                 {
-                    bool titleExists = DataBaseAccessorsForRecipeManager.IsRecipeTitleInDB(TitleEditString);
-                    if (titleExists == true) //Title clash don't save.
+                    selectViewMainRecipeCardModel.Title = TitleEditString;
+                    SelectedViewModel.Instance.CanSelectSave = true;
+                }
+
+                if (string.Compare(parameters[1].ToString().ToLower().Trim(), "ingredient") == 0)
+                {
+                    success = Int32.TryParse(parameters[0], out results);
+                    //messed up someplace
+                    if (success == false)
+                    { return; }
+
+                    IngredHeightList[results - 1].Invoke("0");
+
+                    if (string.Compare(listOfIngredientEditStringsGetters[results - 1].Invoke().ToLower(), selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[results - 1].ToLower()) != 0)
                     {
-                        Title = TitleEditString;
-                        SelectedViewModel.Instance.CanSelectSave = false;
-                        TitleTypeAuthorHeight = "30";
-                        Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a unique title to save a recipe", "Please rename the recipe you are saving!");
-                        dialog.ShowAsync();
-                        
-                    }
-                    else
-                    {
-                        Title = TitleEditString;
-                        selectViewMainRecipeCardModel.Title = Title;
+                        selectViewMainRecipeCardModel.listOfIngredientSetters[results - 1].Invoke(listOfIngredientEditStringsGetters[results - 1].Invoke());
+                        selectViewMainRecipeCardModel.listOfIngredientStringsForDisplay[results - 1] = listOfIngredientEditStringsGetters[results - 1].Invoke();
+
                         SelectedViewModel.Instance.CanSelectSave = true;
-                        TitleTypeAuthorHeight = "0";
                     }
                 }
 
-                
+                if (string.Compare(parameters[1].ToString().ToLower().Trim(), "direction") == 0)
+                {
+                    success = Int32.TryParse(parameters[0], out results);
+                    //messed up someplace
+                    if (success == false)
+                    { return; }
+
+                    DirectHeightList[results - 1].Invoke("0");
+                    string s1 = listOfDirectionEditStringsGetters[results - 1].Invoke().ToLower();
+                    string s2 = selectViewMainRecipeCardModel.listOfDirectionGetters[results - 1].Invoke().ToLower();
+
+                    if (string.Compare(s1, s2) != 0)
+                    {
+                        string st1 = selectViewMainRecipeCardModel.listOfDirectionGetters[results - 1].Invoke();
+                        selectViewMainRecipeCardModel.listOfDirectionSetters[results - 1].Invoke(st1);
+                        string st2 = listOfDirectionEditStringsGetters[results - 1].Invoke();
+                        selectViewMainRecipeCardModel.listOfDirectionSetters[results - 1].Invoke(st2);
+                        selectViewMainRecipeCardModel.listOfDirectionStringsForDisplay[results - 1] = listOfDirectionEditStringsGetters[results - 1].Invoke();
+                        SelectedViewModel.Instance.CanSelectSave = true;
+                    }
+                }
+
+                if (string.Compare(parameters[1].ToString().ToLower().Trim(), "titletypeauthor") == 0)
+                {
+                    success = Int32.TryParse(parameters[0], out results);
+                    //messed up someplace
+                    if (success == false)
+                    { return; }
+
+                    if (string.Compare(selectViewMainRecipeCardModel.Author.ToLower(), AuthorEditString.ToLower()) != 0)
+                    {
+                        Author = AuthorEditString;
+                        selectViewMainRecipeCardModel.Author = Author;
+                        SelectedViewModel.Instance.CanSelectSave = true;
+
+                    }
+
+                    if (selectViewMainRecipeCardModel.RecipeTypeInt != CurrentTypeFromCombo)
+                    {
+                        CurrentTypeString = MainNavTreeViewModel.Instance.CatagoryTypes[CurrentTypeFromCombo];
+                        selectViewMainRecipeCardModel.RecipeTypeInt = CurrentTypeFromCombo;
+                        SelectedViewModel.Instance.CanSelectSave = true;
+                    }
+
+                    TitleTypeAuthorHeight = "0";
+   
+                }  
             }
         }
 

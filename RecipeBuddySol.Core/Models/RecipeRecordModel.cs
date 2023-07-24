@@ -48,9 +48,6 @@ namespace RecipeBuddy.Core.Models
             Description = String.Copy(reSource.Description);
             Title = title;
             Author = String.Copy(reSource.Author);
-
-            //if(reSource.Link != null)
-            //    Link = String.Copy(reSource.Link.ToString());
             TypeAsInt = reSource.RecipeTypeInt;
             ListOfIngredientStrings = new List<string> (reSource.listOfIngredientStringsForDisplay);
             ListOfDirectionStrings = new List<string> (reSource.listOfDirectionStringsForDisplay);
@@ -96,19 +93,6 @@ namespace RecipeBuddy.Core.Models
             TypeAsInt = (int)Type_Of_Recipe.Unknown;
             ListOfIngredientStrings = new List<string>(ingredString);
             ListOfDirectionStrings = new List<string>(descripString);
-        }
-
-
-        public void CopyRecipeModel(RecipeRecordModel reSource)
-        {
-            Description = string.Copy(reSource.Description);
-            Title = string.Copy(reSource.Title);
-            Author = string.Copy(reSource.Author);
-            RecipeDBID = reSource.RecipeDBID;
-            Link = reSource.Link;
-            TypeAsInt = reSource.TypeAsInt;
-            ListOfIngredientStrings = new List<string>(reSource.ListOfIngredientStrings);
-            ListOfDirectionStrings = new List<string>();
         }
 
         public void CopyRecipeModel(RecipeDisplayModel reSource)

@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.Input;
 using Windows.UI.Xaml.Input;
 using Windows.ApplicationModel.Core;
 using RecipeBuddy.Core.Scrapers;
+using Windows.Security.Authentication.Identity.Core;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -37,7 +38,7 @@ namespace RecipeBuddy.ViewModels
             searchString = "";
             dropDownOpen = false;
             searchEnabled = true;
-            webViewEnabled = true;
+            webViewEnabled = false;
             listOfRecipeCards = new RecipeListModel();
             UpdateSearchWebsources();
             CmdEnterKeyDown = new RelayCommand<KeyRoutedEventArgs>(actionWithKeyEventArgs = e => EnterKeyDown(e));
@@ -164,8 +165,11 @@ namespace RecipeBuddy.ViewModels
                 //are we are removing the last recipe?
                 if (listOfRecipeCards.ListCount == 1)
                 {
-                    WebViewModel.Instance.CanSelectTrueIfThereIsARecipe = false;
-                    WebViewModel.Instance.CmdOpenEntry.RaiseCanExecuteChanged();
+                    WebViewModel.Instance.LoadedRecipeHeight = "0";
+                    WebViewModel.Instance.NoLoadedRecipeHeight = "50";
+                    WebViewEnabled = false;
+
+                    WebViewModel.Instance.CancelEntry();
                 }
                 else //so we have at least 2 in our count
                 {
@@ -231,22 +235,16 @@ namespace RecipeBuddy.ViewModels
                 ShowSpecifiedEntry(index);
                 return;
             }
-
+            WebViewModel.Instance.LoadedRecipeHeight = "Auto";
+            WebViewModel.Instance.NoLoadedRecipeHeight = "0";
             listOfRecipeCards.Add(recipeCard);
-            WebViewModel.Instance.CanSelectTrueIfThereIsARecipe = true;
+            WebViewEnabled = true;
+            WebViewModel.Instance.CanSelectGetRecipe = true;
+            //WebViewModel.Instance.CanSelectTrueIfThereIsARecipe = true;
 
             //If we have nothing in the list we will show the first entry otherwise we will show the
             //most recient one.
             listOfRecipeCards.CurrentCardIndex = listOfRecipeCards.ListCount - 1;
-            //if (listOfRecipeCards.ListCount == 1)
-            //{
-            //    listOfRecipeCards.CurrentCardIndex = 0;
-            //}
-            //else
-            //{
-                
-            //}
-
             ShowSpecifiedEntry(listOfRecipeCards.CurrentCardIndex);
         }
 

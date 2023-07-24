@@ -37,6 +37,15 @@ namespace RecipeBuddy.Core.Helpers
                     case '⅛':
                         return true;
 
+                    case '⅜':
+                        return true;
+
+                    case '⅝':
+                        return true;
+
+                    case '⅞':
+                        return true;
+
                     case '⅓':
                         return true;
 
@@ -59,17 +68,17 @@ namespace RecipeBuddy.Core.Helpers
         {
             if (fraction.IndexOf('½') != -1 || fraction.IndexOf("1/2") != -1)
             {
-                return 0.500;
+                return 0.5000;
             }
 
             if (fraction.IndexOf('¼') != -1 || fraction.IndexOf("1/4") != -1)
             {
-                return .250;
+                return .2500;
             }
 
             if (fraction.IndexOf('¾') != -1 || fraction.IndexOf("3/4") != -1)
             {
-                return .750;
+                return .7500;
             }
 
             if (fraction.IndexOf('⅓') != -1 || fraction.IndexOf("1/3") != -1)
@@ -84,7 +93,22 @@ namespace RecipeBuddy.Core.Helpers
 
             if (fraction.IndexOf('⅛') != -1 || fraction.IndexOf("1/8") != -1)
             {
-                return 0.125;
+                return 0.1250;
+            }
+
+            if (fraction.IndexOf('⅜') != -1 || fraction.IndexOf("3/8") != -1)
+            {
+                return 0.3750;
+            }
+
+            if (fraction.IndexOf('⅝') != -1 || fraction.IndexOf("5/8") != -1)
+            {
+                return 0.6250;
+            }
+
+            if (fraction.IndexOf('⅞') != -1 || fraction.IndexOf("7/8") != -1)
+            {
+                return 0.8750;
             }
 
             return -1;
@@ -196,6 +220,7 @@ namespace RecipeBuddy.Core.Helpers
                 case "teaspoons":
                 case "tsp":
                 case "tsp.":
+
                     retVal = "";
                     bool tablespoons = false;
                     if (wholeNumberOfInt >= 3)
@@ -269,12 +294,15 @@ namespace RecipeBuddy.Core.Helpers
                             retVal += " C";
                     }
                     //Do we have any remainders?
-                    if (wholeNumberOfInt < 4 && wholeNumberOfInt > 0)
-                    { 
-                        if(remainderAsDouble > 0)
-                            retVal += wholeNumberOfInt + ConvertDoubleToVulgarFaction(remainderAsDouble) + " Tbsp";
-                        else
-                            retVal += wholeNumberOfInt + " Tbsp";
+                    if (wholeNumberOfInt < 4 && wholeNumberOfInt > 0 || remainderAsDouble > 0)
+                    {
+                        if (wholeNumberOfInt > 0)
+                            retVal += wholeNumberOfInt;
+
+                        if (remainderAsDouble > 0)
+                            retVal += " " + ConvertDoubleToVulgarFaction(remainderAsDouble);
+
+                            retVal += " Tbsp";
                     }
                     break;
 
@@ -303,13 +331,12 @@ namespace RecipeBuddy.Core.Helpers
                 return '⅜';
             if (doubleToConvert == 0.625)
                 return '⅝';
+            if (doubleToConvert == 0.875)
+                return '⅞';
             if (doubleToConvert == 0.667 || doubleToConvert == 0.666)
                 return '⅔';
             if (doubleToConvert == 0.333)
                 return '⅓';
-            if (doubleToConvert == 0.875)
-                return '⅞';
-
 
             return '0';
         }
@@ -348,10 +375,12 @@ namespace RecipeBuddy.Core.Helpers
 
             foreach (string s in listToConvertToString)
             {
-                returnString = returnString + "|" + s;
+                if(s.Length > 0)
+                    returnString = returnString + "|" + s;
             }
 
-            returnString = returnString.Remove(0, 1);
+            if(returnString.Length > 0)
+                returnString = returnString.Remove(0, 1);
 
             return returnString;
         }
@@ -360,9 +389,9 @@ namespace RecipeBuddy.Core.Helpers
         {
             List<string> list = new List<string>();
 
-            char[] stringSplitter = new char[] { '|' };
+            //char[] stringSplitter = new char[] { '|' };
 
-            string[] substrings = stringToConvertToList.Split(stringSplitter);
+            string[] substrings = stringToConvertToList.Split('|');
 
             foreach (string s in substrings)
             {

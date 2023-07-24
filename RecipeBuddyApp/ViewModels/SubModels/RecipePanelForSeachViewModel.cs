@@ -64,6 +64,7 @@ namespace RecipeBuddy.ViewModels
         internal void AddToSelectedList()
         {
             SearchViewModel.Instance.AddToListOfRecipeCards(listOfRecipeModels.GetCurrentEntry());
+
         }
 
         /// <summary>
