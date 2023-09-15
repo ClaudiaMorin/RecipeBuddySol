@@ -3,7 +3,9 @@ using System.IO;
 using System.Threading.Tasks;
 using RecipeBuddy.Services;
 using Windows.ApplicationModel.Activation;
+using Windows.Foundation;
 using Windows.Storage;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 
 namespace RecipeBuddy
@@ -11,6 +13,7 @@ namespace RecipeBuddy
     public sealed partial class App : Application
     {
         private Lazy<ActivationService> _activationService;
+        private readonly double minW = 1000, minH = 600;
 
         private ActivationService ActivationService
         {
@@ -33,6 +36,10 @@ namespace RecipeBuddy
             {
                 await ActivationService.ActivateAsync(args);
             }
+
+            ApplicationView.PreferredLaunchViewSize = new Size(minW, minH);
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(minW, minH));
         }
 
         protected override async void OnActivated(IActivatedEventArgs args)
@@ -72,6 +79,7 @@ namespace RecipeBuddy
         {
             return new Views.ShellPage();
         }
+
     }
 
     static class AppHelper
@@ -92,4 +100,8 @@ namespace RecipeBuddy
             }
         }
     }
+
+
+
+
 }

@@ -9,6 +9,7 @@ using RecipeBuddy.Core.Helpers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Security.Cryptography;
+//using RecipeBuddyApp.RecipeBuddy_XamlTypeInfo;
 
 namespace RecipeBuddy.ViewModels
 {
@@ -96,8 +97,8 @@ namespace RecipeBuddy.ViewModels
             UpdateEditTextBoxes();
             CurrentTypeFromCombo = selectViewMainRecipeCardModel.RecipeTypeInt;
 
-            Title = selectViewMainRecipeCardModel.Title;
-            Author = selectViewMainRecipeCardModel.Author;
+            Title = recipeModel.Title;
+            Author = recipeModel.Author;
             titleTypeAuthorHeight = "0";
             SelectedViewModel.Instance.CanSelectCopy = true;
             SelectedViewModel.Instance.CanSelectSave = false;
@@ -226,7 +227,7 @@ namespace RecipeBuddy.ViewModels
             //CanSelectSave = false;
 
             ///This needs to be handled first because the update box can't be closed until the user has canceled or picked a good title!
-            if (string.Compare(parameters[1].ToString().ToLower().Trim(), "titletypeauthor") == 0 && string.Compare(selectViewMainRecipeCardModel.Title.ToLower(), TitleEditString.ToLower()) != 0 && DataBaseAccessorsForRecipeManager.IsRecipeTitleInDB(TitleEditString))
+            if (string.Compare(parameters[1].ToString().ToLower().Trim(), "titletypeauthor") == 0 && string.Compare(selectViewMainRecipeCardModel.Title.ToLower(), TitleEditString.ToLower()) != 0 && DataBaseAccessorsForRecipeManager.IsRecipeTitleInDB(TitleEditString, UserViewModel.Instance.UsersIDInDB))
             {
                 Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a unique title to save a recipe", "Please rename the recipe you are saving!");
                 dialog.ShowAsync();
@@ -235,13 +236,6 @@ namespace RecipeBuddy.ViewModels
             ///We don't have a title clash so the rest is pretty easy.
             else
             {
-                //if there is a change we do something, otherwise we don't..  this has to be the first thing that we address.
-                //the user cannot be allowed to get passed this if the title isn't unique.
-                if (string.Compare(selectViewMainRecipeCardModel.Title.ToLower(), TitleEditString.ToLower()) != 0)
-                {
-                    selectViewMainRecipeCardModel.Title = TitleEditString;
-                    SelectedViewModel.Instance.CanSelectSave = true;
-                }
 
                 if (string.Compare(parameters[1].ToString().ToLower().Trim(), "ingredient") == 0)
                 {
@@ -289,6 +283,14 @@ namespace RecipeBuddy.ViewModels
                     //messed up someplace
                     if (success == false)
                     { return; }
+
+                    //previous check means that we know that title is unique in the DB so this is good!
+                    if (string.Compare(selectViewMainRecipeCardModel.Title.ToLower(), TitleEditString.ToLower()) != 0)
+                    {
+                        Title = TitleEditString;
+                        selectViewMainRecipeCardModel.Title = Title;
+                        SelectedViewModel.Instance.CanSelectSave = true;
+                    }
 
                     if (string.Compare(selectViewMainRecipeCardModel.Author.ToLower(), AuthorEditString.ToLower()) != 0)
                     {

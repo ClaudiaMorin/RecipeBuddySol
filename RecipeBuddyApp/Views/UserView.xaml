@@ -8,8 +8,6 @@
              d:DataContext="{d:DesignInstance Type=viewmodels:MainNavTreeViewModel}"
              mc:Ignorable="d" 
              x:Name="UserTabView"
-            MaxHeight="800"
-            MaxWidth="1400"
             Tag="LoginView">
 
     <StackPanel  Background="#eee">
@@ -23,7 +21,7 @@
                         <ColumnDefinition Width="6*" />
                     </Grid.ColumnDefinitions>
                     <StackPanel x:Name="UserLoginStackPanel" Grid.Column="0" Margin="10, 10, 10, 10" >
-                        <TextBlock x:Name="Login" Text="User Login" TextAlignment="Center" Margin=" 0, 0, 0, 50" FontSize="30" />
+                        <TextBlock x:Name="Login" Text="User Login" TextAlignment="Center" Margin=" 0, 0, 0, 40" FontSize="30" />
                         <TextBlock x:Name="AccountLable" Text="Account"/>
                         <ComboBox x:Name="AccountNames" Grid.Column="0" MinWidth="100" ItemsSource="{Binding ListOfUserAccountsInDB, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding ComboBoxIndexOfUserFromDB, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin=" 0, 0, 0, 20"/>
                         <TextBlock x:Name="PasswordLable"  Text="Password:"/>
@@ -38,7 +36,7 @@
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Grid.Column="2" x:Name="NewUserStackPanel" Margin="10, 10, 10, 10">
-                        <TextBlock x:Name="NewAccount" Text="New User Account" TextAlignment="Center" Margin="0, 0, 0, 50" FontSize="30" />
+                        <TextBlock x:Name="NewAccount" Text="New User Account" TextAlignment="Center" Margin="0, 0, 0, 40" FontSize="30" />
                         <TextBlock x:Name="NewNameLable" Text="Account Name:" />
                         <TextBox x:Name="NewAccountName" Text="{Binding NewAccountName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin=" 0, 0, 0, 20" IsEnabled="{Binding PasswordBoxEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="15" ToolTipService.ToolTip="User name must be unique and between 3 and 15 characters long.">
                             <i:Interaction.Behaviors>
@@ -72,21 +70,12 @@
 
                         <Button x:Name="btnCreateAccount" BorderThickness="2" HorizontalAlignment="Center" BorderBrush="Gray" Width="120" Height="35" Background="LightSteelBlue" Style="{StaticResource BtnStyleStandard}" Content="Create User" Command="{Binding CmdCreateUserBtn}"/>
                     </StackPanel>
-
                 </Grid>
 
                 <Border BorderThickness="3" BorderBrush="DarkGray" Margin="0, 5"/>
-
                 <TextBlock Text="About" FontSize="20" TextAlignment="Center" Margin=" 0, 0, 0, 10"/>
                 <TextBlock Margin="6" Text="RecipeBuddy a private, digital repository of recipes that have been selected, altered, or created and then saved to a database on the users computer.  It is the sole creation of Claudia Morin and is distributed free of charge, all rights reserved." TextWrapping="Wrap" />
-                <TextBlock Margin="6" Text="Privacy Policy:  RecipeBuddy does not access, collect or transmit personal information.  Please note, RecipeBuddy does use 3rd party sites as part of its search methods and they may have trackers." TextWrapping="Wrap" />
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock x:Name="HyperlinkPublicDomain" Margin="6"  Text="All images sorced from:  "/>
-                    <HyperlinkButton NavigateUri="https://publicdomainvectors.org/en" >
-                        <TextBlock Text=" PublicDomainVectors.org"/>
-                    </HyperlinkButton>
-                    <Border Height="20"/>
-                </StackPanel>
+                <TextBlock TextWrapping="Wrap" Margin="6" Text="Privacy Policy:  RecipeBuddy does not access, collect or transmit personal information.  Please note, RecipeBuddy does use 3rd party sites as part of its search methods and they may have trackers. All images sourced from PublicDomainVectors.org"/>
             </StackPanel>
         </Grid>
     </StackPanel>

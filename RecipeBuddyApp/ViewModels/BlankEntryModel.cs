@@ -41,7 +41,7 @@ namespace RecipeBuddyApp.ViewModels
 
         public void SaveEntry()
         {
-            recipePanelForNew.SaveEntry();
+            recipePanelForNew.SaveEntryToDB(true);
             EmptyRecipePanel();
         }
 

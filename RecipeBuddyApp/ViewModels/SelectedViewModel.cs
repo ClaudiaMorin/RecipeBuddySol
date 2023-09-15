@@ -70,7 +70,7 @@ namespace RecipeBuddy.ViewModels
         {
             NoLoadedRecipeHeight = "0";
             LoadedRecipeHeight = "Auto";
-
+            
             RecipeEditsViewModel.Instance.LoadRecipeEntry(recipeModel);
             UpdateQuantityCalc();
         }
@@ -359,9 +359,7 @@ namespace RecipeBuddy.ViewModels
         {
             RecipeRecordModel recipeRecordModel = new RecipeRecordModel("Copy-" + RecipeEditsViewModel.Instance.selectViewMainRecipeCardModel.Title , RecipeEditsViewModel.Instance.selectViewMainRecipeCardModel);
             RecipeEditsViewModel.Instance.selectViewMainRecipeCardModel.UpdateRecipeDisplayFromRecipeRecordForCopy(recipeRecordModel);
-
-            CanSelectSave = true;
-            CmdSave.RaiseCanExecuteChanged();
+            SaveRecipeEdits();
         }
 
         #region Properties ICommands and related

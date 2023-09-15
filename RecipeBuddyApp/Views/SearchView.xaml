@@ -8,19 +8,16 @@
     mc:Ignorable="d"
     xmlns:local="using:RecipeBuddy.Views" 
     x:Name="SeachView"
-    MaxHeight="800"
-    MaxWidth="1400"
     Tag="SearchView">
-    <!--xmlns:ui ="using:Microsoft.Toolkit.Uwp.UI"
-    <StackPanel x:Name="SeachDockPanelUserControl" ui:FrameworkElementExtensions.Cursor ="{Binding CursorType, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">-->
-    <StackPanel x:Name="SeachDockPanelUserControl" >
+
+    <StackPanel x:Name="SeachDockPanelUserControl"  >
         <local:AppHeader/>
-        <StackPanel Orientation="Horizontal" Background="LightSteelBlue" >
-            <Border BorderThickness="3" BorderBrush="Gray"/>
+        <StackPanel Orientation="Vertical" Background="LightSteelBlue" BorderBrush="Gray" BorderThickness="0, 0, 0, 2" >
             <Grid x:Name="SearchViewItems" >
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"/>
@@ -33,13 +30,11 @@
                             </ic:EventTriggerBehavior>
                         </i:Interaction.Behaviors>-->
                     </TextBox>
-
                     <Button x:Name="SearchButton" Width="100" Height="30" Style="{StaticResource BtnStyleSearch}" IsEnabled="{Binding SearchEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            Command="{Binding SearchButtonCmd}" ToolTipService.ToolTip="Search for recipe titles containing the term(s) in SearchBox" />
-                    
-                    <Border BorderThickness="50" />
+                            Command="{Binding SearchButtonCmd}" ToolTipService.ToolTip="Search for recipe titles containing the term(s) in SearchBox" HorizontalAlignment="Left" />
+
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Column="1" >
+                <StackPanel Orientation="Horizontal" Grid.Column="2" >
                     <ComboBox x:Name="RecipesInComboBox" HorizontalAlignment="Right" Width="300" Grid.Column="1" SelectedIndex="{Binding IndexOfComboBoxItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsDropDownOpen="{Binding DropDownOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="List of selected recipes to view">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
@@ -58,23 +53,25 @@
                         </i:Interaction.Behaviors>
                     </ComboBox>
                     <Button x:Name="GoToWeb" Width="100" Height="30" Content="WebView" Style="{StaticResource BtnStyleSearch}" Command="{Binding WebButtonCmd}" IsEnabled="{Binding WebViewEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                            ToolTipService.ToolTip="Navigate to the recipe's website!" />
+                            ToolTipService.ToolTip="Navigate to the recipe's website!" HorizontalAlignment="Right"/>
                 </StackPanel>
+                
             </Grid>
-        </StackPanel>
-            <Border BorderBrush="Gray" BorderThickness="5">
+            </StackPanel>
+            <Border BorderBrush="Gray">
             <Grid x:Name="RecipeStackPanelCollection" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
+                <!--<Grid.RowDefinitions>
                     <RowDefinition Height="680"/>
-                </Grid.RowDefinitions>
+                </Grid.RowDefinitions>-->
                 <StackPanel x:Name="MasterStackPanel1" Orientation="Vertical" Background="White" Margin ="0,0,0,0" Grid.Row="0" Grid.Column="0"  >
-                        <Border BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue">
-                            <TextBlock x:Name="Title1" Style="{StaticResource TitleTbkStyle}" Text="{Binding Path=Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <!--<Border BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue">-->
+                    <Border Background="LightSteelBlue">
+                        <TextBlock x:Name="Title1" Style="{StaticResource TitleTbkStyle}" Text="{Binding Path=Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                         </Border>
                         <Grid x:Name="ControlsPanel1" Background="Gray">
                             <Grid.ColumnDefinitions >
@@ -100,8 +97,8 @@
                         </StackPanel>
                         </Border>
                     </StackPanel>
-                <StackPanel x:Name="MasterStackPanel2" Orientation="Vertical" Background="White" Margin ="0,0,0,0" Grid.Row="0" Grid.Column="1" >
-                    <Border BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue">
+                <StackPanel x:Name="MasterStackPanel2" Orientation="Vertical" Background="White" Margin ="0,0" Grid.Row="0" Grid.Column="1" >
+                    <Border BorderThickness="2, 0" BorderBrush="Gray"  Background="LightSteelBlue">
                             <TextBlock x:Name="Title2" Style="{StaticResource TitleTbkStyle}" Text="{Binding Path=Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                         </Border>
                     <Grid x:Name="ControlsPanel2" Background="Gray">
@@ -129,7 +126,7 @@
                         </Border>
                     </StackPanel>
                 <StackPanel x:Name="MasterStackPanel3" Orientation="Vertical" Background="White" Margin ="0,0,0,0" Grid.Row="0" Grid.Column="3">
-                        <Border BorderThickness="2" BorderBrush="Gray" Background="LightSteelBlue">
+                        <Border Background="LightSteelBlue">
                             <TextBlock x:Name="Title3" Style="{StaticResource TitleTbkStyle}" Text="{Binding Path=Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                         </Border>
                     <Grid x:Name="ControlsPanel3" Background="Gray">

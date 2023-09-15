@@ -8,12 +8,10 @@
              xmlns:i="using:Microsoft.Xaml.Interactivity"
              xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
              mc:Ignorable="d"
-             MaxHeight="800"
-             MaxWidth="1400"
              x:Name="SelectedViewTab"
              Tag="SelectedView">
 
-    <StackPanel>
+    <StackPanel Background="#eee">
         <local:AppHeader/>
         <Grid x:Name="MasterGrid">
             <Grid.ColumnDefinitions>

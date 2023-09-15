@@ -26,7 +26,7 @@ namespace RecipeBuddy.ViewModels
             CmdSelectedTypeChanged = new RelayCommand<SelectionChangedEventArgs>(actionWithEventArgs = e => ChangeRecipeTypeFromComboBox(e), canCallActionFunc => true);
             measureTypes = new ObservableCollection<string>()
             {
-               "---", "Cup(s)","Tablespoon(s)","Teaspoon(s)"
+               "------", "Cup(s)","Tablespoon(s)","Teaspoon(s)", "Pound(s)"
             };
             ingredQuantMaxLength = "5";
 
@@ -36,7 +36,7 @@ namespace RecipeBuddy.ViewModels
 
         public int SaveEntry()
         {
-            bool titleExists = DataBaseAccessorsForRecipeManager.IsRecipeTitleInDB(recipeCardModel.Title);
+            bool titleExists = DataBaseAccessorsForRecipeManager.IsRecipeTitleInDB(recipeCardModel.Title, UserViewModel.Instance.UsersIDInDB);
             if (titleExists == true) //Title clash don't save.
             {
                 Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a unique title to save a recipe", "Please rename the recipe you are saving!");
@@ -45,6 +45,7 @@ namespace RecipeBuddy.ViewModels
             }
             else
             {
+                
                 return MainNavTreeViewModel.Instance.AddUpdateMoveRecipe(recipeCardModel);
             }
         }
@@ -82,10 +83,23 @@ namespace RecipeBuddy.ViewModels
         /// This does the actual Entry Saving and can be called from either the overwrite? dialog or the CheckEntrySave function
         /// </summary>
         /// <param name="recipeCard">This is an object that is then cast back to a RecipeCardModel to satisfy the ICommandInterface</param>
-        public void SaveEntryToDB()
+        public void SaveEntryToDB(bool directions = false)
         {
+
+            ///This needs to be handled first because the update box can't be closed until the user has canceled or picked a good title!
+            if (DataBaseAccessorsForRecipeManager.IsRecipeTitleInDB(recipeCardModel.Title, UserViewModel.Instance.UsersIDInDB))
+            {
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog("You must have a unique title to save a recipe", "Please rename the recipe you are saving!");
+                dialog.ShowAsync();
+                return;
+            }
+
             //This will only do something if their is a value in the quantity field, if not it will simply return here.
             CreateIngredStringsAndSaveToIngredProperties();
+            if (directions == true)
+            {
+                CreateDirectStringsAndSaveToDirectProperties();
+            }
             //recipeCardModel.SaveEditsToARecipeModel(UserViewModel.Instance.UsersIDInDB);
             MainNavTreeViewModel.Instance.AddUpdateMoveRecipe(recipeCardModel);
             ClearRecipeEntry();
@@ -103,255 +117,171 @@ namespace RecipeBuddy.ViewModels
             recipeCardModel.listOfIngredientStringsForDisplay.Clear();
 
             if (Ingred1Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient1, Ingred1Quant, MeasurementType1); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient1); }
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient1, Ingred1Quant, MeasurementType1)); }
 
             if (Ingred2Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient2, Ingred2Quant, MeasurementType2); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient2); }
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient2, Ingred2Quant, MeasurementType2)); }
 
             if (Ingred3Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient3, Ingred3Quant, MeasurementType3); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient3); }
-
-            if (Ingred4Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient4, Ingred4Quant, MeasurementType4); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient4); }
-
-            if (Ingred5Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient5, Ingred5Quant, MeasurementType5); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient5); }
-
-            if (Ingred6Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient6, Ingred6Quant, MeasurementType6); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient6); }
-
-            if (Ingred7Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient7, Ingred7Quant, MeasurementType7); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient7); }
-
-            if (Ingred8Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient8, Ingred8Quant, MeasurementType8); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient8); }
-
-            if (Ingred9Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient9, Ingred9Quant, MeasurementType9); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient9); }
-
-            if (Ingred10Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient10, Ingred10Quant, MeasurementType10); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient10); }
-
-            if (Ingred11Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient11, Ingred11Quant, MeasurementType11); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient11); }
-
-            if (Ingred12Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient12, Ingred12Quant, MeasurementType12); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient12); }
-
-            if (Ingred13Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient13, Ingred13Quant, MeasurementType13); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient13); }
-
-            if (Ingred14Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient14, Ingred14Quant, MeasurementType14); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient14); }
-
-            if (Ingred15Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient15, Ingred15Quant, MeasurementType15); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient15); }
-
-            if (Ingred16Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient16, Ingred16Quant, MeasurementType16); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient16); }
-
-            if (Ingred17Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient17, Ingred17Quant, MeasurementType17); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient17); }
-
-            if (Ingred18Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient18, Ingred18Quant, MeasurementType18); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient18); }
-
-            if (Ingred19Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient19, Ingred19Quant, MeasurementType19); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient19); }
-
-            if (Ingred20Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient20, Ingred20Quant, MeasurementType20); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient20); }
-
-            if (Ingred21Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient21, Ingred21Quant, MeasurementType21); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient21); }
-
-            if (Ingred22Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient22, Ingred22Quant, MeasurementType22); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient22); }
-
-            if (Ingred23Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient23, Ingred23Quant, MeasurementType23); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient23); }
-
-            if (Ingred24Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient24, Ingred24Quant, MeasurementType24); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient24); }
-
-            if (Ingred25Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient25, Ingred25Quant, MeasurementType25); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient25); }
-
-            if (Ingred26Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient26, Ingred26Quant, MeasurementType26); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient26); }
-
-            if (Ingred27Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient27, Ingred27Quant, MeasurementType27); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient27); }
-
-            if (Ingred28Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient28, Ingred28Quant, MeasurementType28); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient28); }
-
-            if (Ingred29Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient29, Ingred29Quant, MeasurementType29); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient29); }
-
-            if (Ingred30Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient30, Ingred30Quant, MeasurementType30); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient30); }
-
-            if (Ingred31Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient31, Ingred31Quant, MeasurementType31); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient31); }
-
-            if (Ingred32Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient32, Ingred32Quant, MeasurementType32); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient32); }
-
-            if (Ingred33Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient33, Ingred33Quant, MeasurementType33); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient33); }
-
-            if (Ingred34Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient34, Ingred34Quant, MeasurementType34); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient34); }
-
-            if (Ingred35Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient35, Ingred35Quant, MeasurementType35); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient35); }
-
-            if (Ingred36Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient36, Ingred36Quant, MeasurementType36); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient36); }
-
-            if (Ingred37Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient37, Ingred37Quant, MeasurementType37); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient37); }
-
-            if (Ingred38Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient38, Ingred38Quant, MeasurementType38); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient38); }
-
-            if (Ingred39Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient39, Ingred39Quant, MeasurementType39); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient39); }
-
-            if (Ingred40Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient40, Ingred40Quant, MeasurementType40); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient40); }
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient3, Ingred3Quant, MeasurementType3)); }
 
             if (Ingred41Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient41, Ingred41Quant, MeasurementType41); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient41); }
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient4, Ingred4Quant, MeasurementType4)); }
+
+            if (Ingred5Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient5, Ingred5Quant, MeasurementType5)); }
+
+            if (Ingred6Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient6, Ingred6Quant, MeasurementType6)); }
+
+            if (Ingred7Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient7, Ingred7Quant, MeasurementType7)); }
+
+            if (Ingred8Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient8, Ingred8Quant, MeasurementType8)); }
+
+            if (Ingred9Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient9, Ingred9Quant, MeasurementType9)); }
+
+            if (Ingred10Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient10, Ingred10Quant, MeasurementType10)); }
+
+            if (Ingred11Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient11, Ingred11Quant, MeasurementType11)); }
+
+            if (Ingred12Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient12, Ingred12Quant, MeasurementType12)); }
+
+            if (Ingred13Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient13, Ingred13Quant, MeasurementType13)); }
+
+            if (Ingred14Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient14, Ingred14Quant, MeasurementType14)); }
+
+            if (Ingred15Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient15, Ingred15Quant, MeasurementType15)); }
+
+            if (Ingred16Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient16, Ingred16Quant, MeasurementType16)); }
+
+            if (Ingred17Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient17, Ingred17Quant, MeasurementType17)); }
+
+            if (Ingred18Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient18, Ingred18Quant, MeasurementType18)); }
+
+            if (Ingred19Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient19, Ingred19Quant, MeasurementType19)); }
+
+            if (Ingred20Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient20, Ingred20Quant, MeasurementType20)); }
+
+            if (Ingred21Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient21, Ingred21Quant, MeasurementType21)); }
+
+            if (Ingred22Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient22, Ingred22Quant, MeasurementType22)); }
+
+            if (Ingred23Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient23, Ingred23Quant, MeasurementType23)); }
+
+            if (Ingred24Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient24, Ingred24Quant, MeasurementType24)); }
+
+            if (Ingred25Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient25, Ingred25Quant, MeasurementType25)); }
+
+            if (Ingred26Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient26, Ingred26Quant, MeasurementType26)); }
+
+            if (Ingred27Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient27, Ingred27Quant, MeasurementType27)); }
+
+            if (Ingred28Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient28, Ingred28Quant, MeasurementType28)); }
+
+            if (Ingred29Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient29, Ingred29Quant, MeasurementType29)); }
+
+            if (Ingred30Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient30, Ingred30Quant, MeasurementType30)); }
+
+            if (Ingred31Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient31, Ingred31Quant, MeasurementType31)); }
+
+            if (Ingred32Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient32, Ingred32Quant, MeasurementType32)); }
+
+            if (Ingred33Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient33, Ingred33Quant, MeasurementType33)); }
+
+            if (Ingred34Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient34, Ingred34Quant, MeasurementType34)); }
+
+            if (Ingred35Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient35, Ingred35Quant, MeasurementType35)); }
+
+            if (Ingred36Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient36, Ingred36Quant, MeasurementType36)); }
+
+            if (Ingred37Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient37, Ingred37Quant, MeasurementType37)); }
+
+            if (Ingred38Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient38, Ingred38Quant, MeasurementType38)); }
+
+            if (Ingred39Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient39, Ingred39Quant, MeasurementType39)); }
+
+            if (Ingred40Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient40, Ingred40Quant, MeasurementType40)); }
+
+            if (Ingred41Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient41, Ingred41Quant, MeasurementType41)); }
 
             if (Ingred42Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient42, Ingred42Quant, MeasurementType42); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient42); }
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient42, Ingred42Quant, MeasurementType42)); }
 
             if (Ingred43Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient43, Ingred43Quant, MeasurementType43); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient43); }
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient43, Ingred43Quant, MeasurementType43)); }
 
-            if (Ingred4Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient44, Ingred44Quant, MeasurementType44); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient44); }
+            if (Ingred44Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient44, Ingred44Quant, MeasurementType44)); }
 
             if (Ingred45Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient45, Ingred45Quant, MeasurementType45); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient45); }
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient45, Ingred45Quant, MeasurementType45)); }
 
             if (Ingred46Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient46, Ingred46Quant, MeasurementType46); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient46); }
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient46, Ingred46Quant, MeasurementType46)); }
 
             if (Ingred47Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient47, Ingred47Quant, MeasurementType47); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient47); }
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient47, Ingred47Quant, MeasurementType47)); }
 
             if (Ingred48Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient48, Ingred48Quant, MeasurementType48); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient48); }
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient48, Ingred48Quant, MeasurementType48)); }
 
             if (Ingred49Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient49, Ingred49Quant, MeasurementType49); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient49); }
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient49, Ingred49Quant, MeasurementType49)); }
 
-            if (Ingred50Quant.Length > 0)
-            { ManageStringCreation(recipeCardModel.Ingredient50, Ingred50Quant, MeasurementType50); }
-            else
-            { recipeCardModel.listOfIngredientStringsForDisplay.Add(recipeCardModel.Ingredient50); }
+            if (Ingred40Quant.Length > 0)
+            { recipeCardModel.listOfIngredientStringsForDisplay.Add(ManageStringCreation(recipeCardModel.Ingredient50, Ingred50Quant, MeasurementType50)); }
 
+        }
+
+        /// <summary>
+        /// grabs the values in the direction edit fields, if there is a value it gets added to the
+        /// ListOfDirectionStringForDisplay!
+        /// </summary>
+        private void CreateDirectStringsAndSaveToDirectProperties()
+        {
+            recipeCardModel.listOfDirectionStringsForDisplay.Clear();
+
+            for (int count = 0; count < 30; count++)
+            {
+                string Direct = recipeCardModel.listOfDirectionGetters[count].Invoke();
+                if (Direct.Length > 0)
+                    recipeCardModel.listOfDirectionStringsForDisplay.Add(Direct);
+            }
         }
 
         /// <summary>
@@ -375,7 +305,7 @@ namespace RecipeBuddy.ViewModels
             }
         }
 
-        private void ManageStringCreation(string ingred, string quantity, int measureIndex)
+        private string ManageStringCreation(string ingred, string quantity, int measureIndex)
         {
             string strNewIngredVal;
 
@@ -388,7 +318,7 @@ namespace RecipeBuddy.ViewModels
                 strNewIngredVal = quantity + " " + measureTypes[measureIndex] + " " + ingred;
             }
 
-            recipeCardModel.listOfIngredientStringsForDisplay.Add(strNewIngredVal);
+            return strNewIngredVal;
         }
 
         private void ClearValuesForWebCopyQuantityMeasurementType()

@@ -314,8 +314,6 @@ namespace RecipeBuddy.ViewModels
             return recipeTreeItem;
         }
 
-
-
         /// <summary>
         /// Removes a recipe from the treeview 
         /// </summary>
@@ -595,25 +593,26 @@ namespace RecipeBuddy.ViewModels
         /// <param name="recipeToAdd">The new recipe we are attempting to add</param>
         public int AddUpdateMoveRecipe(RecipeDisplayModel recipeToAdd)
         {
-            //New recipe
+
             if (recipeToAdd.RecipeDBID == -1)
             {
-                DataBaseAccessorsForRecipeManager.UpdateAddRecipeToDatabase(recipeToAdd, UserViewModel.Instance.UsersIDInDB);
+                RecipeRecordModel record = DataBaseAccessorsForRecipeManager.UpdateAddRecipeToDatabase(recipeToAdd, UserViewModel.Instance.UsersIDInDB);
+                recipeToAdd.UpdateRecipeDisplayFromRecipeRecord(record);
                 UpdateTreeViewUI(recipeToAdd, false);
                 return 1;
             }
-            else //existing recipe
+            //existing recipe
+            else
             {
                 string sTitle = DataBaseAccessorsForRecipeManager.GetTitleOfRecipeFromDBByRecipeID(recipeToAdd.RecipeDBID);
                 int RecipeType = DataBaseAccessorsForRecipeManager.GetTypeOfRecipeFromDBByRecipeID(recipeToAdd.RecipeDBID);
 
                 RecipeRecordModel record = DataBaseAccessorsForRecipeManager.UpdateAddRecipeToDatabase(recipeToAdd, UserViewModel.Instance.UsersIDInDB);
-
-               recipeToAdd.UpdateRecipeDisplayFromRecipeRecord(record);
-
+                recipeToAdd.UpdateRecipeDisplayFromRecipeRecord(record);
                 UpdateTreeViewUI(recipeToAdd, true, sTitle, RecipeType);
                 return 1;
             }
+
         }
 
         /// <summary>

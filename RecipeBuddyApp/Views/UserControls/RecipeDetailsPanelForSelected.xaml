@@ -7,8 +7,7 @@
              xmlns:i="using:Microsoft.Xaml.Interactivity"
              xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
              mc:Ignorable="d"
-             MaxHeight="650"
-             MaxWidth="1400">
+            MaxHeight="670">
 
     <StackPanel>
         <Grid x:Name="RecipeHeaderGrid">
@@ -54,7 +53,7 @@
         <Border BorderThickness="2" BorderBrush="DarkGray"/>
         <Grid x:Name="HeaderGrid" Background="LightSteelBlue">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*" />
+                   <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="10*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
@@ -72,14 +71,14 @@
                 </ComboBox>
 
             <StackPanel Background="LightSteelBlue" Grid.Column="1" Grid.Row="0">
-                <TextBlock Text="Ingredients:" HorizontalAlignment="Center" FontSize="20" FontWeight="ExtraBold" />
+                <TextBlock Text="  Ingredients:" HorizontalAlignment="Center" FontSize="20" FontWeight="ExtraBold" />
             </StackPanel>
         </Grid>
         <Border BorderThickness="2" BorderBrush="DarkGray"/>
         <!--<ScrollViewer Visibility="Visible" Height="540">-->
         <StackPanel x:Name="IngredientDirections">
             <!--This is where all of the ingredients are set, it is  big!! -->
-            <ScrollViewer Visibility="Visible" Height="270">
+            <ScrollViewer Visibility="Visible" Height="280">
 
                 <Grid x:Name="IngredientGrid">
                     <Grid.ColumnDefinitions>
@@ -598,7 +597,7 @@
                 <TextBlock Text="Directions/Notes:" HorizontalAlignment="Center" FontSize="20" FontWeight="ExtraBold"  />
             </StackPanel>
             <Border BorderThickness="2" BorderBrush="DarkGray"/>
-            <ScrollViewer Visibility="Visible" Height="270">
+            <ScrollViewer Visibility="Visible" Height="280">
                 <Grid x:Name="DirectionGrid" Background="#eee" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="36*" />

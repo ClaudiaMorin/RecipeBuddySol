@@ -226,7 +226,7 @@ namespace RecipeBuddy.Core.Helpers
             }
             else
             {
-                recipeCard.RecipeDBID = SaveRecipeToDatabase(recipeCard, UserIDInDB);
+                recipeRecordModel.RecipeDBID = SaveRecipeToDatabase(recipeCard, UserIDInDB);
             }
 
             return recipeRecordModel;
@@ -240,14 +240,14 @@ namespace RecipeBuddy.Core.Helpers
         public static int GetPKeyofMostRecientlyAddedRecipeFromDB()
         {
             string sql = "SELECT Max(RecipeID) FROM Recipes";
-            int id = 0;
+            int id = -1;
 
             List<List<object>> RecipeID = SqliteDataAccess.LoadData(sql, 1);
 
             if (RecipeID.Count != 0)
-                return Int32.Parse((RecipeID[0][0]).ToString());
+                id = Convert.ToInt32(RecipeID[0][0]);
 
-            return -1;
+            return id;
         }
 
         /// <summary>
@@ -287,7 +287,7 @@ namespace RecipeBuddy.Core.Helpers
                     {"@TypeAsInt", RecipeIDInDB }
                 };
 
-                string sqlStatment = "Select TypeAsInt from Recipes Where RecipeID= " + RecipeIDInDB;
+                string sqlStatment = "Select TypeAsInt from Recipes Where RecipeID= " + RecipeIDInDB ;
                 ret =  Int32.Parse(SqliteDataAccess.LoadData(sqlStatment, 1)[0][0].ToString());
             }
 
@@ -296,13 +296,14 @@ namespace RecipeBuddy.Core.Helpers
 
 
         /// <summary>
-        /// Get the Title of a recipe stored in the DB
+        /// Get the Title of a recipe stored in the DB for this user
         /// </summary>
         /// <returns></returns>
-        public static bool IsRecipeTitleInDB(string title)
+        public static bool IsRecipeTitleInDB(string title, int userID)
         {
+      
             //Recipe ID is not valid
-            string sqlStatment = "Select RecipeID from Recipes Where Title = '" + title + "'";
+            string sqlStatment = "Select RecipeID from Recipes Where Title = '" + title + "' AND UserID= " + userID;
             List < List<object> > result = SqliteDataAccess.LoadData(sqlStatment, 1);
             if(result.Count == 0)
                 return false;
@@ -325,9 +326,7 @@ namespace RecipeBuddy.Core.Helpers
             try
             {
                 if (userDBModels[0] != null)
-                {
                     retInt = Int32.Parse(userDBModels[0][0].ToString());
-                }
             }
             catch (Exception e)
             {
@@ -362,9 +361,7 @@ namespace RecipeBuddy.Core.Helpers
                     return i;
                 }
                 else
-                {
                     new Windows.UI.Popups.MessageDialog("Invalid Password!").ShowAsync();
-                }
             }
             else
             {
@@ -447,9 +444,7 @@ namespace RecipeBuddy.Core.Helpers
             if (users.Count > 0)
             {
                 for (int count = 0; count < users.Count; count++)
-                {
                     ListOfUserAccountsInDB.Add((string)users[count][0]);
-                }
             }
         }
 
