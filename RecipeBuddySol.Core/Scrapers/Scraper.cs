@@ -89,20 +89,21 @@ namespace RecipeBuddy.Core.Scrapers
             {
                 HtmlWeb web = new HtmlWeb();
                 HtmlDocument doc = web.Load(uri);
-               
+
 
                 if (uri.Host == "www.allrecipes.com")
                 {
                     RecipeRecordModel dataBlurbAllRecipes = Scraper_AllRecipes_Southern_FoodAndWine.ProcessRecipeType(doc, splitter, uri);
-                        return dataBlurbAllRecipes;
+                    return dataBlurbAllRecipes;
                 }
 
 
                 if (uri.Host == "www.southernliving.com")
                 {
                     RecipeRecordModel dataSouthernLiving = Scraper_AllRecipes_Southern_FoodAndWine.ProcessRecipeType(doc, splitter, uri);
-                        return dataSouthernLiving;
+                    return dataSouthernLiving;
                 }
+
 
                 if (uri.Host == "www.foodandwine.com")
                 {

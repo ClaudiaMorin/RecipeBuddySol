@@ -8,6 +8,9 @@ using RecipeBuddy.Core.Models;
 using RecipeBuddy.Core.Helpers;
 using System.Threading;
 using System.Collections;
+using System.Drawing;
+using System.Threading.Tasks;
+using Windows.UI.Xaml.Documents;
 
 namespace RecipeBuddy.Core.Scrapers
 {
@@ -55,41 +58,25 @@ namespace RecipeBuddy.Core.Scrapers
                 strQuery += '+' + myQueryArray[i];
             }
 
-            try
+            strQuery += "+recipe";
+
+            if (website == 2) //Food And Wine has shifted so now it is "special"
             {
-                var doc = web.Load(strQuery);
-
-                HtmlNode Node1 = doc.DocumentNode.SelectSingleNode("//div[@id='card-list_1-0']");
-                HtmlNodeCollection list = Node1.SelectNodes("//a[@class='comp mntl-card-list-items mntl-document-card mntl-card card card--no-image']");
-
-                //Search didn't find anything!
-                if (list == null || list.Count == 0)
+                try
                 {
-                    return -1;
-                }
+                    var doc = web.Load(strQuery);
 
-                listModel.URLLists = new RecipeURLLists();
+                    HtmlNode Node1 = doc.DocumentNode.SelectSingleNode("//div[@id='mntl-search-results__content_1-0']");
+                    HtmlNodeCollection list = Node1.SelectNodes("//a[@class='comp mntl-card-list-items mntl-document-card mntl-card card card--no-image']");
 
-                if (website == 0)
-                {
-                    foreach (HtmlNode node in list)
+                    //Search didn't find anything!
+                    if (list == null || list.Count == 0)
                     {
-                        string s = node.Attributes[4].Value;
-                        if (s.Contains("https://www.allrecipes.com/recipe/"))
-                            listModel.URLLists.Add(new Uri(s));
+                        return -1;
                     }
-                }
-                if (website == 1)
-                {
-                    foreach (HtmlNode node in list)
-                    {
-                        string s = node.Attributes[4].Value;
-                        if (s.Contains("https://www.southernliving.com/recipes/"))
-                            listModel.URLLists.Add(new Uri(s));
-                    }
-                }
-                if (website == 2)
-                {
+
+                    listModel.URLLists = new RecipeURLLists();
+
                     foreach (HtmlNode node in list)
                     {
                         string s = node.Attributes[4].Value;
@@ -97,11 +84,57 @@ namespace RecipeBuddy.Core.Scrapers
                             listModel.URLLists.Add(new Uri(s));
                     }
                 }
+
+
+                catch (Exception e)
+                {
+                    return -1;
+                }
             }
 
-            catch (Exception e)
+            else
             {
-                return -1;
+                try
+                {
+                    var doc = web.Load(strQuery);
+
+                    HtmlNode Node1 = doc.DocumentNode.SelectSingleNode("//div[@id='card-list_1-0']");
+                    HtmlNodeCollection list = Node1.SelectNodes("//a[@class='comp mntl-card-list-items mntl-document-card mntl-card card card--no-image']");
+
+                    //Search didn't find anything!
+                    if (list == null || list.Count == 0)
+                    {
+                        return -1;
+                    }
+
+                    listModel.URLLists = new RecipeURLLists();
+
+                    if (website == 0)
+                    {
+                        foreach (HtmlNode node in list)
+                        {
+                            string s = node.Attributes[4].Value;
+                            if (s.Contains("https://www.allrecipes.com/recipe/"))
+                                listModel.URLLists.Add(new Uri(s));
+                        }
+                    }
+
+                    if (website == 1)
+                    {
+                        foreach (HtmlNode node in list)
+                        {
+                            string s = node.Attributes[4].Value;
+                            if (s.Contains("https://www.southernliving.com/recipes/"))
+                                listModel.URLLists.Add(new Uri(s));
+                        }
+                    }
+
+                }
+
+                catch (Exception e)
+                {
+                    return -1;
+                }
             }
 
             return 0;
@@ -116,38 +149,9 @@ namespace RecipeBuddy.Core.Scrapers
         /// <param name="uri">website</param>
         public static RecipeRecordModel ProcessRecipeType(HtmlDocument doc, char[] splitter, Uri uri)
         {
-            //We are going to check for an ingredients tag, if it can't be found we don't have a recipe so abort.
-            //if (doc.DocumentNode.SelectSingleNode("//ul[@class='mntl-structured-ingredients__list']") == null)
-            //    return null;
-
-            List<string> ingredients = FillIngredientListRecipeEntry(doc, 50);
-            if(ingredients == null)
+            RecipeRecordModel recipeModel = RecipeRecordModelFactory(doc, uri);
+            if (recipeModel == null)
                 return null;
-
-            List<string> directions = FillDirectionsListRecipeEntry(doc, 30);
-
-            //no ingredients it isn't a real recipe so we bail
-            if (ingredients.Count == 0)
-                return null;
-
-            RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
-
-            recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//h1[@id='article-heading_1-0']", doc));
-
-            if (uri.Host == "www.southernliving.com")
-            {
-                recipeModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//div[@id='mntl-recipe-intro__content_1-0']").InnerText);
-                recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//h1[@id='article-heading_2-0']", doc));
-            }
-
-            else if (uri.Host == "www.foodandwine.com")
-            {
-                recipeModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//p[@id='article-subheading_1-0']").InnerText);;
-            }
-            else if (uri.Host == "www.allrecipes.com")
-            {
-                recipeModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//p[@id='article-subheading_1-0']").InnerText);
-            }
 
             if (recipeModel.Description.Length > 200)
             {
@@ -158,9 +162,75 @@ namespace RecipeBuddy.Core.Scrapers
             recipeModel.Author = "By: " + StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//a[@class='mntl-attribution__item-name']", doc));
             recipeModel.Link = uri.ToString();
             recipeModel.TypeAsInt = (int)Scraper.FillTypeForRecipeEntry(recipeModel.Title);
-            recipeModel.ListOfIngredientStrings = ingredients;
-            recipeModel.ListOfDirectionStrings = directions;
             return recipeModel;
+        }
+
+        /// <summary>
+        /// Basically this handles the differences between the formatting in the different websites
+        /// </summary>
+        /// <param name="doc">HtmlDocument that has the webiste loaded</param>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        private static RecipeRecordModel RecipeRecordModelFactory(HtmlDocument doc, Uri uri)
+        {
+            if (uri.Host == "www.southernliving.com")
+            {
+                List<string> ingredients = FillIngredientListRecipeEntry(doc, 50);
+                if (ingredients == null)
+                    return null;
+
+                //no ingredients it isn't a real recipe so we bail
+                if (ingredients.Count == 0)
+                    return null;
+
+                List<string> directions = FillDirectionsListRecipeEntry(doc, 30);
+                RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
+                recipeModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//div[@id='mntl-recipe-intro__content_1-0']").InnerText);
+                recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//h1[@id='article-heading_2-0']", doc));
+                recipeModel.ListOfIngredientStrings = ingredients;
+                recipeModel.ListOfDirectionStrings = directions;
+                return recipeModel;
+            }
+
+            else if (uri.Host == "www.foodandwine.com")
+            {
+                List<string> ingredients = FillIngredientListRecipeEntry(doc, 50);
+                if (ingredients == null)
+                    return null;
+
+                //no ingredients it isn't a real recipe so we bail
+                if (ingredients.Count == 0)
+                    return null;
+
+                List<string> directions = FillDirectionsListRecipeEntryFoodAndWine(doc, 30);
+                RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
+                recipeModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//div[@class='comp mntl-recipe-intro mntl-block']").InnerText);
+                HtmlNode node = doc.DocumentNode.SelectSingleNode("//div[@class='comp article-header--recipe mntl-article-header--recipe mntl-article-header']");
+                recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//h1[@class='article-heading type--lion']", node));
+                recipeModel.ListOfIngredientStrings = ingredients;
+                recipeModel.ListOfDirectionStrings = directions;
+                return recipeModel;
+            }
+
+            else if (uri.Host == "www.allrecipes.com")
+            {
+                List<string> ingredients = FillIngredientListRecipeEntry(doc, 50);
+                if (ingredients == null)
+                    return null;
+
+                //no ingredients it isn't a real recipe so we bail
+                if (ingredients.Count == 0)
+                    return null;
+                List<string> directions = FillDirectionsListRecipeEntry(doc, 30);
+                RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
+                recipeModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//p[@id='article-subheading_1-0']").InnerText);
+                recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//h1[@id='article-heading_1-0']", doc));
+                recipeModel.ListOfIngredientStrings = ingredients;
+                recipeModel.ListOfDirectionStrings = directions;
+                return recipeModel;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -216,20 +286,44 @@ namespace RecipeBuddy.Core.Scrapers
             return Scraper.TrimListToSpecifiedEntries(countList, ingredients);
         }
 
+        private static List<string> FillDirectionsListRecipeEntryFoodAndWine(HtmlDocument doc, int countList)
+        {
+            List<string> directions = new List<string>();
+            try
+            {
+                HtmlNode node = doc.DocumentNode.SelectSingleNode("//div[@id='recipe__steps-content_1-0']");
+                if (node != null) 
+                {
+                    HtmlNodeCollection htmlNodes = node.SelectNodes("//li[@class='comp mntl-sc-block mntl-sc-block-startgroup mntl-sc-block-group--LI']");
+                    for (int i = 0; i < countList; i++)
+                    {
+                        HtmlNode sectionHeader_node = htmlNodes[i];
+                        directions.Add(StringManipulationHelper.CleanHTMLTags(sectionHeader_node.InnerText));
+                    }
+                }
+            }
+            catch (Exception e)
+            { }
+
+            return Scraper.TrimListToSpecifiedEntries(countList, directions);
+        }
+
         private static List<string> FillDirectionsListRecipeEntry(HtmlDocument doc, int countList)
         {
             List<string> directions = new List<string>();
             try
             {
-                //HtmlNode direct_node = doc.DocumentNode.SelectSingleNode("//ol[@id='mntl-sc-block_2-0']");
-                HtmlNode direct_node = doc.DocumentNode.SelectSingleNode("//div[@class='comp recipe__steps mntl-block']");
-                //HtmlNodeCollection htmlNodes = direct_node.SelectNodes("//p[@class='comp mntl-sc-block mntl-sc-block-html']");
-                HtmlNodeCollection htmlNodes = direct_node.SelectNodes("//li[@class='comp mntl-sc-block-group--LI mntl-sc-block mntl-sc-block-startgroup']");
 
-                for (int i = 0; i < countList; i++)
+                HtmlNode direct_node = doc.DocumentNode.SelectSingleNode("//div[@id='recipe__steps-content_1-0']");
+
+                if (direct_node != null)
                 {
-                    HtmlNode sectionHeader_node = htmlNodes[i];
-                    directions.Add(StringManipulationHelper.CleanHTMLTags(sectionHeader_node.InnerText));
+                    HtmlNodeCollection htmlNodes = direct_node.SelectNodes("//li[@class='comp mntl-sc-block-group--LI mntl-sc-block mntl-sc-block-startgroup']");
+                    for (int i = 0; i < countList; i++)
+                    {
+                        HtmlNode sectionHeader_node = htmlNodes[i];
+                        directions.Add(StringManipulationHelper.CleanHTMLTags(sectionHeader_node.InnerText));
+                    }
                 }
             }
             catch (Exception e)

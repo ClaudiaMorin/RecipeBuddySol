@@ -10,9 +10,9 @@
   <Identity
     Name="23061ClaudiaMorin.RecipeBuddy"
     Publisher="CN=76CEA5AA-E9D6-4374-825A-C29AA523693A"
-    Version="2.0.1.0" />
+    Version="2.0.6.0" />
 
-  <mp:PhoneIdentity PhoneProductId="4070a593-fe45-4c30-8063-e494b16f15b9" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="97b64409-6514-49ad-a1a8-0a20532b6e96" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>RecipeBuddy</DisplayName>
@@ -46,10 +46,9 @@
           </uap:ShowNameOnTiles>
         </uap:DefaultTile >
         <uap:SplashScreen Image="Assets\SplashScreen.png"  BackgroundColor="lightSteelBlue"/>
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>
       </uap:VisualElements>
-
-      <Extensions>
-      </Extensions>
     </Application>
   </Applications>
 

@@ -30,7 +30,7 @@
     <AppxPackageDir>C:\Users\BlueC\source\repos\GitHub\UWPRecipeBuddyCode\Packages\</AppxPackageDir>
     <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
-    <PackageCertificateThumbprint>1702A54BA1761782BE2BD05728B77E43E8957827</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>0065224CCC20DDAA01E8BC1A2425A6BB1B254169</PackageCertificateThumbprint>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
@@ -406,7 +406,6 @@
     <Content Include="Images\SaladPublicDomain.png" />
     <Content Include="Images\SoupPublicDomain.png" />
     <Content Include="Images\TeaCupPublicDomain.png" />
-    <None Include="codesigning.pfx" />
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />

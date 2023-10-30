@@ -48,7 +48,7 @@ namespace RecipeBuddy.Core.Models
         {
             switch (websource)
             {
-                
+
                 case Type_of_Websource.AllRecipes:
                     {
                         //Failed Search
@@ -60,7 +60,7 @@ namespace RecipeBuddy.Core.Models
                         break;
                     }
 
-                
+
                 case Type_of_Websource.SouthernLiving:
                     {
                         //Failed Search
@@ -72,7 +72,7 @@ namespace RecipeBuddy.Core.Models
                         break;
                     }
 
-               
+
                 case Type_of_Websource.FoodAndWine:
                     {
                         // Failed Search
@@ -80,7 +80,7 @@ namespace RecipeBuddy.Core.Models
                         {
                             Console.WriteLine("error in GenerateURLs");
                             return -1;
-                        };
+                        }
                         break;
                     }
             }
