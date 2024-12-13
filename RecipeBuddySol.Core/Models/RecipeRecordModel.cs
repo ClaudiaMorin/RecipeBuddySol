@@ -42,9 +42,8 @@ namespace RecipeBuddy.Core.Models
         /// </summary>
         /// <param name="title"></param>
         /// <param name="reSource"></param>
-        public RecipeRecordModel(string title, RecipeDisplayModel reSource)
+        public RecipeRecordModel(string title, RecipeDisplayModel reSource) : this()
         {
-            RecipeDBID = -1;
             Description = String.Copy(reSource.Description);
             Title = title;
             Author = String.Copy(reSource.Author);
@@ -68,31 +67,9 @@ namespace RecipeBuddy.Core.Models
             ListOfDirectionStrings = new List<string>();
         }
 
-        /// <summary>
-        /// the Model used when we have an 
-        /// </summary>
-        public RecipeRecordModel(string ingredString, string descripString)
+        public RecipeRecordModel(List<string> ingredString) : this()
         {
-            RecipeDBID = -1;
-            Title = "Search for your next recipe find!";
-            Description = "";
-            Author = "";
-            Link = null;
-            TypeAsInt = (int)Type_Of_Recipe.Unknown;
-            ListOfIngredientStrings = new List<string>(StringManipulationHelper.TurnStringintoListFromDB(ingredString));
-            ListOfDirectionStrings = new List<string>(StringManipulationHelper.TurnStringintoListFromDB(descripString));
-        }
-
-        public RecipeRecordModel(List<string> ingredString, List<string> descripString)
-        {
-            Title = "Search for your next recipe find!";
-            Description = "";
-            Author = "";
-            RecipeDBID = -1;
-            Link = null;
-            TypeAsInt = (int)Type_Of_Recipe.Unknown;
             ListOfIngredientStrings = new List<string>(ingredString);
-            ListOfDirectionStrings = new List<string>(descripString);
         }
 
         public void CopyRecipeModel(RecipeDisplayModel reSource)

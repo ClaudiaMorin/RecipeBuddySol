@@ -6,11 +6,7 @@ using System.Linq;
 using System.Windows;
 using RecipeBuddy.Core.Models;
 using RecipeBuddy.Core.Helpers;
-using System.Threading;
-using System.Collections;
-using System.Drawing;
-using System.Threading.Tasks;
-using Windows.UI.Xaml.Documents;
+
 
 namespace RecipeBuddy.Core.Scrapers
 {
@@ -60,14 +56,14 @@ namespace RecipeBuddy.Core.Scrapers
 
             strQuery += "+recipe";
 
-            if (website == 2) //Food And Wine has shifted so now it is "special"
-            {
+
                 try
                 {
                     var doc = web.Load(strQuery);
 
                     HtmlNode Node1 = doc.DocumentNode.SelectSingleNode("//div[@id='mntl-search-results__content_1-0']");
-                    HtmlNodeCollection list = Node1.SelectNodes("//a[@class='comp mntl-card-list-items mntl-document-card mntl-card card card--no-image']");
+                    HtmlNodeCollection list = Node1.SelectNodes("//a[@class='comp mntl-card-list-card--extendable mntl-universal-card mntl-document-card mntl-card card card--no-image']");
+
 
                     //Search didn't find anything!
                     if (list == null || list.Count == 0)
@@ -80,8 +76,7 @@ namespace RecipeBuddy.Core.Scrapers
                     foreach (HtmlNode node in list)
                     {
                         string s = node.Attributes[4].Value;
-                        if (s.Contains("https://www.foodandwine.com/recipes/"))
-                            listModel.URLLists.Add(new Uri(s));
+                        listModel.URLLists.Add(new Uri(s));      
                     }
                 }
 
@@ -90,52 +85,7 @@ namespace RecipeBuddy.Core.Scrapers
                 {
                     return -1;
                 }
-            }
-
-            else
-            {
-                try
-                {
-                    var doc = web.Load(strQuery);
-
-                    HtmlNode Node1 = doc.DocumentNode.SelectSingleNode("//div[@id='card-list_1-0']");
-                    HtmlNodeCollection list = Node1.SelectNodes("//a[@class='comp mntl-card-list-items mntl-document-card mntl-card card card--no-image']");
-
-                    //Search didn't find anything!
-                    if (list == null || list.Count == 0)
-                    {
-                        return -1;
-                    }
-
-                    listModel.URLLists = new RecipeURLLists();
-
-                    if (website == 0)
-                    {
-                        foreach (HtmlNode node in list)
-                        {
-                            string s = node.Attributes[4].Value;
-                            if (s.Contains("https://www.allrecipes.com/recipe/"))
-                                listModel.URLLists.Add(new Uri(s));
-                        }
-                    }
-
-                    if (website == 1)
-                    {
-                        foreach (HtmlNode node in list)
-                        {
-                            string s = node.Attributes[4].Value;
-                            if (s.Contains("https://www.southernliving.com/recipes/"))
-                                listModel.URLLists.Add(new Uri(s));
-                        }
-                    }
-
-                }
-
-                catch (Exception e)
-                {
-                    return -1;
-                }
-            }
+            
 
             return 0;
         }
@@ -173,64 +123,32 @@ namespace RecipeBuddy.Core.Scrapers
         /// <returns></returns>
         private static RecipeRecordModel RecipeRecordModelFactory(HtmlDocument doc, Uri uri)
         {
+            List<string> ingredients = FillIngredientListRecipeEntry(doc, 50);
+            if (ingredients == null)
+                return null;
+
+            //no ingredients it isn't a real recipe so we bail
+            if (ingredients.Count == 0)
+                return null;
+            
+
+            RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients);
+            recipeModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//p[@class='article-subheading text-body-100']").InnerText);
+            HtmlNode nodeForTitle = doc.DocumentNode.SelectSingleNode("//div[@class='comp article-header--recipe mm-recipes-article-header mntl-article-header']");
+            recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//h1[@class='article-heading text-headline-400']", nodeForTitle));
+            recipeModel.ListOfIngredientStrings = ingredients;
+
             if (uri.Host == "www.southernliving.com")
             {
-                List<string> ingredients = FillIngredientListRecipeEntry(doc, 50);
-                if (ingredients == null)
-                    return null;
-
-                //no ingredients it isn't a real recipe so we bail
-                if (ingredients.Count == 0)
-                    return null;
-
-                List<string> directions = FillDirectionsListRecipeEntry(doc, 30);
-                RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
-                recipeModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//div[@id='mntl-recipe-intro__content_1-0']").InnerText);
-                recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//h1[@id='article-heading_2-0']", doc));
-                recipeModel.ListOfIngredientStrings = ingredients;
-                recipeModel.ListOfDirectionStrings = directions;
-                return recipeModel;
+                recipeModel.ListOfDirectionStrings = FillDirectionsSouthernLiving(doc, 30);
             }
-
-            else if (uri.Host == "www.foodandwine.com")
+            else
             {
-                List<string> ingredients = FillIngredientListRecipeEntry(doc, 50);
-                if (ingredients == null)
-                    return null;
-
-                //no ingredients it isn't a real recipe so we bail
-                if (ingredients.Count == 0)
-                    return null;
-
-                List<string> directions = FillDirectionsListRecipeEntryFoodAndWine(doc, 30);
-                RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
-                recipeModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//div[@class='comp mntl-recipe-intro mntl-block']").InnerText);
-                HtmlNode node = doc.DocumentNode.SelectSingleNode("//div[@class='comp article-header--recipe mntl-article-header--recipe mntl-article-header']");
-                recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//h1[@class='article-heading type--lion']", node));
-                recipeModel.ListOfIngredientStrings = ingredients;
-                recipeModel.ListOfDirectionStrings = directions;
-                return recipeModel;
+                recipeModel.ListOfDirectionStrings = FillDirectionsFoodAndWineAndAllRecipes(doc, 30);
             }
 
-            else if (uri.Host == "www.allrecipes.com")
-            {
-                List<string> ingredients = FillIngredientListRecipeEntry(doc, 50);
-                if (ingredients == null)
-                    return null;
+            return recipeModel;
 
-                //no ingredients it isn't a real recipe so we bail
-                if (ingredients.Count == 0)
-                    return null;
-                List<string> directions = FillDirectionsListRecipeEntry(doc, 30);
-                RecipeRecordModel recipeModel = new RecipeRecordModel(ingredients, directions);
-                recipeModel.Description = StringManipulationHelper.CleanHTMLTags(doc.DocumentNode.SelectSingleNode("//p[@id='article-subheading_1-0']").InnerText);
-                recipeModel.Title = StringManipulationHelper.CleanHTMLTags(Scraper.FillDataFromHTML("//h1[@id='article-heading_1-0']", doc));
-                recipeModel.ListOfIngredientStrings = ingredients;
-                recipeModel.ListOfDirectionStrings = directions;
-                return recipeModel;
-            }
-
-            return null;
         }
 
         /// <summary>
@@ -265,14 +183,14 @@ namespace RecipeBuddy.Core.Scrapers
         {
             List<string> ingredients = new List<string>();
 
-            HtmlNode ingred_node = doc.DocumentNode.SelectSingleNode("//ul[@class='mntl-structured-ingredients__list']");
+            HtmlNode ingred_node = doc.DocumentNode.SelectSingleNode("//ul[@class='mm-recipes-structured-ingredients__list']");
 
             if (ingred_node == null)
                 return null;
 
             try
             {
-                HtmlNodeCollection htmlNodes = ingred_node.SelectNodes("//li[@class='mntl-structured-ingredients__list-item ']");
+                HtmlNodeCollection htmlNodes = ingred_node.SelectNodes("//li[@class='mm-recipes-structured-ingredients__list-item ']");
 
                 for (int i = 0; i < countList; i++)
                 {
@@ -286,19 +204,21 @@ namespace RecipeBuddy.Core.Scrapers
             return Scraper.TrimListToSpecifiedEntries(countList, ingredients);
         }
 
-        private static List<string> FillDirectionsListRecipeEntryFoodAndWine(HtmlDocument doc, int countList)
+        private static List<string> FillDirectionsFoodAndWineAndAllRecipes(HtmlDocument doc, int countList)
         {
             List<string> directions = new List<string>();
             try
             {
-                HtmlNode node = doc.DocumentNode.SelectSingleNode("//div[@id='recipe__steps-content_1-0']");
+                HtmlNode node = doc.DocumentNode.SelectSingleNode("//div[@class='comp mm-recipes-steps__content mntl-sc-page mntl-block ']");
                 if (node != null) 
                 {
-                    HtmlNodeCollection htmlNodes = node.SelectNodes("//li[@class='comp mntl-sc-block mntl-sc-block-startgroup mntl-sc-block-group--LI']");
+                    HtmlNodeCollection htmlNodes = node.SelectNodes("//p[@class='comp mntl-sc-block mntl-sc-block-html']");
                     for (int i = 0; i < countList; i++)
                     {
                         HtmlNode sectionHeader_node = htmlNodes[i];
-                        directions.Add(StringManipulationHelper.CleanHTMLTags(sectionHeader_node.InnerText));
+                        string tempDirection = StringManipulationHelper.CleanHTMLTags(sectionHeader_node.InnerText);
+                        if (tempDirection.Length > 2)
+                            directions.Add(tempDirection);
                     }
                 }
             }
@@ -308,21 +228,23 @@ namespace RecipeBuddy.Core.Scrapers
             return Scraper.TrimListToSpecifiedEntries(countList, directions);
         }
 
-        private static List<string> FillDirectionsListRecipeEntry(HtmlDocument doc, int countList)
+        private static List<string> FillDirectionsSouthernLiving(HtmlDocument doc, int countList)
         {
             List<string> directions = new List<string>();
             try
             {
 
-                HtmlNode direct_node = doc.DocumentNode.SelectSingleNode("//div[@id='recipe__steps-content_1-0']");
+                HtmlNode direct_node = doc.DocumentNode.SelectSingleNode("//ol[@class='comp mntl-sc-block mntl-sc-block-startgroup mntl-sc-block-group--OL']");
 
                 if (direct_node != null)
                 {
-                    HtmlNodeCollection htmlNodes = direct_node.SelectNodes("//li[@class='comp mntl-sc-block-group--LI mntl-sc-block mntl-sc-block-startgroup']");
+                    HtmlNodeCollection htmlNodes = direct_node.ChildNodes;
                     for (int i = 0; i < countList; i++)
                     {
                         HtmlNode sectionHeader_node = htmlNodes[i];
-                        directions.Add(StringManipulationHelper.CleanHTMLTags(sectionHeader_node.InnerText));
+                        string tempDirection = StringManipulationHelper.CleanHTMLTags(sectionHeader_node.InnerText);
+                        if(tempDirection.Length > 2)
+                          directions.Add(tempDirection);
                     }
                 }
             }

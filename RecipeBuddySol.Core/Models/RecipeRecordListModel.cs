@@ -42,22 +42,17 @@ namespace RecipeBuddy.Core.Models
                 return;
 
             //we just added the first entry to the list
-            if (listCount == 0)
+            if (listCount != 0)
             {
-                RecipesList.Add(RE);
-                ListCount = ListCount + 1;
-                return;
-            }
-            else
-            {   //Check to see if we already have it in our list.
                 foreach (var RC in RecipesList)
                 {
                     if (RC.ListOfIngredientStrings == RE.ListOfIngredientStrings)
                         return;
                 }
             }
+
             RecipesList.Add(RE);
-            ListCount = ListCount + 1;
+            ListCount++;
         }
 
         /// <summary>

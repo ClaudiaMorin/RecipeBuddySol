@@ -90,20 +90,17 @@ namespace RecipeBuddy.Core.Scrapers
                 HtmlWeb web = new HtmlWeb();
                 HtmlDocument doc = web.Load(uri);
 
-
                 if (uri.Host == "www.allrecipes.com")
                 {
                     RecipeRecordModel dataBlurbAllRecipes = Scraper_AllRecipes_Southern_FoodAndWine.ProcessRecipeType(doc, splitter, uri);
                     return dataBlurbAllRecipes;
                 }
 
-
                 if (uri.Host == "www.southernliving.com")
                 {
                     RecipeRecordModel dataSouthernLiving = Scraper_AllRecipes_Southern_FoodAndWine.ProcessRecipeType(doc, splitter, uri);
                     return dataSouthernLiving;
                 }
-
 
                 if (uri.Host == "www.foodandwine.com")
                 {
@@ -292,7 +289,7 @@ namespace RecipeBuddy.Core.Scrapers
         /// <param name="uploadedText">The section of text pulled from the recipe that comes right after the word "ingredients"</param>
         /// <param name="listOfIngredients">The list of ingredient items that will be passed to the recipecardmodel</param>
         /// <returns>int indicating where to start the directions processing of the recipe</returns>
-        private static int ProcessUploatedRecipeIngredients(string uploadedText, List<string> listOfIngredients)
+        private static int ProcessUploadedRecipeIngredients(string uploadedText, List<string> listOfIngredients)
         {
             int indexEndIngred = FindIngredientsEndIndex(uploadedText);
             string IngredSection = uploadedText.Substring(0, indexEndIngred).Trim();

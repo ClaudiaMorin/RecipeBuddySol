@@ -103,16 +103,24 @@ namespace RecipeBuddy.Core.Models
         {
             Uri url;
             int UrlNum = recipeCardList.URLLists.URLListCount;
-            
-            RecipeRecordModel re = Scraper.ScrapeDataForRecipeEntry(recipeCardList.URLLists.RecipeURLsList[0]);
+            int count = 0;
+            RecipeRecordModel re = null;
 
+            //Gives us an opportunity to drop recipes until we get a good one!
+            //Southern Recipe website again!!
+            while (re == null)
+            {
+                re = Scraper.ScrapeDataForRecipeEntry(recipeCardList.URLLists.RecipeURLsList[count]);
+                count++;
+            }
+            
             //Gives us the first recipe to fill the blank panel and then the rest can happen async
             view.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => recipeCardList.Add(re));
             view.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => showCurrentEntry());
 
             List<Task> TaskList = new List<Task>();
 
-            for (int count = 1; recipeCardList.ListCount < RecipeURLLists.MaxEntries-1; count++)    
+            for (; recipeCardList.ListCount < RecipeURLLists.MaxEntries-1; count++)    
             {
                 url = recipeCardList.URLLists.RecipeURLsList[count];
                 if (url != null)
